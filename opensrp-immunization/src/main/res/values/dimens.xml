@@ -3,4 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="client_profile_pic_dialog_width">100dp</dimen>
+    <dimen name="client_profile_pic_dialog_height">100dp</dimen>
+
+    <dimen name="activity_title_size">18sp</dimen>
+    <dimen name="activity_sub_title_size">14sp</dimen>
+
+    <dimen name="vaccine_card_width">200dp</dimen>
+    <dimen name="vaccine_horizontal_spacing">20dp</dimen>
+
+
 </resources>

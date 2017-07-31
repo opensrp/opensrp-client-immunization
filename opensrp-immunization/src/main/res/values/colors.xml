@@ -3,4 +3,44 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="alert_na">#ECECEC</color>
+    <color name="alert_upcoming">#D3EAF4</color>
+    <color name="alert_normal">#389CCA</color>
+    <color name="alert_urgent">#D13F3F</color>
+    <color name="alert_completed">#4fb45b</color>
+    <color name="alert_expired">#ECECEC</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="silver">#A9A9A9</color>
+    <color name="client_list_grey">#737373</color>
+    <color name="light_grey">#CCCCCC</color>
+    <color name="dark_grey">#999999</color>
+
+    <color name="vaccine_red_bg_stk">#a82525</color>
+    <color name="vaccine_red_bg_st">#cd2c2c</color>
+    <color name="vaccine_red_bg_end">#be2727</color>
+
+    <color name="vaccine_blue_bg_stk">#267ea5</color>
+    <color name="vaccine_blue_bg_st">#389cc8</color>
+    <color name="vaccine_blue_bg_end">#3495bf</color>
+
+    <color name="vaccine_light_blue_bg_stk">#b2d9ea</color>
+    <color name="vaccine_light_blue_bg_st">#e4f1f6</color>
+    <color name="vaccine_light_blue_bg_end">#e3f0f5</color>
+
+    <color name="vaccine_na_bg_stk">#D4D4D4</color>
+    <color name="vaccine_na_bg_st">#EFEFEF</color>
+    <color name="vaccine_na_bg_end">#ECECEC</color>
+
+    <color name="vaccine_grey_bg_stk">#d8d8d8</color>
+    <color name="vaccine_grey_bg_st">#f4f4f4</color>
+    <color name="vaccine_grey_bg_end">#ebebeb</color>
+
+    <color name="due_vaccine_red">#C52929</color>
+    <color name="due_vaccine_blue">#3597C1</color>
+
+    <color name="vaccinate_popup_light_grey">#F0F0F0</color>
+
 </resources>
