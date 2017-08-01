@@ -51,7 +51,7 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <org.smartregister.path.view.ExpandableHeightGridView
+            <org.smartregister.immunization.view.ExpandableHeightGridView
                 android:id="@+id/services_gv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

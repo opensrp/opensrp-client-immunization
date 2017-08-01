@@ -33,7 +33,7 @@
             android:textSize="@dimen/activity_sub_title_size" />
     </RelativeLayout>
 
-    <org.smartregister.path.view.ExpandableHeightGridView
+    <org.smartregister.immunization.view.ExpandableHeightGridView
         android:id="@+id/vaccines_gv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

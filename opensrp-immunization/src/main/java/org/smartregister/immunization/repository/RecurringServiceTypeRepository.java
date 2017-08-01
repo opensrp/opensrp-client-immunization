@@ -44,7 +44,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         super(repository);
     }
 
-    protected static void createTable(SQLiteDatabase database) {
+    public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_SQL);
         database.execSQL(TYPE_INDEX);
         database.execSQL(NAME_INDEX);

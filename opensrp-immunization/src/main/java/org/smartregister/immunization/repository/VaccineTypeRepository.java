@@ -37,7 +37,7 @@ public class VaccineTypeRepository extends BaseRepository {
         this.alertService = alertService;
     }
 
-    protected static void createTable(SQLiteDatabase database) {
+    public static void createTable(SQLiteDatabase database) {
         database.execSQL(VACCINE_Types_SQL);
     }
 
