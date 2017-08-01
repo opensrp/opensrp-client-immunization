@@ -1,0 +1,17 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="immun_child_card_height">100dp</dimen>
+    <dimen name="immun_pencil_card_height">24dp</dimen>
+    <dimen name="immun_more_vert_width">50dp</dimen>
+
+    <dimen name="card_view_corner_radius">3dp</dimen>
+    <dimen name="card_category_horizontal_margin">10dp</dimen>
+    <dimen name="card_category_vertical_margin">5dp</dimen>
+    <dimen name="card_category_vertical_half_margin">2.5dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+
+</resources>

@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:1.2.3"
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        mavenLocal()
+        flatDir {
+            dirs 'aars'
+        }
+    }
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "26.0.1"
+
+    defaultConfig {
+        applicationId "org.smartregister.immunization.sample"
+        minSdkVersion 18
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        incremental = true
+        preDexLibraries = false
+        javaMaxHeapSize "4g"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'LICENSE.txt'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+
+    compile(name: 'opensrp-app-debug', ext: 'aar') {
+        transitive = true
+        exclude group: 'com.github.johnkil.print', module: 'print'
+        exclude group: 'com.github.bmelnychuk', module: 'atv'
+    }
+
+    compile('org.smartregister:opensrp-client-native-form:1.0.0-SNAPSHOT@aar') {
+        transitive = true
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
+
+    compile(name: 'opensrp-immunization-debug', ext: 'aar')
+
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+
+    // opensrp-app dependencies -- TO REMOVE
+    compile 'net.zetetic:android-database-sqlcipher:3.5.6@aar'
+    compile 'joda-time:joda-time:2.3'
+    compile 'com.github.johnkil.print:print:1.2.3'
+    compile 'org.apache.commons:commons-lang3:3.2'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
+}

@@ -41,13 +41,15 @@ public class VaccineTypeRepository extends BaseRepository {
         database.execSQL(VACCINE_Types_SQL);
     }
 
-    public void add(VaccineType vaccineType) {
+    public void add(VaccineType vaccineType, SQLiteDatabase database) {
         if (vaccineType == null) {
             return;
         }
 
+        if (database == null) {
+            database = getWritableDatabase();
+        }
 
-        SQLiteDatabase database = getWritableDatabase();
         if (vaccineType.getId() == null) {
             vaccineType.setId(database.insert(VACCINE_Types_TABLE_NAME, null, createValuesFor(vaccineType)));
         } else {
@@ -65,8 +67,11 @@ public class VaccineTypeRepository extends BaseRepository {
         return readAllVaccines(cursor);
     }
 
-    public List<VaccineType> getAllVaccineTypes() {
-        SQLiteDatabase database = getReadableDatabase();
+    public List<VaccineType> getAllVaccineTypes(SQLiteDatabase database) {
+        if (database == null) {
+            database = getReadableDatabase();
+        }
+
         Cursor cursor = database.query(VACCINE_Types_TABLE_NAME, VACCINE_Types_TABLE_COLUMNS, null, null, null, null, null, null);
         return readAllVaccines(cursor);
     }

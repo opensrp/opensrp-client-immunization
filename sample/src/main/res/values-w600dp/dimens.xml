@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_category_horizontal_margin">15dp</dimen>
+    <dimen name="card_category_vertical_margin">15dp</dimen>
+    <dimen name="card_category_vertical_half_margin">5dp</dimen>
+</resources>

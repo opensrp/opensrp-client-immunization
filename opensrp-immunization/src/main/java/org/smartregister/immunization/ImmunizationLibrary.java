@@ -2,9 +2,12 @@ package org.smartregister.immunization;
 
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
+import org.smartregister.immunization.domain.VaccineName;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
+import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 
@@ -20,6 +23,8 @@ public class ImmunizationLibrary {
     private VaccineRepository vaccineRepository;
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
+    private VaccineTypeRepository vaccineTypeRepository;
+    private VaccineNameRepository vaccineNameRepository;
     private CommonFtsObject commonFtsObject;
 
     private static ImmunizationLibrary instance;
@@ -77,6 +82,19 @@ public class ImmunizationLibrary {
         return recurringServiceRecordRepository;
     }
 
+    public VaccineTypeRepository vaccineTypeRepository() {
+        if (vaccineTypeRepository == null) {
+            vaccineTypeRepository = new VaccineTypeRepository(getRepository(), commonFtsObject(), context().alertService());
+        }
+        return vaccineTypeRepository;
+    }
+
+    public VaccineNameRepository vaccineNameRepository() {
+        if (vaccineNameRepository == null) {
+            vaccineNameRepository = new VaccineNameRepository(getRepository(), commonFtsObject(), context().alertService());
+        }
+        return vaccineNameRepository;
+    }
 
     public Context context() {
         return context;
