@@ -22,7 +22,9 @@ import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.sample.R;
 import org.smartregister.immunization.view.ServiceGroup;
 import org.smartregister.immunization.view.VaccineGroup;
+import org.smartregister.util.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,10 +32,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import static org.smartregister.util.Utils.getName;
+
 /**
  * Created by keyman on 01/08/2017.
  */
 public class SampleUtil {
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+
     public static final String ENTITY_ID = "1";
     public static final String DOB_STRING = "2017-01-01T00:00:00.000Z";
     public static final String GENDER = (new Random()).nextBoolean() ? "male" : "female";
@@ -146,6 +152,12 @@ public class SampleUtil {
         }
         ft.addToBackStack(null);
         return ft;
+    }
+
+    public static String constructChildName(CommonPersonObjectClient childDetails) {
+        String firstName = Utils.getValue(childDetails.getColumnmaps(), "first_name", true);
+        String lastName = Utils.getValue(childDetails.getColumnmaps(), "last_name", true);
+        return getName(firstName, lastName).trim();
     }
 
 }

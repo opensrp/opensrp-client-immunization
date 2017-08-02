@@ -3,4 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Gender identity colors -->
+    <color name="gender_neutral_dark_green">#219e05</color>
+    <color name="gender_neutral_green">#29C606</color>
+    <color name="gender_neutral_light_green">#b8f5b2</color>
+    <color name="male_dark_blue">#2b84c1</color>
+    <color name="male_blue">#35a6e2</color>
+    <color name="male_light_blue">#d4edfa</color>
+    <color name="female_dark_pink">#b73bb6</color>
+    <color name="female_pink">#de47dc</color>
+    <color name="female_light_pink">#f7dbf7</color>
 </resources>

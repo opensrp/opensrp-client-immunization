@@ -14,9 +14,9 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.db.Event;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.domain.Vaccine;
-import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.util.DateUtil;
 
@@ -159,16 +159,16 @@ public class ServiceRowCard extends LinearLayout {
 
     private void updateStateUi() {
         boolean status_for_more_than_three_months = false;
-        VaccineRepository vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
+        RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
         if (serviceWrapper.getDbKey() != null) {
-            Vaccine vaccine = vaccineRepository.find(serviceWrapper.getDbKey());
+            ServiceRecord serviceRecord = recurringServiceRecordRepository.find(serviceWrapper.getDbKey());
             EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
 
             Event event = null;
-            if (vaccine.getEventId() != null) {
-                event = db.convert(db.getEventsByEventId(vaccine.getEventId()), Event.class);
-            } else if (vaccine.getFormSubmissionId() != null) {
-                event = db.convert(db.getEventsByFormSubmissionId(vaccine.getFormSubmissionId()), Event.class);
+            if (serviceRecord.getEventId() != null) {
+                event = db.convert(db.getEventsByEventId(serviceRecord.getEventId()), Event.class);
+            } else if (serviceRecord.getFormSubmissionId() != null) {
+                event = db.convert(db.getEventsByFormSubmissionId(serviceRecord.getFormSubmissionId()), Event.class);
             }
 
             if (event != null) {

@@ -343,11 +343,11 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         VaccineSchedule.standardiseCalendarDate(maxDate);
 
         if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
-            set.setVisibility(View.INVISIBLE);
+            set.setVisibility(View.GONE);
             datePicker.setMinDate(minDate.getTimeInMillis());
             datePicker.setMaxDate(maxDate.getTimeInMillis());
         } else {
-            set.setVisibility(View.INVISIBLE);
+            set.setVisibility(View.GONE);
             Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
         }
     }
