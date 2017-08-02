@@ -81,7 +81,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                 vaccineWrapper.setGender(vaccineGroup.getChildDetails().getDetails().get("gender"));
                 vaccineWrapper.setName(vaccineName);
 
-                String dobString = Utils.getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
+                String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
                 if (StringUtils.isNotBlank(dobString)) {
                     Calendar dobCalender = Calendar.getInstance();
                     DateTime dateTime = new DateTime(dobString);

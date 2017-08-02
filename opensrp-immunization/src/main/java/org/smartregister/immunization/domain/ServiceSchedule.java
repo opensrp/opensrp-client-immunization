@@ -190,15 +190,15 @@ public class ServiceSchedule {
         try {
             DateTime afterOffset = dateTime;
             if (dateTime != null && offset != null) {
-                offset = offset.replace(" ", "").toLowerCase();
+                String offsetAfterReplace = offset.replace(" ", "").toLowerCase();
                 Pattern p1 = Pattern.compile("([-+]{1})(.*)");
-                Matcher m1 = p1.matcher(offset);
+                Matcher m1 = p1.matcher(offsetAfterReplace);
                 if (m1.find()) {
                     String comparitorString = m1.group(1);
                     String valueString = m1.group(2);
 
                     int comparitor = 1;
-                    if (comparitorString.equals("-")) {
+                    if ("-".equals(comparitorString)) {
                         comparitor = -1;
                     }
 
@@ -210,11 +210,11 @@ public class ServiceSchedule {
                         if (m2.find()) {
                             int curValue = comparitor * Integer.parseInt(m2.group(1));
                             String fieldString = m2.group(2);
-                            if (fieldString.equals("d")) {
+                            if ("d".endsWith(fieldString)) {
                                 afterOffset = afterOffset.plusDays(curValue);
-                            } else if (fieldString.equals("m")) {
+                            } else if ("m".equals(fieldString)) {
                                 afterOffset = afterOffset.plusMonths(curValue);
-                            } else if (fieldString.equals("y")) {
+                            } else if ("y".equals(fieldString)) {
                                 afterOffset = afterOffset.plusYears(curValue);
                             }
                         }

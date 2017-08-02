@@ -82,8 +82,6 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
             String vaccines2 = "";
 
             for (Map.Entry<String, VaccineWrapper> entry : map().entrySet()) {
-                String id = entry.getKey();
-
 
                 VaccineWrapper tag = entry.getValue();
                 String formatedDate = tag.getUpdatedVaccineDate().toString("yyyy-MM-dd");
@@ -95,9 +93,9 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
                     String fieldName = vaccine.name() + "_retro";
 
                     JSONObject parentJson = null;
-                    if (category.equals("child")) {
+                    if ("child".equals(category)) {
                         parentJson = VaccinateActionUtils.find(encounterJson, "vaccines_group");
-                    } else if (category.equals("woman")) {
+                    } else if ("woman".equals(category)) {
                         parentJson = encounterJson;
                     }
 
@@ -119,12 +117,12 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
 
 
             if (StringUtils.isNotBlank(vaccines)) {
-                vaccines.trim();
+                vaccines = vaccines.trim();
                 VaccinateActionUtils.updateJson(encounterJson, "vaccines", vaccines);
             }
 
             if (StringUtils.isNotBlank(vaccines2)) {
-                vaccines2.trim();
+                vaccines2 = vaccines2.trim();
                 VaccinateActionUtils.updateJson(encounterJson, "vaccines_2", vaccines2);
             }
 

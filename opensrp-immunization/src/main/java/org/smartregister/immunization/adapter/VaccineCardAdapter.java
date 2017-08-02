@@ -77,7 +77,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                 vaccineWrapper.setName(vaccineName);
                 vaccineWrapper.setDefaultName(vaccineName);
 
-                String dobString = Utils.getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
+                String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
                 if (StringUtils.isNotBlank(dobString)) {
                     Calendar dobCalender = Calendar.getInstance();
                     DateTime dateTime = new DateTime(dobString);

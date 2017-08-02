@@ -2,7 +2,6 @@ package org.smartregister.immunization;
 
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
-import org.smartregister.immunization.domain.VaccineName;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;

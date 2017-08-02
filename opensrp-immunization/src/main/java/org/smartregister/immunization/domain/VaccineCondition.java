@@ -67,7 +67,10 @@ public abstract class VaccineCondition {
     }
 
     public static class GivenCondition extends VaccineCondition {
-        public static enum Comparison {
+        private final Comparison comparison;
+        private final String value;
+
+        public enum Comparison {
             EXACTLY("exactly"),
             AT_LEAST("at_least"),
             AT_MOST("at_most");
@@ -85,12 +88,8 @@ public abstract class VaccineCondition {
                     return curComparison;
                 }
             }
-
             return null;
         }
-
-        private final Comparison comparison;
-        private final String value;
 
         public GivenCondition(VaccineRepo.Vaccine vaccine, String value, Comparison comparison) {
             super(vaccine);
@@ -129,6 +128,8 @@ public abstract class VaccineCondition {
                         break;
                     case AT_MOST:
                         result = vaccinationDate.getTimeInMillis() <= comparisonDate.getTimeInMillis();
+                        break;
+                    default:
                         break;
                 }
             }

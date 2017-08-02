@@ -76,7 +76,7 @@ public class ServiceRowAdapter extends BaseAdapter {
                 serviceWrapper.setGender(serviceRowGroup.getChildDetails().getDetails().get("gender"));
                 serviceWrapper.setDefaultName(serviceType.getName());
 
-                String dobString = Utils.getValue(serviceRowGroup.getChildDetails().getColumnmaps(), "dob", false);
+                String dobString = getValue(serviceRowGroup.getChildDetails().getColumnmaps(), "dob", false);
                 if (StringUtils.isNotBlank(dobString)) {
                     Calendar dobCalender = Calendar.getInstance();
                     DateTime dateTime = new DateTime(dobString);

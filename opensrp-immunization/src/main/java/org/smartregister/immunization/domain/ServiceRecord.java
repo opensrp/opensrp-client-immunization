@@ -8,18 +8,18 @@ import java.util.HashMap;
  */
 public class ServiceRecord {
     private static final String ZEIR_ID = "ZEIR_ID";
-    Long id;
-    String baseEntityId;
-    String programClientId;
-    Long recurringServiceId;
-    String value;
-    Date date;
-    String anmId;
-    String locationId;
-    String syncStatus;
-    String eventId;
-    String formSubmissionId;
-    Long updatedAt;
+    private Long id;
+    private String baseEntityId;
+    private String programClientId;
+    private Long recurringServiceId;
+    private String value;
+    private Date date;
+    private String anmId;
+    private String locationId;
+    private String syncStatus;
+    private String eventId;
+    private String formSubmissionId;
+    private Long updatedAt;
 
     String type;
     String name;
@@ -45,7 +45,7 @@ public class ServiceRecord {
 
     public ServiceRecord(Long id, String baseEntityId, String programClientId, Long
             recurringServiceId, String value, Date date, String anmId, String locationId, String
-            syncStatus, String eventId, String formSubmissionId, Long updatedAt) {
+                                 syncStatus, String eventId, String formSubmissionId, Long updatedAt) {
         this.id = id;
         this.baseEntityId = baseEntityId;
         this.programClientId = programClientId;

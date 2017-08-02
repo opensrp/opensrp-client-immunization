@@ -73,7 +73,7 @@ public class ServiceCardAdapter extends BaseAdapter {
                 serviceWrapper.setGender(serviceGroup.getChildDetails().getDetails().get("gender"));
                 serviceWrapper.setDefaultName(type);
 
-                String dobString = Utils.getValue(serviceGroup.getChildDetails().getColumnmaps(), "dob", false);
+                String dobString = getValue(serviceGroup.getChildDetails().getColumnmaps(), "dob", false);
                 if (StringUtils.isNotBlank(dobString)) {
                     Calendar dobCalender = Calendar.getInstance();
                     DateTime dateTime = new DateTime(dobString);

@@ -193,10 +193,8 @@ public class VaccineSchedule {
     }
 
     public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
-        if (vaccineSchedules.containsKey(vaccineCategory)) {
-            if (vaccineSchedules.get(vaccineCategory).containsKey(vaccineName.toUpperCase())) {
-                return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
-            }
+        if (vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory).containsKey(vaccineName.toUpperCase())) {
+            return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
         }
 
         return null;
@@ -360,12 +358,12 @@ public class VaccineSchedule {
      * Offsets can look like:
      * "+5y,3m,2d" : Plus 5 years, 3 months, and 2 days
      * "-2d" : Minus 2 days
-     * <p/>
+     * <p>
      * Accepted time units for the offset are:
      * d : Days
      * m : Months
      * y : Years
-     * <p/>
+     * <p>
      * Accepted operators for the offset are:
      * - : Minus
      * + : Plus
@@ -376,15 +374,15 @@ public class VaccineSchedule {
      */
     public static Calendar addOffsetToCalendar(Calendar calendar, String offset) {
         if (calendar != null && offset != null) {
-            offset = offset.replace(" ", "").toLowerCase();
+            String offsetAfterReplace = offset.replace(" ", "").toLowerCase();
             Pattern p1 = Pattern.compile("([-+]{1})(.*)");
-            Matcher m1 = p1.matcher(offset);
+            Matcher m1 = p1.matcher(offsetAfterReplace);
             if (m1.find()) {
                 String operatorString = m1.group(1);
                 String valueString = m1.group(2);
 
                 int operator = 1;
-                if (operatorString.equals("-")) {
+                if ("-".equals(operatorString)) {
                     operator = -1;
                 }
 
@@ -397,11 +395,11 @@ public class VaccineSchedule {
                         int curValue = operator * Integer.parseInt(m2.group(1));
                         String fieldString = m2.group(2);
                         int field = Calendar.DATE;
-                        if (fieldString.equals("d")) {
+                        if ("d".equals(fieldString)) {
                             field = Calendar.DATE;
-                        } else if (fieldString.equals("m")) {
+                        } else if ("m".equals(fieldString)) {
                             field = Calendar.MONTH;
-                        } else if (fieldString.equals("y")) {
+                        } else if ("y".equals(fieldString)) {
                             field = Calendar.YEAR;
                         }
 
