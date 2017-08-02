@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">opensrp-immunization-sample</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="label_immunization_records">IMMUNISATION &amp; SERVICES</string>
+    <string name="updating_dialog_title">Updating…</string>
+</resources>
