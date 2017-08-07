@@ -11,9 +11,6 @@ allprojects {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         mavenLocal()
-        flatDir {
-            dirs 'aars'
-        }
     }
 }
 
@@ -69,9 +66,8 @@ android {
 
 dependencies {
 
-    compile(name: 'opensrp-app-debug', ext: 'aar') {
+    compile('org.smartregister:opensrp-client-core:1.0.0-SNAPSHOT@aar') {
         transitive = true
-        exclude group: 'com.github.johnkil.print', module: 'print'
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
@@ -80,19 +76,14 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
 
-    compile(name: 'opensrp-immunization-debug', ext: 'aar')
+    compile('org.smartregister:opensrp-client-immunization:1.0.0-SNAPSHOT@aar') {
+        transitive = true
+    }
 
+    compile('com.android.support:design:22.2.1') {
+        exclude group: 'com.android.support'
+    }
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.1.1'
-
-    // opensrp-app dependencies -- TO REMOVE
-    compile 'net.zetetic:android-database-sqlcipher:3.5.6@aar'
-    compile 'joda-time:joda-time:2.3'
-    compile 'com.github.johnkil.print:print:1.2.3'
-    compile 'org.apache.commons:commons-lang3:3.2'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.mcxiaoke.volley:library:1.0.+'
 }

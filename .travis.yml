@@ -50,7 +50,7 @@ script:
   # Enable the line below once we get all the test passing, currently most of the tests are failing 
   # so we'll just if the project compiles
   #Run All tests Unit and Instrumentation
-  - travis_wait ./gradlew build  -i --stacktrace
+  - travis_wait ./gradlew :opensrp-immunization:jacocoTestReport coveralls --stacktrace
 
 after_failure:
  - pandoc opensrp-immunization/build/reports/tests/index.html -t plain
