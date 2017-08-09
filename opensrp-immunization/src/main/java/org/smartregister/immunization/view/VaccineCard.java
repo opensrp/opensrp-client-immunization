@@ -220,6 +220,8 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setText("Expired: " + getVaccineName());
                 setClickable(false);
                 break;
+            default:
+                break;
         }
     }
 

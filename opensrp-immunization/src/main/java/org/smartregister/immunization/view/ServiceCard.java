@@ -217,6 +217,8 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setText("Expired: " + getServiceName());
                 setClickable(false);
                 break;
+            default:
+                break;
         }
     }
 

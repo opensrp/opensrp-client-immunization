@@ -151,7 +151,7 @@ public class VaccinateActionUtils {
         TextView v = (TextView) tableRow.findViewById(R.id.date);
         v.setText(tag.getFormattedVaccineDate());
 
-        if (tag.getStatus().equalsIgnoreCase("due")) {
+        if ("due".equalsIgnoreCase(tag.getStatus())) {
             tableRow.setOnClickListener(new TableRow.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -205,6 +205,8 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
                         recurringServices,
                         READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                 break;
+            default:
+                break;
         }
 
     }

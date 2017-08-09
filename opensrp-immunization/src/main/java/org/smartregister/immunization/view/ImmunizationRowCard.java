@@ -241,6 +241,8 @@ public class ImmunizationRowCard extends LinearLayout {
                 StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
                 setClickable(false);
                 break;
+            default:
+                break;
         }
     }
 

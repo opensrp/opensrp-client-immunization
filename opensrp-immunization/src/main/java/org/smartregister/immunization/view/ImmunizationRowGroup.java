@@ -197,6 +197,8 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
                             vaccineData.getString("name"),
                             READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                     break;
+                default:
+                    break;
             }
         } catch (JSONException e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -242,10 +244,9 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
             if (onRecordAllClickListener != null && vaccineCardAdapter != null) {
                 onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
             }
-        } else if (v instanceof ImmunizationRowCard) {
-            if (onVaccineClickedListener != null) {
-                onVaccineClickedListener.onClick(this, ((ImmunizationRowCard) v).getVaccineWrapper());
-            }
+        } else if (v instanceof ImmunizationRowCard && onVaccineClickedListener != null) {
+            onVaccineClickedListener.onClick(this, ((ImmunizationRowCard) v).getVaccineWrapper());
+
         } else if (v.getId() == R.id.undo_b) {
             if (v.getParent().getParent() instanceof ImmunizationRowCard) {
                 ImmunizationRowCard vaccineCard = (ImmunizationRowCard) v.getParent().getParent();
