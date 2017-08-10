@@ -24,6 +24,7 @@ import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.form.FormSubmission;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceType;
@@ -181,7 +182,7 @@ public class VaccinateActionUtils {
             FormUtils formUtils = FormUtils.getInstance(appContext);
             final FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
 
-            org.smartregister.Context context = org.smartregister.Context.getInstance();
+            org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
 

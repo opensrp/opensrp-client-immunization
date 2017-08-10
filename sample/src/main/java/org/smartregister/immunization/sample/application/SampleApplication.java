@@ -44,7 +44,7 @@ public class SampleApplication extends DrishtiApplication {
     public Repository getRepository() {
         try {
             if (repository == null) {
-                repository = new SampleRepository(getInstance().getApplicationContext());
+                repository = new SampleRepository(getInstance().getApplicationContext(), context);
             }
         } catch (UnsatisfiedLinkError e) {
             logError("Error on getRepository: " + e);
