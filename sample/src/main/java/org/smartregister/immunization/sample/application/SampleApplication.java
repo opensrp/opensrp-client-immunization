@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.smartregister.Context;
+import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.sample.repository.SampleRepository;
@@ -32,6 +33,7 @@ public class SampleApplication extends DrishtiApplication {
         initOfflineSchedules();
 
         //Initialize Modules
+        CoreLibrary.init(context);
         ImmunizationLibrary.init(context, getRepository(), null);
 
     }
