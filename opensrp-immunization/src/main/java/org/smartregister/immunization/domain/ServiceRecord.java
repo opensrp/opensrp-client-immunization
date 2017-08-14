@@ -21,8 +21,8 @@ public class ServiceRecord {
     private String formSubmissionId;
     private Long updatedAt;
 
-    String type;
-    String name;
+    protected String type;
+    protected String name;
 
     public ServiceRecord() {
     }

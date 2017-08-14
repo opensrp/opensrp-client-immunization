@@ -33,12 +33,12 @@ public class RecurringIntentService extends IntentService {
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
 
-    final String YES = "yes";
-    final String NO = "no";
-    final String VALUES = "values";
-    final String OPENMRS_CHOICES_IDS = "openmrs_choice_ids";
-    final String OPENMRS_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    final String OPENMRS_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    protected final String YES = "yes";
+    protected final String NO = "no";
+    protected final String VALUES = "values";
+    protected final String OPENMRS_CHOICES_IDS = "openmrs_choice_ids";
+    protected final String OPENMRS_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    protected final String OPENMRS_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
 
     public RecurringIntentService() {
@@ -96,11 +96,9 @@ public class RecurringIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.OPENMRS_ENTITY_ID, serviceType.getServiceNameEntityId());
                     jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, SELECT_DATA_TYPE);
                     jsonObject.put(JsonFormUtils.VALUE, YES);
-                    if (serviceType.getType().equalsIgnoreCase("ITN")) {
-                        if (StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(CHILD_HAS_NET)) {
+                    if (serviceType.getType().equalsIgnoreCase("ITN") && StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(CHILD_HAS_NET)) {
                             jsonObject.put(JsonFormUtils.VALUE, NO);
                             itnHasNet = true;
-                        }
                     }
                     addYesNoChoices(jsonObject);
                     jsonArray.put(jsonObject);

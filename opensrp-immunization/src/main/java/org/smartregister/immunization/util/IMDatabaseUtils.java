@@ -96,6 +96,8 @@ public class IMDatabaseUtils {
 
                                             prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + condition + "|" + Arrays.toString(preArray);
                                             break;
+                                        default:
+                                            break;
 
                                     }
 
@@ -144,7 +146,7 @@ public class IMDatabaseUtils {
 
     public static void accessAssetsAndFillDataBaseForVaccineTypes(Context context, SQLiteDatabase db) {
         VaccineTypeRepository vaccineTypeRepository = ImmunizationLibrary.getInstance().vaccineTypeRepository();
-        if (!(vaccineTypeRepository.getAllVaccineTypes(db).size() > 0)) {
+        if (vaccineTypeRepository.getAllVaccineTypes(db).size() < 1) {
             String vaccinetype = Utils.readAssetContents(context, "vaccine_type.json");
             try {
                 JSONArray vaccinetypeArray = new JSONArray(vaccinetype);

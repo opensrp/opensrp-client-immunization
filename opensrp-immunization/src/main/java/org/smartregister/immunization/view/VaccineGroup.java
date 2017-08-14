@@ -196,6 +196,8 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
                             vaccineData.getString("name"),
                             READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                     break;
+                default:
+                    break;
             }
         } catch (JSONException e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -228,19 +230,15 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        if (v.equals(recordAllTV)) {
-            if (onRecordAllClickListener != null && vaccineCardAdapter != null) {
-                onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
-            }
-        } else if (v instanceof VaccineCard) {
-            if (onVaccineClickedListener != null) {
-                onVaccineClickedListener.onClick(this, ((VaccineCard) v).getVaccineWrapper());
-            }
-        } else if (v.getId() == R.id.undo_b) {
-            if (v.getParent().getParent() instanceof VaccineCard) {
-                VaccineCard vaccineCard = (VaccineCard) v.getParent().getParent();
-                onUndoClick(vaccineCard);
-            }
+        if ((v.equals(recordAllTV)) && (onRecordAllClickListener != null && vaccineCardAdapter != null)) {
+            onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
+
+        } else if (v instanceof VaccineCard && onVaccineClickedListener != null) {
+            onVaccineClickedListener.onClick(this, ((VaccineCard) v).getVaccineWrapper());
+
+        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof VaccineCard) {
+            VaccineCard vaccineCard = (VaccineCard) v.getParent().getParent();
+            onUndoClick(vaccineCard);
         }
     }
 
@@ -311,13 +309,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
-                if (vaccine.equals(VaccineRepo.Vaccine.measles2)
+                if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
                         || vaccine.equals(VaccineRepo.Vaccine.mr2)
                         || vaccine.equals(VaccineRepo.Vaccine.measles1)
-                        || vaccine.equals(VaccineRepo.Vaccine.mr1)) {
-                    if (tag.getAlert() != null && tag.getStatus() != null) {
-                        break;
-                    }
+                        || vaccine.equals(VaccineRepo.Vaccine.mr1) && tag.getAlert() != null) && tag.getStatus() != null) {
+                    break;
                 }
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));

@@ -323,6 +323,8 @@ public class VaccinateActionUtils {
             case measles2:
             case mr2:
                 return "18 months";
+            default:
+                break;
         }
 
         return "";
@@ -345,7 +347,7 @@ public class VaccinateActionUtils {
             return null;
         } else {
             String stateKey = stateKey(vaccine);
-            if (stateKey.equals("at birth")) {
+            if ("at birth".equals(stateKey)) {
                 stateKey = "Birth";
             }
             return stateKey;
@@ -356,7 +358,7 @@ public class VaccinateActionUtils {
         if (category == null) {
             return null;
         }
-        if (category.equals("child")) {
+        if ("child".equals(category)) {
 
             ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines("child");
             List<String> names = new ArrayList<>();
@@ -428,10 +430,8 @@ public class VaccinateActionUtils {
 
         List<Alert> defaultAlerts = new ArrayList<Alert>();
         for (VaccineRepo.Vaccine v : vList) {
-            if (!VaccinateActionUtils.hasVaccine(vaccineList, v)) {
-                if (!VaccinateActionUtils.hasAlert(alertList, v)) {
-                    defaultAlerts.add(VaccinateActionUtils.createDefaultAlert(v, entityId, birthDateTime));
-                }
+            if ((!VaccinateActionUtils.hasVaccine(vaccineList, v)) && (!VaccinateActionUtils.hasAlert(alertList, v))) {
+                defaultAlerts.add(VaccinateActionUtils.createDefaultAlert(v, entityId, birthDateTime));
             }
         }
 

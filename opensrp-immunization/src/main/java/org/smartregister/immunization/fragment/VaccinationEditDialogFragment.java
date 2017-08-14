@@ -352,8 +352,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
     }
 
-    private Calendar updateMinVaccineDate(Calendar minDate, String vaccineName) {
+    private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
         Date dueDate = getMinVaccineDate(vaccineName);
+        Calendar minDate = minDate_;
         if (dueDate == null
                 || dueDate.getTime() < dateOfBirth.getTime()) {
             dueDate = dateOfBirth;
@@ -369,8 +370,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         return minDate;
     }
 
-    private Calendar updateMaxVaccineDate(Calendar maxDate, String vaccineName) {
+    private Calendar updateMaxVaccineDate(Calendar maxDate_, String vaccineName) {
         Date expiryDate = getMaxVaccineDate(vaccineName);
+        Calendar maxDate = maxDate_;
         if (expiryDate == null
                 || expiryDate.getTime() > Calendar.getInstance().getTimeInMillis()) {
             expiryDate = Calendar.getInstance().getTime();

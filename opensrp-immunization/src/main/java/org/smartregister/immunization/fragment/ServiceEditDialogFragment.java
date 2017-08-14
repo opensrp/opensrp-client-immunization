@@ -219,8 +219,9 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
     }
 
-    private DateTime updateMinVaccineDate(DateTime minDate) {
+    private DateTime updateMinVaccineDate(DateTime minDate_) {
         DateTime dueDate = getMinVaccineDate();
+        DateTime minDate = minDate_;
         if (dueDate == null
                 || dueDate.getMillis() < tag.getDob().getMillis()) {
             dueDate = tag.getDob();
@@ -235,8 +236,9 @@ public class ServiceEditDialogFragment extends DialogFragment {
         return minDate;
     }
 
-    private DateTime updateMaxVaccineDate(DateTime maxDate) {
+    private DateTime updateMaxVaccineDate(DateTime maxDate_) {
         DateTime expiryDate = getMaxVaccineDate();
+        DateTime maxDate = maxDate_;
         if (expiryDate == null
                 || expiryDate.getMillis() > DateTime.now().getMillis()) {
             expiryDate = DateTime.now();

@@ -342,7 +342,8 @@ public class VaccineRepository extends BaseRepository {
 
     }
 
-    public void updateFtsSearch(String entityId, String vaccineName) {
+    public void updateFtsSearch(String entityId, String vaccineName_) {
+        String vaccineName = vaccineName_;
         try {
             if (commonFtsObject != null && alertService() != null) {
                 if (vaccineName != null) {
@@ -364,7 +365,6 @@ public class VaccineRepository extends BaseRepository {
         if (alertService == null) {
             alertService = Context.getInstance().alertService();
         }
-        ;
         return alertService;
     }
 

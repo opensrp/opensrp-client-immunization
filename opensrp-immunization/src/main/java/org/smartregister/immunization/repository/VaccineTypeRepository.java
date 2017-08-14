@@ -41,7 +41,8 @@ public class VaccineTypeRepository extends BaseRepository {
         database.execSQL(VACCINE_Types_SQL);
     }
 
-    public void add(VaccineType vaccineType, SQLiteDatabase database) {
+    public void add(VaccineType vaccineType, SQLiteDatabase database_) {
+        SQLiteDatabase database = database_;
         if (vaccineType == null) {
             return;
         }
@@ -67,7 +68,8 @@ public class VaccineTypeRepository extends BaseRepository {
         return readAllVaccines(cursor);
     }
 
-    public List<VaccineType> getAllVaccineTypes(SQLiteDatabase database) {
+    public List<VaccineType> getAllVaccineTypes(SQLiteDatabase database_) {
+        SQLiteDatabase database = database_;
         if (database == null) {
             database = getReadableDatabase();
         }
