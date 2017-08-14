@@ -47,6 +47,7 @@ import org.opensrp.api.util.TreeNode;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.db.VaccineRepo.Vaccine;
@@ -81,7 +82,7 @@ public class VaccinatorUtils {
     private static final String TAG = "VaccinatorUtils";
 
     public static HashMap<String, String> providerDetails() {
-        org.smartregister.Context context = org.smartregister.Context.getInstance();
+        org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
         org.smartregister.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
         org.smartregister.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation());
         org.smartregister.util.Log.logDebug("TEAM DETAILS" + getPreference(context.applicationContext(), "team", "{}"));
@@ -124,11 +125,11 @@ public class VaccinatorUtils {
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type) {
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'";
-        return org.smartregister.Context.getInstance().commonrepository("stock").rawQuery(sqlWasted);
+        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted);
     }
 
     public static int getWasted(String startDate, String endDate, String type, String... variables) {
-        List<CommonPersonObject> cl = org.smartregister.Context.getInstance().commonrepository("stock").customQueryForCompleteRow("SELECT * FROM stock WHERE `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'", null, "stock");
+        List<CommonPersonObject> cl = ImmunizationLibrary.getInstance().context().commonrepository("stock").customQueryForCompleteRow("SELECT * FROM stock WHERE `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'", null, "stock");
         int total = 0;
         for (CommonPersonObject c : cl) {
             for (String v : variables) {
@@ -148,7 +149,7 @@ public class VaccinatorUtils {
         q += " ) e ";
 
         Log.i("DD", q);
-        return org.smartregister.Context.getInstance().commonrepository(table).rawQuery(q);
+        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q);
     }
 
     public static int getTotalUsed(String startDate, String endDate, String table, String... vaccines) {

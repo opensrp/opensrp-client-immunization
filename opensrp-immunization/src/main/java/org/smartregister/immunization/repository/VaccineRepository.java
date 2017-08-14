@@ -8,9 +8,9 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
-import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
@@ -362,7 +362,7 @@ public class VaccineRepository extends BaseRepository {
 
     public AlertService alertService() {
         if (alertService == null) {
-            alertService = Context.getInstance().alertService();
+            alertService = ImmunizationLibrary.getInstance().context().alertService();
         }
         ;
         return alertService;
