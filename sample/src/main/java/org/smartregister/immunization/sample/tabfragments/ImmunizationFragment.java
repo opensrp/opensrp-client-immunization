@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -84,7 +83,7 @@ public class ImmunizationFragment extends Fragment {
         View underFiveFragment = inflater.inflate(R.layout.child_under_five_fragment, container, false);
         fragmentContainer = (LinearLayout) underFiveFragment.findViewById(R.id.container);
 
-        alertService = Context.getInstance().alertService();
+        alertService = ImmunizationLibrary.getInstance().context().alertService();
 
         DetailsRepository detailsRepository = ((DetailActivity) getActivity()).getDetailsRepository();
         childDetails = childDetails != null ? childDetails : ((DetailActivity) getActivity()).getChildDetails();

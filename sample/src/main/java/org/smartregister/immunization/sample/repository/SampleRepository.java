@@ -29,8 +29,8 @@ public class SampleRepository extends Repository {
 
     private String password = "Sample_PASS";
 
-    public SampleRepository(Context context) {
-        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, org.smartregister.Context.getInstance().session(), null, org.smartregister.Context.getInstance().sharedRepositoriesArray());
+    public SampleRepository(Context context, org.smartregister.Context openSRPContext) {
+        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.getInstance().session(), null, openSRPContext.getInstance().sharedRepositoriesArray());
         this.context = context;
     }
 
