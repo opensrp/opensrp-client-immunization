@@ -83,9 +83,6 @@ public class RecurringServiceUtils {
         }
     }
 
-    private static void updateGroup() {
-
-    }
 
     public static ServiceGroup getLastOpenedServiceView(List<ServiceGroup> serviceGroups) {
         if (serviceGroups == null) {

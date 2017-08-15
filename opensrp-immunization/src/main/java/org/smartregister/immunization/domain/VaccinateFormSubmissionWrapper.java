@@ -68,9 +68,9 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
 
 
             String parent = "";
-            if (category.equals("child")) {
+            if ("child".equals(category)) {
                 parent = "Child_Vaccination_Followup";
-            } else if (category.equals("woman")) {
+            } else if ("woman".equals(category)) {
                 parent = "Woman_TT_Followup_Form";
             }
 

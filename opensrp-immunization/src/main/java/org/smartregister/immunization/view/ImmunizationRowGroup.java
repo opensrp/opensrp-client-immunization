@@ -247,11 +247,9 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         } else if (v instanceof ImmunizationRowCard && onVaccineClickedListener != null) {
             onVaccineClickedListener.onClick(this, ((ImmunizationRowCard) v).getVaccineWrapper());
 
-        } else if (v.getId() == R.id.undo_b) {
-            if (v.getParent().getParent() instanceof ImmunizationRowCard) {
+        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ImmunizationRowCard) {
                 ImmunizationRowCard vaccineCard = (ImmunizationRowCard) v.getParent().getParent();
                 onUndoClick(vaccineCard);
-            }
         }
     }
 

@@ -110,20 +110,16 @@ public class ImmunizationRowCard extends LinearLayout {
                 }
             } else {// Vaccination has not been done
                 if (status != null) {
-                    if (status.equalsIgnoreCase("due")) {
+                    if ("due".equalsIgnoreCase(status)) {
                         Alert alert = getAlert();
-                        if (alert == null) {
-                            //state = State.NO_ALERT;
-                        } else if (alert.status().value().equalsIgnoreCase("normal")) {
+                       if ("normal".equalsIgnoreCase(alert.status().value())) {
                             state = State.DUE;
-                        } else if (alert.status().value().equalsIgnoreCase("upcoming")) {
-                            //state = State.UPCOMING;
-                        } else if (alert.status().value().equalsIgnoreCase("urgent")) {
+                        } else if ("urgent".equalsIgnoreCase(alert.status().value())) {
                             state = State.OVERDUE;
-                        } else if (alert.status().value().equalsIgnoreCase("expired")) {
+                        } else if ("expired".equalsIgnoreCase(alert.status().value())) {
                             state = State.EXPIRED;
                         }
-                    } else if (vaccineWrapper.getStatus().equalsIgnoreCase("expired")) {
+                    } else if ("expired".equalsIgnoreCase(vaccineWrapper.getStatus())) {
                         state = State.EXPIRED;
                     }
                 }

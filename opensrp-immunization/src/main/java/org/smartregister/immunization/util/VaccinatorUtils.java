@@ -252,13 +252,11 @@ public class VaccinatorUtils {
             }
         });
 
-        if (table.getChildCount() > 0 && StringUtils.isNotBlank(vaccineWrapper.getId()) && StringUtils.isNotBlank(vaccineWrapper.getPreviousVaccineId())) {
-            if (!vaccineWrapper.getId().equals(vaccineWrapper.getId())) {
-                View view = new View(context);
-                view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, dpToPx(context, 10f)));
+        if (table.getChildCount() > 0 && StringUtils.isNotBlank(vaccineWrapper.getId()) && StringUtils.isNotBlank(vaccineWrapper.getPreviousVaccineId()) && !vaccineWrapper.getId().equals(vaccineWrapper.getId())) {
+            View view = new View(context);
+            view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, dpToPx(context, 10f)));
 
-                table.addView(view);
-            }
+            table.addView(view);
         }
 
         table.addView(tr);
@@ -547,29 +545,19 @@ public class VaccinatorUtils {
                         continue;
                     }
 
-                    if (v == null) {
-                        if (m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
+                    if (v == null && m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
+                        v = m;
+                    } else if ((v.get("alert") == null && m.get("alert") != null) && (m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine")))) {
+                        v = m;
+                    } else if (v.get("alert") != null && m.get("alert") != null && m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
+                        Alert vAlert = (Alert) v.get("alert");
+                        Alert mAlert = (Alert) m.get("alert");
+                        if ((!vAlert.status().equals(AlertStatus.urgent) && (vAlert.status().equals(AlertStatus.upcoming)) && (mAlert.status().equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent)))) {
                             v = m;
-                        }
-                    } else if (v.get("alert") == null && m.get("alert") != null) {
-                        if (m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
+
+                        } else if (vAlert.status().equals(AlertStatus.normal) && mAlert.status().equals(AlertStatus.urgent)) {
                             v = m;
-                        }
-                    } else if (v.get("alert") != null && m.get("alert") != null) {
-                        if (m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
-                            Alert vAlert = (Alert) v.get("alert");
-                            Alert mAlert = (Alert) m.get("alert");
-                            if (!vAlert.status().equals(AlertStatus.urgent)) {
-                                if (vAlert.status().equals(AlertStatus.upcoming)) {
-                                    if (mAlert.status().equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent)) {
-                                        v = m;
-                                    }
-                                } else if (vAlert.status().equals(AlertStatus.normal)) {
-                                    if (mAlert.status().equals(AlertStatus.urgent)) {
-                                        v = m;
-                                    }
-                                }
-                            }
+
                         }
                     }
                 }
@@ -610,28 +598,20 @@ public class VaccinatorUtils {
             for (Map<String, Object> m : schedule) {
                 if (m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")) {
 
-                    if (v == null) {
-                        if (m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
-                            v = m;
-                        }
-                    } else if (v.get("alert") == null && m.get("alert") != null) {
-                        if (m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
-                            v = m;
-                        }
-                    } else if (v.get("alert") != null && m.get("alert") != null) {
-                        if (m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
-                            Alert vAlert = (Alert) v.get("alert");
-                            Alert mAlert = (Alert) m.get("alert");
-                            if (!vAlert.status().equals(AlertStatus.urgent)) {
-                                if (vAlert.status().equals(AlertStatus.upcoming)) {
-                                    if (mAlert.status().equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent)) {
-                                        v = m;
-                                    }
-                                } else if (vAlert.status().equals(AlertStatus.normal)) {
-                                    if (mAlert.status().equals(AlertStatus.urgent)) {
-                                        v = m;
-                                    }
-                                }
+                    if (v == null && m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
+                        v = m;
+
+                    } else if (v.get("alert") == null && m.get("alert") != null && m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
+                        v = m;
+
+                    } else if (v.get("alert") != null && m.get("alert") != null && m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
+                        Alert vAlert = (Alert) v.get("alert");
+                        Alert mAlert = (Alert) m.get("alert");
+                        if (!vAlert.status().equals(AlertStatus.urgent)) {
+                            if (vAlert.status().equals(AlertStatus.upcoming) && (mAlert.status().equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent))) {
+                                v = m;
+                            } else if (vAlert.status().equals(AlertStatus.normal) && mAlert.status().equals(AlertStatus.urgent)) {
+                                v = m;
                             }
                         }
                     }
@@ -773,12 +753,12 @@ public class VaccinatorUtils {
     /**
      * Converts string [a,b,c] to string array
      *
-     * @param s
+     * @param s_
      * @return
      */
-    private static String[] convertToArray(String s) {
+    private static String[] convertToArray(String s_) {
         try {
-
+            String s = s_;
             if (StringUtils.isBlank(s)) {
                 return null;
             }
