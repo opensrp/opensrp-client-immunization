@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/OpenSRP/opensrp-client-immunization.svg?branch=master)](https://travis-ci.org/OpenSRP/opensrp-client-immunization) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master)
+[![Build Status](https://travis-ci.org/OpenSRP/opensrp-client-immunization.svg?branch=master)](https://travis-ci.org/OpenSRP/opensrp-client-immunization) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a58cd4e1748432780ac66a9fbee0394)](https://www.codacy.com/app/OpenSRP/opensrp-client-immunization?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OpenSRP/opensrp-client-immunization&amp;utm_campaign=Badge_Grade)
 
 [![Dristhi](https://raw.githubusercontent.com/OpenSRP/opensrp-client/master/opensrp-app/res/drawable-mdpi/login_logo.png)](https://smartregister.atlassian.net/wiki/dashboard.action)
 
