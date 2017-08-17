@@ -112,32 +112,19 @@ public class ImmunizationRowCard extends LinearLayout {
                 if (status != null) {
                     if ("due".equalsIgnoreCase(status)) {
                         Alert alert = getAlert();
-                       if ("normal".equalsIgnoreCase(alert.status().value())) {
-                            state = State.DUE;
-                        } else if ("urgent".equalsIgnoreCase(alert.status().value())) {
-                            state = State.OVERDUE;
-                        } else if ("expired".equalsIgnoreCase(alert.status().value())) {
-                            state = State.EXPIRED;
+                        if (alert != null) {
+                            if ("normal".equalsIgnoreCase(alert.status().value())) {
+                                state = State.DUE;
+                            } else if ("urgent".equalsIgnoreCase(alert.status().value())) {
+                                state = State.OVERDUE;
+                            } else if ("expired".equalsIgnoreCase(alert.status().value())) {
+                                state = State.EXPIRED;
+                            }
                         }
                     } else if ("expired".equalsIgnoreCase(vaccineWrapper.getStatus())) {
                         state = State.EXPIRED;
                     }
                 }
-
-//                Calendar today = Calendar.getInstance();
-//                today.set(Calendar.HOUR_OF_DAY, 0);
-//                today.set(Calendar.MINUTE, 0);
-//                today.set(Calendar.SECOND, 0);
-//                today.set(Calendar.MILLISECOND, 0);
-//                if (getDateDue().getTime() > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-//                    // Vaccination due more than one day from today
-//                    this.state = State.NOT_DUE;
-//                } else if (getDateDue().getTime() < (today.getTimeInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-//                    // Vaccination overdue
-//                    this.state = State.OVERDUE;
-//                } else {
-//                    this.state = State.DUE;
-//                }
             }
         }
 
@@ -289,6 +276,7 @@ public class ImmunizationRowCard extends LinearLayout {
 
     public static interface OnVaccineStateChangeListener {
         void onStateChanged(final State newState);
+
     }
 
     public Button getUndoB() {
