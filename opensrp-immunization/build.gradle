@@ -26,6 +26,8 @@ android {
     compileSdkVersion 22
     buildToolsVersion "26.0.1"
 
+    defaultPublishConfig !isReleaseBuild() ? "debug" : "release"
+
     defaultConfig {
         minSdkVersion 18
         targetSdkVersion 21
