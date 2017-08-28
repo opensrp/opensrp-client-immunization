@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.ServiceType;
@@ -292,11 +293,17 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             vaccineGroups = new ArrayList<>();
             String supportedVaccinesString = VaccinatorUtils.getSupportedVaccines(this);
 
+
             try {
                 JSONArray supportedVaccines = new JSONArray(supportedVaccinesString);
 
                 for (int i = 0; i < supportedVaccines.length(); i++) {
-                    addVaccineGroup(-1, supportedVaccines.getJSONObject(i), vaccineList, alerts);
+                    JSONObject vaccineGroupObject = supportedVaccines.getJSONObject(i);
+
+                    //Add BCG2 special vaccine to birth vaccine group
+                    addBcg2SpecialVaccine(vaccineList, vaccineGroupObject);
+
+                    addVaccineGroup(-1, vaccineGroupObject, vaccineList, alerts);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
@@ -305,6 +312,36 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     }
 
+    private void addBcg2SpecialVaccine(List<Vaccine> vaccineList, JSONObject vaccineGroupObject) {
+        String specialVaccinesString = VaccinatorUtils.getSpecialVaccines(this);
+     
+        try {
+            //Add BCG2 special vaccine to birth vaccine group
+            if (StringUtils.isNotBlank(specialVaccinesString) && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
+                JSONArray specialVaccines = new JSONArray(specialVaccinesString);
+                if (vaccineGroupObject.has("name")
+                        && vaccineGroupObject.has("days_after_birth_due")
+                        && vaccineGroupObject.has("vaccines")
+                        && "Birth".equalsIgnoreCase(vaccineGroupObject.getString("name"))
+                        && "0".equalsIgnoreCase(vaccineGroupObject.getString("days_after_birth_due"))
+                        && vaccineGroupObject.get("vaccines") instanceof JSONArray) {
+                    JSONArray vaccineArray = vaccineGroupObject.getJSONArray("vaccines");
+                    for (int j = 0; j < specialVaccines.length(); j++) {
+                        JSONObject specialVaccine = specialVaccines.getJSONObject(j);
+                        if (specialVaccine.has("name")
+                                && specialVaccine.has("type")
+                                && specialVaccine.getString("name").equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                                && specialVaccine.getString("type").equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                            vaccineArray.put(specialVaccine);
+                        }
+                    }
+                }
+
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+    }
 
     private void addVaccineGroup(int canvasId, JSONObject vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
         LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);

@@ -309,6 +309,12 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
+
+                //Add exception for bcg 2
+                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
+                    continue;
+                }
+
                 if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
                         || vaccine.equals(VaccineRepo.Vaccine.mr2)
                         || vaccine.equals(VaccineRepo.Vaccine.measles1)
@@ -337,6 +343,12 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         if (!vaccineList.isEmpty()) {
             for (Vaccine vaccine : vaccineList) {
                 if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
+
+                    //Add exception for bcg 2
+                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
+                        continue;
+                    }
+
                     long diff = vaccine.getUpdatedAt() - vaccine.getDate().getTime();
                     if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), false);
