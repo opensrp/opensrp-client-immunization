@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
@@ -521,4 +522,36 @@ public class VaccinateActionUtils {
         return new Alert(entityId, vaccine.display(), vaccine.name(), alertStatus, DateUtil.yyyyMMdd.format(birthDate), null);
 
     }
+
+    public static void addBcg2SpecialVaccine(Context context, JSONObject vaccineGroupObject, List<Vaccine> vaccineList) {
+        String specialVaccinesString = VaccinatorUtils.getSpecialVaccines(context);
+
+        try {
+            //Add BCG2 special vaccine to birth vaccine group
+            if (StringUtils.isNotBlank(specialVaccinesString) && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
+                JSONArray specialVaccines = new JSONArray(specialVaccinesString);
+                if (vaccineGroupObject.has("name")
+                        && vaccineGroupObject.has("days_after_birth_due")
+                        && vaccineGroupObject.has("vaccines")
+                        && "Birth".equalsIgnoreCase(vaccineGroupObject.getString("name"))
+                        && "0".equalsIgnoreCase(vaccineGroupObject.getString("days_after_birth_due"))
+                        && vaccineGroupObject.get("vaccines") instanceof JSONArray) {
+                    JSONArray vaccineArray = vaccineGroupObject.getJSONArray("vaccines");
+                    for (int j = 0; j < specialVaccines.length(); j++) {
+                        JSONObject specialVaccine = specialVaccines.getJSONObject(j);
+                        if (specialVaccine.has("name")
+                                && specialVaccine.has("type")
+                                && specialVaccine.getString("name").equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                                && specialVaccine.getString("type").equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                            vaccineArray.put(specialVaccine);
+                        }
+                    }
+                }
+
+            }
+        } catch (JSONException e) {
+            Log.e(VaccinateActionUtils.class.getName(), Log.getStackTraceString(e));
+        }
+    }
+
 }
