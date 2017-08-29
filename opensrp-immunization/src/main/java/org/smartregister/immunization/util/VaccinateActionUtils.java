@@ -525,24 +525,28 @@ public class VaccinateActionUtils {
 
     public static void addBcg2SpecialVaccine(Context context, JSONObject vaccineGroupObject, List<Vaccine> vaccineList) {
         String specialVaccinesString = VaccinatorUtils.getSpecialVaccines(context);
+        final String NAME = "name";
+        final String DAYS_AFTER_BIRTH_DUE = "days_after_birth_due";
+        final String VACCINES = "vaccines";
+        final String TYPE = "type";
 
         try {
             //Add BCG2 special vaccine to birth vaccine group
             if (StringUtils.isNotBlank(specialVaccinesString) && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
                 JSONArray specialVaccines = new JSONArray(specialVaccinesString);
-                if (vaccineGroupObject.has("name")
-                        && vaccineGroupObject.has("days_after_birth_due")
-                        && vaccineGroupObject.has("vaccines")
-                        && "Birth".equalsIgnoreCase(vaccineGroupObject.getString("name"))
-                        && "0".equalsIgnoreCase(vaccineGroupObject.getString("days_after_birth_due"))
-                        && vaccineGroupObject.get("vaccines") instanceof JSONArray) {
-                    JSONArray vaccineArray = vaccineGroupObject.getJSONArray("vaccines");
+                if (vaccineGroupObject.has(NAME)
+                        && vaccineGroupObject.has(DAYS_AFTER_BIRTH_DUE)
+                        && vaccineGroupObject.has(VACCINES)
+                        && "Birth".equalsIgnoreCase(vaccineGroupObject.getString(NAME))
+                        && "0".equalsIgnoreCase(vaccineGroupObject.getString(DAYS_AFTER_BIRTH_DUE))
+                        && vaccineGroupObject.get(VACCINES) instanceof JSONArray) {
+                    JSONArray vaccineArray = vaccineGroupObject.getJSONArray(VACCINES);
                     for (int j = 0; j < specialVaccines.length(); j++) {
                         JSONObject specialVaccine = specialVaccines.getJSONObject(j);
-                        if (specialVaccine.has("name")
-                                && specialVaccine.has("type")
-                                && specialVaccine.getString("name").equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
-                                && specialVaccine.getString("type").equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                        if (specialVaccine.has(NAME)
+                                && specialVaccine.has(TYPE)
+                                && specialVaccine.getString(NAME).equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                                && specialVaccine.getString(TYPE).equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
                             vaccineArray.put(specialVaccine);
                         }
                     }

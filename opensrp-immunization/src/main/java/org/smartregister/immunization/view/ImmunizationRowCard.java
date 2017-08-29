@@ -148,11 +148,11 @@ public class ImmunizationRowCard extends LinearLayout {
             EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
 
             Event event = null;
-            /*if (vaccine.getEventId() != null) {
+            if (vaccine.getEventId() != null) {
                 event = db.convert(db.getEventsByEventId(vaccine.getEventId()), Event.class);
             } else if (vaccine.getFormSubmissionId() != null) {
                 event = db.convert(db.getEventsByFormSubmissionId(vaccine.getFormSubmissionId()), Event.class);
-            }*/
+            }
 
             if (event != null) {
                 Date vaccine_create_date = event.getDateCreated().toDate();
