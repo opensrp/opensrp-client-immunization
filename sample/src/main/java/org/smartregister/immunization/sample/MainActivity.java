@@ -292,11 +292,17 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             vaccineGroups = new ArrayList<>();
             String supportedVaccinesString = VaccinatorUtils.getSupportedVaccines(this);
 
+
             try {
                 JSONArray supportedVaccines = new JSONArray(supportedVaccinesString);
 
                 for (int i = 0; i < supportedVaccines.length(); i++) {
-                    addVaccineGroup(-1, supportedVaccines.getJSONObject(i), vaccineList, alerts);
+                    JSONObject vaccineGroupObject = supportedVaccines.getJSONObject(i);
+
+                    //Add BCG2 special vaccine to birth vaccine group
+                    VaccinateActionUtils.addBcg2SpecialVaccine(this, vaccineGroupObject, vaccineList);
+
+                    addVaccineGroup(-1, vaccineGroupObject, vaccineList, alerts);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
