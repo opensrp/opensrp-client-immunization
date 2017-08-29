@@ -72,48 +72,41 @@ android {
 }
 
 dependencies {
-
+    compile 'junit:junit:4.12'
     compile('org.smartregister:opensrp-client-core:1.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
-
     compile('org.smartregister:opensrp-client-native-form:1.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'junit:junit:4.12'
-
-    testCompile('org.robolectric:robolectric:3.4') {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile('org.robolectric:robolectric:3.4.2') {
 
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'org.apache.maven', module: 'maven-model'
-        exclude group: 'org.apache.maven', module: 'maven-ant-tasks'
         exclude group: 'com.android.support'
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
-
-    testCompile("org.robolectric:shadows-multidex:3.4-rc2") {
+    testCompile('org.robolectric:shadows-multidex:3.4-rc2') {
         exclude group: 'com.google.guava', module: 'guava'
     }
-
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.+') {
 
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'junit', module: 'junit'
     }
     // PowerMock
-    def powerMockVersion = '1.6.4'
+    def powerMockVersion = '1.7.1'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
-    testCompile "org.powermock:powermock-api-mockito:$powerMockVersion"
-    testCompile("org.powermock:powermock-classloading-xstream:$powerMockVersion") {
+    testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
+    testCompile("org.powermock:powermock-classloading-xstream:$powerMockVersion")
+            {
 
-        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
-    }
-
+                exclude group: 'com.thoughtworks.xstream', module: 'xstream'
+            }
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebug', 'createDebugCoverageReport']) {
