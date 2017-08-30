@@ -103,10 +103,6 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testCompile("org.powermock:powermock-classloading-xstream:$powerMockVersion")
-            {
-
-                exclude group: 'com.thoughtworks.xstream', module: 'xstream'
-            }
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebug', 'createDebugCoverageReport']) {
