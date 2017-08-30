@@ -1,5 +1,7 @@
 package org.smartregister.immunization.domain;
 
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.immunization.db.VaccineRepo;
@@ -15,7 +17,8 @@ import java.util.List;
 public class VaccineTrigger {
     private enum Reference {
         DOB,
-        PREREQUISITE
+        PREREQUISITE,
+        LMP
     }
 
     private final Reference reference;
@@ -25,8 +28,10 @@ public class VaccineTrigger {
     public static VaccineTrigger init(String vaccineCategory, JSONObject data) throws JSONException {
         if (data != null) {
             if (data.getString("reference").equalsIgnoreCase(Reference.DOB.name())) {
-                return new VaccineTrigger(data.getString("offset"));
-            } else if (data.getString("reference").equalsIgnoreCase(Reference.PREREQUISITE.name())) {
+                return new VaccineTrigger(data.getString("offset"),Reference.DOB);
+            }else if (data.getString("reference").equalsIgnoreCase(Reference.LMP.name())) {
+                return new VaccineTrigger(data.getString("offset"),Reference.LMP);
+            }else if (data.getString("reference").equalsIgnoreCase(Reference.PREREQUISITE.name())) {
                 VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.getString("prerequisite"),
                         vaccineCategory);
                 if (prerequisite != null) {
@@ -38,8 +43,8 @@ public class VaccineTrigger {
         return null;
     }
 
-    public VaccineTrigger(String offset) {
-        this.reference = Reference.DOB;
+    public VaccineTrigger(String offset,Reference reference) {
+        this.reference = reference;
         this.offset = offset;
         this.prerequisite = null;
     }
@@ -54,10 +59,19 @@ public class VaccineTrigger {
      * Get the date the trigger will fire
      *
      * @return {@link Date} if able to get trigger date, or {@code null} if prerequisite hasn't been
-     * administered yet
+     *          administered yet
      */
     public Date getFireDate(final List<Vaccine> issuedVaccines, final Date dob) {
         if (reference.equals(Reference.DOB)) {
+            if (dob != null) {
+                Calendar dobCalendar = Calendar.getInstance();
+                dobCalendar.setTime(dob);
+                VaccineSchedule.standardiseCalendarDate(dobCalendar);
+
+                dobCalendar = VaccineSchedule.addOffsetToCalendar(dobCalendar, offset);
+                return dobCalendar.getTime();
+            }
+        } else if (reference.equals(Reference.LMP)) {
             if (dob != null) {
                 Calendar dobCalendar = Calendar.getInstance();
                 dobCalendar.setTime(dob);
