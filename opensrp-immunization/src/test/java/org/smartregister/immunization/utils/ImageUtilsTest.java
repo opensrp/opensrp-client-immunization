@@ -1,7 +1,6 @@
 package org.smartregister.immunization.utils;
 
 
-import org.apache.maven.artifact.ant.Profile;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
