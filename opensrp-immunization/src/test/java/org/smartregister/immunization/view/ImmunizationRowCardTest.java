@@ -21,13 +21,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @PrepareForTest({VaccineCard.class})
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
-    ImmunizationRowCard immunizationRowCard;
+    private ImmunizationRowCard immunizationRowCard;
 
     @Mock
-    Context context;
+    private Context context;
 
     @Mock
-    AttributeSet attributeSet;
+    private AttributeSet attributeSet;
 
     @Before
     public void setUp() {

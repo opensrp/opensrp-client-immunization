@@ -15,5 +15,4 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         assertNotNull(new VaccineIntentService());
     }
-
 }

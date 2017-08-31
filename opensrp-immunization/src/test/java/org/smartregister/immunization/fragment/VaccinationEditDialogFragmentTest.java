@@ -25,14 +25,16 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Mock
-    Context context;
-    View view;
+    private Context context;
+    private View view;
+
     @Before
     public void setUp() throws Exception {
         view = mock(LinearLayout.class);
     }
+
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        assertNotNull(VaccinationEditDialogFragment.newInstance(context,new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(),view));
+        assertNotNull(VaccinationEditDialogFragment.newInstance(context, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), view));
     }
 }

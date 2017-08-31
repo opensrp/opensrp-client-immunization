@@ -32,25 +32,25 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class VaccineRepositoryTest extends BaseUnitTest {
 
     @InjectMocks
-    VaccineRepository vaccineRepository;
+    private VaccineRepository vaccineRepository;
 
     @Mock
-    Repository repository;
+    private Repository repository;
 
     @Mock
-    CommonFtsObject commonFtsObject;
+    private CommonFtsObject commonFtsObject;
 
     @Mock
-    AlertService alertService;
+    private AlertService alertService;
 
     @Mock
-    ImmunizationLibrary immunizationLibrary;
+    private ImmunizationLibrary immunizationLibrary;
 
     @Mock
-    Context context;
+    private Context context;
 
     @Mock
-    SQLiteDatabase sqliteDatabase;
+    private SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {

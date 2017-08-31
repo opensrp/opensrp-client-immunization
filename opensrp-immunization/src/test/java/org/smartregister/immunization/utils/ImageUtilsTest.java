@@ -36,16 +36,16 @@ public class ImageUtilsTest extends BaseUnitTest {
     public PowerMockRule rule = new PowerMockRule();
 
     @Mock
-    CommonPersonObjectClient commonPersonObjectClient;
+    private CommonPersonObjectClient commonPersonObjectClient;
 
     @Mock
-    ImmunizationLibrary immunizationLibrary;
+    private ImmunizationLibrary immunizationLibrary;
 
     @Mock
-    Context context;
+    private Context context;
 
     @Mock
-    ImageRepository imageRepository;
+    private ImageRepository imageRepository;
 
     @Before
     public void setUp() {
