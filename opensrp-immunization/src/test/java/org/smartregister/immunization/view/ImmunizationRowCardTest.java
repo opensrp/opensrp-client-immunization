@@ -18,7 +18,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({VaccineCard.class})
+@PrepareForTest({ImmunizationRowCard.class})
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
     private ImmunizationRowCard immunizationRowCard;

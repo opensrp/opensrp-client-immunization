@@ -18,10 +18,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ServiceCard.class})
-public class ServiceCardTest extends BaseUnitTest {
+@PrepareForTest({ServiceRowGroup.class})
+public class ServiceRowGroupTest extends BaseUnitTest {
 
-    private ServiceCard serviceCard;
+    private ServiceRowGroup serviceRowGroup;
 
     @Mock
     private Context context;
@@ -31,21 +31,21 @@ public class ServiceCardTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        serviceCard = Mockito.mock(ServiceCard.class);
+        serviceRowGroup = Mockito.mock(ServiceRowGroup.class);
         initMocks(this);
     }
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
 
-        ServiceCard serviceCardSpy = PowerMockito.spy(serviceCard);
-        PowerMockito.doReturn(null).when(serviceCardSpy, "init", context);
+        ServiceRowGroup serviceRowGroupSpy = PowerMockito.spy(serviceRowGroup);
+        PowerMockito.doReturn(null).when(serviceRowGroupSpy, "init", context);
 
 
-        assertNotNull(new ServiceCard(context));
-        assertNotNull(new ServiceCard(context, attributeSet));
-        assertNotNull(new ServiceCard(context, attributeSet, 0));
-        assertNotNull(new ServiceCard(context, attributeSet, 0, 0));
+        assertNotNull(new ServiceRowGroup(context,true));
+        assertNotNull(new ServiceRowGroup(context, attributeSet));
+        assertNotNull(new ServiceRowGroup(context, attributeSet, 0));
+        assertNotNull(new ServiceRowGroup(context, attributeSet, 0, 0));
     }
 
 

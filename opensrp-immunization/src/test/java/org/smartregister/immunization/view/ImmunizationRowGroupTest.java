@@ -18,10 +18,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ServiceCard.class})
-public class ServiceCardTest extends BaseUnitTest {
+@PrepareForTest({ImmunizationRowGroup.class})
+public class ImmunizationRowGroupTest extends BaseUnitTest {
 
-    private ServiceCard serviceCard;
+    private ImmunizationRowGroup immunizationRowGroup;
 
     @Mock
     private Context context;
@@ -31,21 +31,21 @@ public class ServiceCardTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        serviceCard = Mockito.mock(ServiceCard.class);
+        immunizationRowGroup = Mockito.mock(ImmunizationRowGroup.class);
         initMocks(this);
     }
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
 
-        ServiceCard serviceCardSpy = PowerMockito.spy(serviceCard);
-        PowerMockito.doReturn(null).when(serviceCardSpy, "init", context);
+        ImmunizationRowGroup immunizationRowGroupSpy = PowerMockito.spy(immunizationRowGroup);
+        PowerMockito.doReturn(null).when(immunizationRowGroupSpy, "init", context);
 
 
-        assertNotNull(new ServiceCard(context));
-        assertNotNull(new ServiceCard(context, attributeSet));
-        assertNotNull(new ServiceCard(context, attributeSet, 0));
-        assertNotNull(new ServiceCard(context, attributeSet, 0, 0));
+        assertNotNull(new ImmunizationRowGroup(context,true));
+        assertNotNull(new ImmunizationRowGroup(context, attributeSet));
+        assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0));
+        assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0, 0));
     }
 
 
