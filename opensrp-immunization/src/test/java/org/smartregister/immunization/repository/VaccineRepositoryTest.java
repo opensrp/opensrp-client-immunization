@@ -1,8 +1,15 @@
 package org.smartregister.immunization.repository;
 
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.CharArrayBuffer;
+import android.database.ContentObserver;
+import android.database.DataSetObserver;
+import android.net.Uri;
+import android.os.Bundle;
 
+import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.junit.Before;
@@ -14,9 +21,12 @@ import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.adapter.VaccineCardAdapter;
+import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +68,23 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         initMocks(this);
         assertNotNull(vaccineRepository);
     }
+
+//    @Test
+//    public void add_and_delete_vaccines_test() throws Exception {
+//        VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, alertService);
+//
+//        Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+//        Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+//        Vaccine vaccine = new Vaccine();
+//        vaccine.setId(1l);
+//        vaccine.setBaseEntityId("dummyvaccine");
+//        vaccineRepository.add(vaccine);
+//        assertEquals(vaccineRepository.findByEntityId("dummyvaccine").size(),1);
+//        vaccineRepository.deleteVaccine(1l);
+//        assertEquals(vaccineRepository.findByEntityId("dummyvaccine").size(),0);
+//    }
+
+
 
     @Test
     public void addHyphenMethodAddsUnderscoreToString() throws Exception {
