@@ -16,20 +16,17 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.ServiceType;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.view.ServiceGroup;
+import org.smartregister.immunization.view.ServiceRowGroup;
 import org.smartregister.immunization.view.VaccineCard;
-import org.smartregister.immunization.view.VaccineGroup;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -37,19 +34,19 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by onaio on 30/08/2017.
  */
 
-public class ServiceCardAdapterTest extends BaseUnitTest {
+public class ServiceRowAdapterTest extends BaseUnitTest {
 
     @Mock
     private Context context;
 
     @Mock
-    private ServiceCardAdapter serviceCardAdapter;
+    private ServiceRowAdapter serviceRowAdapter;
 
     @Mock
     private AttributeSet attributeSet;
 
     @Mock
-    private ServiceGroup serviceGroup;
+    private ServiceRowGroup serviceRowGroup;
 
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
@@ -68,52 +65,33 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        serviceCardAdapter = Mockito.mock(ServiceCardAdapter.class);
+        serviceRowAdapter = Mockito.mock(ServiceRowAdapter.class);
         initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
 
-        assertNotNull(new ServiceCardAdapter(context, serviceGroup));
+        assertNotNull(new ServiceRowAdapter(context, serviceRowGroup,true));
     }
 
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
-        HashMap<String ,List<ServiceType>> vaccineData = new HashMap<String, List<ServiceType>>() ;
+
+
         ArrayList<ServiceType> list1 = new ArrayList<ServiceType>();
         list1.add(new ServiceType());
-        ArrayList<ServiceType> list2 = new ArrayList<ServiceType>();
-        list2.add(new ServiceType());
-        ArrayList<ServiceType> list3 = new ArrayList<ServiceType>();
-        list3.add(new ServiceType());
-
-        vaccineData.put("servicetype1",list1);
-        vaccineData.put("servicetype2",list2);
-        vaccineData.put("servicetype3",list3);
+        list1.add(new ServiceType());
+        list1.add(new ServiceType());
 
 
         List<Alert> alerts = new ArrayList<>();
-
-
-
-        serviceGroup.setData(commonPersonObjectClient,vaccineData, Collections.EMPTY_LIST, alerts);
-        Mockito.when(serviceGroup.getServiceTypeKeys()).thenReturn(getServiceTypeKeys(vaccineData));
-        serviceCardAdapter = new ServiceCardAdapter(context, serviceGroup);
-        assertNotNull(serviceCardAdapter);
-        assertEquals(3, serviceCardAdapter.getCount());
-    }
-
-    public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {
-        List<String> keys = new ArrayList<>();
-        if (vaccineData == null || vaccineData.isEmpty()) {
-            return keys;
-        }
-        for (String key : vaccineData.keySet()) {
-            keys.add(key);
-        }
-        return keys;
+        serviceRowGroup.setData(commonPersonObjectClient, list1, Collections.EMPTY_LIST, alerts);
+        Mockito.when(serviceRowGroup.getServiceTypes()).thenReturn(list1);
+        serviceRowAdapter = new ServiceRowAdapter(context, serviceRowGroup,true);
+        assertNotNull(serviceRowAdapter);
+        assertEquals(3, serviceRowAdapter.getCount());
     }
 
 
