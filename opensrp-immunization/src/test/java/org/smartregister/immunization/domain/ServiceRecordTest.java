@@ -70,6 +70,9 @@ public class ServiceRecordTest extends BaseUnitTest {
 
         serviceRecord.setName("name");
         assertEquals("name",serviceRecord.getName());
+
+        serviceRecord.setType("type");
+        assertEquals("type",serviceRecord.getType());
     }
 
 
