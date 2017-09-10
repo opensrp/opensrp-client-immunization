@@ -70,18 +70,22 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
 //    @Test
-//    public void add_and_delete_vaccines_test() throws Exception {
-//        VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, alertService);
-//
-//        Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
-//        Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
-//        Vaccine vaccine = new Vaccine();
-//        vaccine.setId(1l);
-//        vaccine.setBaseEntityId("dummyvaccine");
-//        vaccineRepository.add(vaccine);
-//        assertEquals(vaccineRepository.findByEntityId("dummyvaccine").size(),1);
-//        vaccineRepository.deleteVaccine(1l);
-//        assertEquals(vaccineRepository.findByEntityId("dummyvaccine").size(),0);
+//    public void delete_vaccines_test() throws Exception {
+////        vaccineRepository.createTable(sqliteDatabase);
+//        Mockito.verify(sqliteDatabase, Mockito.times(1)).delete(anyString(),anyString(),any(String [] .class));
+////        vaccineRepository.
+////
+////        VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, alertService);
+////
+////        Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+////        Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+////        Vaccine vaccine = new Vaccine();
+////        vaccine.setId(1l);
+////        vaccine.setBaseEntityId("dummyvaccine");
+////        vaccineRepository.add(vaccine);
+////        assertEquals(vaccineRepository.findByEntityId("dummyvaccine").size(),1);
+////        vaccineRepository.deleteVaccine(1l);
+////        assertEquals(vaccineRepository.findByEntityId("dummyvaccine").size(),0);
 //    }
 
 
