@@ -192,6 +192,20 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
+    public void deleteVaccineDatabaseDeleteMethod1Times() throws Exception {
+        VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
+        Vaccine vaccine = new Vaccine();
+        vaccine.setBaseEntityId("baseEntityID");
+        vaccine.setName("name");
+        vaccine.setFormSubmissionId("formsubmissionID");
+        vaccine.setEventId("EventID");
+        Mockito.doReturn(vaccine).when(vaccineRepositoryspy).find(0l);
+        when(vaccineRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
+        vaccineRepositoryspy.deleteVaccine(0l);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).delete(anyString(),anyString(),any(String[].class));
+    }
+
+    @Test
     public void closeMethodCallsInternalMethodsWithCorrectParams() throws Exception {
 
         when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
