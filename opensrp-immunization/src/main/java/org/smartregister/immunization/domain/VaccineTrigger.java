@@ -20,17 +20,18 @@ public class VaccineTrigger {
 
     private final Reference reference;
     private final String offset;
+    private final String window;
     private final VaccineRepo.Vaccine prerequisite;
 
     public static VaccineTrigger init(String vaccineCategory, JSONObject data) throws JSONException {
         if (data != null) {
             if (data.getString("reference").equalsIgnoreCase(Reference.DOB.name())) {
-                return new VaccineTrigger(data.getString("offset"));
+                return new VaccineTrigger(data.getString("offset"), data.has("window") ? data.getString("window") : null);
             } else if (data.getString("reference").equalsIgnoreCase(Reference.PREREQUISITE.name())) {
                 VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.getString("prerequisite"),
                         vaccineCategory);
                 if (prerequisite != null) {
-                    return new VaccineTrigger(data.getString("offset"), prerequisite);
+                    return new VaccineTrigger(data.getString("offset"), data.has("window") ? data.getString("window") : null, prerequisite);
                 }
             }
         }
@@ -38,16 +39,18 @@ public class VaccineTrigger {
         return null;
     }
 
-    public VaccineTrigger(String offset) {
+    public VaccineTrigger(String offset, String window) {
         this.reference = Reference.DOB;
         this.offset = offset;
         this.prerequisite = null;
+        this.window = window;
     }
 
-    public VaccineTrigger(String offset, VaccineRepo.Vaccine prerequisite) {
+    public VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite) {
         this.reference = Reference.PREREQUISITE;
         this.offset = offset;
         this.prerequisite = prerequisite;
+        this.window = window;
     }
 
     /**
@@ -88,5 +91,9 @@ public class VaccineTrigger {
         }
 
         return null;
+    }
+
+    public String getWindow() {
+        return window;
     }
 }
