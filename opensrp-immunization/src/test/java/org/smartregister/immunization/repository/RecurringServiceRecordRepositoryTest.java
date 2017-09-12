@@ -21,6 +21,7 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -76,6 +77,29 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         recurringServiceRecordRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(6)).execSQL(anyString());
 
+    }
+
+    @Test
+    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
+        when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+        recurringServiceRecordRepository.add(new ServiceRecord());
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(),isNull(String.class),any(ContentValues.class));
+    }
+
+    @Test
+    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
+        when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+        ServiceRecord serviceRecord = new ServiceRecord();
+        serviceRecord.setId(0l);
+        recurringServiceRecordRepository.add(serviceRecord);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+    }
+
+    @Test
+    public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
+        recurringServiceRecordRepository.add(null);
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(),(String)isNull(),any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
     }
 
     @Test
@@ -146,6 +170,13 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepository.close(null);
         Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(0)).update(anyString(), (ContentValues) any(), anyString(), eq(new String[]{"5"}));
+    }
+
+    @Test
+    public void removeHyphenMethodRemoveHyphenFromString() throws Exception {
+        String testString = recurringServiceRecordRepository.removeHyphen("test_string");
+        assertNotNull(testString);
+        assertFalse(testString.contains("-"));
     }
 
 

@@ -151,6 +151,29 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
+    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
+        when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+        vaccineRepository.add(new Vaccine());
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(),isNull(String.class),any(ContentValues.class));
+      }
+
+    @Test
+    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
+        when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+        Vaccine vaccine = new Vaccine();
+        vaccine.setId(0l);
+        vaccineRepository.add(vaccine);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+    }
+
+    @Test
+    public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
+        vaccineRepository.add(null);
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(),(String)isNull(),any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+    }
+
+    @Test
     public void updateCallsDatabaseUpdateMethod1Times() throws Exception {
         Vaccine vaccine = new Vaccine();
         vaccine.setId(0l);
