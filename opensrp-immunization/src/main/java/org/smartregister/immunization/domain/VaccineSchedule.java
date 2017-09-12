@@ -273,7 +273,7 @@ public class VaccineSchedule {
         Date expiryDate = getExpiryDate(issuedVaccines, dateOfBirth);
         Date overDueDate = getOverDueDate(dueDate);
         // Use the trigger date as a reference, since that is what is mostly used
-        AlertStatus alertStatus = calculateAlertStatus(dueDate, overDueDate, expiryDate);
+        AlertStatus alertStatus = calculateAlertStatus(dueDate, overDueDate);
 
         if (alertStatus != null) {
 
@@ -297,10 +297,9 @@ public class VaccineSchedule {
      *
      * @param referenceDate The reference date to use to
      * @param overDueDate   The overdue date to use
-     * @param expiryDate    The expiry date to use
      * @return {@link AlertStatus} if able to calculate or {@code NULL} if unable
      */
-    private AlertStatus calculateAlertStatus(Date referenceDate, Date overDueDate, Date expiryDate) {
+    private AlertStatus calculateAlertStatus(Date referenceDate, Date overDueDate) {
         if (referenceDate != null) {
             Calendar refCalendarDate = Calendar.getInstance();
             refCalendarDate.setTime(referenceDate);
@@ -312,19 +311,11 @@ public class VaccineSchedule {
                 standardiseCalendarDate(overDueCalendarDate);
             }
 
-            Calendar expiryCalendarDate = Calendar.getInstance();
-            if (expiryDate != null) {
-                expiryCalendarDate.setTime(expiryDate);
-                standardiseCalendarDate(expiryCalendarDate);
-            }
-
             Calendar today = Calendar.getInstance();
             standardiseCalendarDate(today);
 
-            if (expiryDate != null
-                    && expiryCalendarDate.getTimeInMillis() < today.getTimeInMillis()) {//Expired
-                return AlertStatus.expired;
-            } else if (overDueDate != null
+
+            if (overDueDate != null
                     && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) {//OverDue
                 return AlertStatus.urgent;
             } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) {// Due
@@ -404,12 +395,12 @@ public class VaccineSchedule {
      * Offsets can look like:
      * "+5y,3m,2d" : Plus 5 years, 3 months, and 2 days
      * "-2d" : Minus 2 days
-     * <p/>
+     * <p>
      * Accepted time units for the offset are:
      * d : Days
      * m : Months
      * y : Years
-     * <p/>
+     * <p>
      * Accepted operators for the offset are:
      * - : Minus
      * + : Plus
