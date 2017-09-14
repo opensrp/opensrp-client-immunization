@@ -2,27 +2,52 @@
 
 [![Dristhi](https://raw.githubusercontent.com/OpenSRP/opensrp-client/master/opensrp-app/res/drawable-mdpi/login_logo.png)](https://smartregister.atlassian.net/wiki/dashboard.action)
 
-To run this project, you need to do this:
-=========================================
 
-1. Set the `ANDROID_HOME` environment variable to point to the location of your installed Android SDK 4.1.2 API level 16. For more information, look at [the documentation of maven-android-plugin](http://code.google.com/p/maven-android-plugin/wiki/GettingStarted).
+# Table of Contents
 
-2. Start an Android Virtual Device. Normally, this means you need to run `android avd` and then start one of the devices there.
+* [Introduction](#introduction)
+* [Features](#features)
+* [App Walkthrough](#app-walkthrough)
+   * [Sample Android Form](#2-sample-form)
+   * [Sample JSON Form](#sample-json-form)
+   * [Json Form Attributes](#json-form-attributes)
+* [Usage](#usage)
+* [Developer Documentation](#developer-documentation)
+   * [Pre-requisites](#pre-requisites)
+   * [Installation Devices](#installation-devices)
+   * [How to install](#how-to-install)
+   * [Customisations From Android Native JSON Form](#customisations-from-android-native-json-form)
 
-Then, you can run `mvn clean install` in the main directory.
+# Introduction
 
-Tips and tricks (to be completed):
-=================================
+OpenSRP Client Immunization Module/App provides access to immunisation records which can be updated and retrieved. 
 
-* How to setup your Android SDK so that Maven finds it: http://pivotal.github.com/robolectric/maven-quick-start.html
+# Developer Documentation
 
-* Adding an external Android library (apklib) as a submodule, and making it work with both Maven and IntelliJ. TODO: Write about `mvn clean` trick.
+This section will provide a brief description how to build and install the application from the repository source code.
 
-Login (for demo server):
-=================================
-```
-login-username - demotest
-login-password - Demot123
-```
+## Pre-requisites
 
-Check `app.properties` file in `drishti-app/asset/` folder to change the demo server url to your own instance of opensrp server.
+1. Make sure you have Java 1.7 to 1.8 installed
+2. Make sure you have Android Studio installed or [download it from here](https://developer.android.com/studio/index.html)
+
+
+## Installation Devices
+
+1. Use a physical Android device to run the app
+2. Use the Android Emulator that comes with the Android Studio installation (Slow & not advisable)
+3. Use Genymotion Android Emulator
+    * Go [here](https://www.genymotion.com/) and register for genymotion account if none. Free accounts have limitations which are not counter-productive
+    * Download your OS Version of VirtualBox at [here](https://www.virtualbox.org/wiki/Downloads)
+    * Install VirtualBox
+    * Download Genymotion & Install it
+    * Sign in to the genymotion app
+    * Create a new Genymotion Virtual Device 
+        * **Preferrable & Stable Choice** - API 22(Android 5.1.0), Screen size of around 800 X 1280, 1024 MB Memory --> eg. Google Nexus 7, Google Nexus 5
+
+## How to install
+
+1. Import the project into Android Studio by: **Import a gradle project** option
+   _All the plugins required are explicitly stated, therefore it can work with any Android Studio version - Just enable it to download any packages not available offline_
+1. Open Genymotion and Run the Virtual Device created previously.
+1. Run the app on Android Studio and chose the Genymotion Emulator as the ` Deployment Target`
