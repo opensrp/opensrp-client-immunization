@@ -316,9 +316,9 @@ public class VaccineSchedule {
 
 
             if (overDueDate != null
-                    && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) {//OverDue
+                    && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { //OverDue
                 return AlertStatus.urgent;
-            } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) {// Due
+            } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { // Due
                 return AlertStatus.normal;
             }
         }
