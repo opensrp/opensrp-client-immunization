@@ -269,13 +269,14 @@ public class VaccineSchedule {
             }
         }
 
+        Date dueDate = getDueDate(issuedVaccines, dateOfBirth);
+        Date expiryDate = getExpiryDate(issuedVaccines, dateOfBirth);
+        Date overDueDate = getOverDueDate(dueDate);
         // Use the trigger date as a reference, since that is what is mostly used
-        AlertStatus alertStatus = calculateAlertStatus(
-                getDueDate(issuedVaccines, dateOfBirth));
+        AlertStatus alertStatus = calculateAlertStatus(dueDate, overDueDate);
 
         if (alertStatus != null) {
-            Date dueDate = getDueDate(issuedVaccines, dateOfBirth);
-            Date expiryDate = getExpiryDate(issuedVaccines, dateOfBirth);
+
             Alert offlineAlert = new Alert(baseEntityId,
                     vaccine.display(),
                     vaccine.name(),
@@ -295,18 +296,29 @@ public class VaccineSchedule {
      * status returned is {@code AlertStatus.normal}
      *
      * @param referenceDate The reference date to use to
+     * @param overDueDate   The overdue date to use
      * @return {@link AlertStatus} if able to calculate or {@code NULL} if unable
      */
-    private AlertStatus calculateAlertStatus(Date referenceDate) {
+    private AlertStatus calculateAlertStatus(Date referenceDate, Date overDueDate) {
         if (referenceDate != null) {
             Calendar refCalendarDate = Calendar.getInstance();
             refCalendarDate.setTime(referenceDate);
             standardiseCalendarDate(refCalendarDate);
 
+            Calendar overDueCalendarDate = Calendar.getInstance();
+            if (overDueDate != null) {
+                overDueCalendarDate.setTime(overDueDate);
+                standardiseCalendarDate(overDueCalendarDate);
+            }
+
             Calendar today = Calendar.getInstance();
             standardiseCalendarDate(today);
 
-            if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) {// Due
+
+            if (overDueDate != null
+                    && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { //OverDue
+                return AlertStatus.urgent;
+            } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { // Due
                 return AlertStatus.normal;
             }
         }
@@ -345,6 +357,31 @@ public class VaccineSchedule {
 
         return expiryDate;
     }
+
+    public Date getOverDueDate(Date dueDate) {
+        if (dueDate == null) {
+            return null;
+        }
+
+        String window = null;
+        for (VaccineTrigger curTrigger : dueTriggers) {
+            if (curTrigger.getWindow() != null) {
+                window = curTrigger.getWindow();
+                break;
+            }
+        }
+
+        if (window != null) {
+            Calendar dueDateCalendar = Calendar.getInstance();
+            dueDateCalendar.setTime(dueDate);
+            standardiseCalendarDate(dueDateCalendar);
+
+            return addOffsetToCalendar(dueDateCalendar, window).getTime();
+        }
+
+        return null;
+    }
+
 
     public static void standardiseCalendarDate(Calendar calendarDate) {
         calendarDate.set(Calendar.HOUR_OF_DAY, 0);
