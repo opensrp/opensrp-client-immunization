@@ -104,8 +104,10 @@ public class VaccineRepo {
     public static ArrayList<Vaccine> nextVaccines(String vaccine) {
         ArrayList<Vaccine> vl = new ArrayList<>();
         for (Vaccine v : Vaccine.values()) {
-            if (v.prerequisite().name().equalsIgnoreCase(vaccine.trim())) {
-                vl.add(v);
+            if(v.prerequisite != null){
+                if (v.prerequisite().name().equalsIgnoreCase(vaccine.trim())) {
+                    vl.add(v);
+                }
             }
         }
         return vl;
