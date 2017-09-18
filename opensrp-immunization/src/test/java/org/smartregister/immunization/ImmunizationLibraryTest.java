@@ -24,25 +24,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ImmunizationLibraryTest extends BaseUnitTest {
 
-    @Mock
-    private Repository repository;
-
-    @Mock
-    private CommonFtsObject commonFtsObject;
-
-    @Mock
-    private Context context;
-
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
     @Before
     public void setUp() {
-        repository = Mockito.mock(Repository.class);
-        context = Mockito.mock(Context.class);
-        commonFtsObject = Mockito.mock(CommonFtsObject.class);
+        Repository repository = Mockito.mock(Repository.class);
+        Context context = Mockito.mock(Context.class);
+        CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
         ImmunizationLibrary.init(context,repository,commonFtsObject);
-        immunizationLibrary = ImmunizationLibrary.getInstance();
+        ImmunizationLibrary immunizationLibrary = ImmunizationLibrary.getInstance();
         initMocks(this);
     }
 
