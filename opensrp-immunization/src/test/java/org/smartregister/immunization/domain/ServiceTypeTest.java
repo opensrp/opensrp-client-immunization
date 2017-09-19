@@ -15,8 +15,7 @@ public class ServiceTypeTest extends BaseUnitTest {
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         assertNotNull(new ServiceType());
-        assertNotNull(new ServiceType(0l, "type", "name", "serviceNameEntity","serviceNameEntityId","dateEntity","dateEntityId", "units",
-                "serviceLogic", "prerequisite", "preOffset", "expiryOffset", "milestoneOffset", 0l));
+        assertNotNull(new ServiceType(0l, "type", "name", "serviceNameEntity", "serviceNameEntityId", "dateEntity", "dateEntityId", "units", "serviceLogic", "prerequisite", "preOffset", "expiryOffset", "milestoneOffset", 0l));
     }
 
     @Test
@@ -24,46 +23,46 @@ public class ServiceTypeTest extends BaseUnitTest {
         ServiceType serviceType = new ServiceType();
 
         serviceType.setId(0l);
-        assertEquals(0l,serviceType.getId().longValue());
+        assertEquals(0l, serviceType.getId().longValue());
 
         serviceType.setType("type");
-        assertEquals("type",serviceType.getType());
+        assertEquals("type", serviceType.getType());
 
         serviceType.setName("name");
-        assertEquals("name",serviceType.getName());
+        assertEquals("name", serviceType.getName());
 
         serviceType.setServiceNameEntity("serviceNameEntity");
-        assertEquals("serviceNameEntity",serviceType.getServiceNameEntity());
+        assertEquals("serviceNameEntity", serviceType.getServiceNameEntity());
 
         serviceType.setServiceNameEntityId("serviceNameEntityId");
-        assertEquals("serviceNameEntityId",serviceType.getServiceNameEntityId());
+        assertEquals("serviceNameEntityId", serviceType.getServiceNameEntityId());
 
         serviceType.setDateEntity("dateEntity");
-        assertEquals("dateEntity",serviceType.getDateEntity());
+        assertEquals("dateEntity", serviceType.getDateEntity());
 
         serviceType.setDateEntityId("dateEntityId");
-        assertEquals("dateEntityId",serviceType.getDateEntityId());
+        assertEquals("dateEntityId", serviceType.getDateEntityId());
 
         serviceType.setUnits("units");
-        assertEquals("units",serviceType.getUnits());
+        assertEquals("units", serviceType.getUnits());
 
         serviceType.setServiceLogic("serviceLogic");
-        assertEquals("serviceLogic",serviceType.getServiceLogic());
+        assertEquals("serviceLogic", serviceType.getServiceLogic());
 
         serviceType.setPrerequisite("prerequisite");
-        assertEquals("prerequisite",serviceType.getPrerequisite());
+        assertEquals("prerequisite", serviceType.getPrerequisite());
 
         serviceType.setPreOffset("PreOffset");
-        assertEquals("PreOffset",serviceType.getPreOffset());
+        assertEquals("PreOffset", serviceType.getPreOffset());
 
         serviceType.setExpiryOffset("ExpiryOffset");
-        assertEquals("ExpiryOffset",serviceType.getExpiryOffset());
+        assertEquals("ExpiryOffset", serviceType.getExpiryOffset());
 
         serviceType.setMilestoneOffset("MilestoneOffset");
-        assertEquals("MilestoneOffset",serviceType.getMilestoneOffset());
+        assertEquals("MilestoneOffset", serviceType.getMilestoneOffset());
 
         serviceType.setUpdatedAt(0l);
-        assertEquals(0l,serviceType.getUpdatedAt().longValue());
+        assertEquals(0l, serviceType.getUpdatedAt().longValue());
 
     }
 }

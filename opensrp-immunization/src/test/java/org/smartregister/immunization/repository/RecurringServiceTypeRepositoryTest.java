@@ -59,7 +59,6 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-
         initMocks(this);
         assertNotNull(recurringServiceTypeRepository);
     }
@@ -67,7 +66,6 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
 
     @Test
     public void instantiatesSuccessfullyOnConstructorCall() throws Exception {
-
         RecurringServiceTypeRepository vaccineNameRepository = new RecurringServiceTypeRepository(repository);
         assertNotNull(vaccineNameRepository);
     }
@@ -83,73 +81,60 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
         when(recurringServiceTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         ServiceType serviceType = PowerMockito.mock(ServiceType.class);
         when(serviceType.getId()).thenReturn(null);
-        recurringServiceTypeRepository.add(serviceType,sqliteDatabase);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(),isNull(String.class),any(ContentValues.class));
+        recurringServiceTypeRepository.add(serviceType, sqliteDatabase);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(), isNull(String.class), any(ContentValues.class));
     }
 
-//    @Test
-//    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
-//        when(recurringServiceTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
-//        ServiceType serviceType = new ServiceType();
-//        serviceType.setId(0l);
-//        recurringServiceTypeRepository.add(serviceType,sqliteDatabase);
-//        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
-//    }
     @Test
     public void searchByNamecallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = PowerMockito.spy(recurringServiceTypeRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class),isNull(String.class))).thenReturn(cursor);
+        when(sqliteDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class))).thenReturn(cursor);
         when(recurringServiceTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceTypeRepository.searchByName("Name");
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class), isNull(String.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class));
     }
 
     @Test
     public void searchByTypecallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = PowerMockito.spy(recurringServiceTypeRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class),isNull(String.class))).thenReturn(cursor);
+        when(sqliteDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class))).thenReturn(cursor);
         when(recurringServiceTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceTypeRepository.findByType("Type");
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class), isNull(String.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class), anyString(),any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class));
     }
 
     @Test
     public void findcallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = PowerMockito.spy(recurringServiceTypeRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class),isNull(String.class))).thenReturn(cursor);
+        when(sqliteDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class))).thenReturn(cursor);
         when(recurringServiceTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
-        recurringServiceTypeRepository.find(0l,sqliteDatabase);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class), isNull(String.class));
+        recurringServiceTypeRepository.find(0l, sqliteDatabase);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class));
     }
 
     @Test
     public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
         recurringServiceTypeRepository.add(null,sqliteDatabase);
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(),(String)isNull(),any(ContentValues.class));
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(), (String)isNull(), any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(), any(ContentValues.class), anyString(), any(String [].class));
     }
 
     @Test
     public void fetchAllTypecallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = PowerMockito.spy(recurringServiceTypeRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.query(anyString(),any(String[].class),isNull(String.class),isNull(String[].class),isNull(String.class),isNull(String.class),anyString())).thenReturn(cursor);
+        when(sqliteDatabase.query(anyString(), any(String[].class), isNull(String.class), isNull(String[].class), isNull(String.class), isNull(String.class), anyString())).thenReturn(cursor);
         when(recurringServiceTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceTypeRepository.fetchAll();
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class),isNull(String.class),isNull(String[].class),isNull(String.class),isNull(String.class),anyString());
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(), any(String[].class), isNull(String.class), isNull(String[].class), isNull(String.class), isNull(String.class), anyString());
     }
 
     @Test
     public void fetchTypescallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = PowerMockito.spy(recurringServiceTypeRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.rawQuery(anyString(),isNull(String[].class))).thenReturn(cursor);
+        when(sqliteDatabase.rawQuery(anyString(), isNull(String[].class))).thenReturn(cursor);
         when(recurringServiceTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceTypeRepository.fetchTypes();
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).rawQuery(anyString(),isNull(String[].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).rawQuery(anyString(), isNull(String[].class));
     }
 
 
@@ -157,10 +142,10 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     public void deletecallsDatabaseDeleteMethod1Times() throws Exception {
         RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = Mockito.spy(recurringServiceTypeRepository);
         ServiceType serviceType = new ServiceType();
-        Mockito.doReturn(serviceType).when(recurringServiceTypeRepositoryspy).find(0l,null);
+        Mockito.doReturn(serviceType).when(recurringServiceTypeRepositoryspy).find(0l, null);
         when(recurringServiceTypeRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceTypeRepositoryspy.deleteServiceType(0l);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).delete(anyString(),anyString(),any(String[].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).delete(anyString(), anyString(), any(String[].class));
     }
 
     @Test

@@ -42,7 +42,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         PowerMockito.doReturn(null).when(immunizationRowGroupSpy, "init", context);
 
 
-        assertNotNull(new ImmunizationRowGroup(context,true));
+        assertNotNull(new ImmunizationRowGroup(context, true));
         assertNotNull(new ImmunizationRowGroup(context, attributeSet));
         assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0));
         assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0, 0));

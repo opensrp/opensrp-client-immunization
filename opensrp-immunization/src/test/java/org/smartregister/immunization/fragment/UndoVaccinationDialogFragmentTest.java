@@ -4,10 +4,6 @@ import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-
 import static junit.framework.Assert.assertNotNull;
 
 /**

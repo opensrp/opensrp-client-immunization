@@ -17,7 +17,6 @@ import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
@@ -83,7 +82,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
         when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepository.add(new ServiceRecord());
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(),isNull(String.class),any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(),isNull(String.class), any(ContentValues.class));
     }
 
     @Test
@@ -92,24 +91,24 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setId(0l);
         recurringServiceRecordRepository.add(serviceRecord);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(), any(ContentValues.class), anyString(), any(String [].class));
     }
 
     @Test
     public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
         recurringServiceRecordRepository.add(null);
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(),(String)isNull(),any(ContentValues.class));
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(), (String)isNull(), any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(), any(ContentValues.class), anyString(), any(String [].class));
     }
 
     @Test
     public void findbyEntityIDcallsDatabaseQueryMethod1Times() throws Exception {
         RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = PowerMockito.spy(recurringServiceRecordRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.rawQuery(anyString(),any(String[].class))).thenReturn(cursor);
+        when(sqliteDatabase.rawQuery(anyString(), any(String[].class))).thenReturn(cursor);
         when(recurringServiceRecordRepositoryspy.getReadableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepositoryspy.findByEntityId("entityID");
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).rawQuery(anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).rawQuery(anyString(), any(String [].class));
     }
 
     @Test
@@ -119,20 +118,19 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setFormSubmissionId("formsubmissionID");
         serviceRecord.setEventId("EventID");
-        when(sqliteDatabase.query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), anyString(),isNull(String.class))).thenReturn(cursor);
+        when(sqliteDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), anyString(), isNull(String.class))).thenReturn(cursor);
         when(recurringServiceRecordRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
-        recurringServiceRecordRepository.findUnique(sqliteDatabase,serviceRecord);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class),anyString(), isNull(String.class));
+        recurringServiceRecordRepository.findUnique(sqliteDatabase, serviceRecord);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), anyString(), isNull(String.class));
     }
 
     @Test
     public void findbyCaseIDcallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = PowerMockito.spy(recurringServiceRecordRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        when(sqliteDatabase.query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class),isNull(String.class))).thenReturn(cursor);
+        when(sqliteDatabase.query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class))).thenReturn(cursor);
         when(recurringServiceRecordRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepository.find(0l);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(),any(String[].class),anyString(),any(String[].class),isNull(String.class),isNull(String.class), isNull(String.class), isNull(String.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(anyString(), any(String[].class), anyString(), any(String[].class), isNull(String.class), isNull(String.class), isNull(String.class), isNull(String.class));
     }
 
 
@@ -141,7 +139,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setId(0l);
         recurringServiceRecordRepository.update(sqliteDatabase,serviceRecord);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(), any(ContentValues.class), anyString(), any(String [].class));
     }
 
     @Test
@@ -155,21 +153,21 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         Mockito.doReturn(serviceRecord).when(recurringServiceRecordRepositoryspy).find(0l);
         when(recurringServiceRecordRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepositoryspy.deleteServiceRecord(0l);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).delete(anyString(),anyString(),any(String[].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).delete(anyString(), anyString(), any(String[].class));
     }
 
     @Test
     public void closeMethodCallsInternalMethodsWithCorrectParams() throws Exception {
         when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepository.close(5l);
-        Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(1)).update(eq(recurringServiceRecordRepository.TABLE_NAME), (ContentValues) any(), anyString(), eq(new String[]{"5"}));
+        Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(1)).update(eq(recurringServiceRecordRepository.TABLE_NAME), (ContentValues)any(), anyString(), eq(new String[]{"5"}));
     }
 
     @Test
     public void closeMethodFailsSilentlyWithNullParams() throws Exception {
         when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepository.close(null);
-        Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(0)).update(anyString(), (ContentValues) any(), anyString(), eq(new String[]{"5"}));
+        Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(0)).update(anyString(), (ContentValues)any(), anyString(), eq(new String[]{"5"}));
     }
 
     @Test

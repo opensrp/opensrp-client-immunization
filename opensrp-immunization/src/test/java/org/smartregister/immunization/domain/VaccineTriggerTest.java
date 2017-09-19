@@ -5,11 +5,9 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -30,14 +28,12 @@ public class VaccineTriggerTest extends BaseUnitTest {
             "              \"offset\": \"+28d\"\n" +
             "            }";
 
-
-
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
-        assertNotNull(VaccineTrigger.init("child",data1));
-        assertNotNull(VaccineTrigger.init("child",data2));
+        assertNotNull(VaccineTrigger.init("child", data1));
+        assertNotNull(VaccineTrigger.init("child", data2));
     }
 
     @Test
@@ -47,7 +43,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         VaccineSchedule.standardiseCalendarDate(calendar);
-        assertEquals(calendar.getTime(),VaccineTrigger.init("child",data1).getFireDate(Collections.EMPTY_LIST,date));
+        assertEquals(calendar.getTime(), VaccineTrigger.init("child", data1).getFireDate(Collections.EMPTY_LIST, date));
 
     }
 

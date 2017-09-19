@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.robolectric.Robolectric;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 

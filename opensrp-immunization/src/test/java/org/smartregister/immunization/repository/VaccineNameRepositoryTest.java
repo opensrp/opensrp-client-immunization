@@ -15,7 +15,6 @@ import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineName;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
@@ -82,22 +81,22 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
         VaccineName vaccineName = PowerMockito.mock(VaccineName.class);
         when(vaccineName.getId()).thenReturn(null);
         vaccineNameRepository.add(vaccineName);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(),isNull(String.class),any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(anyString(), isNull(String.class), any(ContentValues.class));
     }
 
     @Test
     public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
         when(vaccineNameRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
-        VaccineName vaccineName = new VaccineName(0l,"","","","","","");
+        VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
         vaccineNameRepository.add(vaccineName);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(anyString(), any(ContentValues.class), anyString(), any(String [].class));
     }
 
     @Test
     public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
         vaccineNameRepository.add(null);
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(),(String)isNull(),any(ContentValues.class));
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(),any(ContentValues.class),anyString(),any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(anyString(), (String)isNull(), any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(anyString(), any(ContentValues.class), anyString(), any(String [].class));
     }
 
 }

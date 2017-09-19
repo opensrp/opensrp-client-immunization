@@ -24,8 +24,9 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     public void setUp() throws Exception {
         view = mock(LinearLayout.class);
     }
+
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(),view));
+        assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
     }
 }

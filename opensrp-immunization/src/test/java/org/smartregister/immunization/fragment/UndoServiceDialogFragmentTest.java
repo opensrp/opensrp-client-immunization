@@ -4,8 +4,6 @@ import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 
-import java.util.Collections;
-
 import static junit.framework.Assert.assertNotNull;
 
 /**

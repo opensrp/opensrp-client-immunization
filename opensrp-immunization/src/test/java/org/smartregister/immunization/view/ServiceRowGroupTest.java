@@ -42,7 +42,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         PowerMockito.doReturn(null).when(serviceRowGroupSpy, "init", context);
 
 
-        assertNotNull(new ServiceRowGroup(context,true));
+        assertNotNull(new ServiceRowGroup(context, true));
         assertNotNull(new ServiceRowGroup(context, attributeSet));
         assertNotNull(new ServiceRowGroup(context, attributeSet, 0));
         assertNotNull(new ServiceRowGroup(context, attributeSet, 0, 0));

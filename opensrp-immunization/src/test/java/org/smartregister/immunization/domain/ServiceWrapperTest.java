@@ -29,33 +29,33 @@ public class ServiceWrapperTest extends BaseUnitTest {
         DateTime datetime = new DateTime();
 
         serviceWrapper.setId("ID");
-        assertEquals("ID",serviceWrapper.getId());
+        assertEquals("ID", serviceWrapper.getId());
 
         serviceWrapper.setDbKey(0l);
-        assertEquals(0l,serviceWrapper.getDbKey().longValue());
+        assertEquals(0l, serviceWrapper.getDbKey().longValue());
 
         serviceWrapper.setStatus("status");
-        assertEquals("status",serviceWrapper.getStatus());
+        assertEquals("status", serviceWrapper.getStatus());
 
         serviceWrapper.setVaccineDate(datetime);
-        assertEquals(datetime,serviceWrapper.getVaccineDate());
+        assertEquals(datetime, serviceWrapper.getVaccineDate());
 
         Alert alert = Mockito.mock(Alert.class);
         serviceWrapper.setAlert(alert);
-        assertEquals(alert,serviceWrapper.getAlert());
+        assertEquals(alert, serviceWrapper.getAlert());
 
         serviceWrapper.setDefaultName("defaultname");
-        assertEquals("defaultname",serviceWrapper.getDefaultName());
-        assertEquals("defaultname",serviceWrapper.getName());
+        assertEquals("defaultname", serviceWrapper.getDefaultName());
+        assertEquals("defaultname", serviceWrapper.getName());
 
         serviceWrapper.setPreviousVaccine("ID");
-        assertEquals("ID",serviceWrapper.getPreviousVaccineId());
+        assertEquals("ID", serviceWrapper.getPreviousVaccineId());
 
         serviceWrapper.setColor("color");
-        assertEquals("color",serviceWrapper.getColor());
+        assertEquals("color", serviceWrapper.getColor());
 
         serviceWrapper.setDob(datetime);
-        assertEquals(datetime,serviceWrapper.getDob());
+        assertEquals(datetime, serviceWrapper.getDob());
 
         ServiceType serviceType = new ServiceType();
         serviceType.setUnits("units");
@@ -63,38 +63,38 @@ public class ServiceWrapperTest extends BaseUnitTest {
         serviceType.setId(0l);
         serviceWrapper.setServiceType(serviceType);
         serviceType.setName("name");
-        assertEquals("name",serviceWrapper.getName());
-        assertEquals(serviceType,serviceWrapper.getServiceType());
-        assertEquals(serviceType.getUnits(),serviceWrapper.getUnits());
-        assertEquals(serviceType.getType(),serviceWrapper.getType());
-        assertEquals(0l,serviceWrapper.getTypeId().longValue());
+        assertEquals("name", serviceWrapper.getName());
+        assertEquals(serviceType, serviceWrapper.getServiceType());
+        assertEquals(serviceType.getUnits(), serviceWrapper.getUnits());
+        assertEquals(serviceType.getType(), serviceWrapper.getType());
+        assertEquals(0l, serviceWrapper.getTypeId().longValue());
 
         serviceWrapper.setValue("value");
-        assertEquals("value",serviceWrapper.getValue());
+        assertEquals("value", serviceWrapper.getValue());
 
         serviceWrapper.setPatientName("patientName");
-        assertEquals("patientName",serviceWrapper.getPatientName());
+        assertEquals("patientName", serviceWrapper.getPatientName());
 
         serviceWrapper.setUpdatedVaccineDate(datetime,true);
-        assertEquals(datetime,serviceWrapper.getVaccineDate());
-        assertEquals(datetime,serviceWrapper.getUpdatedVaccineDate());
-        assertEquals(true,serviceWrapper.isToday());
-        assertEquals(datetime.toString("yyyy-MM-dd"),serviceWrapper.getUpdatedVaccineDateAsString());
-        assertEquals(datetime.toString("yyyy-MM-dd"),serviceWrapper.getVaccineDateAsString());
+        assertEquals(datetime, serviceWrapper.getVaccineDate());
+        assertEquals(datetime, serviceWrapper.getUpdatedVaccineDate());
+        assertEquals(true, serviceWrapper.isToday());
+        assertEquals(datetime.toString("yyyy-MM-dd"), serviceWrapper.getUpdatedVaccineDateAsString());
+        assertEquals(datetime.toString("yyyy-MM-dd"), serviceWrapper.getVaccineDateAsString());
 
         serviceWrapper.setPatientNumber("number");
-        assertEquals("number",serviceWrapper.getPatientNumber());
+        assertEquals("number", serviceWrapper.getPatientNumber());
 
         Photo photo = Mockito.mock(Photo.class);
         serviceWrapper.setPhoto(photo);
-        assertEquals(photo,serviceWrapper.getPhoto());
+        assertEquals(photo, serviceWrapper.getPhoto());
 
         serviceWrapper.setGender("test");
-        assertEquals("test",serviceWrapper.getGender());
+        assertEquals("test", serviceWrapper.getGender());
 
 
         serviceWrapper.setSynced(true);
-        assertEquals(true,serviceWrapper.isSynced());
+        assertEquals(true, serviceWrapper.isSynced());
 
     }
 

@@ -6,16 +6,10 @@ import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -44,7 +38,6 @@ public class ServiceTriggerTest extends BaseUnitTest {
             "            \"offset\": \"+6m\"\n" +
             "          }";
 
-
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
@@ -66,11 +59,11 @@ public class ServiceTriggerTest extends BaseUnitTest {
         prerequisites.add("Vit A IFC 2");
         prerequisites.add("dob");
 
-        assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(),condition);
-        assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(),prerequisites);
-        assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger.Reference.MULTIPLE);
-        assertEquals(ServiceTrigger.init(data1).getOffset(),"+0d");
-        assertEquals(ServiceTrigger.init(data3).getPrerequisite(),"Vit A 2");
+        assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(), condition);
+        assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(), prerequisites);
+        assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger. Reference.MULTIPLE);
+        assertEquals(ServiceTrigger.init(data1).getOffset(), "+0d");
+        assertEquals(ServiceTrigger.init(data3).getPrerequisite(), "Vit A 2");
 
     }
 
