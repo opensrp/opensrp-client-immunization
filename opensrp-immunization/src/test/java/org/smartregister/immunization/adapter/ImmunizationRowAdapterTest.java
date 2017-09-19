@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,7 +16,6 @@ import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +41,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     @Mock
     protected ViewGroup parentView;
 
-    @Mock
-    private VaccineWrapper vaccineWrapper;
-
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -53,7 +48,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-
         junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, vaccineGroup, true));
     }
 

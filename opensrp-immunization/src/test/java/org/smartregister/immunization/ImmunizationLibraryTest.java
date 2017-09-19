@@ -6,13 +6,10 @@ import org.mockito.Mockito;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.repository.Repository;
-import static junit.framework.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by onaio on 30/08/2017.
  */
-
 
 public class ImmunizationLibraryTest extends BaseUnitTest {
 
@@ -22,52 +19,52 @@ public class ImmunizationLibraryTest extends BaseUnitTest {
         Context context = Mockito.mock(Context.class);
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
         ImmunizationLibrary.init(context, repository, commonFtsObject);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        assertNotNull(ImmunizationLibrary.getInstance());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance());
     }
 
     @Test
     public void assertRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().getRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().getRepository());
     }
 
     @Test
     public void assertRecurringServiceRecordRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().recurringServiceRecordRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().recurringServiceRecordRepository());
     }
 
     @Test
     public void assertRecurringServiceTypeRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().recurringServiceTypeRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().recurringServiceTypeRepository());
     }
 
     @Test
     public void assertEventClientRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().eventClientRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().eventClientRepository());
     }
 
     @Test
     public void assertVaccineRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().vaccineRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().vaccineRepository());
     }
 
     @Test
     public void assertVaccineNameRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().vaccineNameRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().vaccineNameRepository());
     }
 
     @Test
     public void assertVaccineTypeRepositoryReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().vaccineTypeRepository());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().vaccineTypeRepository());
     }
 
     @Test
     public void assertContextReturnsNonNUllObject() {
-        assertNotNull(ImmunizationLibrary.getInstance().context());
+        junit.framework.Assert.assertNotNull(ImmunizationLibrary.getInstance().context());
     }
 
 }

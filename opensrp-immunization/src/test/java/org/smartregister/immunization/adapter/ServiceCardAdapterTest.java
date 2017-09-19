@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,9 +13,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.ServiceType;
-import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.view.ServiceGroup;
-import org.smartregister.immunization.view.VaccineCard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +52,6 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-
         org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, serviceGroup));
     }
 
