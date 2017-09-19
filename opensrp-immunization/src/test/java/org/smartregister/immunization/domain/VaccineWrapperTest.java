@@ -22,9 +22,8 @@ public class VaccineWrapperTest extends BaseUnitTest {
         assertNotNull(new VaccineWrapper());
     }
 
-
     @Test
-    public void assetTestallgettersandsetters(){
+    public void assetTestallgettersandsetters() {
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
         DateTime datetime = new DateTime();
 

@@ -25,7 +25,7 @@ public class VaccineTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetGetIDwillReturnID(){
+    public void assetGetIDwillReturnID() {
         Vaccine vaccine = new Vaccine(0l, "baseEntityId", "name", 0, new Date(),
                 "anmId", "locationId", "syncStatus", "hia2Status", 0l, "eventId", "formSubmissionId", 0);
         assertEquals(0l, vaccine.getId().longValue());
@@ -34,7 +34,7 @@ public class VaccineTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetGetBaseEntityIDwillReturnBaseEntityID(){
+    public void assetGetBaseEntityIDwillReturnBaseEntityID() {
         Vaccine vaccine = new Vaccine(0l, "BaseEntityID", "name", 0, new Date(),
                 "anmId", "locationId", "syncStatus", "hia2Status", 0l, "eventId", "formSubmissionId", 0);
         assertEquals("BaseEntityID", vaccine.getBaseEntityId());
@@ -43,7 +43,7 @@ public class VaccineTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetGetNamewillReturnName(){
+    public void assetGetNamewillReturnName() {
         Vaccine vaccine = new Vaccine(0l, "BaseEntityID", "name", 0, new Date(),
                 "anmId", "locationId", "syncStatus", "hia2Status", 0l, "eventId", "formSubmissionId", 0);
         assertEquals("name", vaccine.getName());
@@ -52,7 +52,7 @@ public class VaccineTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetGetDatewillReturnDate(){
+    public void assetGetDatewillReturnDate() {
         Date date = new Date();
         Vaccine vaccine = new Vaccine(0l, "BaseEntityID", "name", 0, date,
                 "anmId", "locationId", "syncStatus", "hia2Status", 0l, "eventId", "formSubmissionId", 0);
@@ -63,7 +63,7 @@ public class VaccineTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetTestallgettersandsetters(){
+    public void assetTestallgettersandsetters() {
         Date date = new Date();
         Vaccine vaccine = new Vaccine(0l, "BaseEntityID", "name", 0, date,
                 "anmId", "locationId", "syncStatus", "hia2Status", 0l, "eventId", "formSubmissionId", 0);
@@ -109,7 +109,7 @@ public class VaccineTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetIdentifiersFromCLientID(){
+    public void assetIdentifiersFromCLientID() {
         Vaccine vaccine = new Vaccine();
         vaccine.setProgramClientId("programClientID");
         HashMap<String,String> hashMap = new HashMap<String, String>();

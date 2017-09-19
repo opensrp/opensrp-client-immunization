@@ -1,8 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +13,6 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.Vaccine;
-import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +31,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
-
-    @Mock
-    protected View convertView;
-
-    @Mock
-    protected ViewGroup parentView;
 
     @Before
     public void setUp() {

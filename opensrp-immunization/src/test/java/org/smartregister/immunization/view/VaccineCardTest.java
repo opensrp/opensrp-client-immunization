@@ -37,11 +37,8 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
-
         VaccineCard vaccineCardSpy = PowerMockito.spy(vaccineCard);
         PowerMockito.doReturn(null).when(vaccineCardSpy, "init", context);
-
-
         assertNotNull(new VaccineCard(context));
         assertNotNull(new VaccineCard(context, attributeSet));
         assertNotNull(new VaccineCard(context, attributeSet, 0));

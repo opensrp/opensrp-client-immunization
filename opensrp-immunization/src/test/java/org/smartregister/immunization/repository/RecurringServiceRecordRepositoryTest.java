@@ -12,13 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.smartregister.Context;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.repository.Repository;
-import org.smartregister.service.AlertService;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -42,23 +38,10 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     private Repository repository;
 
     @Mock
-    private CommonFtsObject commonFtsObject;
-
-    @Mock
-    private AlertService alertService;
-
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private Context context;
-
-    @Mock
     private SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {
-
         initMocks(this);
         assertNotNull(recurringServiceRecordRepository);
     }
@@ -66,7 +49,6 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void instantiatesSuccessfullyOnConstructorCall() throws Exception {
-
         RecurringServiceRecordRepository vaccineNameRepository = new RecurringServiceRecordRepository(repository);
         assertNotNull(vaccineNameRepository);
     }
@@ -75,7 +57,6 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     public void createTableCallsExecuteSQLMethod() throws Exception {
         recurringServiceRecordRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(6)).execSQL(anyString());
-
     }
 
     @Test
@@ -113,7 +94,6 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void findbyUniqueIDcallsDatabaseQueryMethod1Times() throws Exception {
-        RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = PowerMockito.spy(recurringServiceRecordRepository);
         Cursor cursor = PowerMockito.mock(Cursor.class);
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setFormSubmissionId("formsubmissionID");

@@ -37,11 +37,8 @@ public class ServiceRowGroupTest extends BaseUnitTest {
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
-
         ServiceRowGroup serviceRowGroupSpy = PowerMockito.spy(serviceRowGroup);
         PowerMockito.doReturn(null).when(serviceRowGroupSpy, "init", context);
-
-
         assertNotNull(new ServiceRowGroup(context, true));
         assertNotNull(new ServiceRowGroup(context, attributeSet));
         assertNotNull(new ServiceRowGroup(context, attributeSet, 0));

@@ -12,15 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.smartregister.Context;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.ImmunizationLibrary;
-import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
-import org.smartregister.immunization.domain.VaccineType;
 import org.smartregister.repository.Repository;
-import org.smartregister.service.AlertService;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -43,18 +37,6 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     private Repository repository;
 
     @Mock
-    private CommonFtsObject commonFtsObject;
-
-    @Mock
-    private AlertService alertService;
-
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private Context context;
-
-    @Mock
     private SQLiteDatabase sqliteDatabase;
 
     @Before
@@ -62,7 +44,6 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
         initMocks(this);
         assertNotNull(recurringServiceTypeRepository);
     }
-
 
     @Test
     public void instantiatesSuccessfullyOnConstructorCall() throws Exception {

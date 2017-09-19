@@ -21,7 +21,7 @@ public class ServiceRecordTest extends BaseUnitTest {
     }
 
     @Test
-    public void assetTestallgettersandsetters(){
+    public void assetTestallgettersandsetters() {
         ServiceRecord serviceRecord = new ServiceRecord();
 
         serviceRecord.setId(0l);

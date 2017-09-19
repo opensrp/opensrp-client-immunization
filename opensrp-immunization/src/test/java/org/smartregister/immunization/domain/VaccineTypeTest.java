@@ -18,7 +18,7 @@ public class VaccineTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetIDwillreturnID(){
+    public void assertgetIDwillreturnID() {
         VaccineType vaccineType = new VaccineType(0l, 0, "", "", "", "");
         assertEquals(vaccineType.getId().longValue(), 0l);
         vaccineType.setId(1l);
@@ -26,7 +26,7 @@ public class VaccineTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetDosewillreturnDose(){
+    public void assertgetDosewillreturnDose() {
         VaccineType vaccineType = new VaccineType(0l, 0, "", "", "", "");
         assertEquals(vaccineType.getDoses(), 0);
         vaccineType.setDoses(20);
@@ -34,7 +34,7 @@ public class VaccineTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetNamewillreturnName(){
+    public void assertgetNamewillreturnName() {
         VaccineType vaccineType = new VaccineType(0l, 0, "BCG", "", "", "");
         assertEquals(vaccineType.getName(), "BCG");
         vaccineType.setName("TT");
@@ -42,7 +42,7 @@ public class VaccineTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetOpenMrsParentEntityIDwillreturnOpenMrsParentEntityID(){
+    public void assertgetOpenMrsParentEntityIDwillreturnOpenMrsParentEntityID() {
         VaccineType vaccineType = new VaccineType(0l, 0, "BCG", "018AAAAAAAA", "", "");
         assertEquals(vaccineType.getOpenmrs_parent_entity_id(), "018AAAAAAAA");
         vaccineType.setOpenmrs_parent_entity_id("01841AAAAAAAA");
@@ -50,7 +50,7 @@ public class VaccineTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetOpenMrsDateConceptIDwillreturnOpenMrsDateConceptID(){
+    public void assertgetOpenMrsDateConceptIDwillreturnOpenMrsDateConceptID() {
         VaccineType vaccineType = new VaccineType(0l, 0, "BCG", "018AAAAAAAA", "0AAAPAAAAAA", "");
         assertEquals(vaccineType.getOpenmrs_date_concept_id(), "0AAAPAAAAAA");
         vaccineType.setOpenmrs_date_concept_id("0AAA111PAAAAAA");
@@ -58,7 +58,7 @@ public class VaccineTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetOpenMrsDoseConceptIDwillreturnOpenMrsDoseConceptID(){
+    public void assertgetOpenMrsDoseConceptIDwillreturnOpenMrsDoseConceptID() {
         VaccineType vaccineType = new VaccineType(0l, 0, "BCG", "018AAAAAAAA", "0AAAPAAAAAA", "0FF41AAAAAA");
         assertEquals(vaccineType.getOpenmrs_dose_concept_id(), "0FF41AAAAAA");
         vaccineType.setOpenmrs_dose_concept_id("0FF41AAAAAA");

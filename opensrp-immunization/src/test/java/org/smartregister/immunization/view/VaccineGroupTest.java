@@ -37,11 +37,8 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
-
         VaccineGroup vaccineGroupSpy = PowerMockito.spy(vaccineGroup);
         PowerMockito.doReturn(null).when(vaccineGroupSpy, "init", context);
-
-
         assertNotNull(new VaccineGroup(context));
         assertNotNull(new VaccineGroup(context, attributeSet));
         assertNotNull(new VaccineGroup(context, attributeSet, 0));

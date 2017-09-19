@@ -18,7 +18,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetIDwillreturnID(){
+    public void assertgetIDwillreturnID() {
         VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
         assertEquals(vaccineName.getId(). longValue(), 0l);
         vaccineName.setId(1l);
@@ -26,7 +26,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetNamewillreturnName(){
+    public void assertgetNamewillreturnName() {
         VaccineName vaccineName = new VaccineName(0l, "BCG", "", "", "", "", "");
         assertEquals(vaccineName.getName(), "BCG");
         vaccineName.setName("TT");
@@ -34,7 +34,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetTypeIDwillreturnTypeID(){
+    public void assertgetTypeIDwillreturnTypeID() {
         VaccineName vaccineName = new VaccineName(0l, "TT1", "TT", "", "", "", "");
         assertEquals(vaccineName.getVaccine_type_id(), "TT");
         vaccineName.setVaccine_type_id("BCG");
@@ -42,7 +42,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetDueDayswillreturnDueDays(){
+    public void assertgetDueDayswillreturnDueDays() {
         VaccineName vaccineName = new VaccineName(0l, "TT1", "TT", "5", "", "", "");
         assertEquals(vaccineName.getDue_days(), "5");
         vaccineName.setDue_days("10");
@@ -50,7 +50,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetReferenceVaccineIDwillreturnReferenceVaccineID(){
+    public void assertgetReferenceVaccineIDwillreturnReferenceVaccineID() {
         VaccineName vaccineName = new VaccineName(0l, "TT2", "TT", "5", "TT1", "", "");
         assertEquals(vaccineName.getReference_vaccine_id(), "TT1");
         vaccineName.setReference_vaccine_id("TT3");
@@ -58,7 +58,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetClientTypewillreturnClientType(){
+    public void assertgetClientTypewillreturnClientType() {
         VaccineName vaccineName = new VaccineName(0l, "TT2", "TT", "5", "TT1", "Mother", "");
         assertEquals(vaccineName.getClient_type(), "Mother");
         vaccineName.setClient_type("Child");
@@ -66,7 +66,7 @@ public class VaccineNameTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetDoseNowillreturnDoseNo(){
+    public void assertgetDoseNowillreturnDoseNo() {
         VaccineName vaccineName = new VaccineName(0l, "TT2", "TT", "5", "TT1", "Mother", "5");
         assertEquals(vaccineName.getDose_no(), "5");
         vaccineName.setDose_no("10");

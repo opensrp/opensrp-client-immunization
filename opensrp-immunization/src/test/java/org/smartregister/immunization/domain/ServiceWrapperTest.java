@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.db.VaccineRepo;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -24,7 +23,7 @@ public class ServiceWrapperTest extends BaseUnitTest {
 
 
     @Test
-    public void assetTestallgettersandsetters(){
+    public void assetTestallgettersandsetters() {
         ServiceWrapper serviceWrapper = new ServiceWrapper();
         DateTime datetime = new DateTime();
 

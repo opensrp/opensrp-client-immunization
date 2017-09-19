@@ -11,10 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.VaccineName;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
@@ -45,17 +43,10 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     private AlertService alertService;
 
     @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private Context context;
-
-    @Mock
     private SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {
-
         initMocks(this);
         assertNotNull(vaccineNameRepository);
     }
@@ -63,7 +54,6 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
 
     @Test
     public void instantiatesSuccessfullyOnConstructorCall() throws Exception {
-
         VaccineNameRepository vaccineNameRepository = new VaccineNameRepository(repository, commonFtsObject, alertService);
         assertNotNull(vaccineNameRepository);
     }
@@ -72,7 +62,6 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     public void createTableCallsExecuteSQLMethod() throws Exception {
         vaccineNameRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).execSQL(anyString());
-
     }
 
     @Test

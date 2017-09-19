@@ -12,10 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
@@ -49,17 +47,10 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     private AlertService alertService;
 
     @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private Context context;
-
-    @Mock
     private SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {
-
         initMocks(this);
         assertNotNull(vaccineRepository);
     }
@@ -73,7 +64,6 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void removeHyphenMethodRemoveHyphenFromString() throws Exception {
-
         String testString = vaccineRepository.removeHyphen("test_string");
         assertNotNull(testString);
         assertFalse(testString.contains("-"));
@@ -100,7 +90,6 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void instantiatesSuccessfullyOnConstructorCall() throws Exception {
-
         VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, alertService);
         assertNotNull(vaccineRepository);
     }

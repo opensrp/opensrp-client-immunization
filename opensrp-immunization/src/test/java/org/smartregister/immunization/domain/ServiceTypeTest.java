@@ -19,7 +19,7 @@ public class ServiceTypeTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertCheckGettersandSetters(){
+    public void assertCheckGettersandSetters() {
         ServiceType serviceType = new ServiceType();
 
         serviceType.setId(0l);
