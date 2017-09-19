@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,8 +15,6 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.Vaccine;
-import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
 
 import java.util.ArrayList;
@@ -40,9 +37,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     private VaccineCardAdapter vaccineCardAdapter;
 
     @Mock
-    private AttributeSet attributeSet;
-
-    @Mock
     private VaccineGroup vaccineGroup;
 
     @Mock
@@ -54,22 +48,15 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     @Mock
     protected ViewGroup parentView;
 
-    @Mock
-    private VaccineCard vaccineCard;
-
-    @Mock
-    private VaccineWrapper vaccineWrapper;
-
     @Before
     public void setUp() {
         vaccineCardAdapter = Mockito.mock(VaccineCardAdapter.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-
-        assertNotNull(new VaccineCardAdapter(context, vaccineGroup));
+        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, vaccineGroup));
     }
 
 
@@ -87,8 +74,8 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         vaccineGroup.setData(vaccineData, commonPersonObjectClient, vaccineList, alerts);
         Mockito.when(vaccineGroup.getVaccineData()).thenReturn(vaccineData);
         vaccineCardAdapter = new VaccineCardAdapter(context, vaccineGroup);
-        assertNotNull(vaccineCardAdapter);
-        assertEquals(3, vaccineCardAdapter.getCount());
+        org.junit.Assert.assertNotNull(vaccineCardAdapter);
+        org.junit.Assert.assertEquals(3, vaccineCardAdapter.getCount());
     }
 
 

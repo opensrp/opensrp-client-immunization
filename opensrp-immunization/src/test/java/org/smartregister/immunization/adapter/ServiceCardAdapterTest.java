@@ -5,9 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,22 +14,14 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.ServiceType;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.view.ServiceGroup;
 import org.smartregister.immunization.view.VaccineCard;
-import org.smartregister.immunization.view.VaccineGroup;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -46,9 +36,6 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     private ServiceCardAdapter serviceCardAdapter;
 
     @Mock
-    private AttributeSet attributeSet;
-
-    @Mock
     private ServiceGroup serviceGroup;
 
     @Mock
@@ -60,24 +47,17 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     @Mock
     protected ViewGroup parentView;
 
-    @Mock
-    private VaccineCard vaccineCard;
-
-    @Mock
-    private VaccineWrapper vaccineWrapper;
-
     @Before
     public void setUp() {
         serviceCardAdapter = Mockito.mock(ServiceCardAdapter.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
 
-        assertNotNull(new ServiceCardAdapter(context, serviceGroup));
+        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, serviceGroup));
     }
-
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
@@ -101,8 +81,8 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         serviceGroup.setData(commonPersonObjectClient,vaccineData, Collections.EMPTY_LIST, alerts);
         Mockito.when(serviceGroup.getServiceTypeKeys()).thenReturn(getServiceTypeKeys(vaccineData));
         serviceCardAdapter = new ServiceCardAdapter(context, serviceGroup);
-        assertNotNull(serviceCardAdapter);
-        assertEquals(3, serviceCardAdapter.getCount());
+        org.junit.Assert.assertNotNull(serviceCardAdapter);
+        org.junit.Assert.assertEquals(3, serviceCardAdapter.getCount());
     }
 
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {

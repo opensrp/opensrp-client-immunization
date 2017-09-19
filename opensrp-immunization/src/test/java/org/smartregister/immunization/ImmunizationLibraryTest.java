@@ -2,19 +2,11 @@ package org.smartregister.immunization;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
-import org.smartregister.immunization.service.intent.RecurringIntentService;
-import org.smartregister.immunization.view.ImmunizationRowCard;
-import org.smartregister.immunization.view.ImmunizationRowGroup;
 import org.smartregister.repository.Repository;
-
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
@@ -29,8 +21,7 @@ public class ImmunizationLibraryTest extends BaseUnitTest {
         Repository repository = Mockito.mock(Repository.class);
         Context context = Mockito.mock(Context.class);
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
-        ImmunizationLibrary.init(context,repository,commonFtsObject);
-        ImmunizationLibrary immunizationLibrary = ImmunizationLibrary.getInstance();
+        ImmunizationLibrary.init(context, repository, commonFtsObject);
         initMocks(this);
     }
 

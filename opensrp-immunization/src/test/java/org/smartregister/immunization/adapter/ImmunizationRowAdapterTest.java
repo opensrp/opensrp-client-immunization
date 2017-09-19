@@ -19,15 +19,8 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
-import org.smartregister.immunization.view.VaccineCard;
-import org.smartregister.immunization.view.VaccineGroup;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -37,12 +30,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Mock
     private Context context;
-
-    @Mock
-    private ImmunizationRowAdapter immunizationRowAdapter;
-
-    @Mock
-    private AttributeSet attributeSet;
 
     @Mock
     private ImmunizationRowGroup vaccineGroup;
@@ -57,21 +44,17 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     protected ViewGroup parentView;
 
     @Mock
-    private ImmunizationRowCard immunizationRowCard;
-
-    @Mock
     private VaccineWrapper vaccineWrapper;
 
     @Before
     public void setUp() {
-        immunizationRowAdapter = Mockito.mock(ImmunizationRowAdapter.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
 
-        assertNotNull(new ImmunizationRowAdapter(context, vaccineGroup,true));
+        junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, vaccineGroup, true));
     }
 
 
@@ -88,9 +71,9 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         List<Alert> alerts = new ArrayList<>();
         vaccineGroup.setData(vaccineData, commonPersonObjectClient, vaccineList, alerts);
         Mockito.when(vaccineGroup.getVaccineData()).thenReturn(vaccineData);
-        immunizationRowAdapter = new ImmunizationRowAdapter(context, vaccineGroup,true);
-        assertNotNull(immunizationRowAdapter);
-        assertEquals(3, immunizationRowAdapter.getCount());
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, vaccineGroup, true);
+        junit.framework.Assert.assertNotNull(immunizationRowAdapter);
+        junit.framework.Assert.assertEquals(3, immunizationRowAdapter.getCount());
     }
 
 
