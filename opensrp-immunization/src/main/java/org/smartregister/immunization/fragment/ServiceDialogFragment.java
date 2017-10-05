@@ -199,6 +199,8 @@ public class ServiceDialogFragment extends DialogFragment {
 
             // step 2
             final DatePicker itnDatePicker = (DatePicker) step2.findViewById(R.id.itn_date_picker);
+            DatePickerUtils.themeDatePicker(itnDatePicker, new char[]{'d', 'm', 'y'});
+
             Button recordItn = (Button) step2.findViewById(R.id.record_itn);
             recordItn.setOnClickListener(new View.OnClickListener() {
                 @Override
