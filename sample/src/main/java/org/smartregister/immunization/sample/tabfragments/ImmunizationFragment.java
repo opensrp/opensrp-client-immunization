@@ -222,7 +222,7 @@ public class ImmunizationFragment extends Fragment {
                 .findByEntityId(childDetails.entityId());
         if (vaccineList == null) vaccineList = new ArrayList<>();
 
-        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(getActivity(), dob, vaccineList, vaccineWrappers, vaccineGroup);
+        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(getActivity(), dob, vaccineList, vaccineWrappers, vaccineGroup, true);
         vaccinationDialogFragment.show(ft, DIALOG_TAG);
     }
 
@@ -233,11 +233,16 @@ public class ImmunizationFragment extends Fragment {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
+        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        DateTime dob = DateTime.now();
+        if (!TextUtils.isEmpty(dobString)) {
+            dob = new DateTime(dobString);
+        }
 
         List<ServiceRecord> serviceRecordList = ImmunizationLibrary.getInstance().recurringServiceRecordRepository()
                 .findByEntityId(childDetails.entityId());
 
-        ServiceEditDialogFragment serviceEditDialogFragment = ServiceEditDialogFragment.newInstance(serviceRecordList, serviceWrapper, serviceRowGroup);
+        ServiceEditDialogFragment serviceEditDialogFragment = ServiceEditDialogFragment.newInstance(dob, serviceRecordList, serviceWrapper, serviceRowGroup, true);
         serviceEditDialogFragment.show(ft, DIALOG_TAG);
     }
 

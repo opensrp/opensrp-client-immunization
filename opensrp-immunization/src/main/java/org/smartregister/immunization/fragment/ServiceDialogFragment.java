@@ -361,7 +361,6 @@ public class ServiceDialogFragment extends DialogFragment {
             minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
             maxDate = ServiceSchedule.standardiseDateTime(dcToday);
         } else {
-
             minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
             maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
         }
