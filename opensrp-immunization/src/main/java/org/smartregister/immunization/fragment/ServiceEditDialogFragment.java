@@ -46,17 +46,40 @@ public class ServiceEditDialogFragment extends DialogFragment {
     public static final String DIALOG_TAG = "ServiceEditDialogFragment";
 
     private List<ServiceRecord> issuedServices;
+    private DateTime dateOfBirth;
+    private boolean disableConstraints;
+    private DateTime dcToday;
 
     private ServiceEditDialogFragment(List<ServiceRecord> issuedServices, ServiceWrapper tag, View viewGroup) {
         this.issuedServices = issuedServices;
         this.tag = tag;
         this.viewGroup = viewGroup;
+        this.disableConstraints = false;
+    }
+
+    private ServiceEditDialogFragment(DateTime dateOfBirth, List<ServiceRecord> issuedServices, ServiceWrapper tag, View viewGroup, boolean disableConstraints) {
+        this.issuedServices = issuedServices;
+        this.tag = tag;
+        this.viewGroup = viewGroup;
+
+        this.dateOfBirth = dateOfBirth;
+        this.disableConstraints = disableConstraints;
+        if (disableConstraints) {
+            this.dcToday = ServiceSchedule.standardiseDateTime(DateTime.now());
+        }
     }
 
     public static ServiceEditDialogFragment newInstance(
             List<ServiceRecord> issuedServices,
             ServiceWrapper tag, View viewGroup) {
         return new ServiceEditDialogFragment(issuedServices, tag, viewGroup);
+    }
+
+    public static ServiceEditDialogFragment newInstance(
+            DateTime dateOfBirth,
+            List<ServiceRecord> issuedServices,
+            ServiceWrapper tag, View viewGroup, boolean disableConstraints) {
+        return new ServiceEditDialogFragment(dateOfBirth, issuedServices, tag, viewGroup, disableConstraints);
     }
 
     @Override
@@ -206,8 +229,13 @@ public class ServiceEditDialogFragment extends DialogFragment {
         DateTime minDate = null;
         DateTime maxDate = null;
 
-        minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
-        maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        if (disableConstraints) {
+            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
+            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
+        } else {
+            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
+            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        }
 
         if (maxDate.getMillis() >= minDate.getMillis()) {
             set.setVisibility(View.INVISIBLE);
