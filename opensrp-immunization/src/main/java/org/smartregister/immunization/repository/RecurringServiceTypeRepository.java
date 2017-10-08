@@ -51,8 +51,9 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         database.execSQL(UPDATED_AT_INDEX);
     }
 
-    public void add(ServiceType serviceType, SQLiteDatabase database) {
+    public void add(ServiceType serviceType, SQLiteDatabase database_) {
         try {
+            SQLiteDatabase database = database_;
             if (serviceType == null) {
                 return;
             }
@@ -95,7 +96,8 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         return readAllServiceTypes(cursor);
     }
 
-    public List<ServiceType> searchByName(String name) {
+    public List<ServiceType> searchByName(String name_) {
+        String name = name_;
         if (StringUtils.isBlank(name)) {
             return new ArrayList<>();
         }
@@ -107,7 +109,8 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         return readAllServiceTypes(cursor);
     }
 
-    public ServiceType find(Long caseId, SQLiteDatabase database) {
+    public ServiceType find(Long caseId, SQLiteDatabase database_) {
+        SQLiteDatabase database = database_;
         ServiceType serviceType = null;
         Cursor cursor = null;
         try {

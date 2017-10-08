@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.smartregister.Context;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -30,6 +30,7 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.DetailActivity;
 import org.smartregister.immunization.sample.R;
 import org.smartregister.immunization.util.VaccinateActionUtils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import org.smartregister.immunization.view.ServiceRowGroup;
 import org.smartregister.repository.DetailsRepository;
@@ -37,8 +38,6 @@ import org.smartregister.service.AlertService;
 import org.smartregister.util.Utils;
 import org.smartregister.view.customcontrols.CustomFontTextView;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +55,6 @@ public class ImmunizationFragment extends Fragment {
     private CommonPersonObjectClient childDetails;
     private ArrayList<ImmunizationRowGroup> vaccineGroups;
     private ArrayList<ServiceRowGroup> serviceRowGroups;
-    private static final String VACCINES_FILE = "vaccines.json";
     private static final String DIALOG_TAG = "ChildImmunoActivity_DIALOG_TAG";
     private AlertService alertService;
     private LinearLayout fragmentContainer;
@@ -84,7 +82,7 @@ public class ImmunizationFragment extends Fragment {
         View underFiveFragment = inflater.inflate(R.layout.child_under_five_fragment, container, false);
         fragmentContainer = (LinearLayout) underFiveFragment.findViewById(R.id.container);
 
-        alertService = Context.getInstance().alertService();
+        alertService = ImmunizationLibrary.getInstance().context().alertService();
 
         DetailsRepository detailsRepository = ((DetailActivity) getActivity()).getDetailsRepository();
         childDetails = childDetails != null ? childDetails : ((DetailActivity) getActivity()).getChildDetails();
@@ -121,12 +119,16 @@ public class ImmunizationFragment extends Fragment {
                     VaccinateActionUtils.allAlertNames("child"));
         }
 
-        String supportedVaccinesString = readAssetContents(VACCINES_FILE);
+        String supportedVaccinesString = VaccinatorUtils.getSupportedVaccines(getActivity());
         try {
             JSONArray supportedVaccines = new JSONArray(supportedVaccinesString);
             for (int i = 0; i < supportedVaccines.length(); i++) {
+                JSONObject vaccineGroupObject = supportedVaccines.getJSONObject(i);
+
+                VaccinateActionUtils.addBcg2SpecialVaccine(getActivity(), vaccineGroupObject, vaccineList);
+
                 ImmunizationRowGroup curGroup = new ImmunizationRowGroup(getActivity(), editmode);
-                curGroup.setData(supportedVaccines.getJSONObject(i), childDetails, vaccineList, alertList);
+                curGroup.setData(vaccineGroupObject, childDetails, vaccineList, alertList);
                 curGroup.setOnVaccineUndoClickListener(new ImmunizationRowGroup.OnVaccineUndoClickListener() {
                     @Override
                     public void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine) {
@@ -201,23 +203,6 @@ public class ImmunizationFragment extends Fragment {
 
     }
 
-    private String readAssetContents(String path) {
-        String fileContents = null;
-        try {
-            InputStream is = getActivity().getAssets().open(path);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            fileContents = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            Log.e(getClass().getName(), ex.toString(), ex);
-        }
-
-        return fileContents;
-    }
-
-
     public void addVaccinationDialogFragment(List<VaccineWrapper> vaccineWrappers, ImmunizationRowGroup vaccineGroup) {
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
         android.app.Fragment prev = getActivity().getFragmentManager().findFragmentByTag(DIALOG_TAG);
@@ -237,7 +222,7 @@ public class ImmunizationFragment extends Fragment {
                 .findByEntityId(childDetails.entityId());
         if (vaccineList == null) vaccineList = new ArrayList<>();
 
-        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(getActivity(), dob, vaccineList, vaccineWrappers, vaccineGroup);
+        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(getActivity(), dob, vaccineList, vaccineWrappers, vaccineGroup, true);
         vaccinationDialogFragment.show(ft, DIALOG_TAG);
     }
 
@@ -248,11 +233,16 @@ public class ImmunizationFragment extends Fragment {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
+        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        DateTime dob = DateTime.now();
+        if (!TextUtils.isEmpty(dobString)) {
+            dob = new DateTime(dobString);
+        }
 
         List<ServiceRecord> serviceRecordList = ImmunizationLibrary.getInstance().recurringServiceRecordRepository()
                 .findByEntityId(childDetails.entityId());
 
-        ServiceEditDialogFragment serviceEditDialogFragment = ServiceEditDialogFragment.newInstance(serviceRecordList, serviceWrapper, serviceRowGroup);
+        ServiceEditDialogFragment serviceEditDialogFragment = ServiceEditDialogFragment.newInstance(dob, serviceRecordList, serviceWrapper, serviceRowGroup, true);
         serviceEditDialogFragment.show(ft, DIALOG_TAG);
     }
 

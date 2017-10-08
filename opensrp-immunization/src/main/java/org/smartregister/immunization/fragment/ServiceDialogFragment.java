@@ -46,6 +46,9 @@ public class ServiceDialogFragment extends DialogFragment {
     public static final String DIALOG_TAG = "ServiceDialogFragment";
     public static final String WRAPPER_TAG = "tag";
     private List<ServiceRecord> issuedServices;
+    private DateTime dateOfBirth;
+    private boolean disableConstraints;
+    private DateTime dcToday;
 
     public static ServiceDialogFragment newInstance(
             List<ServiceRecord> issuedServices,
@@ -57,6 +60,25 @@ public class ServiceDialogFragment extends DialogFragment {
         args.putSerializable(WRAPPER_TAG, tag);
         serviceDialogFragment.setArguments(args);
         serviceDialogFragment.setIssuedServices(issuedServices);
+        serviceDialogFragment.setDisableConstraints(false);
+
+        return serviceDialogFragment;
+    }
+
+    public static ServiceDialogFragment newInstance(
+            DateTime dateOfBirth,
+            List<ServiceRecord> issuedServices,
+            ServiceWrapper tag,
+            boolean disableConstraints) {
+
+        ServiceDialogFragment serviceDialogFragment = new ServiceDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(WRAPPER_TAG, tag);
+        serviceDialogFragment.setArguments(args);
+        serviceDialogFragment.setIssuedServices(issuedServices);
+        serviceDialogFragment.setDateOfBirth(dateOfBirth);
+        serviceDialogFragment.setDisableConstraints(disableConstraints);
 
         return serviceDialogFragment;
     }
@@ -177,6 +199,8 @@ public class ServiceDialogFragment extends DialogFragment {
 
             // step 2
             final DatePicker itnDatePicker = (DatePicker) step2.findViewById(R.id.itn_date_picker);
+            DatePickerUtils.themeDatePicker(itnDatePicker, new char[]{'d', 'm', 'y'});
+
             Button recordItn = (Button) step2.findViewById(R.id.record_itn);
             recordItn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -329,13 +353,17 @@ public class ServiceDialogFragment extends DialogFragment {
             return;
         }
 
-
         DateTime today = ServiceSchedule.standardiseDateTime(DateTime.now());
         DateTime minDate = null;
         DateTime maxDate = null;
 
-        minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
-        maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        if (disableConstraints) {
+            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
+            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
+        } else {
+            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
+            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        }
 
         if (maxDate.getMillis() >= minDate.getMillis()) {
             givenToday.setTextColor(getActivity().getResources().getColor(R.color.white));
@@ -385,8 +413,13 @@ public class ServiceDialogFragment extends DialogFragment {
         DateTime minDate = null;
         DateTime maxDate = null;
 
-        minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
-        maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        if (disableConstraints) {
+            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
+            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
+        } else {
+            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
+            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        }
 
         if (maxDate.getMillis() >= minDate.getMillis()) {
             set.setVisibility(View.VISIBLE);
@@ -398,8 +431,9 @@ public class ServiceDialogFragment extends DialogFragment {
         }
     }
 
-    private DateTime updateMinVaccineDate(DateTime minDate) {
+    private DateTime updateMinVaccineDate(DateTime minDate_) {
         DateTime dueDate = getMinVaccineDate();
+        DateTime minDate = minDate_;
         if (dueDate == null
                 || dueDate.getMillis() < tag.getDob().getMillis()) {
             dueDate = tag.getDob();
@@ -414,8 +448,9 @@ public class ServiceDialogFragment extends DialogFragment {
         return minDate;
     }
 
-    private DateTime updateMaxVaccineDate(DateTime maxDate) {
+    private DateTime updateMaxVaccineDate(DateTime maxDate_) {
         DateTime expiryDate = getMaxVaccineDate();
+        DateTime maxDate = maxDate_;
         if (expiryDate == null
                 || expiryDate.getMillis() > DateTime.now().getMillis()) {
             expiryDate = DateTime.now();
@@ -440,6 +475,17 @@ public class ServiceDialogFragment extends DialogFragment {
 
     public void setIssuedServices(List<ServiceRecord> issuedServices) {
         this.issuedServices = issuedServices;
+    }
+
+    public void setDateOfBirth(DateTime dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setDisableConstraints(boolean disableConstraints) {
+        this.disableConstraints = disableConstraints;
+        if (disableConstraints) {
+            this.dcToday = ServiceSchedule.standardiseDateTime(DateTime.now());
+        }
     }
 
     @Override

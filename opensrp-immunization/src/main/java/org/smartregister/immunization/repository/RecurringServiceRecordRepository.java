@@ -93,7 +93,8 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         }
     }
 
-    public void update(SQLiteDatabase database, ServiceRecord serviceRecord) {
+    public void update(SQLiteDatabase database_, ServiceRecord serviceRecord) {
+        SQLiteDatabase database = database_;
         if (serviceRecord == null || serviceRecord.getId() == null) {
             return;
         }
@@ -159,8 +160,8 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         return serviceRecord;
     }
 
-    public ServiceRecord findUnique(SQLiteDatabase database, ServiceRecord serviceRecord) {
-
+    public ServiceRecord findUnique(SQLiteDatabase database_, ServiceRecord serviceRecord) {
+        SQLiteDatabase database = database_;
         if (serviceRecord == null || (StringUtils.isBlank(serviceRecord.getFormSubmissionId()) && StringUtils.isBlank(serviceRecord.getEventId()))) {
             return null;
         }

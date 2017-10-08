@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
@@ -24,6 +25,7 @@ import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.form.FormSubmission;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceType;
@@ -181,7 +183,7 @@ public class VaccinateActionUtils {
             FormUtils formUtils = FormUtils.getInstance(appContext);
             final FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
 
-            org.smartregister.Context context = org.smartregister.Context.getInstance();
+            org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
             ZiggyService ziggyService = context.ziggyService();
             ziggyService.saveForm(getParams(submission), submission.instance());
 
@@ -323,6 +325,8 @@ public class VaccinateActionUtils {
             case measles2:
             case mr2:
                 return "18 months";
+            default:
+                break;
         }
 
         return "";
@@ -345,7 +349,7 @@ public class VaccinateActionUtils {
             return null;
         } else {
             String stateKey = stateKey(vaccine);
-            if (stateKey.equals("at birth")) {
+            if ("at birth".equals(stateKey)) {
                 stateKey = "Birth";
             }
             return stateKey;
@@ -356,7 +360,7 @@ public class VaccinateActionUtils {
         if (category == null) {
             return null;
         }
-        if (category.equals("child")) {
+        if ("child".equals(category)) {
 
             ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines("child");
             List<String> names = new ArrayList<>();
@@ -428,10 +432,8 @@ public class VaccinateActionUtils {
 
         List<Alert> defaultAlerts = new ArrayList<Alert>();
         for (VaccineRepo.Vaccine v : vList) {
-            if (!VaccinateActionUtils.hasVaccine(vaccineList, v)) {
-                if (!VaccinateActionUtils.hasAlert(alertList, v)) {
-                    defaultAlerts.add(VaccinateActionUtils.createDefaultAlert(v, entityId, birthDateTime));
-                }
+            if ((!VaccinateActionUtils.hasVaccine(vaccineList, v)) && (!VaccinateActionUtils.hasAlert(alertList, v))) {
+                defaultAlerts.add(VaccinateActionUtils.createDefaultAlert(v, entityId, birthDateTime));
             }
         }
 
@@ -520,4 +522,40 @@ public class VaccinateActionUtils {
         return new Alert(entityId, vaccine.display(), vaccine.name(), alertStatus, DateUtil.yyyyMMdd.format(birthDate), null);
 
     }
+
+    public static void addBcg2SpecialVaccine(Context context, JSONObject vaccineGroupObject, List<Vaccine> vaccineList) {
+        String specialVaccinesString = VaccinatorUtils.getSpecialVaccines(context);
+        final String NAME = "name";
+        final String DAYS_AFTER_BIRTH_DUE = "days_after_birth_due";
+        final String VACCINES = "vaccines";
+        final String TYPE = "type";
+
+        try {
+            //Add BCG2 special vaccine to birth vaccine group
+            if (StringUtils.isNotBlank(specialVaccinesString) && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
+                JSONArray specialVaccines = new JSONArray(specialVaccinesString);
+                if (vaccineGroupObject.has(NAME)
+                        && vaccineGroupObject.has(DAYS_AFTER_BIRTH_DUE)
+                        && vaccineGroupObject.has(VACCINES)
+                        && "Birth".equalsIgnoreCase(vaccineGroupObject.getString(NAME))
+                        && "0".equalsIgnoreCase(vaccineGroupObject.getString(DAYS_AFTER_BIRTH_DUE))
+                        && vaccineGroupObject.get(VACCINES) instanceof JSONArray) {
+                    JSONArray vaccineArray = vaccineGroupObject.getJSONArray(VACCINES);
+                    for (int j = 0; j < specialVaccines.length(); j++) {
+                        JSONObject specialVaccine = specialVaccines.getJSONObject(j);
+                        if (specialVaccine.has(NAME)
+                                && specialVaccine.has(TYPE)
+                                && specialVaccine.getString(NAME).equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                                && specialVaccine.getString(TYPE).equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                            vaccineArray.put(specialVaccine);
+                        }
+                    }
+                }
+
+            }
+        } catch (JSONException e) {
+            Log.e(VaccinateActionUtils.class.getName(), Log.getStackTraceString(e));
+        }
+    }
+
 }

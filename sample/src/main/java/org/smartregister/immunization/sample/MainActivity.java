@@ -292,11 +292,17 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             vaccineGroups = new ArrayList<>();
             String supportedVaccinesString = VaccinatorUtils.getSupportedVaccines(this);
 
+
             try {
                 JSONArray supportedVaccines = new JSONArray(supportedVaccinesString);
 
                 for (int i = 0; i < supportedVaccines.length(); i++) {
-                    addVaccineGroup(-1, supportedVaccines.getJSONObject(i), vaccineList, alerts);
+                    JSONObject vaccineGroupObject = supportedVaccines.getJSONObject(i);
+
+                    //Add BCG2 special vaccine to birth vaccine group
+                    VaccinateActionUtils.addBcg2SpecialVaccine(this, vaccineGroupObject, vaccineList);
+
+                    addVaccineGroup(-1, vaccineGroupObject, vaccineList, alerts);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
@@ -428,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 .findByEntityId(childDetails.entityId());
         if (vaccineList == null) vaccineList = new ArrayList<>();
 
-        VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(dob, vaccineList, vaccineWrappers);
+        VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(dob, vaccineList, vaccineWrappers, true);
         vaccinationDialogFragment.show(ft, DIALOG_TAG);
     }
 
@@ -442,11 +448,16 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         ft.addToBackStack(null);
         serviceGroup.setModalOpen(true);
+        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        DateTime dob = DateTime.now();
+        if (!TextUtils.isEmpty(dobString)) {
+            dob = new DateTime(dobString);
+        }
 
         List<ServiceRecord> serviceRecordList = ImmunizationLibrary.getInstance().recurringServiceRecordRepository()
                 .findByEntityId(childDetails.entityId());
 
-        ServiceDialogFragment serviceDialogFragment = ServiceDialogFragment.newInstance(serviceRecordList, serviceWrapper);
+        ServiceDialogFragment serviceDialogFragment = ServiceDialogFragment.newInstance(dob, serviceRecordList, serviceWrapper, true);
         serviceDialogFragment.show(ft, DIALOG_TAG);
     }
 

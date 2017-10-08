@@ -51,6 +51,8 @@ public class VaccinationDialogFragment extends DialogFragment {
     private List<Vaccine> issuedVaccines;
     public static final String DIALOG_TAG = "VaccinationDialogFragment";
     public static final String WRAPPER_TAG = "tag";
+    private boolean disableConstraints;
+    private Calendar dcToday;
 
     public static VaccinationDialogFragment newInstance(Date dateOfBirth,
                                                         List<Vaccine> issuedVaccines,
@@ -63,6 +65,23 @@ public class VaccinationDialogFragment extends DialogFragment {
         vaccinationDialogFragment.setArguments(args);
         vaccinationDialogFragment.setDateOfBirth(dateOfBirth);
         vaccinationDialogFragment.setIssuedVaccines(issuedVaccines);
+        vaccinationDialogFragment.setDisableConstraints(false);
+
+        return vaccinationDialogFragment;
+    }
+
+    public static VaccinationDialogFragment newInstance(Date dateOfBirth,
+                                                        List<Vaccine> issuedVaccines,
+                                                        ArrayList<VaccineWrapper> tags, boolean disableConstraints) {
+
+        VaccinationDialogFragment vaccinationDialogFragment = new VaccinationDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(WRAPPER_TAG, tags);
+        vaccinationDialogFragment.setArguments(args);
+        vaccinationDialogFragment.setDateOfBirth(dateOfBirth);
+        vaccinationDialogFragment.setIssuedVaccines(issuedVaccines);
+        vaccinationDialogFragment.setDisableConstraints(disableConstraints);
 
         return vaccinationDialogFragment;
     }
@@ -79,6 +98,15 @@ public class VaccinationDialogFragment extends DialogFragment {
 
     public void setIssuedVaccines(List<Vaccine> issuedVaccines) {
         this.issuedVaccines = issuedVaccines;
+    }
+
+    public void setDisableConstraints(boolean disableConstraints) {
+        this.disableConstraints = disableConstraints;
+        if (disableConstraints) {
+            Calendar dcToday = Calendar.getInstance();
+            VaccineSchedule.standardiseCalendarDate(dcToday);
+            this.dcToday = dcToday;
+        }
     }
 
     @Override
@@ -326,8 +354,20 @@ public class VaccinationDialogFragment extends DialogFragment {
 
     private boolean validateVaccinationDate(VaccineWrapper vaccine, Date date) {
         // Assuming that the vaccine wrapper provided to this method isn't one where there's more than one vaccine in a wrapper
-        Date minDate = getMinVaccineDate(vaccine.getName());
-        Date maxDate = getMaxVaccineDate(vaccine.getName());
+        Date minDate;
+        Date maxDate;
+
+        if (disableConstraints) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateOfBirth);
+            VaccineSchedule.standardiseCalendarDate(calendar);
+
+            minDate = calendar.getTime();
+            maxDate = dcToday.getTime();
+        } else {
+            minDate = getMinVaccineDate(vaccine.getName());
+            maxDate = getMaxVaccineDate(vaccine.getName());
+        }
         Calendar vaccineDate = Calendar.getInstance();
         vaccineDate.setTime(date);
         VaccineSchedule.standardiseCalendarDate(vaccineDate);
@@ -370,15 +410,21 @@ public class VaccinationDialogFragment extends DialogFragment {
         Calendar minDate = null;
         Calendar maxDate = null;
 
-        for (VaccineWrapper curVaccine : tags) {
-            if (!curVaccine.getName().contains("/")) {
-                minDate = updateMinVaccineDate(minDate, curVaccine.getName());
-                maxDate = updateMaxVaccineDate(maxDate, curVaccine.getName());
-            } else {
-                String[] sisterVaccines = curVaccine.getName().split(" / ");
-                for (int i = 0; i < sisterVaccines.length; i++) {
-                    minDate = updateMinVaccineDate(minDate, sisterVaccines[i]);
-                    maxDate = updateMaxVaccineDate(maxDate, sisterVaccines[i]);
+        if (disableConstraints) {
+            minDate = Calendar.getInstance();
+            minDate.setTime(dateOfBirth);
+            maxDate = dcToday;
+        } else {
+            for (VaccineWrapper curVaccine : tags) {
+                if (!curVaccine.getName().contains("/")) {
+                    minDate = updateMinVaccineDate(minDate, curVaccine.getName());
+                    maxDate = updateMaxVaccineDate(maxDate, curVaccine.getName());
+                } else {
+                    String[] sisterVaccines = curVaccine.getName().split(" / ");
+                    for (int i = 0; i < sisterVaccines.length; i++) {
+                        minDate = updateMinVaccineDate(minDate, sisterVaccines[i]);
+                        maxDate = updateMaxVaccineDate(maxDate, sisterVaccines[i]);
+                    }
                 }
             }
         }
@@ -421,8 +467,9 @@ public class VaccinationDialogFragment extends DialogFragment {
         }
     }
 
-    private Calendar updateMinVaccineDate(Calendar minDate, String vaccineName) {
+    private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
         Date dueDate = getMinVaccineDate(vaccineName);
+        Calendar minDate = minDate_;
         if (dueDate == null
                 || dueDate.getTime() < dateOfBirth.getTime()) {
             dueDate = dateOfBirth;
@@ -438,8 +485,9 @@ public class VaccinationDialogFragment extends DialogFragment {
         return minDate;
     }
 
-    private Calendar updateMaxVaccineDate(Calendar maxDate, String vaccineName) {
+    private Calendar updateMaxVaccineDate(Calendar maxDate_, String vaccineName) {
         Date expiryDate = getMaxVaccineDate(vaccineName);
+        Calendar maxDate = maxDate_;
         if (expiryDate == null
                 || expiryDate.getTime() > Calendar.getInstance().getTimeInMillis()) {
             expiryDate = Calendar.getInstance().getTime();

@@ -31,6 +31,7 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
+import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -40,8 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.smartregister.immunization.util.ImageUtils;
-
 @SuppressLint("ValidFragment")
 public class VaccinationEditDialogFragment extends DialogFragment {
     private final Context context;
@@ -50,16 +49,40 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     private VaccinationActionListener listener;
     private Date dateOfBirth;
     private List<Vaccine> issuedVaccines;
+    private boolean disableConstraints;
+    private Calendar dcToday;
+
     public static final String DIALOG_TAG = "VaccinationEditDialogFragment";
 
-    private VaccinationEditDialogFragment(Context context, Date dateOfBirth,
-                                          List<Vaccine> issuedVaccines,
-                                          List<VaccineWrapper> tags, View viewGroup) {
+    private VaccinationEditDialogFragment(
+            Context context, Date dateOfBirth,
+            List<Vaccine> issuedVaccines,
+            List<VaccineWrapper> tags, View viewGroup) {
         this.context = context;
         this.dateOfBirth = dateOfBirth;
         this.issuedVaccines = issuedVaccines;
         this.tags = new ArrayList<>(tags);
         this.viewGroup = viewGroup;
+        this.disableConstraints = false;
+    }
+
+    private VaccinationEditDialogFragment(
+            Context context, Date dateOfBirth,
+            List<Vaccine> issuedVaccines,
+            List<VaccineWrapper> tags, View viewGroup,
+            boolean disableConstraints) {
+        this.context = context;
+        this.dateOfBirth = dateOfBirth;
+        this.issuedVaccines = issuedVaccines;
+        this.tags = new ArrayList<>(tags);
+        this.viewGroup = viewGroup;
+
+        this.disableConstraints = disableConstraints;
+        if (disableConstraints) {
+            Calendar dcToday = Calendar.getInstance();
+            VaccineSchedule.standardiseCalendarDate(dcToday);
+            this.dcToday = dcToday;
+        }
     }
 
     public static VaccinationEditDialogFragment newInstance(
@@ -67,6 +90,13 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             List<Vaccine> issuedVaccines,
             List<VaccineWrapper> tags, View viewGroup) {
         return new VaccinationEditDialogFragment(context, dateOfBirth, issuedVaccines, tags, viewGroup);
+    }
+
+    public static VaccinationEditDialogFragment newInstance(
+            Context context, Date dateOfBirth,
+            List<Vaccine> issuedVaccines,
+            List<VaccineWrapper> tags, View viewGroup, boolean disableConstraints) {
+        return new VaccinationEditDialogFragment(context, dateOfBirth, issuedVaccines, tags, viewGroup, disableConstraints);
     }
 
     @Override
@@ -283,8 +313,20 @@ public class VaccinationEditDialogFragment extends DialogFragment {
 
     private boolean validateVaccinationDate(VaccineWrapper vaccine, Date date) {
         // Assuming that the vaccine wrapper provided to this method isn't one where there's more than one vaccine in a wrapper
-        Date minDate = getMinVaccineDate(vaccine.getName());
-        Date maxDate = getMaxVaccineDate(vaccine.getName());
+
+        Date minDate;
+        Date maxDate;
+        if (disableConstraints) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateOfBirth);
+            VaccineSchedule.standardiseCalendarDate(calendar);
+
+            minDate = calendar.getTime();
+            maxDate = dcToday.getTime();
+        } else {
+            minDate = getMinVaccineDate(vaccine.getName());
+            maxDate = getMaxVaccineDate(vaccine.getName());
+        }
         Calendar vaccineDate = Calendar.getInstance();
         vaccineDate.setTime(date);
         VaccineSchedule.standardiseCalendarDate(vaccineDate);
@@ -326,15 +368,21 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         Calendar minDate = null;
         Calendar maxDate = null;
 
-        for (VaccineWrapper curVaccine : tags) {
-            if (!curVaccine.getName().contains("/")) {
-                minDate = updateMinVaccineDate(minDate, curVaccine.getName());
-                maxDate = updateMaxVaccineDate(maxDate, curVaccine.getName());
-            } else {
-                String[] sisterVaccines = curVaccine.getName().split(" / ");
-                for (int i = 0; i < sisterVaccines.length; i++) {
-                    minDate = updateMinVaccineDate(minDate, sisterVaccines[i]);
-                    maxDate = updateMaxVaccineDate(maxDate, sisterVaccines[i]);
+        if (disableConstraints) {
+            minDate = Calendar.getInstance();
+            minDate.setTime(dateOfBirth);
+            maxDate = dcToday;
+        } else {
+            for (VaccineWrapper curVaccine : tags) {
+                if (!curVaccine.getName().contains("/")) {
+                    minDate = updateMinVaccineDate(minDate, curVaccine.getName());
+                    maxDate = updateMaxVaccineDate(maxDate, curVaccine.getName());
+                } else {
+                    String[] sisterVaccines = curVaccine.getName().split(" / ");
+                    for (int i = 0; i < sisterVaccines.length; i++) {
+                        minDate = updateMinVaccineDate(minDate, sisterVaccines[i]);
+                        maxDate = updateMaxVaccineDate(maxDate, sisterVaccines[i]);
+                    }
                 }
             }
         }
@@ -352,8 +400,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
     }
 
-    private Calendar updateMinVaccineDate(Calendar minDate, String vaccineName) {
+    private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
         Date dueDate = getMinVaccineDate(vaccineName);
+        Calendar minDate = minDate_;
         if (dueDate == null
                 || dueDate.getTime() < dateOfBirth.getTime()) {
             dueDate = dateOfBirth;
@@ -369,8 +418,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         return minDate;
     }
 
-    private Calendar updateMaxVaccineDate(Calendar maxDate, String vaccineName) {
+    private Calendar updateMaxVaccineDate(Calendar maxDate_, String vaccineName) {
         Date expiryDate = getMaxVaccineDate(vaccineName);
+        Calendar maxDate = maxDate_;
         if (expiryDate == null
                 || expiryDate.getTime() > Calendar.getInstance().getTimeInMillis()) {
             expiryDate = Calendar.getInstance().getTime();

@@ -43,7 +43,6 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     private static final String TAG = "ServiceRowGroup";
     private Context context;
     private TextView nameTV;
-    private TextView recordAllTV;
     private ExpandableHeightGridView servicesGV;
     private ServiceRowAdapter serviceRowAdapter;
     private List<ServiceType> serviceTypeList;
@@ -126,7 +125,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
         nameTV.setVisibility(GONE);
         servicesGV = (ExpandableHeightGridView) findViewById(R.id.vaccines_gv);
         servicesGV.setExpanded(true);
-        recordAllTV = (TextView) findViewById(R.id.record_all_tv);
+        TextView recordAllTV = (TextView) findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
         recordAllTV.setVisibility(GONE);
     }
@@ -232,15 +231,12 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v instanceof ServiceRowCard) {
-            if (onServiceClickedListener != null) {
+        if (v instanceof ServiceRowCard && onServiceClickedListener != null) {
                 onServiceClickedListener.onClick(this, ((ServiceRowCard) v).getServiceWrapper());
-            }
-        } else if (v.getId() == R.id.undo_b) {
-            if (v.getParent().getParent() instanceof ServiceRowCard) {
+
+        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ServiceRowCard) {
                 ServiceRowCard serviceRowCard = (ServiceRowCard) v.getParent().getParent();
                 onUndoClick(serviceRowCard);
-            }
         }
     }
 

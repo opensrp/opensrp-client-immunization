@@ -247,11 +247,9 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         } else if (v instanceof ImmunizationRowCard && onVaccineClickedListener != null) {
             onVaccineClickedListener.onClick(this, ((ImmunizationRowCard) v).getVaccineWrapper());
 
-        } else if (v.getId() == R.id.undo_b) {
-            if (v.getParent().getParent() instanceof ImmunizationRowCard) {
-                ImmunizationRowCard vaccineCard = (ImmunizationRowCard) v.getParent().getParent();
-                onUndoClick(vaccineCard);
-            }
+        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ImmunizationRowCard) {
+            ImmunizationRowCard vaccineCard = (ImmunizationRowCard) v.getParent().getParent();
+            onUndoClick(vaccineCard);
         }
     }
 
@@ -309,6 +307,12 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
+
+                //Add exception for bcg 2
+                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
+                    continue;
+                }
+
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
 
@@ -332,6 +336,12 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         if (!vaccineList.isEmpty()) {
             for (Vaccine vaccine : vaccineList) {
                 if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
+
+                    //Add exception for bcg 2
+                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
+                        continue;
+                    }
+
                     long diff = vaccine.getUpdatedAt() - vaccine.getDate().getTime();
                     if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), false);
