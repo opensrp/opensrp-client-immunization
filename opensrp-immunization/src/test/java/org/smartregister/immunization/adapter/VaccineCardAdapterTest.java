@@ -52,7 +52,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, vaccineGroup));
+        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, vaccineGroup ,""));
     }
 
 
@@ -67,9 +67,9 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
         List<Vaccine> vaccineList = new ArrayList<>();
         List<Alert> alerts = new ArrayList<>();
-        vaccineGroup.setData(vaccineData, commonPersonObjectClient, vaccineList, alerts);
+        vaccineGroup.setData(vaccineData, commonPersonObjectClient, vaccineList, alerts , "");
         Mockito.when(vaccineGroup.getVaccineData()).thenReturn(vaccineData);
-        vaccineCardAdapter = new VaccineCardAdapter(context, vaccineGroup);
+        vaccineCardAdapter = new VaccineCardAdapter(context, vaccineGroup ,"");
         org.junit.Assert.assertNotNull(vaccineCardAdapter);
         org.junit.Assert.assertEquals(3, vaccineCardAdapter.getCount());
     }

@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private void addVaccineGroup(int canvasId, JSONObject vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
         LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
         VaccineGroup curGroup = new VaccineGroup(this);
-        curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts);
+        curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts , "child");
         curGroup.setOnRecordAllClickListener(new VaccineGroup.OnRecordAllClickListener() {
             @Override
             public void onClick(VaccineGroup vaccineGroup, ArrayList<VaccineWrapper> dueVaccines) {
@@ -516,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         if (Looper.myLooper() == Looper.getMainLooper()) {
             if (undo) {
                 vaccineGroup.setVaccineList(vaccineList);
-                vaccineGroup.updateWrapperStatus(wrappers);
+                vaccineGroup.updateWrapperStatus(wrappers, "child");
             }
             vaccineGroup.updateViews(wrappers);
 
@@ -527,7 +527,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 public void run() {
                     if (undo) {
                         vaccineGroup.setVaccineList(vaccineList);
-                        vaccineGroup.updateWrapperStatus(wrappers);
+                        vaccineGroup.updateWrapperStatus(wrappers, "child");
                     }
                     vaccineGroup.updateViews(wrappers);
                 }
