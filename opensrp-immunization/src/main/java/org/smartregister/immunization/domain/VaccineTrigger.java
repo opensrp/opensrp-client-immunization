@@ -30,7 +30,7 @@ public class VaccineTrigger {
             final String OFFSET = "offset";
             final String PREREQUISITE = "prerequisite";
             final String WINDOW = "window";
-            final String LMP = "window";
+            final String LMP = "lmp";
             if (data.getString(REFERENCE).equalsIgnoreCase(Reference.DOB.name())) {
                 return new VaccineTrigger(data.getString(OFFSET), data.has(WINDOW) ? data.getString(WINDOW) : null , Reference.DOB);
             }else if (data.getString(REFERENCE).equalsIgnoreCase(Reference.LMP.name())) {
