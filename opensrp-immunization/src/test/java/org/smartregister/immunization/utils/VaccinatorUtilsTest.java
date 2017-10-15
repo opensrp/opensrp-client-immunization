@@ -15,8 +15,6 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AllSettings;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by onaio on 29/08/2017.
@@ -42,7 +40,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -50,9 +48,9 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(anyString())).thenReturn(commonRepository);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
         VaccinatorUtils.getWasted("", "", "");
-        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(anyString());
+        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString());
     }
 
     @Test
@@ -60,13 +58,9 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(anyString())).thenReturn(commonRepository);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
         VaccinatorUtils.getUsed("", "", "",new String[]{"", ""});
-        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(anyString());
+        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString());
     }
-
-
-
-
 
 }

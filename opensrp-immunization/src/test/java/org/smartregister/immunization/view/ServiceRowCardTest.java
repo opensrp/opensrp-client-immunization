@@ -11,9 +11,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.smartregister.immunization.BaseUnitTest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -32,7 +29,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
     @Before
     public void setUp() {
         serviceRowCard = Mockito.mock(ServiceRowCard.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = Exception.class)
@@ -40,13 +37,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         ServiceRowCard serviceRowCardSpy = PowerMockito.spy(serviceRowCard);
         PowerMockito.doReturn(null).when(serviceRowCardSpy, "init", context);
-
-
-        assertNotNull(new ServiceRowCard(context));
-        assertNotNull(new ServiceRowCard(context, attributeSet));
-        assertNotNull(new ServiceRowCard(context, attributeSet, 0));
-        assertNotNull(new ServiceRowCard(context, attributeSet, 0, 0));
+        org.junit.Assert.assertNotNull(new ServiceRowCard(context));
+        org.junit.Assert.assertNotNull(new ServiceRowCard(context, attributeSet));
+        org.junit.Assert.assertNotNull(new ServiceRowCard(context, attributeSet, 0));
+        org.junit.Assert.assertNotNull(new ServiceRowCard(context, attributeSet, 0, 0));
     }
-
 
 }

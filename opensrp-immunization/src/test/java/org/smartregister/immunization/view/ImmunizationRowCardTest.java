@@ -11,9 +11,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.smartregister.immunization.BaseUnitTest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -32,21 +29,17 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
     @Before
     public void setUp() {
         immunizationRowCard = Mockito.mock(ImmunizationRowCard.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
-
         ImmunizationRowCard immunizationRowCardSpy = PowerMockito.spy(immunizationRowCard);
         PowerMockito.doReturn(null).when(immunizationRowCardSpy, "init", context);
-
-
-        assertNotNull(new ImmunizationRowCard(context));
-        assertNotNull(new ImmunizationRowCard(context, attributeSet));
-        assertNotNull(new ImmunizationRowCard(context, attributeSet, 0));
-        assertNotNull(new ImmunizationRowCard(context, attributeSet, 0, 0));
+        org.junit.Assert.assertNotNull(new ImmunizationRowCard(context));
+        org.junit.Assert.assertNotNull(new ImmunizationRowCard(context, attributeSet));
+        org.junit.Assert.assertNotNull(new ImmunizationRowCard(context, attributeSet, 0));
+        org.junit.Assert.assertNotNull(new ImmunizationRowCard(context, attributeSet, 0, 0));
     }
-
 
 }
