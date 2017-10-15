@@ -34,16 +34,12 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
-
         ImmunizationRowGroup immunizationRowGroupSpy = PowerMockito.spy(immunizationRowGroup);
         PowerMockito.doReturn(null).when(immunizationRowGroupSpy, "init", context);
-
-
         org.junit.Assert.assertNotNull(new ImmunizationRowGroup(context, true));
         org.junit.Assert.assertNotNull(new ImmunizationRowGroup(context, attributeSet));
         org.junit.Assert.assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0));
         org.junit.Assert.assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0, 0));
     }
-
 
 }
