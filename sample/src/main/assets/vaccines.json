@@ -31,6 +31,12 @@
               "reference": "dob",
               "offset": "+13d"
             }
+          ],
+          "conditions": [
+            {
+              "type": "not_given",
+              "vaccine": "OPV 4"
+            }
           ]
         }
       },
