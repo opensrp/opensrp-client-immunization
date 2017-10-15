@@ -68,5 +68,4 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertEquals(list1.size(), serviceRowAdapter.getCount());
     }
 
-
 }

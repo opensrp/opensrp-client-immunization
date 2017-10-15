@@ -50,7 +50,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         jsonArray.put("testvalue2");
         jsonArray.put("testvalue3");
         vaccineData.put("vaccines", jsonArray);
-
         List<Vaccine> vaccineList = new ArrayList<>();
         List<Alert> alerts = new ArrayList<>();
         vaccineGroup.setData(vaccineData, commonPersonObjectClient, vaccineList, alerts);
@@ -59,6 +58,5 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(immunizationRowAdapter);
         junit.framework.Assert.assertEquals(jsonArray.length(), immunizationRowAdapter.getCount());
     }
-
 
 }

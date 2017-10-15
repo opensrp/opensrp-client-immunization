@@ -57,7 +57,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
-        HashMap<String ,List<ServiceType>> vaccineData = new HashMap<String, List<ServiceType>>() ;
+        HashMap<String, List<ServiceType>> vaccineData = new HashMap<String, List<ServiceType>>() ;
         ArrayList<ServiceType> list1 = new ArrayList<ServiceType>();
         list1.add(new ServiceType());
         ArrayList<ServiceType> list2 = new ArrayList<ServiceType>();
@@ -91,6 +91,5 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         }
         return keys;
     }
-
 
 }
