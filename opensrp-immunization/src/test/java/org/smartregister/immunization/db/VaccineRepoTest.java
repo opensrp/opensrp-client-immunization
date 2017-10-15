@@ -21,12 +21,12 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.tt3);
         vaccines.add(VaccineRepo.Vaccine.tt4);
         vaccines.add(VaccineRepo.Vaccine.tt5);
-        junit.framework.Assert.assertEquals(vaccines, VaccineRepo.getVaccines("woman"));
-        junit.framework.Assert.assertEquals(vaccines.get(0),VaccineRepo.getVaccine("TT 1", WOMAN));
-        junit.framework.Assert.assertEquals(vaccines.get(1),VaccineRepo.getVaccine("TT 2", WOMAN));
-        junit.framework.Assert.assertEquals(vaccines.get(2),VaccineRepo.getVaccine("TT 3", WOMAN));
-        junit.framework.Assert.assertEquals(vaccines.get(3),VaccineRepo.getVaccine("TT 4", WOMAN));
-        junit.framework.Assert.assertEquals(vaccines.get(4),VaccineRepo.getVaccine("TT 5", WOMAN));
+        junit.framework.Assert.assertEquals(vaccines, VaccineRepo.getVaccines(WOMAN));
+        junit.framework.Assert.assertEquals(vaccines.get(0), VaccineRepo.getVaccine("TT 1", WOMAN));
+        junit.framework.Assert.assertEquals(vaccines.get(1), VaccineRepo.getVaccine("TT 2", WOMAN));
+        junit.framework.Assert.assertEquals(vaccines.get(2), VaccineRepo.getVaccine("TT 3", WOMAN));
+        junit.framework.Assert.assertEquals(vaccines.get(3), VaccineRepo.getVaccine("TT 4", WOMAN));
+        junit.framework.Assert.assertEquals(vaccines.get(4), VaccineRepo.getVaccine("TT 5", WOMAN));
     }
 
     @Test
