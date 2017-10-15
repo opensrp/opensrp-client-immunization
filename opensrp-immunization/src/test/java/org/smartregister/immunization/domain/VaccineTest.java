@@ -112,11 +112,9 @@ public class VaccineTest extends BaseUnitTest {
     public void assetIdentifiersFromCLientID() {
         Vaccine vaccine = new Vaccine();
         vaccine.setProgramClientId("programClientID");
-        HashMap<String,String> hashMap = new HashMap<String, String>();
-        hashMap.put("ZEIR_ID" ,"programClientID");
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+        hashMap.put("ZEIR_ID", "programClientID");
         assertEquals(hashMap, vaccine.getIdentifiers());
     }
-
-
 
 }

@@ -68,10 +68,10 @@ public class VaccineWrapperTest extends BaseUnitTest {
         vaccineWrapper.setPatientName("patientName");
         assertEquals("patientName", vaccineWrapper.getPatientName());
 
-        vaccineWrapper.setUpdatedVaccineDate(datetime,true);
+        vaccineWrapper.setUpdatedVaccineDate(datetime, true);
         assertEquals(datetime, vaccineWrapper.getVaccineDate());
         assertEquals(datetime, vaccineWrapper.getUpdatedVaccineDate());
-        assertEquals(true,vaccineWrapper.isToday());
+        assertEquals(true, vaccineWrapper.isToday());
         assertEquals(datetime.toString("yyyy-MM-dd"), vaccineWrapper.getUpdatedVaccineDateAsString());
         assertEquals(datetime.toString("yyyy-MM-dd"), vaccineWrapper.getVaccineDateAsString());
 
@@ -92,9 +92,5 @@ public class VaccineWrapperTest extends BaseUnitTest {
         assertEquals(true, vaccineWrapper.isSynced());
 
     }
-
-
-
-
 
 }

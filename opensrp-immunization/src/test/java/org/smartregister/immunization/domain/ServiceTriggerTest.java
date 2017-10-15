@@ -17,11 +17,11 @@ import static junit.framework.Assert.assertNotNull;
 
 public class ServiceTriggerTest extends BaseUnitTest {
 
-    String stringdata1 = "{\n" +
+    public static final String stringdata1 = "{\n" +
             "            \"reference\": \"dob\",\n" +
             "            \"offset\": \"+0d\"\n" +
             "          }";
-    String stringdata2 = "{\n" +
+    public static final String stringdata2 = "{\n" +
             "            \"reference\": \"multiple\",\n" +
             "            \"multiple\": {\n" +
             "              \"condition\": \"OR\",\n" +
@@ -29,10 +29,10 @@ public class ServiceTriggerTest extends BaseUnitTest {
             "                \"Vit A IFC 2\",\n" +
             "                \"dob\"\n" +
             "              ]\n" +
-            "            }" +",\n" +
-            "            \"offset\": \"+6m\""+
+            "            }" + ",\n" +
+            "            \"offset\": \"+6m\"" +
             "}";
-    String stringdata3 = "{\n" +
+    public static final String stringdata3 = "{\n" +
             "            \"reference\": \"prerequisite\",\n" +
             "            \"prerequisite\": \"Vit A 2\",\n" +
             "            \"offset\": \"+6m\"\n" +
@@ -61,7 +61,7 @@ public class ServiceTriggerTest extends BaseUnitTest {
 
         assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(), condition);
         assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(), prerequisites);
-        assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger. Reference.MULTIPLE);
+        assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger.Reference.MULTIPLE);
         assertEquals(ServiceTrigger.init(data1).getOffset(), "+0d");
         assertEquals(ServiceTrigger.init(data3).getPrerequisite(), "Vit A 2");
 

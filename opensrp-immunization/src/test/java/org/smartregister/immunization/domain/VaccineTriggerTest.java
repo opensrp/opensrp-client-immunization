@@ -18,6 +18,7 @@ import static junit.framework.Assert.assertNotNull;
 
 public class VaccineTriggerTest extends BaseUnitTest {
 
+    public static final String CHILD = "child";
     String stringdata1 = "{\n" +
             "              \"reference\": \"dob\",\n" +
             "              \"offset\": \"+0d\"\n" +
@@ -32,8 +33,8 @@ public class VaccineTriggerTest extends BaseUnitTest {
     public void assertInitReturnsNonNullTriggers() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
-        assertNotNull(VaccineTrigger.init("child", data1));
-        assertNotNull(VaccineTrigger.init("child", data2));
+        assertNotNull(VaccineTrigger.init(CHILD, data1));
+        assertNotNull(VaccineTrigger.init(CHILD, data2));
     }
 
     @Test
@@ -43,8 +44,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         VaccineSchedule.standardiseCalendarDate(calendar);
-        assertEquals(calendar.getTime(), VaccineTrigger.init("child", data1).getFireDate(Collections.EMPTY_LIST, date));
-
+        assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
     }
 
 }

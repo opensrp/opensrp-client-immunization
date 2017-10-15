@@ -12,12 +12,19 @@ import java.util.HashMap;
  */
 
 public class ServiceRecordTest extends BaseUnitTest {
+    public final static String BASEENTITYID = "baseEntityId";
+    public final static String LOCATIONID = "locationID";
+    public final static String SYNCED = "synced";
+    public final static String EVENTID = "eventID";
+    public final static String PROGRAMCLIENTID = "programClientID";
+    public final static String NAME = "name";
+    public final static String TYPE = "type";
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         junit.framework.Assert.assertNotNull(new ServiceRecord());
-        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, "baseEntityId", 0l, "value", new Date(), "anmId", "locationId", "syncStatus", "eventId", "formSubmissionId", 0l));
-        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, "baseEntityId", "programClientId", 0l, "value", new Date(), "anmId", "locationId", "syncStatus", "eventId", "formSubmissionId", 0l));
+        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, 0l, "value", new Date(), "anmId", LOCATIONID, "syncStatus", "eventId", "formSubmissionId", 0l));
+        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, "programClientId", 0l, "value", new Date(), "anmId", LOCATIONID, "syncStatus", "eventId", "formSubmissionId", 0l));
     }
 
     @Test
@@ -25,10 +32,10 @@ public class ServiceRecordTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord();
 
         serviceRecord.setId(0l);
-        junit.framework.Assert.assertEquals(0l,serviceRecord.getId().longValue());
+        junit.framework.Assert.assertEquals(0l, serviceRecord.getId().longValue());
 
-        serviceRecord.setBaseEntityId( "baseEntityId");
-        junit.framework.Assert.assertEquals( "baseEntityId", serviceRecord.getBaseEntityId());
+        serviceRecord.setBaseEntityId(BASEENTITYID);
+        junit.framework.Assert.assertEquals(BASEENTITYID, serviceRecord.getBaseEntityId());
 
         serviceRecord.setRecurringServiceId(0l);
         junit.framework.Assert.assertEquals(0l, serviceRecord.getRecurringServiceId().longValue());
@@ -46,11 +53,11 @@ public class ServiceRecordTest extends BaseUnitTest {
         serviceRecord.setLocationId("locationID");
         junit.framework.Assert.assertEquals("locationID", serviceRecord.getLocationId());
 
-        serviceRecord.setSyncStatus("synced");
-        junit.framework.Assert.assertEquals("synced", serviceRecord.getSyncStatus());
+        serviceRecord.setSyncStatus(SYNCED);
+        junit.framework.Assert.assertEquals(SYNCED, serviceRecord.getSyncStatus());
 
-        serviceRecord.setEventId("eventID");
-        junit.framework.Assert.assertEquals("eventID", serviceRecord.getEventId());
+        serviceRecord.setEventId(EVENTID);
+        junit.framework.Assert.assertEquals(EVENTID, serviceRecord.getEventId());
 
         serviceRecord.setFormSubmissionId("formSubmissionId");
         junit.framework.Assert.assertEquals("formSubmissionId", serviceRecord.getFormSubmissionId());
@@ -58,22 +65,18 @@ public class ServiceRecordTest extends BaseUnitTest {
         serviceRecord.setUpdatedAt(0l);
         junit.framework.Assert.assertEquals(0l, serviceRecord.getUpdatedAt().longValue());
 
-        serviceRecord.setProgramClientId("programClientID");
-        junit.framework.Assert.assertEquals("programClientID", serviceRecord.getProgramClientId());
+        serviceRecord.setProgramClientId(PROGRAMCLIENTID);
+        junit.framework.Assert.assertEquals(PROGRAMCLIENTID, serviceRecord.getProgramClientId());
 
         HashMap<String, String> identifiers = new HashMap<>();
-        identifiers.put("ZEIR_ID", "programClientID");
+        identifiers.put("ZEIR_ID", PROGRAMCLIENTID);
         junit.framework.Assert.assertEquals(identifiers, serviceRecord.getIdentifiers());
 
-        serviceRecord.setName("name");
-        junit.framework.Assert.assertEquals("name", serviceRecord.getName());
+        serviceRecord.setName(NAME);
+        junit.framework.Assert.assertEquals(NAME, serviceRecord.getName());
 
-        serviceRecord.setType("type");
-        junit.framework.Assert.assertEquals("type", serviceRecord.getType());
+        serviceRecord.setType(TYPE);
+        junit.framework.Assert.assertEquals(TYPE, serviceRecord.getType());
     }
-
-
-
-
 
 }

@@ -11,11 +11,15 @@ import static junit.framework.Assert.assertNotNull;
  */
 
 public class ServiceTypeTest extends BaseUnitTest {
+    public static final String TYPE = "type";
+    public static final String PREOFFSET = "PreOffset";
+    public static final String EXPIRYOFFSET = "ExpiryOffset";
+    public static final String MILESTONEOFFSET = "MilestoneOffset";
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         assertNotNull(new ServiceType());
-        assertNotNull(new ServiceType(0l, "type", "name", "serviceNameEntity", "serviceNameEntityId", "dateEntity", "dateEntityId", "units", "serviceLogic", "prerequisite", "preOffset", "expiryOffset", "milestoneOffset", 0l));
+        assertNotNull(new ServiceType(0l, TYPE, "name", "serviceNameEntity", "serviceNameEntityId", "dateEntity", "dateEntityId", "units", "serviceLogic", "prerequisite", "preOffset", "expiryOffset", "milestoneOffset", 0l));
     }
 
     @Test
@@ -25,8 +29,8 @@ public class ServiceTypeTest extends BaseUnitTest {
         serviceType.setId(0l);
         assertEquals(0l, serviceType.getId().longValue());
 
-        serviceType.setType("type");
-        assertEquals("type", serviceType.getType());
+        serviceType.setType(TYPE);
+        assertEquals(TYPE, serviceType.getType());
 
         serviceType.setName("name");
         assertEquals("name", serviceType.getName());
@@ -52,14 +56,14 @@ public class ServiceTypeTest extends BaseUnitTest {
         serviceType.setPrerequisite("prerequisite");
         assertEquals("prerequisite", serviceType.getPrerequisite());
 
-        serviceType.setPreOffset("PreOffset");
-        assertEquals("PreOffset", serviceType.getPreOffset());
+        serviceType.setPreOffset(PREOFFSET);
+        assertEquals(PREOFFSET, serviceType.getPreOffset());
 
-        serviceType.setExpiryOffset("ExpiryOffset");
-        assertEquals("ExpiryOffset", serviceType.getExpiryOffset());
+        serviceType.setExpiryOffset(EXPIRYOFFSET);
+        assertEquals(EXPIRYOFFSET, serviceType.getExpiryOffset());
 
-        serviceType.setMilestoneOffset("MilestoneOffset");
-        assertEquals("MilestoneOffset", serviceType.getMilestoneOffset());
+        serviceType.setMilestoneOffset(MILESTONEOFFSET);
+        assertEquals(MILESTONEOFFSET, serviceType.getMilestoneOffset());
 
         serviceType.setUpdatedAt(0l);
         assertEquals(0l, serviceType.getUpdatedAt().longValue());
