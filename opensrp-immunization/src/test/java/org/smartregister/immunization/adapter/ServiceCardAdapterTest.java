@@ -65,20 +65,20 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         ArrayList<ServiceType> list3 = new ArrayList<ServiceType>();
         list3.add(new ServiceType());
 
-        vaccineData.put("servicetype1",list1);
-        vaccineData.put("servicetype2",list2);
-        vaccineData.put("servicetype3",list3);
+        vaccineData.put("servicetype1", list1);
+        vaccineData.put("servicetype2", list2);
+        vaccineData.put("servicetype3", list3);
 
 
         List<Alert> alerts = new ArrayList<>();
 
 
 
-        serviceGroup.setData(commonPersonObjectClient,vaccineData, Collections.EMPTY_LIST, alerts);
+        serviceGroup.setData(commonPersonObjectClient, vaccineData, Collections.EMPTY_LIST, alerts);
         Mockito.when(serviceGroup.getServiceTypeKeys()).thenReturn(getServiceTypeKeys(vaccineData));
         serviceCardAdapter = new ServiceCardAdapter(context, serviceGroup);
         org.junit.Assert.assertNotNull(serviceCardAdapter);
-        org.junit.Assert.assertEquals(3, serviceCardAdapter.getCount());
+        org.junit.Assert.assertEquals(vaccineData.size(), serviceCardAdapter.getCount());
     }
 
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {

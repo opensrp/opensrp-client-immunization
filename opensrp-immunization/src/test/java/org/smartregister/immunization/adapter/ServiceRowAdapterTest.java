@@ -65,7 +65,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         Mockito.when(serviceRowGroup.getServiceTypes()).thenReturn(list1);
         serviceRowAdapter = new ServiceRowAdapter(context, serviceRowGroup, true);
         org.junit.Assert.assertNotNull(serviceRowAdapter);
-        junit.framework.Assert.assertEquals(3, serviceRowAdapter.getCount());
+        junit.framework.Assert.assertEquals(list1.size(), serviceRowAdapter.getCount());
     }
 
 
