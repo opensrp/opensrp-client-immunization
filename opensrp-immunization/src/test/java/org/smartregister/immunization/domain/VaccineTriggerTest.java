@@ -9,9 +9,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -33,8 +30,8 @@ public class VaccineTriggerTest extends BaseUnitTest {
     public void assertInitReturnsNonNullTriggers() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
-        assertNotNull(VaccineTrigger.init(CHILD, data1));
-        assertNotNull(VaccineTrigger.init(CHILD, data2));
+        junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data1));
+        junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data2));
     }
 
     @Test
@@ -44,7 +41,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         VaccineSchedule.standardiseCalendarDate(calendar);
-        assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
+        junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
     }
 
 }

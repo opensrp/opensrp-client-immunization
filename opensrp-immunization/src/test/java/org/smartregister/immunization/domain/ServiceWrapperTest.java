@@ -7,9 +7,6 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.BaseUnitTest;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -29,7 +26,7 @@ public class ServiceWrapperTest extends BaseUnitTest {
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        assertNotNull(new ServiceWrapper());
+        junit.framework.Assert.assertNotNull(new ServiceWrapper());
     }
 
     @Test
@@ -38,33 +35,33 @@ public class ServiceWrapperTest extends BaseUnitTest {
         DateTime datetime = new DateTime();
 
         serviceWrapper.setId(ID);
-        assertEquals(ID, serviceWrapper.getId());
+        junit.framework.Assert.assertEquals(ID, serviceWrapper.getId());
 
         serviceWrapper.setDbKey(0l);
-        assertEquals(0l, serviceWrapper.getDbKey().longValue());
+        junit.framework.Assert.assertEquals(0l, serviceWrapper.getDbKey().longValue());
 
         serviceWrapper.setStatus(STATUS);
-        assertEquals(STATUS, serviceWrapper.getStatus());
+        junit.framework.Assert.assertEquals(STATUS, serviceWrapper.getStatus());
 
         serviceWrapper.setVaccineDate(datetime);
-        assertEquals(datetime, serviceWrapper.getVaccineDate());
+        junit.framework.Assert.assertEquals(datetime, serviceWrapper.getVaccineDate());
 
         Alert alert = Mockito.mock(Alert.class);
         serviceWrapper.setAlert(alert);
-        assertEquals(alert, serviceWrapper.getAlert());
+        junit.framework.Assert.assertEquals(alert, serviceWrapper.getAlert());
 
         serviceWrapper.setDefaultName(DEFAULTNAME);
-        assertEquals(DEFAULTNAME, serviceWrapper.getDefaultName());
-        assertEquals(DEFAULTNAME, serviceWrapper.getName());
+        junit.framework.Assert.assertEquals(DEFAULTNAME, serviceWrapper.getDefaultName());
+        junit.framework.Assert.assertEquals(DEFAULTNAME, serviceWrapper.getName());
 
         serviceWrapper.setPreviousVaccine(ID);
-        assertEquals(ID, serviceWrapper.getPreviousVaccineId());
+        junit.framework.Assert.assertEquals(ID, serviceWrapper.getPreviousVaccineId());
 
         serviceWrapper.setColor(COLOR);
-        assertEquals(COLOR, serviceWrapper.getColor());
+        junit.framework.Assert.assertEquals(COLOR, serviceWrapper.getColor());
 
         serviceWrapper.setDob(datetime);
-        assertEquals(datetime, serviceWrapper.getDob());
+        junit.framework.Assert.assertEquals(datetime, serviceWrapper.getDob());
 
         ServiceType serviceType = new ServiceType();
         serviceType.setUnits("units");
@@ -72,38 +69,38 @@ public class ServiceWrapperTest extends BaseUnitTest {
         serviceType.setId(0l);
         serviceWrapper.setServiceType(serviceType);
         serviceType.setName(NAME);
-        assertEquals(NAME, serviceWrapper.getName());
-        assertEquals(serviceType, serviceWrapper.getServiceType());
-        assertEquals(serviceType.getUnits(), serviceWrapper.getUnits());
-        assertEquals(serviceType.getType(), serviceWrapper.getType());
-        assertEquals(0l, serviceWrapper.getTypeId().longValue());
+        junit.framework.Assert.assertEquals(NAME, serviceWrapper.getName());
+        junit.framework.Assert.assertEquals(serviceType, serviceWrapper.getServiceType());
+        junit.framework.Assert.assertEquals(serviceType.getUnits(), serviceWrapper.getUnits());
+        junit.framework.Assert.assertEquals(serviceType.getType(), serviceWrapper.getType());
+        junit.framework.Assert.assertEquals(0l, serviceWrapper.getTypeId().longValue());
 
         serviceWrapper.setValue(VALUE);
-        assertEquals(VALUE, serviceWrapper.getValue());
+        junit.framework.Assert.assertEquals(VALUE, serviceWrapper.getValue());
 
         serviceWrapper.setPatientName(PATIENTNAME);
-        assertEquals(PATIENTNAME, serviceWrapper.getPatientName());
+        junit.framework.Assert.assertEquals(PATIENTNAME, serviceWrapper.getPatientName());
 
         serviceWrapper.setUpdatedVaccineDate(datetime, true);
-        assertEquals(datetime, serviceWrapper.getVaccineDate());
-        assertEquals(datetime, serviceWrapper.getUpdatedVaccineDate());
-        assertEquals(true, serviceWrapper.isToday());
-        assertEquals(datetime.toString(YYYY_MM_DD), serviceWrapper.getUpdatedVaccineDateAsString());
-        assertEquals(datetime.toString(YYYY_MM_DD), serviceWrapper.getVaccineDateAsString());
+        junit.framework.Assert.assertEquals(datetime, serviceWrapper.getVaccineDate());
+        junit.framework.Assert.assertEquals(datetime, serviceWrapper.getUpdatedVaccineDate());
+        junit.framework.Assert.assertEquals(true, serviceWrapper.isToday());
+        junit.framework.Assert.assertEquals(datetime.toString(YYYY_MM_DD), serviceWrapper.getUpdatedVaccineDateAsString());
+        junit.framework.Assert.assertEquals(datetime.toString(YYYY_MM_DD), serviceWrapper.getVaccineDateAsString());
 
         serviceWrapper.setPatientNumber(NUMBER);
-        assertEquals(NUMBER, serviceWrapper.getPatientNumber());
+        junit.framework.Assert.assertEquals(NUMBER, serviceWrapper.getPatientNumber());
 
         Photo photo = Mockito.mock(Photo.class);
         serviceWrapper.setPhoto(photo);
-        assertEquals(photo, serviceWrapper.getPhoto());
+        junit.framework.Assert.assertEquals(photo, serviceWrapper.getPhoto());
 
         serviceWrapper.setGender(GENDER);
-        assertEquals(GENDER, serviceWrapper.getGender());
+        junit.framework.Assert.assertEquals(GENDER, serviceWrapper.getGender());
 
 
         serviceWrapper.setSynced(true);
-        assertEquals(true, serviceWrapper.isSynced());
+        junit.framework.Assert.assertEquals(true, serviceWrapper.isSynced());
 
     }
 

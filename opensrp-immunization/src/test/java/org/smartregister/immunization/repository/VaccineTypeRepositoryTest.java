@@ -14,7 +14,6 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.VaccineType;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Created by onaio on 29/08/2017.

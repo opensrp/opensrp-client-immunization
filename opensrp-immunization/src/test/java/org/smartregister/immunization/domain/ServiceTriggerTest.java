@@ -8,9 +8,6 @@ import org.smartregister.immunization.BaseUnitTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -43,9 +40,9 @@ public class ServiceTriggerTest extends BaseUnitTest {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
         JSONObject data3 = new JSONObject(stringdata3);
-        assertNotNull(ServiceTrigger.init(data1));
-        assertNotNull(ServiceTrigger.init(data2));
-        assertNotNull(ServiceTrigger.init(data3));
+        junit.framework.Assert.assertNotNull(ServiceTrigger.init(data1));
+        junit.framework.Assert.assertNotNull(ServiceTrigger.init(data2));
+        junit.framework.Assert.assertNotNull(ServiceTrigger.init(data3));
     }
 
     @Test
@@ -59,11 +56,11 @@ public class ServiceTriggerTest extends BaseUnitTest {
         prerequisites.add("Vit A IFC 2");
         prerequisites.add("dob");
 
-        assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(), condition);
-        assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(), prerequisites);
-        assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger.Reference.MULTIPLE);
-        assertEquals(ServiceTrigger.init(data1).getOffset(), "+0d");
-        assertEquals(ServiceTrigger.init(data3).getPrerequisite(), "Vit A 2");
+        junit.framework.Assert.assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(), condition);
+        junit.framework.Assert.assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(), prerequisites);
+        junit.framework.Assert.assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger.Reference.MULTIPLE);
+        junit.framework.Assert.assertEquals(ServiceTrigger.init(data1).getOffset(), "+0d");
+        junit.framework.Assert.assertEquals(ServiceTrigger.init(data3).getPrerequisite(), "Vit A 2");
 
     }
 
