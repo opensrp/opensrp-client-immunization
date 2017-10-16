@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.powermock.api.mockito.PowerMockito.mock;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -29,11 +26,11 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        view = mock(LinearLayout.class);
+        view = org.powermock.api.mockito.PowerMockito.mock(LinearLayout.class);
     }
 
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        assertNotNull(VaccinationEditDialogFragment.newInstance(context, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), view));
+        junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(context, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), view));
     }
 }
