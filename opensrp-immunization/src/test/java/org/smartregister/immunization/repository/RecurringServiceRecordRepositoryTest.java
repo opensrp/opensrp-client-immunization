@@ -110,7 +110,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setId(0l);
         recurringServiceRecordRepository.update(sqliteDatabase, serviceRecord);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test

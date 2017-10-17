@@ -16,6 +16,10 @@ public class VaccineNameTest extends BaseUnitTest {
     public static final String TT3 = "TT3";
     public static final String MOTHER = "Mother";
     public static final String CHILD = "Child";
+    public static final String DOSENO5 = "5";
+    public static final String DOSENO10 = "10";
+    public static final String DUEDAYS5 = "5";
+    public static final String DUEDAYS10 = "10";
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
@@ -48,15 +52,15 @@ public class VaccineNameTest extends BaseUnitTest {
 
     @Test
     public void assertgetDueDayswillreturnDueDays() {
-        VaccineName vaccineName = new VaccineName(0l, TT1, TT, "5", "", "", "");
-        junit.framework.Assert.assertEquals(vaccineName.getDue_days(), "5");
-        vaccineName.setDue_days("10");
-        junit.framework.Assert.assertEquals(vaccineName.getDue_days(), "10");
+        VaccineName vaccineName = new VaccineName(0l, TT1, TT, DUEDAYS5, "", "", "");
+        junit.framework.Assert.assertEquals(vaccineName.getDue_days(), DUEDAYS5);
+        vaccineName.setDue_days(DUEDAYS10);
+        junit.framework.Assert.assertEquals(vaccineName.getDue_days(), DUEDAYS10);
     }
 
     @Test
     public void assertgetReferenceVaccineIDwillreturnReferenceVaccineID() {
-        VaccineName vaccineName = new VaccineName(0l, TT2, TT, "5", TT1, "", "");
+        VaccineName vaccineName = new VaccineName(0l, TT2, TT, DUEDAYS5, TT1, "", "");
         junit.framework.Assert.assertEquals(vaccineName.getReference_vaccine_id(), TT1);
         vaccineName.setReference_vaccine_id(TT3);
         junit.framework.Assert.assertEquals(vaccineName.getReference_vaccine_id(), TT3);
@@ -64,7 +68,7 @@ public class VaccineNameTest extends BaseUnitTest {
 
     @Test
     public void assertgetClientTypewillreturnClientType() {
-        VaccineName vaccineName = new VaccineName(0l, TT2, TT, "5", TT1, MOTHER, "");
+        VaccineName vaccineName = new VaccineName(0l, TT2, TT, DUEDAYS5, TT1, MOTHER, "");
         junit.framework.Assert.assertEquals(vaccineName.getClient_type(), MOTHER);
         vaccineName.setClient_type(CHILD);
         junit.framework.Assert.assertEquals(vaccineName.getClient_type(), CHILD);
@@ -72,10 +76,10 @@ public class VaccineNameTest extends BaseUnitTest {
 
     @Test
     public void assertgetDoseNowillreturnDoseNo() {
-        VaccineName vaccineName = new VaccineName(0l, TT2, TT, "5", TT1, MOTHER, "5");
-        junit.framework.Assert.assertEquals(vaccineName.getDose_no(), "5");
-        vaccineName.setDose_no("10");
-        junit.framework.Assert.assertEquals(vaccineName.getDose_no(), "10");
+        VaccineName vaccineName = new VaccineName(0l, TT2, TT, DUEDAYS5, TT1, MOTHER, DOSENO5);
+        junit.framework.Assert.assertEquals(vaccineName.getDose_no(), DOSENO5);
+        vaccineName.setDose_no(DOSENO10);
+        junit.framework.Assert.assertEquals(vaccineName.getDose_no(), DOSENO10);
     }
 
 }

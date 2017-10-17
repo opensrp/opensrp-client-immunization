@@ -24,6 +24,7 @@ public class VaccineWrapperTest extends BaseUnitTest {
     public static final String DEFAULTNAME = "defaultname";
     public static final String GENDER = "gender";
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String AGE = "5";
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
@@ -70,8 +71,8 @@ public class VaccineWrapperTest extends BaseUnitTest {
         vaccineWrapper.setFormattedVaccineDate(DD_MM_YYYY);
         junit.framework.Assert.assertEquals(DD_MM_YYYY, vaccineWrapper.getFormattedVaccineDate());
 
-        vaccineWrapper.setExistingAge("5");
-        junit.framework.Assert.assertEquals("5", vaccineWrapper.getExistingAge());
+        vaccineWrapper.setExistingAge(AGE);
+        junit.framework.Assert.assertEquals(AGE, vaccineWrapper.getExistingAge());
 
         vaccineWrapper.setPatientName(PATIENTNAME);
         junit.framework.Assert.assertEquals(PATIENTNAME, vaccineWrapper.getPatientName());
