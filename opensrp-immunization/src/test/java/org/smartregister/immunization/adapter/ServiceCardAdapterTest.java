@@ -69,10 +69,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         vaccineData.put("servicetype2", list2);
         vaccineData.put("servicetype3", list3);
 
-
         List<Alert> alerts = new ArrayList<>();
-
-
 
         serviceGroup.setData(commonPersonObjectClient, vaccineData, Collections.EMPTY_LIST, alerts);
         Mockito.when(serviceGroup.getServiceTypeKeys()).thenReturn(getServiceTypeKeys(vaccineData));
