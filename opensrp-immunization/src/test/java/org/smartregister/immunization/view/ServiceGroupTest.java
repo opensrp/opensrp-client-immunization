@@ -11,9 +11,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.smartregister.immunization.BaseUnitTest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -32,7 +29,7 @@ public class ServiceGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         serviceGroup = Mockito.mock(ServiceGroup.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = Exception.class)
@@ -40,13 +37,10 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         ServiceGroup serviceGroupSpy = PowerMockito.spy(serviceGroup);
         PowerMockito.doReturn(null).when(serviceGroupSpy, "init", context);
-
-
-        assertNotNull(new ServiceGroup(context));
-        assertNotNull(new ServiceGroup(context, attributeSet));
-        assertNotNull(new ServiceGroup(context, attributeSet, 0));
-        assertNotNull(new ServiceGroup(context, attributeSet, 0, 0));
+        org.junit.Assert.assertNotNull(new ServiceGroup(context));
+        org.junit.Assert.assertNotNull(new ServiceGroup(context, attributeSet));
+        org.junit.Assert.assertNotNull(new ServiceGroup(context, attributeSet, 0));
+        org.junit.Assert.assertNotNull(new ServiceGroup(context, attributeSet, 0, 0));
     }
-
-
+    
 }

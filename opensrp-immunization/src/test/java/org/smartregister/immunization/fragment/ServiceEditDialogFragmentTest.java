@@ -10,9 +10,6 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 
 import java.util.Collections;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.powermock.api.mockito.PowerMockito.mock;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -22,11 +19,11 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        view = mock(LinearLayout.class);
+        view = org.powermock.api.mockito.PowerMockito.mock(LinearLayout.class);
     }
 
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
+        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
     }
 }

@@ -11,9 +11,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.smartregister.immunization.BaseUnitTest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.initMocks;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -32,18 +29,17 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         vaccineGroup = Mockito.mock(VaccineGroup.class);
-        initMocks(this);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = Exception.class)
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
         VaccineGroup vaccineGroupSpy = PowerMockito.spy(vaccineGroup);
         PowerMockito.doReturn(null).when(vaccineGroupSpy, "init", context);
-        assertNotNull(new VaccineGroup(context));
-        assertNotNull(new VaccineGroup(context, attributeSet));
-        assertNotNull(new VaccineGroup(context, attributeSet, 0));
-        assertNotNull(new VaccineGroup(context, attributeSet, 0, 0));
+        org.junit.Assert.assertNotNull(new VaccineGroup(context));
+        org.junit.Assert.assertNotNull(new VaccineGroup(context, attributeSet));
+        org.junit.Assert.assertNotNull(new VaccineGroup(context, attributeSet, 0));
+        org.junit.Assert.assertNotNull(new VaccineGroup(context, attributeSet, 0, 0));
     }
-
 
 }

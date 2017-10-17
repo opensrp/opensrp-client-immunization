@@ -3,8 +3,6 @@ package org.smartregister.immunization.service.intent;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -13,7 +11,7 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        assertNotNull(new RecurringIntentService());
+        junit.framework.Assert.assertNotNull(new RecurringIntentService());
     }
 
 }

@@ -55,7 +55,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, vaccineGroup ,""));
     }
 
-
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
         JSONObject vaccineData = new JSONObject();
@@ -71,8 +70,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         Mockito.when(vaccineGroup.getVaccineData()).thenReturn(vaccineData);
         vaccineCardAdapter = new VaccineCardAdapter(context, vaccineGroup ,"");
         org.junit.Assert.assertNotNull(vaccineCardAdapter);
-        org.junit.Assert.assertEquals(3, vaccineCardAdapter.getCount());
+        org.junit.Assert.assertEquals(jsonArray.length(), vaccineCardAdapter.getCount());
     }
-
-
 }

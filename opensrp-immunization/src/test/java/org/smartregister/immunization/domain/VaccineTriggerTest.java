@@ -9,31 +9,22 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-
 /**
  * Created by onaio on 30/08/2017.
  */
 
 public class VaccineTriggerTest extends BaseUnitTest {
 
-    String stringdata1 = "{\n" +
-            "              \"reference\": \"dob\",\n" +
-            "              \"offset\": \"+0d\"\n" +
-            "            }";
-    String stringdata2 = "{\n" +
-            "              \"reference\": \"prerequisite\",\n" +
-            "              \"prerequisite\": \"OPV 1\",\n" +
-            "              \"offset\": \"+28d\"\n" +
-            "            }";
+    public static final String CHILD = "child";
+    public static final String stringdata1 = "{ \"reference\": \"dob\",\"offset\": \"+0d\"}";
+    public static final String stringdata2 = "{\"reference\": \"prerequisite\",\"prerequisite\": \"OPV 1\",\"offset\": \"+28d\"}";
 
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
-        assertNotNull(VaccineTrigger.init("child", data1));
-        assertNotNull(VaccineTrigger.init("child", data2));
+        junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data1));
+        junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data2));
     }
 
     @Test
@@ -43,8 +34,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         VaccineSchedule.standardiseCalendarDate(calendar);
-        assertEquals(calendar.getTime(), VaccineTrigger.init("child", data1).getFireDate(Collections.EMPTY_LIST, date));
-
+        junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
     }
 
 }
