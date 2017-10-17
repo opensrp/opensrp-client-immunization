@@ -65,7 +65,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Test
     public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
-        org.mockito.Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+        Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineType vaccineType = new VaccineType(0l, 0, "", "", "", "");
         vaccineTypeRepository.add(vaccineType, sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
