@@ -16,15 +16,8 @@ import java.util.Date;
 public class VaccineTriggerTest extends BaseUnitTest {
 
     public static final String CHILD = "child";
-    String stringdata1 = "{\n" +
-            "              \"reference\": \"dob\",\n" +
-            "              \"offset\": \"+0d\"\n" +
-            "            }";
-    String stringdata2 = "{\n" +
-            "              \"reference\": \"prerequisite\",\n" +
-            "              \"prerequisite\": \"OPV 1\",\n" +
-            "              \"offset\": \"+28d\"\n" +
-            "            }";
+    public static final String stringdata1 = "{ \"reference\": \"dob\",\"offset\": \"+0d\"}";
+    public static final String stringdata2 = "{\"reference\": \"prerequisite\",\"prerequisite\": \"OPV 1\",\"offset\": \"+28d\"}";
 
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
