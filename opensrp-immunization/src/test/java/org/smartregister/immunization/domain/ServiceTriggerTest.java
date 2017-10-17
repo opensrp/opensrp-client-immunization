@@ -15,7 +15,7 @@ import java.util.List;
 public class ServiceTriggerTest extends BaseUnitTest {
 
     public static final String stringdata1 = "{\"reference\": \"dob\",\"offset\": \"+0d\"}";
-    public static final String stringdata2 = "{\"reference\": \"multiple\",\"multiple\": {\"condition\": \"OR\",\"prerequisites\": [ \"Vit A IFC 2\", \"dob\"},\"offset\": \"+6m\" }";
+    public static final String stringdata2 = "{\"reference\": \"multiple\",\"multiple\": {\"condition\": \"OR\",\"prerequisites\": [ \"Vit A IFC 2\", \"dob\"]},\"offset\": \"+6m\" }";
     public static final String stringdata3 = "{\"reference\": \"prerequisite\",\"prerequisite\": \"Vit A 2\",\"offset\": \"+6m\"}";
 
     @Test
