@@ -13,7 +13,7 @@ public class ServiceTypeTest extends BaseUnitTest {
     public static final String EXPIRYOFFSET = "ExpiryOffset";
     public static final String MILESTONEOFFSET = "MilestoneOffset";
     public static final String NAME = "name";
-    public static final String SERVICENAMEENTITY = "serviceNameEntity" ;
+    public static final String SERVICENAMEENTITY = "serviceNameEntity";
     public static final String SERVICENAMEENTITYID = "serviceNameEntityId";
     public static final String DATEENTITY = "dateEntity";
     public static final String DATEENTITYID = "dateEntityId";

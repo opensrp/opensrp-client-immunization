@@ -56,9 +56,9 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Test
     public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
-        org.mockito.Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
+        Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineType vaccineType = PowerMockito.mock(VaccineType.class);
-        org.mockito.Mockito.when(vaccineType.getId()).thenReturn(null);
+        Mockito.when(vaccineType.getId()).thenReturn(null);
         vaccineTypeRepository.add(vaccineType, sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.any(ContentValues.class));
     }
@@ -68,21 +68,21 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
         org.mockito.Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineType vaccineType = new VaccineType(0l, 0, "", "", "", "");
         vaccineTypeRepository.add(vaccineType, sqliteDatabase);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test
     public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
         vaccineTypeRepository.add(null, sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.any(ContentValues.class));
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String [].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test
     public void findbyEntityIDcallsDatabaseQueryMethod1Times() throws Exception {
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        org.mockito.Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
-        org.mockito.Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+        Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
+        Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         vaccineTypeRepository.findIDByName("Name");
         Mockito.verify(sqliteDatabase, Mockito.times(1)).query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class));
     }
@@ -90,8 +90,8 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     @Test
     public void findallVaccineTypcallsDatabaseQueryMethod1Times() throws Exception {
         Cursor cursor = PowerMockito.mock(Cursor.class);
-        org.mockito.Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
-        org.mockito.Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+        Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
+        Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         vaccineTypeRepository.getAllVaccineTypes(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class));
     }

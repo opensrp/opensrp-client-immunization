@@ -13,16 +13,16 @@ import org.smartregister.immunization.BaseUnitTest;
 
 public class ServiceWrapperTest extends BaseUnitTest {
 
-    public static final String ID = "ID" ;
+    public static final String ID = "ID";
     public static final String STATUS = "status";
     public static final String DEFAULTNAME = "defaultname";
     public static final String COLOR = "color";
     public static final String NAME = "name";
     public static final String VALUE = "value";
-    public static final String YYYY_MM_DD = "yyyy-MM-dd" ;
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
     public static final String PATIENTNAME = "patientName";
     public static final String NUMBER = "number";
-    public static final String GENDER = "gender" ;
+    public static final String GENDER = "gender";
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
