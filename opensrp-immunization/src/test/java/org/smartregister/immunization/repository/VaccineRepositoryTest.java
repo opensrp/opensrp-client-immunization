@@ -10,7 +10,9 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -18,11 +20,15 @@ import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static org.smartregister.immunization.domain.VaccineTest.PROGRAMCLIENTID;
 
 /**
  * Created by onaio on 29/08/2017.
@@ -114,7 +120,12 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void addTest() throws Exception {
-       //null vaccine
+        //null database, throws exception
+        Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(null);
+        Vaccine vaccine1 = new Vaccine();
+        vaccine1.setId(1l);
+        vaccineRepository.add(vaccine1);
+        //null vaccine
         vaccineRepository.add(null);
         Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.any(ContentValues.class));
         Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
@@ -129,16 +140,28 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.add(new Vaccine());
         Mockito.verify(sqliteDatabase, Mockito.times(2)).insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.any(ContentValues.class));
+        Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(),
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+
+        VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
+        Vaccine vaccineToReturn = Mockito.mock(Vaccine.class);
+        Mockito.when(vaccineRepositoryspy.findUnique(org.mockito.ArgumentMatchers.any(SQLiteDatabase.class),org.mockito.ArgumentMatchers.any(Vaccine.class))).thenReturn(vaccineToReturn);
+        vaccineRepositoryspy.add(newVaccine);
+        Mockito.verify(sqliteDatabase, Mockito.times(2)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test
     public void updateTest() throws Exception {
         Vaccine vaccine = new Vaccine();
         vaccine.setId(0l);
-        vaccineRepository.update(sqliteDatabase, vaccine);
-
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
+        //exception test database null
+        vaccineRepository.update(null, vaccine);
+        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
+        //vaccine null test
         vaccineRepository.update(sqliteDatabase, null);
+        //vaccine and database not null
+        vaccineRepository.update(sqliteDatabase, vaccine);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test
