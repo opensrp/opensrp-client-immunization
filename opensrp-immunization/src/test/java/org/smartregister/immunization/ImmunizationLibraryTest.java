@@ -2,6 +2,7 @@ package org.smartregister.immunization;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
