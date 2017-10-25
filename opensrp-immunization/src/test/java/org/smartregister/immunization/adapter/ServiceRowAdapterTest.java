@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +68,11 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         serviceRowAdapter = new ServiceRowAdapter(context, serviceRowGroup, true);
         org.junit.Assert.assertNotNull(serviceRowAdapter);
         junit.framework.Assert.assertEquals(list1.size(), serviceRowAdapter.getCount());
+
+        //should return null
+        Assert.assertNull(serviceRowAdapter.getItem(0));
+
+        Assert.assertEquals(serviceRowAdapter.getItemId(0),231231);
     }
 
 }

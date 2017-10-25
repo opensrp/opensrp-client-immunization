@@ -23,6 +23,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.junit.Test;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
@@ -43,9 +44,6 @@ public class VaccineScheduleTest extends BaseUnitTest{
     @Rule
     public PowerMockRule rule = new PowerMockRule();
 
-//    @Mock
-//    private SQLiteDatabase sqliteDatabase;
-
     @Mock
     private ImmunizationLibrary immunizationLibrary;
 
@@ -61,6 +59,9 @@ public class VaccineScheduleTest extends BaseUnitTest{
     @Mock
     VaccineSchedule vaccineSchedule;
     Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "OPV", 0, new Date(),
+            VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+
+    Vaccine newVaccine2 = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "OPV 0", 0, new Date(),
             VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
     @Before
     public void setup(){
@@ -82,15 +83,6 @@ public class VaccineScheduleTest extends BaseUnitTest{
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
 
         Assert.assertNotNull(vaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID,new DateTime(),"child"));
-//        VaccineRepository vaccineRepositoryspy = Mockito.mock(VaccineRepository.class);
-//       Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-//        Mockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepositoryspy);
-//
-////       Mockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepositoryspy);
-////        ImmunizationLibrary.init(Mockito.mock(Context.class),Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class));
-//        Mockito.when(vaccineRepositoryspy.findByEntityId(Mockito.any(String.class))).thenReturn(null);
-//        Mockito.when(vaccineRepositoryspy.getReadableDatabase()).thenReturn(sqliteDatabase);
-//        Assert.assertNotNull(vaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID,new DateTime(),"child"));
 
     }
 
@@ -108,6 +100,25 @@ public class VaccineScheduleTest extends BaseUnitTest{
         vaccineSchedule.init(new JSONArray(VaccineData.vaccines),new JSONArray(VaccineData.special_vacines),"");
         Assert.assertNotNull(vaccineSchedule.getVaccineSchedule("child","OPV 0"));
         Assert.assertNull(vaccineSchedule.getVaccineSchedule("",""));
+        //vaccine cnodition test
+        JSONObject object = new JSONObject();
+        object.put("type","");
+        VaccineCondition vaccineCondition = Mockito.mock(VaccineCondition.class);
+        Assert.assertNull(vaccineCondition.init("",object));
+
+        VaccineCondition.NotGivenCondition notgiven = new VaccineCondition.NotGivenCondition(VaccineRepo.Vaccine.opv0);
+        List<Vaccine>list = new ArrayList<Vaccine>();
+        list.add(newVaccine2);
+        Assert.assertNotNull(notgiven.passes(list));
+
+        VaccineCondition.GivenCondition given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0,"+10d", VaccineCondition.GivenCondition.Comparison.AT_LEAST);
+        Assert.assertNull(given.getComparison(""));
+        Assert.assertNotNull(given.passes(list));
+
+        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0,"+10d", VaccineCondition.GivenCondition.Comparison.AT_MOST);
+        Assert.assertNotNull(given.passes(list));
+        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0,"+10d", VaccineCondition.GivenCondition.Comparison.EXACTLY);
+        Assert.assertNotNull(given.passes(list));
 
     }
 

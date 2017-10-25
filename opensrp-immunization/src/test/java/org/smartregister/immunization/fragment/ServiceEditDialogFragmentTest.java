@@ -3,6 +3,7 @@ package org.smartregister.immunization.fragment;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
@@ -25,5 +26,6 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
+        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(new DateTime(),Collections.EMPTY_LIST, new ServiceWrapper(), view,true));
     }
 }

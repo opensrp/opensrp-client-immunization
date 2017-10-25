@@ -32,5 +32,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(context, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), view));
+        junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(context, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), view,true));
     }
 }
