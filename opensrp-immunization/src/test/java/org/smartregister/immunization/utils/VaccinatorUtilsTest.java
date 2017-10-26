@@ -3,6 +3,7 @@ package org.smartregister.immunization.utils;
 import android.app.Activity;
 import android.content.res.Resources;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,16 +21,28 @@ import org.robolectric.annotation.Config;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.domain.ServiceType;
+import org.smartregister.immunization.domain.VaccineSchedule;
+import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.immunization.util.IMDatabaseUtils;
+import org.smartregister.immunization.util.JsonFormUtils;
+import org.smartregister.immunization.util.RecurringServiceUtils;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.immunization.util.VaccineScheduleUtils;
 import org.smartregister.repository.Repository;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.powermock.configuration.ConfigurationType.PowerMock;
 
 /**
@@ -81,24 +94,36 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Test
     @Config(packageName = "org.smartregister.immunization")
-    public void assertVaccinatorUtilsTest(){
+    public void assertVaccinatorUtilsTest() throws Exception{
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
-//        Activity activity = Robolectric.setupActivity(Activity.class);
-//        android.content.Context ctx = RuntimeEnvironment.application;
-        android.content.Context ctx = Mockito.mock(android.content.Context.class);
-        Resources resources = Mockito.mock(Resources.class);
+
+        android.content.Context ctx = mock(android.content.Context.class);
+        Resources resources = mock(Resources.class);
         PowerMockito.when(ctx.getResources()).thenReturn(resources);
         PowerMockito.when(resources.getColor(anyInt())).thenReturn(255);
-//        PowerMockito.when(ctx.getResources().getColor(R.color.alert_normal)).thenReturn(255);
-//        PowerMockito.when(ctx.getResources().getColor(R.color.alert_urgent)).thenReturn(255);
-//        PowerMockito.when(ctx.getResources().getColor(R.color.alert_na)).thenReturn(255);
+        //get color test for different status
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.normal));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.urgent));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.expired));
+
+        //get getServiceExpiryDate null test
+
+        Assert.assertNull(vaccinatorUtils.getServiceExpiryDate(null,null));
+        Assert.assertNotNull(new IMConstants());
+        Assert.assertNotNull(new VaccineScheduleUtils());
+        Assert.assertNotNull(new JsonFormUtils());
+        Assert.assertNotNull(new RecurringServiceUtils());
+        Assert.assertNotNull(new IMDatabaseUtils());
+        Assert.assertNotNull(new VaccinateActionUtils());
+        Assert.assertNotNull(new VaccinatorUtils());
+        Assert.assertEquals(IMConstants.VACCINE_SYNC_TIME, BuildConfig.VACCINE_SYNC_TIME);
+
+//        VaccinatorUtils powerspy = PowerMockito.spy(vaccinatorUtils);
+//        PowerMockito.doReturn(new HashMap<String,Object>()).when(VaccinatorUtils.class,"createVaccineMap",mock(String.class),mock(Alert.class),mock(DateTime.class),mock(ServiceType.class));
     }
 
 }
