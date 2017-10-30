@@ -50,14 +50,14 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     private AlertService alertService;
 
     @Mock
-    public static SQLiteDatabase sqliteDatabase;
+    public SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
-    public static SQLiteDatabase getMockDatabase(){
+    public SQLiteDatabase getMockDatabase(){
         return sqliteDatabase == null ? Mockito.mock(SQLiteDatabase.class) : sqliteDatabase;
     }
     @Test

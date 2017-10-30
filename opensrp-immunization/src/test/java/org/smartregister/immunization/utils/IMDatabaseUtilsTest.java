@@ -61,14 +61,18 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
 
     @Test
     public void populateRecurringServices() throws Exception {
-        SQLiteDatabase sqLiteDatabase = VaccineRepositoryTest.getMockDatabase();
+        VaccineRepositoryTest test = new VaccineRepositoryTest();
+        SQLiteDatabase sqLiteDatabase = test.getMockDatabase();
+        
         PowerMockito.mockStatic(VaccinatorUtils.class);
         PowerMockito.when(VaccinatorUtils.getSupportedRecurringServices(context)).thenReturn(ServiceData.recurringservice);
         imDatabaseUtils.populateRecurringServices(context,sqLiteDatabase,recurringServiceTypeRepository);
     }
     @Test
     public void accessAssetsAndFillDataBaseForVaccineTypesTest() throws Exception {
-        SQLiteDatabase sqLiteDatabase = VaccineRepositoryTest.getMockDatabase();
+        VaccineRepositoryTest test = new VaccineRepositoryTest();
+        SQLiteDatabase sqLiteDatabase = test.getMockDatabase();
+
         PowerMockito.mockStatic(Utils.class);
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
