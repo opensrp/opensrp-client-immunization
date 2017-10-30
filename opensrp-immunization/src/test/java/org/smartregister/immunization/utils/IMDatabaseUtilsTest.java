@@ -10,10 +10,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceData;
@@ -53,6 +55,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
+
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
@@ -61,25 +64,29 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
 
     @Test
     public void populateRecurringServices() throws Exception {
-        VaccineRepositoryTest test = new VaccineRepositoryTest();
-        SQLiteDatabase sqLiteDatabase = test.getMockDatabase();
-        
+//        VaccineRepositoryTest test = new VaccineRepositoryTest();
+//        SQLiteDatabase.loadLibs(RuntimeEnvironment.application);
+//        SQLiteDatabase sqLiteDatabase = new SQLiteDatabase("",new char[]{},null,1);
+
+
         PowerMockito.mockStatic(VaccinatorUtils.class);
         PowerMockito.when(VaccinatorUtils.getSupportedRecurringServices(context)).thenReturn(ServiceData.recurringservice);
-        imDatabaseUtils.populateRecurringServices(context,sqLiteDatabase,recurringServiceTypeRepository);
+        imDatabaseUtils.populateRecurringServices(context,null,recurringServiceTypeRepository);
     }
     @Test
     public void accessAssetsAndFillDataBaseForVaccineTypesTest() throws Exception {
-        VaccineRepositoryTest test = new VaccineRepositoryTest();
-        SQLiteDatabase sqLiteDatabase = test.getMockDatabase();
+//        VaccineRepositoryTest test = new VaccineRepositoryTest();
+//        SQLiteDatabase sqLiteDatabase = test.getMockDatabase();
+//        SQLiteDatabase.loadLibs(RuntimeEnvironment.application);
+//        SQLiteDatabase sqLiteDatabase = new SQLiteDatabase("",new char[]{},null,1);
 
         PowerMockito.mockStatic(Utils.class);
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.vaccineTypeRepository()).thenReturn(vaccineTypeRepository);
-        PowerMockito.when(vaccineTypeRepository.getAllVaccineTypes(sqLiteDatabase)).thenReturn(new ArrayList<VaccineType>());
+        PowerMockito.when(vaccineTypeRepository.getAllVaccineTypes(null)).thenReturn(new ArrayList<VaccineType>());
         PowerMockito.when(Utils.readAssetContents(any(Context.class),any(String.class))).thenReturn(VaccineData.vaccine_type);
-        imDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context,sqLiteDatabase);
+        imDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context,null);
     }
 
 }
