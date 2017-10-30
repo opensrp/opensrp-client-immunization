@@ -636,4 +636,48 @@ public static final String special_vacines = "[\n" +
         "    }\n" +
         "  }\n" +
         "]";
+public static final String vaccine_type = "[\n" +
+        "  {\n" +
+        "    \"doses\": \"20\",\n" +
+        "    \"name\": \"BCG\",\n" +
+        "    \"openmrs_parent_entity_id\": \"\",\n" +
+        "    \"openmrs_date_concept_id\": \"\",\n" +
+        "    \"openmrs_dose_concept_id\": \"\"\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"doses\": \"20\",\n" +
+        "    \"name\": \"OPV\",\n" +
+        "    \"openmrs_parent_entity_id\": \"\",\n" +
+        "    \"openmrs_date_concept_id\": \"\",\n" +
+        "    \"openmrs_dose_concept_id\": \"\"\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"doses\": \"1\",\n" +
+        "    \"name\": \"Penta\",\n" +
+        "    \"openmrs_parent_entity_id\": \"\",\n" +
+        "    \"openmrs_date_concept_id\": \"\",\n" +
+        "    \"openmrs_dose_concept_id\": \"\"\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"doses\": \"2\",\n" +
+        "    \"name\": \"PCV\",\n" +
+        "    \"openmrs_parent_entity_id\": \"\",\n" +
+        "    \"openmrs_date_concept_id\": \"\",\n" +
+        "    \"openmrs_dose_concept_id\": \"\"\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"doses\": \"1\",\n" +
+        "    \"name\": \"Rota\",\n" +
+        "    \"openmrs_parent_entity_id\": \"\",\n" +
+        "    \"openmrs_date_concept_id\": \"\",\n" +
+        "    \"openmrs_dose_concept_id\": \"\"\n" +
+        "  },\n" +
+        "  {\n" +
+        "    \"doses\": \"10\",\n" +
+        "    \"name\": \"M/MR\",\n" +
+        "    \"openmrs_parent_entity_id\": \"\",\n" +
+        "    \"openmrs_date_concept_id\": \"\",\n" +
+        "    \"openmrs_dose_concept_id\": \"\"\n" +
+        "  }\n" +
+        "]";
 }

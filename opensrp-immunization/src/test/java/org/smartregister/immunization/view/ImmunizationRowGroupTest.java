@@ -74,10 +74,11 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 //        org.junit.Assert.assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0));
 //        org.junit.Assert.assertNotNull(new ImmunizationRowGroup(context, attributeSet, 0, 0));
 
-
-        immunizationRowGroup.setAlertList(new ArrayList<Alert>());
-        immunizationRowGroup.setData(mock(JSONObject.class),mock(CommonPersonObjectClient.class),mock(List.class),mock(List.class));
-        immunizationRowGroup.setModalOpen(false);
+//        ImmunizationRowGroup immunizationRowGroup = new ImmunizationRowGroup(context, true);
+//        immunizationRowGroup.setAlertList(new ArrayList<Alert>());
+//        immunizationRowGroup.setData(mock(JSONObject.class),mock(CommonPersonObjectClient.class),mock(List.class),mock(List.class));
+//        immunizationRowGroup.setModalOpen(false);
+//
 
         immunizationRowGroup.editmode = true;
         Assert.assertNotNull(immunizationRowGroup.getAlertList());

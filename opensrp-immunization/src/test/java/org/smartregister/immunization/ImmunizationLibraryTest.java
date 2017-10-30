@@ -17,16 +17,12 @@ import org.smartregister.repository.Repository;
 
 public class ImmunizationLibraryTest extends BaseUnitTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
         Repository repository = Mockito.mock(Repository.class);
         Context context = Mockito.mock(Context.class);
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
-//        thrown.expect(IllegalStateException.class);
-//        ImmunizationLibrary.getInstance();
         ImmunizationLibrary.init(context, repository, commonFtsObject);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
