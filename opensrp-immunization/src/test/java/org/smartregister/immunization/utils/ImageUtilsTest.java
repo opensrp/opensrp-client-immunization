@@ -1,5 +1,7 @@
 package org.smartregister.immunization.utils;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
