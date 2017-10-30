@@ -23,6 +23,7 @@ import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.repository.Repository;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -35,32 +36,31 @@ import static org.mockito.ArgumentMatchers.any;
 @PrepareForTest({VaccinatorUtils.class,ImmunizationLibrary.class,Utils.class})
 public class IMDatabaseUtilsTest  extends BaseUnitTest{
 
-
-
-    @Mock
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    @InjectMocks
     private IMDatabaseUtils imDatabaseUtils;
-
     @Mock
     private Context context;
     @Mock
-    ImmunizationLibrary immunizationLibrary;
+    private ImmunizationLibrary immunizationLibrary;
     @Mock
-    Utils utils;
+    private Utils utils;
     @Mock
-    VaccineTypeRepository vaccineTypeRepository;
-
+    private VaccineTypeRepository vaccineTypeRepository;
+    
     @Mock
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+
     @Before
     public void setup(){
         org.mockito.MockitoAnnotations.initMocks(this);
+//        org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
 
     @Test
     public void populateRecurringServices() throws Exception {
-        SQLiteDatabase sqLiteDatabase =Mockito.mock(SQLiteDatabase.class);
+        SQLiteDatabase sqLiteDatabase = Mockito.mock(SQLiteDatabase.class);
         PowerMockito.mockStatic(VaccinatorUtils.class);
         PowerMockito.when(VaccinatorUtils.getSupportedRecurringServices(context)).thenReturn(ServiceData.recurringservice);
         imDatabaseUtils.populateRecurringServices(context,sqLiteDatabase,recurringServiceTypeRepository);
