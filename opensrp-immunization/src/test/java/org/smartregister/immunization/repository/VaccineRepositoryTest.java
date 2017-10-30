@@ -1,11 +1,7 @@
 package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
-import android.content.Context;
 
-import junit.framework.Assert;
-
-import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -54,14 +50,16 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     private AlertService alertService;
 
     @Mock
-    private SQLiteDatabase sqliteDatabase;
+    public static SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
-
+    public static SQLiteDatabase getMockDatabase(){
+        return sqliteDatabase == null ? Mockito.mock(SQLiteDatabase.class) : sqliteDatabase;
+    }
     @Test
     public void addHyphenTest() throws Exception {
         String testString = vaccineRepository.addHyphen("");
