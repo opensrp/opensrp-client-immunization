@@ -2,6 +2,8 @@ package org.smartregister.immunization.utils;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -9,6 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -68,7 +71,17 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+    }
 
+    @Test
+    public void addStatusTagTest() throws Exception {
+
+//        Activity activity = new Activity();
+//        TableLayout tableLayout = Mockito.spy(new TableLayout(activity));
+
+
+//        PowerMockito.doNothing().when(activity).vaccinatorUtilsTest(vaccinatorUtils);
+//        VaccinatorUtils.addStatusTag(activity,new TableLayout(activity),"",true);
     }
 
     @Test
@@ -93,7 +106,6 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    @Config(packageName = "org.smartregister.immunization")
     public void assertVaccinatorUtilsTest() throws Exception{
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
