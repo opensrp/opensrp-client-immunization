@@ -3,6 +3,7 @@ package org.smartregister.immunization.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class ServiceDialogFragment extends DialogFragment {
     private DateTime dateOfBirth;
     private boolean disableConstraints;
     private DateTime dcToday;
+    private DialogInterface.OnDismissListener onDismissListener;
 
     public static ServiceDialogFragment newInstance(
             List<ServiceRecord> issuedServices,
@@ -523,6 +525,19 @@ public class ServiceDialogFragment extends DialogFragment {
                 window.setGravity(Gravity.CENTER);
             }
         });
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 
 }
