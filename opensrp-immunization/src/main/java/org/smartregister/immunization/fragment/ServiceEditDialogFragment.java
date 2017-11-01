@@ -207,7 +207,9 @@ public class ServiceEditDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View view) {
                     CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
-                    childSelect.toggle();
+                    if (childSelect != null) {
+                        childSelect.toggle();
+                    }
                 }
             });
         }
