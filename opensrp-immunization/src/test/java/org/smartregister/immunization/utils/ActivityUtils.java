@@ -1,9 +1,12 @@
 package org.smartregister.immunization.utils;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.widget.TableLayout;
 
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
 /**
@@ -12,10 +15,5 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 
 public class ActivityUtils extends Activity {
 
-
-    public void vaccinatorUtilsTest() {
-        TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
-        VaccinatorUtils.addStatusTag(this,tableLayout,"",true);
-    }
 
 }

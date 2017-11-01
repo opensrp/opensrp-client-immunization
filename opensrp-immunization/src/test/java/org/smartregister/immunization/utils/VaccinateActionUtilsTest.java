@@ -1,5 +1,7 @@
 package org.smartregister.immunization.utils;
 
+import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -19,26 +21,35 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
+import org.smartregister.domain.Alert;
+import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
+import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.repository.AlertRepository;
+import org.smartregister.service.AlertService;
 import org.smartregister.util.FormUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
 /**
@@ -76,6 +87,51 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     }
 
+//    @Test
+//    public void vaccinateTodayTest()throws Exception {
+//        ActivityUtils activity = Robolectric.setupActivity(ActivityUtils.class);
+//        TableRow row = (TableRow) LayoutInflater
+//                .from(activity)
+//                .inflate(R.layout.vaccinate_row_view,null);
+////        View v = new View(RuntimeEnvironment.application);
+////        TableRow row = new TableRow(RuntimeEnvironment.application);
+////        PowerMockito.doReturn(v).when(row).findViewById(R.id.date);
+//        VaccinateActionUtils.vaccinateToday(row,null);
+//    }
+
+    @Test
+    public void addDialogHookCustomFilterTest() throws Exception {
+        VaccineWrapper vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setExistingAge("36");
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv1);
+        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper),true);
+
+        vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setExistingAge("64");
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv2);
+        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper),true);
+
+        vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setExistingAge("92");
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv3);
+        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper),true);
+
+        vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setExistingAge("251");
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.measles1);
+        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper),true);
+
+        vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setExistingAge("351");
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.measles2);
+        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper),true);
+
+        vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setExistingAge("0");
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.bcg);
+        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper),true);
+
+    }
     @Test
     public void findRowTest() throws Exception {
         String tag= "TAG";
@@ -193,15 +249,43 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         PowerMockito.when(VaccinatorUtils.getSpecialVaccines(any(android.content.Context.class))).thenReturn("NULL");
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class),vaccines.getJSONObject(0),list);
 
-
         //choto related methods
+
         //hasvaccines
         Assert.assertEquals(VaccinateActionUtils.hasVaccine(null,null),false);
-        Assert.assertEquals(VaccinateActionUtils.hasVaccine(new ArrayList<Vaccine>(),VaccineRepo.Vaccine.opv0),false);
+        Assert.assertEquals(VaccinateActionUtils.hasVaccine(list,VaccineRepo.Vaccine.opv0),false);
         //getvaccines
         Assert.assertNull(VaccinateActionUtils.getVaccine(null,null));
-        Assert.assertNull(VaccinateActionUtils.getVaccine(new ArrayList<Vaccine>(),VaccineRepo.Vaccine.opv0));
+        Assert.assertNull(VaccinateActionUtils.getVaccine(list,VaccineRepo.Vaccine.opv0));
         Assert.assertNotNull(VaccinateActionUtils.getVaccine(list,VaccineRepo.Vaccine.bcg2));
+
+    }
+
+    @Test
+    public void populateDefaultAlertsTest() throws Exception {
+        VaccinateActionUtils.populateDefaultAlerts(null,null,null,null,null,null);
+        List<Vaccine>vlist = new ArrayList<Vaccine>();
+        Vaccine v = new Vaccine();
+        v.setName("BCG");
+        vlist.add(v);
+        List<Alert>alist = new ArrayList<Alert>();
+        Alert a = new Alert("caseID","BCG","BCG", AlertStatus.normal,new Date().toString(),new Date().toString());
+        alist.add(a);
+        VaccineRepo.Vaccine vaccine [] = {VaccineRepo.Vaccine.bcg};
+        AlertService alertService = new AlertService(Mockito.mock(AlertRepository.class));
+        VaccinateActionUtils.populateDefaultAlerts(alertService,vlist,alist,"uselessentityID",new DateTime(),vaccine);
+        VaccineRepo.Vaccine vaccine2 [] = {VaccineRepo.Vaccine.bcg2};
+        VaccinateActionUtils.populateDefaultAlerts(alertService,vlist,alist,"uselessentityID",new DateTime(),vaccine2);
+
+
+        Assert.assertEquals(VaccinateActionUtils.hasAlert(alist,VaccineRepo.Vaccine.bcg2),false);
+        Assert.assertEquals(VaccinateActionUtils.hasAlert(alist,VaccineRepo.Vaccine.bcg),true);
+        Assert.assertEquals(VaccinateActionUtils.hasAlert(null,VaccineRepo.Vaccine.bcg),false);
+
+        Assert.assertNull(VaccinateActionUtils.getAlert(alist,VaccineRepo.Vaccine.bcg2));
+        Assert.assertNotNull(VaccinateActionUtils.getAlert(alist,VaccineRepo.Vaccine.bcg));
+        Assert.assertNull(VaccinateActionUtils.getAlert(null,VaccineRepo.Vaccine.bcg));
+
 
     }
 
@@ -211,16 +295,16 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0,"",dateTime));
         dateTime = new DateTime();
-        dateTime.plusDays(2);
+        dateTime = dateTime.plusDays(2);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0,"",dateTime));
         dateTime = new DateTime();
-        dateTime.minusDays(2);
+        dateTime = dateTime.minusDays(2);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0,"",dateTime));
         dateTime = new DateTime();
-        dateTime.plusDays(20);
+        dateTime = dateTime.plusDays(400);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0,"",dateTime));
         dateTime = new DateTime();
-        dateTime.minusDays(20);
+        dateTime = dateTime.minusDays(400);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0,"",dateTime));
 
     }

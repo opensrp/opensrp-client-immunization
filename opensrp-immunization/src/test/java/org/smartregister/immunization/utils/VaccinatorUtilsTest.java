@@ -23,6 +23,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -30,7 +31,11 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.domain.ServiceData;
+import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
+import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
@@ -40,11 +45,17 @@ import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.util.VaccineScheduleUtils;
 import org.smartregister.repository.Repository;
+import org.smartregister.util.Utils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.powermock.configuration.ConfigurationType.PowerMock;
 
@@ -52,7 +63,7 @@ import static org.powermock.configuration.ConfigurationType.PowerMock;
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
+@PrepareForTest({ImmunizationLibrary.class,Utils.class})
 public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Rule
@@ -63,7 +74,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Mock
     private Context context;
-
+    @Mock
+    private Utils utils;
     @Mock
     private CommonRepository commonRepository;
     @Mock
@@ -93,6 +105,16 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         VaccinatorUtils.getWasted("", "", "");
         VaccinatorUtils.getWasted("", "", "","");
         Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString());
+
+//        HashMap<String,String>detail = new HashMap<String,String>();
+//        detail.put("0","0");
+//        List<CommonPersonObject> cl = new ArrayList<CommonPersonObject>();
+//        CommonPersonObject o = new CommonPersonObject("","",detail,"");
+//        cl.add(o);
+//
+//        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()).customQueryForCompleteRow(anyString(),any(String[].class),anyString())).thenReturn(cl);
+//        Assert.assertEquals(VaccinatorUtils.getWasted("", "", "",new String[]{"0"}),0);
+//        PowerMockito.when(Utils.getValue(Mockito.any(Map.class),anyString(),anyString(),anyString()))
     }
 
     @Test
@@ -138,4 +160,47 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 //        PowerMockito.doReturn(new HashMap<String,Object>()).when(VaccinatorUtils.class,"createVaccineMap",mock(String.class),mock(Alert.class),mock(DateTime.class),mock(ServiceType.class));
     }
 
+    @Test
+    public void getVaccineDisplayNameTest() throws Exception {
+        android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(Utils.class);
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.vaccines);
+        Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context,"Birth"));
+        Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context,"OPV 0"));
+
+    }
+    @Test
+    public void receivedServicesTest() throws Exception {
+        List<ServiceRecord> serviceRecordList = new ArrayList<ServiceRecord>();
+        ServiceRecord serviceRecord = new ServiceRecord();
+        serviceRecord.setName("NULL");
+        serviceRecord.setDate(new Date());
+        serviceRecordList.add(serviceRecord);
+        Assert.assertNotNull(VaccinatorUtils.receivedServices(serviceRecordList));
+    }
+
+    @Test
+    public void receivedVaccinesTest() throws Exception {
+        List<org.smartregister.immunization.domain.Vaccine> vaccines = new ArrayList<Vaccine>();
+        Vaccine v = new Vaccine();
+        v.setName("NULL");
+        v.setDate(new Date());
+        vaccines.add(v);
+        Assert.assertNotNull(VaccinatorUtils.receivedVaccines(vaccines));
+    }
+    @Test
+    public void getVaccineCalculationTest() throws Exception {
+        android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(Utils.class);
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.vaccines);
+        Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context,"OPV 0"),0);
+        Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context,"NULL"),-1);
+
+        //readspecialvaccines
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.special_vacines);
+        Assert.assertEquals(VaccinatorUtils.getSpecialVaccines(context),VaccineData.special_vacines);
+        //readrecurringservices
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(ServiceData.recurringservice);
+        Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context),ServiceData.recurringservice);
+    }
 }
