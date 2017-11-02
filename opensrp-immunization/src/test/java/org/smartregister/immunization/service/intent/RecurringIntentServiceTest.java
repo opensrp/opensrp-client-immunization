@@ -1,6 +1,7 @@
 package org.smartregister.immunization.service.intent;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
@@ -64,28 +65,19 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Test
     public void onStartCommandTest() {
+        Application application = RuntimeEnvironment.application;
 
-//        Activity activity = Robolectric.setupActivity(Activity.class);
-//        Intent intent = new Intent(activity,RecurringIntentService.class);
-        RecurringIntentService recurringIntentService = new RecurringIntentService();
+        Intent intent =  new Intent(application, RecurringIntentService.class);
+
+        RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
         recurringIntentService.onHandleIntent(new Intent());
 
-//        IntentService service = Mockito.mock(IntentService.class);
-//        RecurringIntentService recurringIntentService = new RecurringIntentService();
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository()).thenReturn(recurringServiceTypeRepository);
         PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
-//        Mockito.when(IntentService.onStartCommand(intent, Service.START_FLAG_RETRY,1)).thenReturn(1);
-//        recurringIntentService = Mockito.spy(recurringIntentService);
-//        RecurringIntentService spy = Mockito.spy(recurringIntentService);
-//        Intent i = new Intent();
-//        i = Mockito.spy(Intent.class);
-//        Mockito.doReturn(1).when(((IntentService)spy)).onStartCommand(i, Service.START_FLAG_REDELIVERY,IntentService.START_STICKY);
-//        Mockito.when(spy.onStartCommand(i, Service.START_FLAG_REDELIVERY,IntentService.START_STICKY)).thenReturn(1);
-//        Mockito.when(spy.onStartCommand(i, Service.START_FLAG_REDELIVERY,IntentService.START_STICKY)).thenCallRealMethod();
-//        spy.startService(i);
-//        Assert.assertEquals(spy.onStartCommand(i, Service.START_FLAG_REDELIVERY,IntentService.START_STICKY),1);
+        PowerMockito.doReturn(1).when((IntentService)recurringIntentService).onStartCommand(intent,IntentService.START_FLAG_REDELIVERY,1);
+//        recurringIntentService.onStartCommand(intent,IntentService.START_FLAG_REDELIVERY,1);
 
     }
 
