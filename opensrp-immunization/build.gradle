@@ -103,6 +103,7 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testCompile("org.powermock:powermock-classloading-xstream:$powerMockVersion")
+
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebug', 'createDebugCoverageReport']) {
@@ -112,8 +113,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebug', 'createDebugC
         html.enabled = true
     }
 
-    getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
-    getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
+    getReports().getXml().setDestination(file("/home/real/reports/jacoco/jacocoRootReport/merged.xml"))
+    getReports().getHtml().setDestination(file("/home/real/reports/jacoco/jacocoRootReport/html"))
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$ViewBinder*.*']
     def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
@@ -127,7 +128,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebug', 'createDebugC
 }
 
 coveralls {
-    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
+    jacocoReportPath = "/home/real/reports/jacoco/jacocoRootReport/merged.xml"
 }
 
 
