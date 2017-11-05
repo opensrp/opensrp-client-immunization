@@ -20,7 +20,9 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.customshadows.CheckBoxShadow;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
+import org.smartregister.immunization.customshadows.RadioButtonShadow;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
 import org.smartregister.immunization.domain.ServiceType;
@@ -49,14 +51,9 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     private org.smartregister.Context context_;
 
 
-//    @Rule
-//    public PowerMockRule rule = new PowerMockRule();
-
     @Before
     public void setUp() throws Exception {
-//        view = org.powermock.api.mockito.PowerMockito.mock(LinearLayout.class);
         org.mockito.MockitoAnnotations.initMocks(this);
-
 
         Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
         controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
@@ -90,7 +87,6 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
         activity = controller.get();
         controller.setup();
-
     }
 
     private void destroyController() {
