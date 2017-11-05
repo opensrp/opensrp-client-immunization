@@ -57,7 +57,17 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         controller = null;
 
     }
+    private void destroyController() {
+        try {
+            activity.finish();
+            controller.pause().stop().destroy(); //destroy controller if we can
 
+        } catch (Exception e) {
+            Log.e(getClass().getCanonicalName(), e.getMessage());
+        }
+
+        System.gc();
+    }
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(ServiceDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper()));
@@ -72,17 +82,7 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         controller.setup();
     }
 
-    private void destroyController() {
-        try {
-            activity.finish();
-            controller.pause().stop().destroy(); //destroy controller if we can
 
-        } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
-        }
-
-        System.gc();
-    }
 
 
 

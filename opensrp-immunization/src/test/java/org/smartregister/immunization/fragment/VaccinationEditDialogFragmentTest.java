@@ -47,7 +47,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-        controller.setup();
+//        controller.setup();
     }
 
     @After
@@ -63,7 +63,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, VaccinationEditDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
         activity = controller.get();
-        controller.setup();
+//        controller.setup();
 
     }
 

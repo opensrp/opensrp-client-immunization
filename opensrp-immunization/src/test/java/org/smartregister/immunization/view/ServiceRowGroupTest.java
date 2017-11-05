@@ -2,97 +2,96 @@ package org.smartregister.immunization.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.test.mock.MockContext;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.android.controller.ActivityController;
+import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
+import org.smartregister.immunization.view.mock.ServiceRowCardTestActivity;
+import org.smartregister.immunization.view.mock.ServiceRowGroupTestActivity;
 
 /**
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ServiceRowGroup.class})
+
 public class ServiceRowGroupTest extends BaseUnitTest {
 
-    private ServiceRowGroup serviceRowGroup;
+    @Mock
+    private ServiceRowGroup vaccineGroup;
 
     @Mock
     private Context context;
 
+    private ActivityController<ServiceRowGroupTestActivity> controller;
+
+    @InjectMocks
+    private ServiceRowGroupTestActivity activity;
+
     @Mock
-    private AttributeSet attributeSet;
-
+    private org.smartregister.Context context_;
     @Before
-    public void setUp() {
-        serviceRowGroup = Mockito.mock(ServiceRowGroup.class);
+    public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
-//        context = Mockito.mock(Context.class);
-        //serviceRowGroup.init();
-    }
-
-
-    @Test(expected = Exception.class)
-    public void assertOnUndoClickReturnsVoid() throws Exception {
-        ServiceRowGroup group = PowerMockito.spy(serviceRowGroup);
-
-        //PowerMockito.doReturn(null).when(group, "init", context);
-        ServiceRowCard v = new ServiceRowCard(context,true);
-        group.setOnServiceUndoClickListener(new ServiceRowGroup.OnServiceUndoClickListener() {
-            @Override
-            public void onUndoClick(ServiceRowGroup serviceRowGroup, ServiceWrapper serviceWrapper) {
-
-            }
-        });
-        group.onUndoClick(v);
-        Mockito.verify(group).onUndoClick(ArgumentMatchers.eq(v));
-        Mockito.verify(group,Mockito.times(1)).onUndoClick(v);
+        Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowGroupTestActivity.class);
+        controller = Robolectric.buildActivity(ServiceRowGroupTestActivity.class, intent);
+        activity = controller.start().resume().get();
+        CoreLibrary.init(context_);
+        controller.setup();
 
     }
-
     @Test
-    public void assertonModalOpenReturnsBoolean() throws Exception{
-        serviceRowGroup.setModalOpen(true);
-        Mockito.when(serviceRowGroup.isModalOpen()).thenReturn(true);
-        org.junit.Assert.assertEquals(serviceRowGroup.isModalOpen(),true);
+    public void testActivity(){
+        Assert.assertNotNull(activity);
     }
-
     @Test
-    public void assertgetChildDetailReturnsCommonPersonObject()throws Exception{
-        ServiceRowGroup group = Mockito.mock(ServiceRowGroup.class);
-        Map<String,String> map = new HashMap<String, String>();
-       // map.put("1","kk");
-        CommonPersonObjectClient childDetails = new CommonPersonObjectClient("1",map,"kk");
-        Mockito.when(group.getChildDetails()).thenReturn(childDetails);
-        //CommonPersonObjectClient childDetails2 = group.getChildDetails();
-        org.junit.Assert.assertEquals(group.getChildDetails(),childDetails);
+    public void testConstructors(){
+        Assert.assertNotNull(activity.getInstance());
+        Assert.assertNotNull(activity.getInstance1());
+        Assert.assertNotNull(activity.getInstance2());
+        Assert.assertNotNull(activity.getInstance3());
+    }
+    @After
+    public void tearDown() {
+        destroyController();
+        activity = null;
+        controller = null;
+
+    }
+    private void destroyController() {
+        try {
+            activity.finish();
+            controller.pause().stop().destroy(); //destroy controller if we can
+
+        } catch (Exception e) {
+            Log.e(getClass().getCanonicalName(), e.getMessage());
+        }
+
+        System.gc();
     }
 
-    @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws Exception {
 
-//        Activity mockActivity = Mockito.mock(Activity.class);
-//        context = mockActivity.getApplicationContext();
-//Context ctx = Mockito.mock(Context.class);
-//        ServiceRowGroup serviceRowGroupSpy = PowerMockito.spy(serviceRowGroup);
-//        PowerMockito.doReturn(null).when(serviceRowGroupSpy, "init", context);
-//        org.junit.Assert.assertNotNull(new ServiceRowGroup(context, true));
-//        org.junit.Assert.assertNotNull(new ServiceRowGroup(context, attributeSet));
-//        org.junit.Assert.assertNotNull(new ServiceRowGroup(context, attributeSet, 0));
-//        org.junit.Assert.assertNotNull(new ServiceRowGroup(context, attributeSet, 0, 0));
-    }
-//./gradlew :opensrp-immunization:clean :opensrp-immunization:jacocoTestReport
 
 }

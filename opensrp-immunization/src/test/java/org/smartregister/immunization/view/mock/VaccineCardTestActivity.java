@@ -6,14 +6,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.view.VaccineCard;
@@ -25,7 +23,7 @@ import java.util.ArrayList;
  * Created by real on 05/11/17.
  */
 
-public class VaccineGroupTestActivity extends Activity implements View.OnClickListener,
+public class VaccineCardTestActivity extends Activity implements View.OnClickListener,
         VaccineCard.OnVaccineStateChangeListener{
     @Override
     public void onClick(View view) {
@@ -46,18 +44,18 @@ public class VaccineGroupTestActivity extends Activity implements View.OnClickLi
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    VaccineGroup view;
-    public VaccineGroup getInstance(){
-        return (view == null)? new VaccineGroup(this):view;
+    VaccineCard view;
+    public VaccineCard getInstance(){
+        return (view == null)? new VaccineCard(this):view;
     }
-    public VaccineGroup getInstance1(){
-        return new VaccineGroup(this,ViewAttributes.attrs);
+    public VaccineCard getInstance1(){
+        return new VaccineCard(this,ViewAttributes.attrs);
     }
-    public VaccineGroup getInstance2(){
-        return new VaccineGroup(this,ViewAttributes.attrs,0);
+    public VaccineCard getInstance2(){
+        return new VaccineCard(this,ViewAttributes.attrs,0);
     }
-    public VaccineGroup getInstance3(){
-        return new VaccineGroup(this,ViewAttributes.attrs,0,0);
+    public VaccineCard getInstance3(){
+        return new VaccineCard(this,ViewAttributes.attrs,0,0);
     }
 
     public ArrayList<VaccineWrapper> vaccineWrapperList(){
