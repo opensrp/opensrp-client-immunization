@@ -45,8 +45,7 @@ import static org.mockito.Mockito.mock;
 
 public class ImmunizationRowGroupTest extends BaseUnitTest {
 
-    @Mock
-    private ImmunizationRowGroup vaccineGroup;
+    private ImmunizationRowGroup view;
 
     @Mock
     private Context context;
@@ -58,6 +57,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -66,12 +66,14 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
         controller.setup();
-
+        view = activity.getInstance();
     }
+
     @Test
     public void testActivity(){
         Assert.assertNotNull(activity);
     }
+
     @Test
     public void testConstructors(){
         Assert.assertNotNull(activity.getInstance());
@@ -79,6 +81,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
+
     @After
     public void tearDown() {
         destroyController();

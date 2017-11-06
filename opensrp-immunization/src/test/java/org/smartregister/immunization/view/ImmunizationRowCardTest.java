@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +19,10 @@ import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.CoreLibrary;
+import org.smartregister.domain.Alert;
+import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.view.mock.ImmunizationRowCardTestActivity;
 import org.smartregister.immunization.view.mock.VaccineGroupTestActivity;
 
@@ -29,14 +33,14 @@ import org.smartregister.immunization.view.mock.VaccineGroupTestActivity;
 
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
-    @Mock
-    private ImmunizationRowCard vaccineGroup;
+    private ImmunizationRowCard view;
 
     @Mock
     private Context context;
 
     private ActivityController<ImmunizationRowCardTestActivity> controller;
-
+    private Alert alert;
+    private VaccineWrapper wrapper;
     @InjectMocks
     private ImmunizationRowCardTestActivity activity;
 
@@ -50,7 +54,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
         controller.setup();
-
+        view = activity.getInstance();
     }
     @Test
     public void testActivity(){
@@ -63,6 +67,80 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
         Assert.assertNotNull(activity.getInstance4());
+    }
+
+    public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
+        alert = new Alert("","","", AlertStatus.normal,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus("due");
+        wrapper.setAlert(alert);
+        wrapper.setName("mr");
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertEquals(view.getState(),VaccineCard.State.DUE);
+
+        alert = new Alert("","","", AlertStatus.upcoming,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus("due");
+        wrapper.setAlert(alert);
+        wrapper.setName("mr");
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertNotNull(view.getState());
+
+        alert = new Alert("","","", AlertStatus.urgent,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus("due");
+        wrapper.setAlert(alert);
+        wrapper.setName("mr");
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertEquals(view.getState(),VaccineCard.State.OVERDUE);
+
+        alert = new Alert("","","", AlertStatus.expired,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus("due");
+        wrapper.setAlert(alert);
+        wrapper.setName("measles");
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertEquals(view.getState(),VaccineCard.State.EXPIRED);
+
+        alert = new Alert("","","", AlertStatus.normal,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus("expired");
+        wrapper.setAlert(alert);
+        wrapper.setName("measles");
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertEquals(view.getState(),VaccineCard.State.EXPIRED);
+
+        alert = new Alert("","","", AlertStatus.normal,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus("expired");
+        wrapper.setAlert(alert);
+        wrapper.setName("mr");
+        wrapper.setUpdatedVaccineDate(new DateTime(),true);
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertEquals(view.getState(),VaccineCard.State.DONE_CAN_NOT_BE_UNDONE);
+
+        alert = new Alert("","","", AlertStatus.normal,"","");
+        wrapper = new VaccineWrapper();
+        wrapper.setSynced(false);
+        wrapper.setStatus("expired");
+        wrapper.setAlert(alert);
+        wrapper.setName("mr");
+        wrapper.setUpdatedVaccineDate(new DateTime(),true);
+        wrapper.setVaccineDate(new DateTime());
+        view.setVaccineWrapper(wrapper);
+        Assert.assertEquals(view.getState(),VaccineCard.State.DONE_CAN_BE_UNDONE);
     }
     @After
     public void tearDown() {
