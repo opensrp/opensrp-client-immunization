@@ -98,7 +98,7 @@ public class VaccineCardTest extends BaseUnitTest {
         wrapper.setSynced(true);
         wrapper.setStatus("due");
         wrapper.setAlert(alert);
-        wrapper.setName("measles");
+        wrapper.setName("mr");
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(),VaccineCard.State.EXPIRED);

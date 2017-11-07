@@ -22,7 +22,7 @@ import org.smartregister.immunization.view.VaccineGroup;
 import java.util.ArrayList;
 
 /**
- * Created by real on 05/11/17.
+ * Created by kaderchowdhury on 05/11/17.
  */
 
 public class VaccineGroupTestActivity extends Activity implements View.OnClickListener,

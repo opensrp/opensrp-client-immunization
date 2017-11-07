@@ -16,11 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
@@ -28,6 +30,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.db.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
@@ -42,15 +45,20 @@ import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyObject;
 
 /**
  * Created by onaio on 30/08/2017.
  */
 
-
+@PrepareForTest({ImmunizationLibrary.class})
+@Config(shadows = {FontTextViewShadow.class})
+@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*",  "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
 
 
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
 
     private ServiceRowCard view;
 
@@ -73,27 +81,33 @@ public class ServiceRowCardTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(ServiceRowCardTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-        controller.setup();
-        view = activity.getInstance();
-//        ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
-//        serviceRecord.setDate(new Date());
-//        serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
-//        serviceRecord.setEventId("1");
-//        Event event = new Event();
-//        event.setEventId("1");
-//        event.setDateCreated(new DateTime());
-//        EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
-//        PowerMockito.mockStatic(ImmunizationLibrary.class);
-//        ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class),Mockito.mock(Repository.class),Mockito.mock(CommonFtsObject.class));
-//        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(Mockito.mock(ImmunizationLibrary.class));
-//        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository()).thenReturn(Mockito.mock(RecurringServiceRecordRepository.class));
-//        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository().find(anyLong())).thenReturn(serviceRecord);
-//        PowerMockito.when(ImmunizationLibrary.getInstance().eventClientRepository()).thenReturn(eventClientRepository);
-//        PowerMockito.when(eventClientRepository.convert(any(JSONObject.class),Event.class)).thenReturn(event);
 
+
+        ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+        serviceRecord.setDate(new Date());
+        serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
+        serviceRecord.setEventId("1");
+        Event event = new Event();
+        event.setEventId("1");
+        event.setDateCreated(new DateTime());
+
+        EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
+
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito.mock(RecurringServiceRecordRepository.class);
+        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class),Mockito.mock(Repository.class),Mockito.mock(CommonFtsObject.class));
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
+        PowerMockito.when(recurringServiceRecordRepository.find(anyLong())).thenReturn(serviceRecord);
+        PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
+        PowerMockito.when(eventClientRepository.convert(any(JSONObject.class),any(Class.class))).thenReturn(event);
+//        controller.setup();
+        view = new ServiceRowCard(RuntimeEnvironment.application);
+//        view = activity.getInstance();
     }
 
-
+    @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
         alert = new Alert("","","", AlertStatus.normal,"","");
         wrapper = new ServiceWrapper();

@@ -40,6 +40,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.ServiceDialogFragmentTestActivity;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.mock.VaccineGroupTestActivity;
+import org.smartregister.immunization.view.mock.ViewAttributes;
 import org.smartregister.util.Utils;
 
 import java.lang.reflect.Array;
@@ -64,11 +65,6 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Mock
     private Context context;
 
-    private ActivityController<VaccineGroupTestActivity> controller;
-
-    @InjectMocks
-    private VaccineGroupTestActivity activity;
-
     @Mock
     private org.smartregister.Context context_;
 
@@ -81,12 +77,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccineGroupTestActivity.class);
-        controller = Robolectric.buildActivity(VaccineGroupTestActivity.class, intent);
-        activity = controller.start().resume().get();
-        CoreLibrary.init(context_);
-        controller.setup();
-        view = activity.getInstance();
+        view = new VaccineGroup(RuntimeEnvironment.application);
     }
     @Test
     public void assertGetAlertListNotNull() throws Exception {
@@ -240,29 +231,10 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void asertConstructorsNotNull(){
-        Assert.assertNotNull(activity.getInstance());
-        Assert.assertNotNull(activity.getInstance1());
-        Assert.assertNotNull(activity.getInstance2());
-        Assert.assertNotNull(activity.getInstance3());
-    }
-
-    @After
-    public void tearDown() {
-        destroyController();
-        activity = null;
-        controller = null;
-
-    }
-    private void destroyController() {
-        try {
-            activity.finish();
-            controller.pause().stop().destroy(); //destroy controller if we can
-
-        } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
-        }
-
-        System.gc();
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs,0));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs,0,0));
     }
 
 }
