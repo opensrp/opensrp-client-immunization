@@ -103,6 +103,10 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testCompile("org.powermock:powermock-classloading-xstream:$powerMockVersion")
+
+    testCompile 'org.apache.maven:maven-ant-tasks:2.1.3'
+
+
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebug', 'createDebugCoverageReport']) {

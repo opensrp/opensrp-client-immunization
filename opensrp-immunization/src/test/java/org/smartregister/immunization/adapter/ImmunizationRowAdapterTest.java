@@ -2,6 +2,8 @@ package org.smartregister.immunization.adapter;
 
 import android.content.Context;
 
+import junit.framework.Assert;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +15,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +45,17 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, vaccineGroup, true));
     }
 
+//    @Test
+//    public void assertGetViewReturnsView() throws Exception {
+//        JSONObject object = new JSONObject();
+//        object = new JSONArray(VaccineData.vaccines).getJSONObject(0);
+//        ImmunizationRowAdapter adapter = new ImmunizationRowAdapter(context, vaccineGroup, true);
+//        Mockito.when(vaccineGroup.getVaccineData()).thenReturn(object);
+//        Assert.assertNull(adapter.getView(0,null,null));
+//
+//    }
     @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
+    public void assertgetCountTestReturnsCount() throws Exception {
         JSONObject vaccineData = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         jsonArray.put("testvalue1");
@@ -57,6 +69,19 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, vaccineGroup, true);
         junit.framework.Assert.assertNotNull(immunizationRowAdapter);
         junit.framework.Assert.assertEquals(jsonArray.length(), immunizationRowAdapter.getCount());
+
+        //returns 0 when throwsexception
+        JSONObject errData = new JSONObject();
+        errData.put("err", jsonArray);
+        vaccineGroup.setData(errData, commonPersonObjectClient, vaccineList, alerts);
+        Mockito.when(vaccineGroup.getVaccineData()).thenReturn(errData);
+        junit.framework.Assert.assertEquals(0, immunizationRowAdapter.getCount());
+
+        //should return null
+        Assert.assertNull(immunizationRowAdapter.getItem(0));
+
+        Assert.assertEquals(immunizationRowAdapter.getItemId(0),231231);
+
     }
 
 }

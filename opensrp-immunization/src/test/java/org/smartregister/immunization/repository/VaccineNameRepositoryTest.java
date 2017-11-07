@@ -44,19 +44,19 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void instantiatesSuccessfullyOnConstructorCall() throws Exception {
+    public void assertInstantiatesSuccessfullyOnConstructorCall() throws Exception {
         VaccineNameRepository vaccineNameRepository = new VaccineNameRepository(repository, commonFtsObject, alertService);
         org.junit.Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
-    public void createTableCallsExecuteSQLMethod() throws Exception {
+    public void verifyCreateTableCallsExecuteSQLMethod() throws Exception {
         vaccineNameRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).execSQL(org.mockito.ArgumentMatchers.anyString());
     }
 
     @Test
-    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
         Mockito.when(vaccineNameRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineName vaccineName = PowerMockito.mock(VaccineName.class);
         Mockito.when(vaccineName.getId()).thenReturn(null);
@@ -65,7 +65,7 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
         Mockito.when(vaccineNameRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
         vaccineNameRepository.add(vaccineName);
@@ -73,7 +73,7 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
         vaccineNameRepository.add(null);
         Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.any(ContentValues.class));
         Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));

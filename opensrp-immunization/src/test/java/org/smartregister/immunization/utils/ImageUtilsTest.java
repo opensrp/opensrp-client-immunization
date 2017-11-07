@@ -1,5 +1,7 @@
 package org.smartregister.immunization.utils;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,48 +48,48 @@ public class ImageUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void profileImageResourceByGenderWithEmptyStringParameterReturnsDefaultResource() {
+    public void assertProfileImageResourceByGenderWithEmptyStringParameterReturnsDefaultResource() {
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(""), R.drawable.child_boy_infant);
     }
 
     @Test
-    public void profileImageResourceByGenderWithMaleParameterReturnsMaleResource() {
+    public void assertProfileImageResourceByGenderWithMaleParameterReturnsMaleResource() {
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender("male"), R.drawable.child_boy_infant);
     }
 
     @Test
-    public void profileImageResourceByGenderWithFemaleParameterReturnsFemaleResource() {
+    public void assertProfileImageResourceByGenderWithFemaleParameterReturnsFemaleResource() {
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender("female"), R.drawable.child_girl_infant);
     }
 
     @Test
-    public void profileImageResourceByGenderWithTransgenderParameterReturnsTransgenderResource() {
+    public void assertProfileImageResourceByGenderWithTransgenderParameterReturnsTransgenderResource() {
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender("transgender"), R.drawable.child_transgender_inflant);
     }
 
     @Test
-    public void profileImageResourceByGenderObjectWithMaleGenderParameterReturnsMaleResource() {
+    public void assertProfileImageResourceByGenderObjectWithMaleGenderParameterReturnsMaleResource() {
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.MALE), R.drawable.child_boy_infant);
     }
 
     @Test
-    public void profileImageResourceByGenderWithFemaleObjectReturnsFemaleResource() {
+    public void assertProfileImageResourceByGenderWithFemaleObjectReturnsFemaleResource() {
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.FEMALE), R.drawable.child_girl_infant);
     }
 
     @Test
-    public void profileImageResourceByGenderWithNullObjectParameterReturnsTransgenderResource() {
+    public void assertProfileImageResourceByGenderWithNullObjectParameterReturnsTransgenderResource() {
         org.opensrp.api.constants.Gender gender = null;
         org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(gender), R.drawable.child_transgender_inflant);
     }
 
     @Test
-    public void imageUtilsClassConstructorReturnsNonNullObjectOnInstantiation() {
+    public void assertImageUtilsClassConstructorReturnsNonNullObjectOnInstantiation() {
         org.junit.Assert.assertNotNull(new ImageUtils());
     }
 
     @Test
-    public void profilePhotoByClientReturnsDefaultInfantBoyPhoto() {
+    public void assertProfilePhotoByClientReturnsDefaultInfantBoyPhoto() {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
@@ -99,7 +101,7 @@ public class ImageUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void profilePhotoByClientReturnsCorrectPhotoFilePathForCorrespondingClient() {
+    public void assertProfilePhotoByClientReturnsCorrectPhotoFilePathForCorrespondingClient() {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);

@@ -4,7 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -76,6 +79,11 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         serviceCardAdapter = new ServiceCardAdapter(context, serviceGroup);
         org.junit.Assert.assertNotNull(serviceCardAdapter);
         org.junit.Assert.assertEquals(vaccineData.size(), serviceCardAdapter.getCount());
+
+        //should return null
+        Assert.assertNull(serviceCardAdapter.getItem(0));
+
+        Assert.assertEquals(serviceCardAdapter.getItemId(0),231231);
     }
 
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {
