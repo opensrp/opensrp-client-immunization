@@ -31,6 +31,7 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 
 /**
  * Created by real on 29/10/17.
@@ -63,7 +64,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void populateRecurringServices() throws Exception {
+    public void assertPopulateRecurringServices() throws Exception {
 //        VaccineRepositoryTest test = new VaccineRepositoryTest();
 //        SQLiteDatabase.loadLibs(RuntimeEnvironment.application);
 //        SQLiteDatabase sqLiteDatabase = new SQLiteDatabase("",new char[]{},null,1);
@@ -72,6 +73,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(VaccinatorUtils.class);
         PowerMockito.when(VaccinatorUtils.getSupportedRecurringServices(context)).thenReturn(ServiceData.recurringservice);
         imDatabaseUtils.populateRecurringServices(context,null,recurringServiceTypeRepository);
+        org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
     @Test
     public void accessAssetsAndFillDataBaseForVaccineTypesTest() throws Exception {
@@ -87,6 +89,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         PowerMockito.when(vaccineTypeRepository.getAllVaccineTypes(null)).thenReturn(new ArrayList<VaccineType>());
         PowerMockito.when(Utils.readAssetContents(any(Context.class),any(String.class))).thenReturn(VaccineData.vaccine_type);
         imDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context,null);
+        org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
 
 }

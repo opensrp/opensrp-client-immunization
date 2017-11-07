@@ -118,7 +118,7 @@ public class ServiceGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertOnClickCallsOnUndoServiceAllClickListenerAndOnServiceClickedListener() throws Exception {
+    public void verifyOnClickCallsOnUndoServiceAllClickListenerAndOnServiceClickedListener() throws Exception {
 
         setDataForTest("1985-07-24T00:00:00.000Z");
         view.updateViews();

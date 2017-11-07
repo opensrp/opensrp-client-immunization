@@ -84,6 +84,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         taglist.add(tag);
 
 //        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),issuedVaccines,taglist);
+
         VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),null,null);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

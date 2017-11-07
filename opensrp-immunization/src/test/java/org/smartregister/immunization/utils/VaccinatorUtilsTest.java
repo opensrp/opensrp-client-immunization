@@ -97,7 +97,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetwastedcallssqlmethodonce() {
+    public void verifygetwastedcallssqlmethodonce() {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
@@ -118,7 +118,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetUsedcallssqlmethodonce() {
+    public void verifyGetUsedcallssqlmethodonce() {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
@@ -161,7 +161,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void getVaccineDisplayNameTest() throws Exception {
+    public void assertGetVaccineDisplayNameTestReturnsDisplayName() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
         PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.vaccines);
@@ -170,7 +170,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     }
     @Test
-    public void receivedServicesTest() throws Exception {
+    public void assertReceivedServicesTestReturnsService() throws Exception {
         List<ServiceRecord> serviceRecordList = new ArrayList<ServiceRecord>();
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setName("NULL");
@@ -180,7 +180,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void receivedVaccinesTest() throws Exception {
+    public void assertReceivedVaccinesTestReturnsVaccine() throws Exception {
         List<org.smartregister.immunization.domain.Vaccine> vaccines = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
         v.setName("NULL");
@@ -189,7 +189,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(VaccinatorUtils.receivedVaccines(vaccines));
     }
     @Test
-    public void getVaccineCalculationTest() throws Exception {
+    public void assertGetVaccineCalculationTestReturnsCalculation() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
         PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.vaccines);

@@ -32,7 +32,7 @@ import java.util.List;
 public class VaccinationEditDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
     LinearLayout linearLayout;
-
+    private VaccinationEditDialogFragment fragment;
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
@@ -79,11 +79,14 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         taglist.add(tag);
 
 //        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),issuedVaccines,taglist);
-        VaccinationEditDialogFragment fragment = VaccinationEditDialogFragment.newInstance(this,new java.util.Date(),issuedVaccines,taglist,linearLayout);
+        fragment = VaccinationEditDialogFragment.newInstance(this,new java.util.Date(),issuedVaccines,taglist,linearLayout);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add( fragment, null );
         fragmentTransaction.commit();
+    }
+    public VaccinationEditDialogFragment getFragment(){
+        return fragment;
     }
     @Override
     protected void onStart() {

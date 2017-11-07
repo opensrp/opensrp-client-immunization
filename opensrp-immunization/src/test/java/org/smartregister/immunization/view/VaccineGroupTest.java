@@ -128,7 +128,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         Assert.assertNotNull(view.getAllVaccineWrappers());
     }
     @Test
-    public void assertOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() throws Exception {
+    public void verifyOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() throws Exception {
 
         setDataForTest("1985-07-24T00:00:00.000Z");
         view.updateViews();

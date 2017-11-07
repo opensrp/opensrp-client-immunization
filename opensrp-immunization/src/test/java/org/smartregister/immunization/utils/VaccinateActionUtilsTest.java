@@ -76,7 +76,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void formDataTest() throws Exception {
+    public void assertFormDataTestWithTestData() throws Exception {
         VaccinateActionUtils vaccinateActionUtils = new VaccinateActionUtils();
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(FormUtils.class);
@@ -100,7 +100,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 //    }
 
     @Test
-    public void addDialogHookCustomFilterTest() throws Exception {
+    public void assertAddDialogHookCustomFilterTestForDifferentAgeAndVaccines() throws Exception {
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("36");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv1);
@@ -133,7 +133,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     }
     @Test
-    public void findRowTest() throws Exception {
+    public void assertFindRowTestReturnsTableRow() throws Exception {
         String tag= "TAG";
 
         Set<TableLayout>tables = new HashSet<TableLayout>();
@@ -149,7 +149,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void retrieveFieldOveridesTest() throws Exception {
+    public void assertRetrieveFieldOveridesTestReturnsFieldOverieds() throws Exception {
         String s = "{\"fieldOverrides\":\"{}\"}";
         Assert.assertNotNull(VaccinateActionUtils.retrieveFieldOverides(s));
         //throws Exception
@@ -157,7 +157,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void allAlertNamesTest() throws Exception {
+    public void assertAllAlertNamesTestReturnsAlertForACategory() throws Exception {
 
         List<ServiceType> typeList = new ArrayList<ServiceType>();
         HashMap<String,List<ServiceType>> collection = new HashMap<String,List<ServiceType>>();
@@ -171,7 +171,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertNull(VaccinateActionUtils.allAlertNames("NULL"));
     }
     @Test
-    public void updateJsonAndFindTest() throws Exception {
+    public void assertUpdateJsonAndFindTestReturnsJsonObject() throws Exception {
         JSONObject object = new JSONObject();
         String field = "FIELD";
         String value = "value";
@@ -199,7 +199,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void previousStateKeyTest() throws Exception {
+    public void assertPreviousStateKeyTestWithVariousVaccineNames() throws Exception {
         Assert.assertNull(VaccinateActionUtils.previousStateKey(null,null));
         Vaccine v = new Vaccine();
         v.setName("BCG");
@@ -227,7 +227,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void hyphenTest() throws Exception {
+    public void assertHyphenTestReturnsHyphenatedString() throws Exception {
         Assert.assertNotNull(VaccinateActionUtils.addHyphen(""));
         Assert.assertNotNull(VaccinateActionUtils.addHyphen("a b"));
         Assert.assertNotNull(VaccinateActionUtils.removeHyphen(""));
@@ -235,7 +235,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void addBcg2SpecialVaccineTest() throws Exception {
+    public void assertAddBcg2SpecialVaccineTestReturnsSpecialVaccinesOnHasVaccineAndGetVaccineMethods() throws Exception {
         List<Vaccine>list = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
         v.setName("BCG 2");
@@ -262,7 +262,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void populateDefaultAlertsTest() throws Exception {
+    public void assertPopulateDefaultAlertsTestReturnsAlerts() throws Exception {
         VaccinateActionUtils.populateDefaultAlerts(null,null,null,null,null,null);
         List<Vaccine>vlist = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
@@ -290,7 +290,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void createDefaultAlertTest() throws Exception {
+    public void assertCreateDefaultAlertTestReturnsAlert() throws Exception {
         DateTime dateTime = new DateTime();
 
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0,"",dateTime));

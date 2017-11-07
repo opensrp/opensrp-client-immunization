@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -49,13 +50,13 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
 
     }
     @Test
-    public void onCreateViewTest() throws Exception {
+    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
         destroyController();
         Intent intent = new Intent(RuntimeEnvironment.application, UndoVaccinationDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();
-
+        Assert.assertNotNull(activity);
     }
 
     private void destroyController() {

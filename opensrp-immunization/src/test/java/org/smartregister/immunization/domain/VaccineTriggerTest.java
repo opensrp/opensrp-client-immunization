@@ -44,7 +44,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
 //        junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data2).getFireDate(Collections.EMPTY_LIST, date));
     }
     @Test
-    public void getWindowTest() throws JSONException{
+    public void assertGetWindowTestReturnsCurrentWindow() throws JSONException{
         JSONObject data1 = new JSONObject(stringdata1);
         VaccineTrigger vaccineTrigger = Mockito.mock(VaccineTrigger.class);
         vaccineTrigger.init(CHILD, data1);

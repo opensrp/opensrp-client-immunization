@@ -54,7 +54,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void getDosesPerVialTest() throws Exception {
+    public void assertGetDosesPerVialTest() throws Exception {
         List<VaccineType> list = new ArrayList<VaccineType>();
         VaccineType type = new VaccineType(10l,10,"","","","");
         list.add(type);
@@ -69,19 +69,19 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
 
     @Test
-    public void instantiatesSuccessfullyOnConstructorCall() throws Exception {
+    public void assertInstantiatesSuccessfullyOnConstructorCall() throws Exception {
         VaccineTypeRepository vaccineRepository = new VaccineTypeRepository(repository, commonFtsObject, alertService);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
 
     @Test
-    public void createTableCallsExecuteSQLMethod() throws Exception {
+    public void verifyCreateTableCallsExecuteSQLMethod() throws Exception {
         vaccineTypeRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).execSQL(org.mockito.ArgumentMatchers.anyString());
     }
 
     @Test
-    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
         Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineType vaccineType = PowerMockito.mock(VaccineType.class);
         Mockito.when(vaccineType.getId()).thenReturn(null);
@@ -90,7 +90,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void addCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() throws Exception {
         Mockito.when(vaccineTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineType vaccineType = new VaccineType(0l, 0, "", "", "", "");
         vaccineTypeRepository.add(vaccineType, sqliteDatabase);
@@ -98,14 +98,14 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void addCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
         vaccineTypeRepository.add(null, sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(), any(ContentValues.class));
         Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), any(String[].class));
     }
 
     @Test
-    public void findbyEntityIDcallsDatabaseQueryMethod1Times() throws Exception {
+    public void verifyFindbyEntityIDcallsDatabaseQueryMethod1Times() throws Exception {
         Cursor cursor = PowerMockito.mock(Cursor.class);
         Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), any(String[].class), org.mockito.ArgumentMatchers.anyString(), any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
         Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
@@ -114,7 +114,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void findallVaccineTypcallsDatabaseQueryMethod1Times() throws Exception {
+    public void verifyFindallVaccineTypcallsDatabaseQueryMethod1Times() throws Exception {
 //        Cursor cursor = PowerMockito.mock(Cursor.class);
         String[] columns = new String[] {VaccineTypeRepository.ID_COLUMN,VaccineTypeRepository.DOSES,VaccineTypeRepository.NAME,VaccineTypeRepository.OPENMRS_PARENT_ENTITIY_ID,VaccineTypeRepository.OPENMRS_DATE_CONCEPT_ID,VaccineTypeRepository.OPENMRS_DOSE_CONCEPT_ID};
         MatrixCursor cursor= new MatrixCursor(columns);

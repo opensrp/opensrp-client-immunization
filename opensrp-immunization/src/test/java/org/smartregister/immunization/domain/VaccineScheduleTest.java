@@ -69,7 +69,7 @@ public class VaccineScheduleTest extends BaseUnitTest{
     }
 
     @Test
-    public void updateOfflineAlertsTest() throws Exception{
+    public void assertUpdateOfflineAlertsTestReturnsAlert() throws Exception{
 
         VaccineSchedule vaccineSchedule = new VaccineSchedule(null,null,null,null);
         vaccineSchedule.init(new JSONArray(VaccineData.vaccines),new JSONArray(VaccineData.special_vacines),"child");
@@ -88,12 +88,12 @@ public class VaccineScheduleTest extends BaseUnitTest{
 
 
     @Test
-    public void constructorTest() throws Exception{
+    public void assertConstructorInitializationTest() throws Exception{
         Assert.assertNotNull(new VaccineSchedule(null,null,null,null));
     }
 
     @Test
-    public void initAndInitVaccineTest()throws Exception{
+    public void assertInitAndInitVaccineWithTestData()throws Exception{
         VaccineSchedule vaccineSchedule = new VaccineSchedule(null,null,null,null);
 //        VaccineSchedule vaccineSchedule = Mockito.spy(this.vaccineSchedule);
         vaccineSchedule.init(new JSONArray(VaccineData.vaccines),new JSONArray(VaccineData.special_vacines),"child");

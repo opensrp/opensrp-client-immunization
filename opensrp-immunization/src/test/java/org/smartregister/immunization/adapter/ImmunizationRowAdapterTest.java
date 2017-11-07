@@ -15,6 +15,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,17 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, vaccineGroup, true));
     }
 
-
+//    @Test
+//    public void assertGetViewReturnsView() throws Exception {
+//        JSONObject object = new JSONObject();
+//        object = new JSONArray(VaccineData.vaccines).getJSONObject(0);
+//        ImmunizationRowAdapter adapter = new ImmunizationRowAdapter(context, vaccineGroup, true);
+//        Mockito.when(vaccineGroup.getVaccineData()).thenReturn(object);
+//        Assert.assertNull(adapter.getView(0,null,null));
+//
+//    }
     @Test
-    public void getCountTest() throws Exception {
+    public void assertgetCountTestReturnsCount() throws Exception {
         JSONObject vaccineData = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         jsonArray.put("testvalue1");

@@ -3,6 +3,8 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,12 +61,13 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
     }
 
     @Test
-    public void onCreateViewTest() throws Exception {
+    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
         destroyController();
         Intent intent = new Intent(RuntimeEnvironment.application, UndoServiceDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(UndoServiceDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();
+        Assert.assertNotNull(activity);
     }
 
     private void destroyController() {

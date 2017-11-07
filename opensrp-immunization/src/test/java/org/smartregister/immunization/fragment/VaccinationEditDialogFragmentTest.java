@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import org.json.JSONArray;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,9 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
+import org.smartregister.immunization.domain.VaccineData;
+import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
@@ -38,7 +42,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-
+    private VaccinationEditDialogFragment view;
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -47,9 +51,16 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-//        controller.setup();
+        VaccineSchedule.init(new JSONArray(VaccineData.vaccines),new JSONArray(VaccineData.special_vacines),"child");
+        controller.setup();
+        view = activity.getFragment();
     }
 
+//    @Test
+//    public void assertButtonIdSetOnClickCallsOnVaccinationEarlier() throws Exception{
+//        view.getView().findViewById(R.id.set).performClick();
+//
+//    }
     @After
     public void tearDown() {
         destroyController();
@@ -63,7 +74,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, VaccinationEditDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
         activity = controller.get();
-//        controller.setup();
+        controller.setup();
 
     }
 

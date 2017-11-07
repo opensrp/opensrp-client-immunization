@@ -71,7 +71,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
         org.mockito.MockitoAnnotations.initMocks(this);
     }
     @Test
-    public void updateOfflineAlertsTest() throws Exception{
+    public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() throws Exception{
 
         ServiceSchedule serviceSchedule = new ServiceSchedule(dueTrigger,expTrigger);
 
@@ -97,19 +97,27 @@ public class ServiceScheduleTest extends BaseUnitTest {
         serviceSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID,new DateTime());
         serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID,null);
         serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID,new DateTime());
-
+        ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+        serviceRecord.setDate(new Date());
+        serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
+        serviceRecord.setEventId("1");
+        ArrayList<ServiceRecord>issuedServices = new ArrayList<ServiceRecord>();
+        issuedServices.add(serviceRecord);
+        Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType,issuedServices,VaccineTest.BASEENTITYID,new DateTime()));
+    }
+    @Test
+    public void assertAddOffsetToCalanderReturnsDateTime() throws Exception{
         List<String>offsets = new ArrayList<String>();
         offsets.add("+10d");
         offsets.add("+10m");
         offsets.add("+10y");
         offsets.add("-10d");
-        offsets.add("+xxy");//shouldthrowexception
+        offsets.add("+xxy");
         Assert.assertNotNull(serviceSchedule.addOffsetToDateTime(new DateTime(),offsets));
-
     }
 
     @Test
-    public void getServiceScheduleTest() throws Exception{
+    public void assertGetServiceScheduleTestWithTestJSONData() throws Exception{
         JSONArray array = new JSONArray(ServiceData.recurringservice);
         JSONArray services = array.getJSONObject(0).getJSONArray("services");
         Assert.assertNotNull(serviceSchedule.getServiceSchedule(services.getJSONObject(0).getJSONObject("schedule")));
@@ -121,7 +129,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void constructorTest(){
+    public void assertConstructorInitiatedTest(){
         Assert.assertNotNull(new ServiceSchedule(null,null));
     }
 

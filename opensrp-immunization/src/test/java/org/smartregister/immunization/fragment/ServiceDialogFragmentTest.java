@@ -3,6 +3,8 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 
+import junit.framework.Assert;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -44,7 +46,6 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(ServiceDialogFragmentTestActivity.class, intent);
         activity = controller.start().resume().get();
 
-
         CoreLibrary.init(context_);
         controller.setup();
 
@@ -74,12 +75,13 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(ServiceDialogFragment.newInstance(new DateTime(),Collections.EMPTY_LIST, new ServiceWrapper(),true));
     }
     @Test
-    public void onCreateViewTest() throws Exception {
+    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
         destroyController();
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(ServiceDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();
+        Assert.assertNotNull(activity);
     }
 
 

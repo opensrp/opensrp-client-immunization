@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import junit.framework.Assert;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -81,12 +83,13 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     }
 
     @Test
-    public void onCreateViewTest() throws Exception {
+    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
         destroyController();
         Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
         controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
         activity = controller.get();
         controller.setup();
+        Assert.assertNotNull(activity);
     }
 
     private void destroyController() {

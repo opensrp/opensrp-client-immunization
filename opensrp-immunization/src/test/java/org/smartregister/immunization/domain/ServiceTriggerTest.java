@@ -19,7 +19,7 @@ public class ServiceTriggerTest extends BaseUnitTest {
     public static final String stringdata3 = "{\"reference\": \"prerequisite\",\"prerequisite\": \"Vit A 2\",\"offset\": \"+6m\"}";
 
     @Test
-    public void initTest() throws JSONException {
+    public void assertinitConstructorWithTestData() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
         JSONObject data3 = new JSONObject(stringdata3);
