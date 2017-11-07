@@ -2,14 +2,10 @@ package org.smartregister.immunization.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,8 +13,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -36,15 +30,9 @@ import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.Vaccine;
-import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
-import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.view.mock.ServiceCardTestActivity;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,12 +80,13 @@ public class ServiceGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorsNotNull(){
+    public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
         Assert.assertNotNull(activity.getInstance1());
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
+    
     @After
     public void tearDown() {
         destroyController();
@@ -130,7 +119,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceCard.setServiceWrapper(wrapper);
         view.onClick(serviceCard);
 
-        Mockito.verify(onServiceClickedListener).onClick(any(ServiceGroup.class),any(ServiceWrapper.class));
+        Mockito.verify(onServiceClickedListener).onClick(any(ServiceGroup.class), any(ServiceWrapper.class));
 
         ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
@@ -140,7 +129,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         parent.addView(v);
         serviceCard.addView(parent);
         view.onClick(v);
-        Mockito.verify(onServiceUndoClickListener).onUndoClick(any(ServiceGroup.class),any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener).onUndoClick(any(ServiceGroup.class), any(ServiceWrapper.class));
 
 
     }
@@ -159,9 +148,9 @@ public class ServiceGroupTest extends BaseUnitTest {
     @Test
     public void assertIsModalOpenReturnsBoolean() throws Exception {
         view.setModalOpen(true);
-        Assert.assertEquals(view.isModalOpen(),true);
+        Assert.assertEquals(view.isModalOpen(), true);
         view.setModalOpen(false);
-        Assert.assertEquals(view.isModalOpen(),false);
+        Assert.assertEquals(view.isModalOpen(), false);
     }
     @Test
     public void assertOnStateChangedCallsUpdateViews() throws Exception {
@@ -185,17 +174,17 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         wrappers.add(wrapper);
 
-        HashMap<String,String> detail = new HashMap<String,String>();
-        detail.put("dob",dateTimeString);
-        childdetails = new CommonPersonObjectClient("1",detail,"NME");
+        HashMap<String, String> detail = new HashMap<String, String>();
+        detail.put("dob", dateTimeString);
+        childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
-        Alert alert = new Alert("","","", AlertStatus.complete,"","");
+        Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
         alertlist =  new ArrayList<Alert>();
         alertlist.add(alert);
-        serviceTypeMap = new HashMap<String,List<ServiceType>>();
+        serviceTypeMap = new HashMap<String, List<ServiceType>>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
@@ -213,13 +202,13 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceType.setUpdatedAt(0l);
         ArrayList<ServiceType>serviceTypes= new ArrayList<ServiceType>();
         serviceTypes.add(serviceType);
-        serviceTypeMap.put(type,serviceTypes);
+        serviceTypeMap.put(type, serviceTypes);
         servcServiceRecords = new ArrayList<ServiceRecord>();
         ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);
-        view.setData(childdetails,serviceTypeMap,servcServiceRecords,alertlist);
+        view.setData(childdetails, serviceTypeMap, servcServiceRecords, alertlist);
     }
 
 }

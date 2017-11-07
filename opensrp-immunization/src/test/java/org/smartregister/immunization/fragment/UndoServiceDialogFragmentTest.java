@@ -2,9 +2,7 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +39,6 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, UndoServiceDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(UndoServiceDialogFragmentTestActivity.class, intent);
         activity = controller.start().resume().get();
-
 
         CoreLibrary.init(context_);
         controller.setup();

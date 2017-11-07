@@ -86,6 +86,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         //should return null
         Assert.assertNull(vaccineCardAdapter.getItem(0));
 
-        Assert.assertEquals(vaccineCardAdapter.getItemId(0),231231);
+        Assert.assertEquals(vaccineCardAdapter.getItemId(0), 231231);
     }
 }

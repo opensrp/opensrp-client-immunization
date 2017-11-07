@@ -2,9 +2,7 @@ package org.smartregister.immunization.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.AttributeSet;
 import android.util.Log;
-
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.After;
@@ -36,16 +34,12 @@ import org.smartregister.immunization.domain.ServiceRecordTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
-import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
 import org.smartregister.immunization.view.mock.ServiceRowCardTestActivity;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
-
 import java.util.Date;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyObject;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -53,7 +47,7 @@ import static org.mockito.ArgumentMatchers.anyObject;
 
 @PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*",  "org.springframework.context.*", "org.apache.log4j.*"})
+@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
 
 
@@ -96,12 +90,12 @@ public class ServiceRowCardTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito.mock(RecurringServiceRecordRepository.class);
-        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class),Mockito.mock(Repository.class),Mockito.mock(CommonFtsObject.class));
+        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class));
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
         PowerMockito.when(recurringServiceRecordRepository.find(anyLong())).thenReturn(serviceRecord);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository.convert(any(JSONObject.class),any(Class.class))).thenReturn(event);
+        PowerMockito.when(eventClientRepository.convert(any(JSONObject.class), any(Class.class))).thenReturn(event);
 //        controller.setup();
         view = new ServiceRowCard(RuntimeEnvironment.application);
 //        view = activity.getInstance();
@@ -109,7 +103,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
-        alert = new Alert("","","", AlertStatus.normal,"","");
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
         wrapper.setStatus("due");
@@ -118,9 +112,9 @@ public class ServiceRowCardTest extends BaseUnitTest {
         wrapper.setDefaultName("DEFAULT");
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
-        Assert.assertEquals(view.getState(),ServiceRowCard.State.DUE);
+        Assert.assertEquals(view.getState(), ServiceRowCard.State.DUE);
 
-        alert = new Alert("","","", AlertStatus.upcoming,"","");
+        alert = new Alert("", "", "", AlertStatus.upcoming, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
         wrapper.setStatus("due");
@@ -131,7 +125,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         view.setServiceWrapper(wrapper);
         Assert.assertNotNull(view.getState());
 
-        alert = new Alert("","","", AlertStatus.urgent,"","");
+        alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
         wrapper.setStatus("due");
@@ -140,9 +134,9 @@ public class ServiceRowCardTest extends BaseUnitTest {
         wrapper.setDefaultName("DEFAULT");
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
-        Assert.assertEquals(view.getState(),ServiceRowCard.State.OVERDUE);
+        Assert.assertEquals(view.getState(), ServiceRowCard.State.OVERDUE);
 
-        alert = new Alert("","","", AlertStatus.expired,"","");
+        alert = new Alert("", "", "", AlertStatus.expired, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
         wrapper.setStatus("due");
@@ -151,9 +145,9 @@ public class ServiceRowCardTest extends BaseUnitTest {
         wrapper.setDefaultName("DEFAULT");
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
-        Assert.assertEquals(view.getState(),ServiceRowCard.State.EXPIRED);
+        Assert.assertEquals(view.getState(), ServiceRowCard.State.EXPIRED);
 
-        alert = new Alert("","","", AlertStatus.normal,"","");
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
         wrapper.setStatus("expired");
@@ -162,34 +156,34 @@ public class ServiceRowCardTest extends BaseUnitTest {
         wrapper.setDefaultName("DEFAULT");
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
-        Assert.assertEquals(view.getState(),ServiceRowCard.State.EXPIRED);
+        Assert.assertEquals(view.getState(), ServiceRowCard.State.EXPIRED);
 
-        alert = new Alert("","","", AlertStatus.normal,"","");
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
         wrapper.setStatus("expired");
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
         wrapper.setDefaultName("DEFAULT");
-        wrapper.setUpdatedVaccineDate(new DateTime(),true);
+        wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
-        Assert.assertEquals(view.getState(),ServiceRowCard.State.DONE_CAN_NOT_BE_UNDONE);
+        Assert.assertEquals(view.getState(), ServiceRowCard.State.DONE_CAN_NOT_BE_UNDONE);
 
-        alert = new Alert("","","", AlertStatus.normal,"","");
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setDbKey(0l);
         wrapper.setSynced(false);
         wrapper.setStatus("expired");
         wrapper.setAlert(alert);
         wrapper.setDefaultName("DEFAULT");
-        wrapper.setUpdatedVaccineDate(new DateTime(),true);
+        wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
-        Assert.assertEquals(view.getState(),ServiceRowCard.State.DONE_CAN_BE_UNDONE);
+        Assert.assertEquals(view.getState(), ServiceRowCard.State.DONE_CAN_BE_UNDONE);
     }
     @Test
-    public void assertConstructorsNotNull(){
+    public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
         Assert.assertNotNull(activity.getInstance1());
         Assert.assertNotNull(activity.getInstance2());

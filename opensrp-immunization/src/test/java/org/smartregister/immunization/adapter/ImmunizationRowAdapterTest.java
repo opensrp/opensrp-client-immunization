@@ -1,9 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-
-import junit.framework.Assert;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +12,6 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.Vaccine;
-import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,9 +74,9 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertEquals(0, immunizationRowAdapter.getCount());
 
         //should return null
-        Assert.assertNull(immunizationRowAdapter.getItem(0));
+        junit.framework.Assert.assertNull(immunizationRowAdapter.getItem(0));
 
-        Assert.assertEquals(immunizationRowAdapter.getItemId(0),231231);
+        junit.framework.Assert.assertEquals(immunizationRowAdapter.getItemId(0), 231231);
 
     }
 

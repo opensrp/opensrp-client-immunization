@@ -3,11 +3,8 @@ package org.smartregister.immunization.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-
 import junit.framework.Assert;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,7 +14,6 @@ import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.view.ServiceGroup;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

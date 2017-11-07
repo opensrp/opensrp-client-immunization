@@ -1,32 +1,20 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.annotation.Config;
-import org.robolectric.internal.bytecode.InstrumentationConfiguration;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.customshadows.CheckBoxShadow;
-import org.smartregister.immunization.customshadows.FontTextViewShadow;
-import org.smartregister.immunization.customshadows.RadioButtonShadow;
 import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -87,8 +75,5 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>()));
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(),true));
     }
-
-
-
 
 }

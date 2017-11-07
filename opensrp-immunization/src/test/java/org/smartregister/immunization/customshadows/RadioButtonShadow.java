@@ -2,10 +2,7 @@ package org.smartregister.immunization.customshadows;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
-import com.vijay.jsonwizard.customviews.CheckBox;
 import com.vijay.jsonwizard.customviews.RadioButton;
-
 import org.robolectric.annotation.Implements;
 import org.robolectric.shadows.ShadowCompoundButton;
 
@@ -14,7 +11,6 @@ import org.robolectric.shadows.ShadowCompoundButton;
  */
 @Implements(RadioButton.class)
 public class RadioButtonShadow extends ShadowCompoundButton {
-
 
     public void __constructor__(Context context) {
 
@@ -46,6 +42,5 @@ public class RadioButtonShadow extends ShadowCompoundButton {
     public void setCheckedImmediately(boolean checked) {
 
     }
-
 
 }

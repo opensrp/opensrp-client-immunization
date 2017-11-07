@@ -55,22 +55,22 @@ public class VaccinateFormSubmissionWrapperTest extends BaseUnitTest {
     public void assertUpdateWrappeCountrAfterAdingRemovingWapper() throws Exception {
         vaccineFormSubmisionWrapper.add(wrapper);
         vaccineFormSubmisionWrapper.remove(wrapper);
-        org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(),0);
+        org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 0);
         vaccineFormSubmisionWrapper.add(wrapper);
-        org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(),1);
+        org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 1);
     }
     @Before
-    public void setup(){
-        vaccineFormSubmisionWrapper = new VaccinateFormSubmissionWrapper(null,"1","form",null,"child");
+    public void setUp() {
+        vaccineFormSubmisionWrapper = new VaccinateFormSubmissionWrapper(null, "1", "form", null, "child");
         setWrapperForTest();
     }
 
-    public void setWrapperForTest(){
+    public void setWrapperForTest() {
         wrapper = new VaccineWrapper();
         wrapper.setId(VaccineWrapperTest.ID);
         wrapper.setAlert(Mockito.mock(Alert.class));
         wrapper.setColor(VaccineWrapperTest.COLOR);
-        wrapper.setUpdatedVaccineDate(new DateTime(),true);
+        wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setGender(VaccineWrapperTest.GENDER);
         wrapper.setDbKey(0l);
         wrapper.setCompact(true);

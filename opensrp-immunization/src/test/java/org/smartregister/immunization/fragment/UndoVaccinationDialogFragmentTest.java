@@ -2,7 +2,6 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +15,6 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.UndoVaccinationDialogFragmentTestActivity;
-import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
 
 /**
  * Created by onaio on 30/08/2017.

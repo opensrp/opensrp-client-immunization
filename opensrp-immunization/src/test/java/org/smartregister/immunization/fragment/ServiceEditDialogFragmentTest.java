@@ -3,10 +3,7 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-
 import junit.framework.Assert;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -19,25 +16,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
-import org.smartregister.domain.Alert;
-import org.smartregister.domain.Photo;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.customshadows.CheckBoxShadow;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
-import org.smartregister.immunization.customshadows.RadioButtonShadow;
-import org.smartregister.immunization.domain.ServiceRecord;
-import org.smartregister.immunization.domain.ServiceRecordTest;
-import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
-
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
-import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -60,7 +44,6 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
         controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
         activity = controller.start().resume().get();
-
 
         CoreLibrary.init(context_);
         controller.setup();
@@ -103,10 +86,4 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
         System.gc();
     }
-
-
-
-
-
-
 }

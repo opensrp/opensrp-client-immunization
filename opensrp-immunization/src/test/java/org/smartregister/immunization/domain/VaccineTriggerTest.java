@@ -1,13 +1,10 @@
 package org.smartregister.immunization.domain;
 
-import junit.framework.Assert;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smartregister.immunization.BaseUnitTest;
-
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -44,7 +41,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
 //        junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data2).getFireDate(Collections.EMPTY_LIST, date));
     }
     @Test
-    public void assertGetWindowTestReturnsCurrentWindow() throws JSONException{
+    public void assertGetWindowTestReturnsCurrentWindow() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
         VaccineTrigger vaccineTrigger = Mockito.mock(VaccineTrigger.class);
         vaccineTrigger.init(CHILD, data1);

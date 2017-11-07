@@ -1,12 +1,8 @@
 package org.smartregister.immunization.domain;
 
 import junit.framework.Assert;
-
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.joda.time.DateTime;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +22,6 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,25 +50,27 @@ public class ServiceScheduleTest extends BaseUnitTest {
     @InjectMocks
     private ServiceSchedule serviceSchedule;
 
-//    @Mock
-//    private SQLiteDatabase sqLiteDatabase;
     @Mock
     private ServiceTrigger dueTrigger;
+
     @Mock
     private ServiceTrigger expTrigger;
+
     @Mock
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
+
     @Mock
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
 
     @Before
-    public void setup(){
+    public void setup() {
         org.mockito.MockitoAnnotations.initMocks(this);
     }
+
     @Test
     public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() throws Exception{
 
-        ServiceSchedule serviceSchedule = new ServiceSchedule(dueTrigger,expTrigger);
+        ServiceSchedule serviceSchedule = new ServiceSchedule(dueTrigger, expTrigger);
 
         List<String> types = new ArrayList<String>();
         types.add("TT");
@@ -94,10 +91,10 @@ public class ServiceScheduleTest extends BaseUnitTest {
                 AlertStatus.complete, DateUtil.yyyyMMdd.format(new Date()), DateUtil.yyyyMMdd.format(new Date()), true);
 
         //Mockito.when(serviceSchedule.getOfflineAlert(Mockito.any(ServiceType.class),Mockito.any(List.class),Mockito.any(String.class),Mockito.any(DateTime.class))).thenReturn(Mockito.mock(Alert.class));
-        serviceSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID,new DateTime());
-        serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID,null);
-        serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID,new DateTime());
-        ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+        serviceSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime());
+        serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID, null);
+        serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID, new DateTime());
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         serviceRecord.setEventId("1");
@@ -106,7 +103,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
         Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType,issuedServices,VaccineTest.BASEENTITYID,new DateTime()));
     }
     @Test
-    public void assertAddOffsetToCalanderReturnsDateTime() throws Exception{
+    public void assertAddOffsetToCalanderReturnsDateTime() throws Exception {
         List<String>offsets = new ArrayList<String>();
         offsets.add("+10d");
         offsets.add("+10m");
@@ -117,7 +114,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetServiceScheduleTestWithTestJSONData() throws Exception{
+    public void assertGetServiceScheduleTestWithTestJSONData() throws Exception {
         JSONArray array = new JSONArray(ServiceData.recurringservice);
         JSONArray services = array.getJSONObject(0).getJSONArray("services");
         Assert.assertNotNull(serviceSchedule.getServiceSchedule(services.getJSONObject(0).getJSONObject("schedule")));
@@ -129,8 +126,8 @@ public class ServiceScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorInitiatedTest(){
-        Assert.assertNotNull(new ServiceSchedule(null,null));
+    public void assertConstructorInitiatedTest() {
+        Assert.assertNotNull(new ServiceSchedule(null, null));
     }
 
 }

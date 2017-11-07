@@ -1,28 +1,21 @@
 package org.smartregister.immunization.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-
 import org.json.JSONArray;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
 
 import java.util.ArrayList;
@@ -43,6 +36,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
     private VaccinationEditDialogFragment view;
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -61,6 +55,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 //        view.getView().findViewById(R.id.set).performClick();
 //
 //    }
+
     @After
     public void tearDown() {
         destroyController();

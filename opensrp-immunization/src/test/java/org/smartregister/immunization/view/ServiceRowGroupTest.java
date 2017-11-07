@@ -1,32 +1,19 @@
 package org.smartregister.immunization.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.test.mock.MockContext;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -35,7 +22,6 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
@@ -47,10 +33,6 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.mock.ServiceRowGroupTestActivity;
-import org.smartregister.immunization.view.mock.ServiceRowCardTestActivity;
-import org.smartregister.immunization.view.mock.ServiceRowGroupTestActivity;
-
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -187,7 +169,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         detail.put("dob", dateTimeString);
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 

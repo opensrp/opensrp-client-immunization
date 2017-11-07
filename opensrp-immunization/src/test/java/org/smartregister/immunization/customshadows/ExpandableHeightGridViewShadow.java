@@ -33,7 +33,6 @@ public class ExpandableHeightGridViewShadow extends ShadowGridView{
         return false;
     }
 
-
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
     }

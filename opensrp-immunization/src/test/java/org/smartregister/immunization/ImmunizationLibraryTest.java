@@ -1,11 +1,7 @@
 package org.smartregister.immunization;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
@@ -16,7 +12,6 @@ import org.smartregister.repository.Repository;
  */
 
 public class ImmunizationLibraryTest extends BaseUnitTest {
-
 
     @Before
     public void setUp() {

@@ -72,7 +72,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         //should return null
         Assert.assertNull(serviceRowAdapter.getItem(0));
 
-        Assert.assertEquals(serviceRowAdapter.getItemId(0),231231);
+        Assert.assertEquals(serviceRowAdapter.getItemId(0), 231231);
     }
 
 }

@@ -84,9 +84,4 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         Assert.assertNotNull(activity);
     }
 
-
-
-
-
-
 }
