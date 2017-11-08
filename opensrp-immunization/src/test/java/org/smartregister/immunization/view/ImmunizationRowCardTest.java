@@ -1,13 +1,11 @@
 package org.smartregister.immunization.view;
 
-import android.content.Context;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -48,9 +46,6 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
     private final String magicMR = "mr";
     private final String magicMeasles = "measles";
     private final String magicExpired = "expired";
-    
-    @Mock
-    private org.smartregister.Context context_;
 
     @Before
     public void setUp() throws Exception {

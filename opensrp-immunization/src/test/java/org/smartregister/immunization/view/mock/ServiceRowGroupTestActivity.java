@@ -25,19 +25,19 @@ public class ServiceRowGroupTestActivity extends Activity {
     }
 
     public ServiceRowGroup getInstance() {
-        return (view == null) ? new ServiceRowGroup(this):view;
+        return (view == null) ? new ServiceRowGroup(this) : view;
     }
 
     public ServiceRowGroup getInstance2() {
-        return new ServiceRowGroup(this,ViewAttributes.attrs);
+        return new ServiceRowGroup(this, ViewAttributes.attrs);
     }
 
     public ServiceRowGroup getInstance3() {
-        return new ServiceRowGroup(this,ViewAttributes.attrs,0);
+        return new ServiceRowGroup(this, ViewAttributes.attrs, 0);
     }
 
     public ServiceRowGroup getInstance1() {
-        return new ServiceRowGroup(this,ViewAttributes.attrs,0,0);
+        return new ServiceRowGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
     @Override

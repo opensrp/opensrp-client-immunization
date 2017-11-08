@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 
 public class VaccineCardTestActivity extends Activity implements View.OnClickListener,
-        VaccineCard.OnVaccineStateChangeListener{
+        VaccineCard.OnVaccineStateChangeListener {
 
     private VaccineCard view;
 
@@ -47,7 +47,7 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
     }
 
     public VaccineCard getInstance() {
-        return (view == null) ? new VaccineCard(this):view;
+        return (view == null) ? new VaccineCard(this) : view;
     }
 
     public VaccineCard getInstance1() {

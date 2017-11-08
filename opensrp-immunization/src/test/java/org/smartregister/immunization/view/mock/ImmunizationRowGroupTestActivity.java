@@ -25,7 +25,7 @@ public class ImmunizationRowGroupTestActivity extends Activity {
     }
 
     public ImmunizationRowGroup getInstance() {
-        return (view == null) ? new ImmunizationRowGroup(this, true):view;
+        return (view == null) ? new ImmunizationRowGroup(this, true) : view;
     }
 
     public ImmunizationRowGroup getInstance2() {

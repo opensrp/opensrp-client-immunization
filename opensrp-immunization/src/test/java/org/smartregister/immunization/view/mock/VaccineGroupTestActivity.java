@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 
 public class VaccineGroupTestActivity extends Activity implements View.OnClickListener,
-        VaccineCard.OnVaccineStateChangeListener{
+        VaccineCard.OnVaccineStateChangeListener {
 
     private VaccineGroup view;
 
@@ -48,7 +48,7 @@ public class VaccineGroupTestActivity extends Activity implements View.OnClickLi
     }
 
     public VaccineGroup getInstance() {
-        return (view == null) ? new VaccineGroup(this):view;
+        return (view == null) ? new VaccineGroup(this) : view;
     }
 
     public VaccineGroup getInstance1() {
@@ -92,6 +92,7 @@ public class VaccineGroupTestActivity extends Activity implements View.OnClickLi
         taglist.add(tag);
         return taglist;
     }
+
     @Override
     protected void onStart() {
         super.onStart();
