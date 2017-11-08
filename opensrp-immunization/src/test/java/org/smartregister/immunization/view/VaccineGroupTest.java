@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -41,25 +40,26 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Mock
     private Context context;
 
-    @Mock
-    private org.smartregister.Context context_;
-
     private JSONObject vaccineData;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
     private VaccineWrapper wrapper;
     private ArrayList<VaccineWrapper>wrappers;
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
         view = new VaccineGroup(RuntimeEnvironment.application);
     }
+
     @Test
     public void assertGetAlertListNotNull() throws Exception {
         view.setAlertList(new ArrayList<Alert>());
         Assert.assertNotNull(view.getAlertList());
     }
+
     @Test
     public void assertGetVaccineListNotNull() throws Exception {
         view.setVaccineList(new ArrayList<Vaccine>());
@@ -68,62 +68,67 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void assertEqualsVaccineData() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineData(), vaccineData);
     }
+
     @Test
     public void assertEqualsChildDetails() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getChildDetails(), childdetails);
     }
+
     @Test
     public void assertEqualsVaccineList() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineList(), vaccinelist);
     }
+
     @Test
     public void assertEqualsAlertList()throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getAlertList(), alertlist);
     }
+
     @Test
     public void assertUpdateViewsWithDifferentTimeWillSetVaccineAdapter() throws Exception {
         Assert.assertEquals(view.getDueVaccines().size(), 0);
         Assert.assertEquals(view.getAllVaccineWrappers().size(), 0);
 
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateViews();
         view.updateViews(wrappers);
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-        setDataForTest(format.format(new Date())+"T00:00:00.000Z");
+        setDataForTest(format.format(new Date()) +"T00:00:00.000Z");
         view.updateViews(wrappers);
         setDataForTest("2018-01-01T00:00:00.000Z");
         view.updateViews(wrappers);
         Assert.assertNotNull(view.getDueVaccines());
         Assert.assertNotNull(view.getAllVaccineWrappers());
     }
+
     @Test
     public void verifyOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() throws Exception {
 
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateViews();
         view.updateViews(wrappers);
         VaccineGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(VaccineGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick((android.widget.TextView) view.findViewById(R.id.record_all_tv));
-        Mockito.verify(onRecordAllClickListener).onClick(any(VaccineGroup.class), any(ArrayList.class));
+        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(VaccineGroup.OnVaccineClickedListener.class);
         view.setOnVaccineClickedListener(onVaccineClickListener);
         VaccineCard vaccineCard = new VaccineCard(RuntimeEnvironment.application);
-        wrapper= new VaccineWrapper();
+        wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         vaccineCard.setVaccineWrapper(wrapper);
 
         view.onClick(vaccineCard);
-        Mockito.verify(onVaccineClickListener).onClick(any(VaccineGroup.class), any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         VaccineGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(VaccineGroup.OnVaccineUndoClickListener.class);
         view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
@@ -134,19 +139,19 @@ public class VaccineGroupTest extends BaseUnitTest {
         vaccineCard.addView(parent);
 
         view.onClick(v);
-        Mockito.verify(onVaccineUndoClickListener).onUndoClick(any(VaccineGroup.class), any(VaccineWrapper.class));
+        Mockito.verify(onVaccineUndoClickListener).onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
     }
 
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers);
-        wrapper= new VaccineWrapper();
+        wrapper = new VaccineWrapper();
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
         view.updateWrapper(wrapper);
-        wrapper= new VaccineWrapper();
-        wrapper.setName(VaccineRepo.Vaccine.bcg2.display()+"/:D");
+        wrapper = new VaccineWrapper();
+        wrapper.setName(VaccineRepo.Vaccine.bcg2.display() +"/:D");
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
         view.updateWrapper(wrapper);
         Assert.assertNotNull(view.getAllVaccineWrappers());
@@ -163,7 +168,7 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void assertOnStateChangedCallsUpdateViews() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.onStateChanged(VaccineCard.State.DONE_CAN_BE_UNDONE);
         //calls updateViews which sets the adapter, we can check the the adapter is not null
         Assert.assertNotNull(view.getAllVaccineWrappers());
@@ -171,15 +176,15 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     public void setDataForTest(String dateTimeString) throws Exception {
         wrappers = new ArrayList<VaccineWrapper>();
-        wrapper= new VaccineWrapper();
+        wrapper = new VaccineWrapper();
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
         wrappers.add(wrapper);
-        wrapper= new VaccineWrapper();
+        wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.opv1);
         wrapper.setName(VaccineRepo.Vaccine.opv1.display());
         wrappers.add(wrapper);
-        wrapper= new VaccineWrapper();
+        wrapper = new VaccineWrapper();
         wrapper.setName(VaccineRepo.Vaccine.measles2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.measles2);
         wrappers.add(wrapper);
@@ -192,7 +197,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
-        vaccinelist= new ArrayList<Vaccine>();
+        vaccinelist = new ArrayList<Vaccine>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);

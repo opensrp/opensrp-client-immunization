@@ -53,15 +53,9 @@ public class ServiceRowGroupTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-    private ArrayList<ServiceWrapper> wrappers;
-    private ServiceWrapper wrapper;
-    private CommonPersonObjectClient childdetails;
 
-    private ArrayList<ServiceRecord> servcServiceRecords;
-    private ArrayList<Alert> alertlist;
-    private Map<String, List<ServiceType>> serviceTypeMap;
+    private ServiceWrapper wrapper;
     private String type = "SERVICETYPE";
-    private ArrayList<ServiceType> serviceTypes;
 
     @Before
     public void setUp() throws Exception {
@@ -151,7 +145,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
     }
 
     public void setDataForTest(String dateTimeString) throws Exception {
-        wrappers = new ArrayList<ServiceWrapper>();
+        ArrayList<ServiceWrapper> wrappers = new ArrayList<ServiceWrapper>();
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
 
@@ -167,15 +161,13 @@ public class ServiceRowGroupTest extends BaseUnitTest {
 
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
-        childdetails = new CommonPersonObjectClient("1", detail, "NME");
+        CommonPersonObjectClient childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
-        alertlist = new ArrayList<Alert>();
+        ArrayList<Alert> alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
-        serviceTypeMap = new HashMap<String, List<ServiceType>>();
+        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<String, List<ServiceType>>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
@@ -191,10 +183,10 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         serviceType.setExpiryOffset(ServiceTypeTest.EXPIRYOFFSET);
         serviceType.setMilestoneOffset(ServiceTypeTest.MILESTONEOFFSET);
         serviceType.setUpdatedAt(0l);
-        serviceTypes = new ArrayList<ServiceType>();
+        ArrayList<ServiceType> serviceTypes = new ArrayList<ServiceType>();
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
-        servcServiceRecords = new ArrayList<ServiceRecord>();
+        ArrayList<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);

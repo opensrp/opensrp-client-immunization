@@ -38,8 +38,6 @@ import org.smartregister.immunization.view.mock.ServiceRowCardTestActivity;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import java.util.Date;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -49,7 +47,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 @Config(shadows = {FontTextViewShadow.class})
 @PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
-
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
@@ -66,8 +63,11 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-    private Alert alert;
-    private ServiceWrapper wrapper;
+    
+    private final String magicDue = "due";
+    private final String magicDefault = "DEFAULT";
+    private final String magicExpired = "expired";
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -75,9 +75,8 @@ public class ServiceRowCardTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(ServiceRowCardTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-
-
-        ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+        
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         serviceRecord.setEventId("1");
@@ -93,9 +92,9 @@ public class ServiceRowCardTest extends BaseUnitTest {
         immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class));
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
-        PowerMockito.when(recurringServiceRecordRepository.find(anyLong())).thenReturn(serviceRecord);
+        PowerMockito.when(recurringServiceRecordRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(serviceRecord);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository.convert(any(JSONObject.class), any(Class.class))).thenReturn(event);
+        PowerMockito.when(eventClientRepository.convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class))).thenReturn(event);
 //        controller.setup();
         view = new ServiceRowCard(RuntimeEnvironment.application);
 //        view = activity.getInstance();
@@ -103,13 +102,13 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
-        alert = new Alert("", "", "", AlertStatus.normal, "", "");
-        wrapper = new ServiceWrapper();
+        Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        ServiceWrapper wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceRowCard.State.DUE);
@@ -117,10 +116,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.upcoming, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertNotNull(view.getState());
@@ -128,10 +127,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceRowCard.State.OVERDUE);
@@ -139,10 +138,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.expired, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceRowCard.State.EXPIRED);
@@ -150,10 +149,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceRowCard.State.EXPIRED);
@@ -161,10 +160,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
         wrapper.setDbKey(0l);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
@@ -174,14 +173,15 @@ public class ServiceRowCardTest extends BaseUnitTest {
         wrapper = new ServiceWrapper();
         wrapper.setDbKey(0l);
         wrapper.setSynced(false);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceRowCard.State.DONE_CAN_BE_UNDONE);
     }
+    
     @Test
     public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
@@ -189,6 +189,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
+    
     @After
     public void tearDown() {
         destroyController();
@@ -196,6 +197,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         controller = null;
 
     }
+    
     private void destroyController() {
         try {
             activity.finish();
@@ -207,6 +209,4 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         System.gc();
     }
-
-
 }

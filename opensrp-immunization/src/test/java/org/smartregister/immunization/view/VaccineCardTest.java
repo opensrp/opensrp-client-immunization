@@ -35,10 +35,13 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @InjectMocks
     private VaccineCardTestActivity activity;
-    private Alert alert;
-    private VaccineWrapper wrapper;
+
     @Mock
     private org.smartregister.Context context_;
+    private final String magicDue = "due";
+    private final String magicMR = "mr";
+    private final String magicExpired = "expired";
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -57,12 +60,12 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
-        alert = new Alert("", "", "", AlertStatus.normal, "", "");
-        wrapper = new VaccineWrapper();
+        Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setName("mr");
+        wrapper.setName(magicMR);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), VaccineCard.State.DUE);
@@ -70,9 +73,9 @@ public class VaccineCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.upcoming, "", "");
         wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setName("mr");
+        wrapper.setName(magicMR);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertNotNull(view.getState());
@@ -80,9 +83,9 @@ public class VaccineCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setName("mr");
+        wrapper.setName(magicMR);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), VaccineCard.State.OVERDUE);
@@ -90,9 +93,9 @@ public class VaccineCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.expired, "", "");
         wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setName("mr");
+        wrapper.setName(magicMR);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), VaccineCard.State.EXPIRED);
@@ -100,7 +103,7 @@ public class VaccineCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
         wrapper.setName("measles");
         wrapper.setVaccineDate(new DateTime());
@@ -110,9 +113,9 @@ public class VaccineCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
-        wrapper.setName("mr");
+        wrapper.setName(magicMR);
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
@@ -121,14 +124,15 @@ public class VaccineCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new VaccineWrapper();
         wrapper.setSynced(false);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
-        wrapper.setName("mr");
+        wrapper.setName(magicMR);
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), VaccineCard.State.DONE_CAN_BE_UNDONE);
     }
+
     @Test
     public void assertConstructorsNotNull() throws Exception {
         Assert.assertNotNull(activity.getInstance());
@@ -136,6 +140,7 @@ public class VaccineCardTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
+
     @After
     public void tearDown() {
         destroyController();
@@ -143,6 +148,7 @@ public class VaccineCardTest extends BaseUnitTest {
         controller = null;
 
     }
+
     private void destroyController() {
         try {
             activity.finish();
@@ -154,6 +160,4 @@ public class VaccineCardTest extends BaseUnitTest {
 
         System.gc();
     }
-
-
 }
