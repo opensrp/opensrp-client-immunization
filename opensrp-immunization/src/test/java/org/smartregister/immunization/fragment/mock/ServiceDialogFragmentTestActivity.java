@@ -89,7 +89,7 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         ServiceDialogFragment fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( fragment, null );
+        fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
@@ -98,12 +98,10 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         super.onStart();
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

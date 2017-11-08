@@ -89,7 +89,7 @@ public class UndoServiceDialogFragmentTestActivity extends Activity implements S
         UndoServiceDialogFragment fragment = UndoServiceDialogFragment.newInstance(tag);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( fragment, null );
+        fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
@@ -98,12 +98,10 @@ public class UndoServiceDialogFragmentTestActivity extends Activity implements S
         super.onStart();
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

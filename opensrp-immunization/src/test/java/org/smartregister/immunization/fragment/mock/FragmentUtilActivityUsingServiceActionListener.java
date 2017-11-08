@@ -104,7 +104,6 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
         super.onRestart();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();

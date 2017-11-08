@@ -7,12 +7,9 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -20,12 +17,8 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.smartregister.immunization.domain.VaccineTest.PROGRAMCLIENTID;
 
 /**
  * Created by onaio on 29/08/2017.
@@ -57,9 +50,11 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         org.mockito.MockitoAnnotations.initMocks(this);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
-    public SQLiteDatabase getMockDatabase(){
+
+    public SQLiteDatabase getMockDatabase() {
         return sqliteDatabase == null ? Mockito.mock(SQLiteDatabase.class) : sqliteDatabase;
     }
+
     @Test
     public void assertAddHyphenTest() throws Exception {
         String testString = vaccineRepository.addHyphen("");
@@ -90,8 +85,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         ImmunizationLibrary.init(context, repository, commonFtsObject);
         vaccineRepository.alertService();
     }
+
     @Test
-    public void assertFindUnSyncedBeforeTimeTest(){
+    public void assertFindUnSyncedBeforeTimeTest() {
         String[] columns = new String[] {VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATIONID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor= new MatrixCursor(columns);
         cursor.addRow(new Object[] {1l, "", "", "NAME", 10, 1509347804l, "", "", "", "", 1l, "", "", 1});
@@ -106,8 +102,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, alertService);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
+
     @Test
-    public void verifyUpdateHia2StatusTest(){
+    public void verifyUpdateHia2StatusTest() {
         Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.add(new Vaccine());
         Vaccine vaccine = new Vaccine();
@@ -115,6 +112,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         vaccineRepository.updateHia2Status(vaccine, "TS");
         vaccineRepository.updateHia2Status(null, "TS");
     }
+
     @Test
     public void verifyCreateTableTest() throws Exception {
         vaccineRepository.createTable(sqliteDatabase);
@@ -226,7 +224,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void findWithNullHia2StatusTest() throws Exception{
+    public void findWithNullHia2StatusTest() throws Exception {
 
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         List<Vaccine>list= vaccineRepository.findWithNullHia2Status();

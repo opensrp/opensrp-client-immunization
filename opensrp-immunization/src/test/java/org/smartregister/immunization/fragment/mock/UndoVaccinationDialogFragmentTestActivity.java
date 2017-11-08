@@ -28,7 +28,6 @@ import java.util.List;
 
 public class UndoVaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
-
     private LinearLayout linearLayout;
 
     @Override
@@ -80,7 +79,7 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         UndoVaccinationDialogFragment fragment = UndoVaccinationDialogFragment.newInstance(tag);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( fragment, null );
+        fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
@@ -108,7 +107,6 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

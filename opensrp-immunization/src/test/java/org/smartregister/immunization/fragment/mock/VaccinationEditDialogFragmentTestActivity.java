@@ -83,7 +83,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         fragment = VaccinationEditDialogFragment.newInstance(this, new java.util.Date(), issuedVaccines, taglist, linearLayout);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( fragment, null );
+        fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
@@ -115,7 +115,6 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

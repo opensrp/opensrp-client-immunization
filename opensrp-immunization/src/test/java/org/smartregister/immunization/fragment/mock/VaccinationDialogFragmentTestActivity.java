@@ -78,7 +78,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), null, null);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( fragment, null );
+        fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
@@ -106,7 +106,6 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {
