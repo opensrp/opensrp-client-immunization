@@ -35,8 +35,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * Created by real on 31/10/17.
@@ -47,14 +45,18 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
+
     @Mock
     private VaccinateActionUtils vaccinateActionUtils;
+
     @Mock
     private FormUtils formUtils;
-    @Mock
-    private VaccineRepo vaccineRepo;
-    @Mock
-    private VaccinatorUtils vaccinatorUtils;
+
+    private final String magicData = "data";
+    private final String magicChild = "child";
+    private final String magicNULL = "NULL";
+    private final String magicBCG = "BCG";
+    private final int magic400 = 400;
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -63,13 +65,12 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertFormDataTestWithTestData() throws Exception {
-        VaccinateActionUtils vaccinateActionUtils = new VaccinateActionUtils();
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(FormUtils.class);
         Assert.assertNull(VaccinateActionUtils.formData(context, "", "", ""));
-        PowerMockito.when(FormUtils.getInstance(any(android.content.Context.class))).thenReturn(formUtils);
-        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(anyString(), anyString(), anyString())).thenReturn("data");
-        Assert.assertEquals(VaccinateActionUtils.formData(context, "", "", ""), "data");
+        PowerMockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(formUtils);
+        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(magicData);
+        Assert.assertEquals(VaccinateActionUtils.formData(context, "", "", ""), magicData);
 
     }
 
@@ -120,8 +121,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
     @Test
     public void assertFindRowTestReturnsTableRow() throws Exception {
-        String tag= "TAG";
-
+        String tag = "TAG";
+        String wrong_tag = "WRONG TAG";
         Set<TableLayout>tables = new HashSet<TableLayout>();
         TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
         TableRow row = new TableRow(RuntimeEnvironment.application);
@@ -129,9 +130,9 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         tableLayout.addView(row);
         tables.add(tableLayout);
         Assert.assertNotNull(VaccinateActionUtils.findRow(tables, tag));
-        Assert.assertNull(VaccinateActionUtils.findRow(tables, "WRONG TAG"));
+        Assert.assertNull(VaccinateActionUtils.findRow(tables, wrong_tag));
         Assert.assertNotNull(VaccinateActionUtils.findRow(tableLayout, tag));
-        Assert.assertNull(VaccinateActionUtils.findRow(tableLayout, "WRONG TAG"));
+        Assert.assertNull(VaccinateActionUtils.findRow(tableLayout, wrong_tag));
     }
 
     @Test
@@ -153,8 +154,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         collection.put("2", null);
         Assert.assertNotNull(VaccinateActionUtils.allAlertNames(collection.values()));
 
-        Assert.assertNotNull(VaccinateActionUtils.allAlertNames("child"));
-        Assert.assertNull(VaccinateActionUtils.allAlertNames("NULL"));
+        Assert.assertNotNull(VaccinateActionUtils.allAlertNames(magicChild));
+        Assert.assertNull(VaccinateActionUtils.allAlertNames(magicNULL));
     }
     @Test
     public void assertUpdateJsonAndFindTestReturnsJsonObject() throws Exception {
@@ -188,26 +189,26 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     public void assertPreviousStateKeyTestWithVariousVaccineNames() throws Exception {
         Assert.assertNull(VaccinateActionUtils.previousStateKey(null, null));
         Vaccine v = new Vaccine();
-        v.setName("BCG");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
-        v.setName("NULL");
-        Assert.assertNull(VaccinateActionUtils.previousStateKey("child", v));
+        v.setName(magicBCG);
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
+        v.setName(magicNULL);
+        Assert.assertNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("OPV 0");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("OPV 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("OPV 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("OPV 3");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("OPV 4");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("MR 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("MR 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("IPV");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("child", v));
+        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
         v.setName("TT 1");
         Assert.assertNotNull(VaccinateActionUtils.previousStateKey("woman", v));
     }
@@ -228,11 +229,11 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         list.add(v);
         JSONArray vaccines = new JSONArray(VaccineData.vaccines);
         PowerMockito.mockStatic(VaccinatorUtils.class);
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(any(android.content.Context.class))).thenReturn(VaccineData.special_vacines);
+        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(VaccineData.special_vacines);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.getJSONObject(0), list);
 
 
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(any(android.content.Context.class))).thenReturn("NULL");
+        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(magicNULL);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.getJSONObject(0), list);
 
         //choto related methods
@@ -252,15 +253,15 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         VaccinateActionUtils.populateDefaultAlerts(null, null, null, null, null, null);
         List<Vaccine>vlist = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
-        v.setName("BCG");
+        v.setName(magicBCG);
         vlist.add(v);
         List<Alert>alist = new ArrayList<Alert>();
-        Alert a = new Alert("caseID", "BCG", "BCG", AlertStatus.normal, new Date().toString(), new Date().toString());
+        Alert a = new Alert("caseID", magicBCG, magicBCG, AlertStatus.normal, new Date().toString(), new Date().toString());
         alist.add(a);
-        VaccineRepo.Vaccine vaccine [] = {VaccineRepo.Vaccine.bcg};
+        VaccineRepo.Vaccine vaccine[] = {VaccineRepo.Vaccine.bcg};
         AlertService alertService = new AlertService(Mockito.mock(AlertRepository.class));
         VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, "uselessentityID", new DateTime(), vaccine);
-        VaccineRepo.Vaccine vaccine2 [] = {VaccineRepo.Vaccine.bcg2};
+        VaccineRepo.Vaccine vaccine2[] = {VaccineRepo.Vaccine.bcg2};
         VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, "uselessentityID", new DateTime(), vaccine2);
 
 
@@ -287,10 +288,10 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         dateTime = dateTime.minusDays(2);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
         dateTime = new DateTime();
-        dateTime = dateTime.plusDays(400);
+        dateTime = dateTime.plusDays(magic400);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
         dateTime = new DateTime();
-        dateTime = dateTime.minusDays(400);
+        dateTime = dateTime.minusDays(magic400);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
 
     }

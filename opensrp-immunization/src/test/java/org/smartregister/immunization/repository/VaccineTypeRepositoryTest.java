@@ -113,7 +113,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     public void verifyFindallVaccineTypcallsDatabaseQueryMethod1Times() throws Exception {
 //        Cursor cursor = PowerMockito.mock(Cursor.class);
         String[] columns = new String[] {VaccineTypeRepository.ID_COLUMN, VaccineTypeRepository.DOSES, VaccineTypeRepository.NAME, VaccineTypeRepository.OPENMRS_PARENT_ENTITIY_ID, VaccineTypeRepository.OPENMRS_DATE_CONCEPT_ID, VaccineTypeRepository.OPENMRS_DOSE_CONCEPT_ID};
-        MatrixCursor cursor= new MatrixCursor(columns);
+        MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[] {1l, 1, "", "", "", ""});
 
         Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);

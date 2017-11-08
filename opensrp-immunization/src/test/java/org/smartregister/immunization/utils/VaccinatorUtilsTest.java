@@ -31,10 +31,6 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 
 /**
  * Created by onaio on 29/08/2017.
@@ -94,10 +90,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
 
-        android.content.Context ctx = mock(android.content.Context.class);
-        Resources resources = mock(Resources.class);
+        android.content.Context ctx = org.mockito.Mockito.mock(android.content.Context.class);
+        Resources resources = org.mockito.Mockito.mock(Resources.class);
         PowerMockito.when(ctx.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getColor(anyInt())).thenReturn(255);
+        PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(255);
         //get color test for different status
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.normal));
@@ -121,7 +117,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertGetVaccineDisplayNameTestReturnsDisplayName() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.vaccines);
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "OPV 0"));
 
@@ -151,15 +147,15 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertGetVaccineCalculationTestReturnsCalculation() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.vaccines);
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, "OPV 0"), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, "NULL"), -1);
 
         //readspecialvaccines
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(VaccineData.special_vacines);
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.special_vacines);
         Assert.assertEquals(VaccinatorUtils.getSpecialVaccines(context), VaccineData.special_vacines);
         //readrecurringservices
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(any(android.content.Context.class), anyString())).thenReturn(ServiceData.recurringservice);
+        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
         Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context), ServiceData.recurringservice);
     }
 }

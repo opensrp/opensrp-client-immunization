@@ -1,6 +1,5 @@
 package org.smartregister.immunization.utils;
 
-
 import android.content.Context;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,14 +21,12 @@ import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.Utils;
 import java.util.ArrayList;
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Created by real on 29/10/17.
  */
 @PrepareForTest({VaccinatorUtils.class, ImmunizationLibrary.class, Utils.class})
 public class IMDatabaseUtilsTest extends BaseUnitTest {
-
 
     @InjectMocks
     private IMDatabaseUtils imDatabaseUtils;
@@ -39,9 +36,6 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
 
     @Mock
     private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private Utils utils;
 
     @Mock
     private VaccineTypeRepository vaccineTypeRepository;
@@ -74,7 +68,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.vaccineTypeRepository()).thenReturn(vaccineTypeRepository);
         PowerMockito.when(vaccineTypeRepository.getAllVaccineTypes(null)).thenReturn(new ArrayList<VaccineType>());
-        PowerMockito.when(Utils.readAssetContents(any(Context.class), any(String.class))).thenReturn(VaccineData.vaccine_type);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(Context.class), org.mockito.ArgumentMatchers.any(String.class))).thenReturn(VaccineData.vaccine_type);
         imDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, null);
         org.junit.Assert.assertNotNull(imDatabaseUtils);
     }

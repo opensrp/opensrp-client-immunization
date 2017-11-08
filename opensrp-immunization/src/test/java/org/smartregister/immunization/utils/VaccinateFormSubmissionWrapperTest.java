@@ -1,7 +1,5 @@
 package org.smartregister.immunization.utils;
 
-import junit.framework.Assert;
-
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,38 +17,46 @@ import org.smartregister.immunization.domain.VaccineWrapperTest;
  */
 
 public class VaccinateFormSubmissionWrapperTest extends BaseUnitTest {
+
     @InjectMocks
-    VaccinateFormSubmissionWrapper vaccineFormSubmisionWrapper;
+    private VaccinateFormSubmissionWrapper vaccineFormSubmisionWrapper;
     private VaccineWrapper wrapper;
 
     @Test
-    public void assertConstructorInitializationTest(){
-        Assert.assertNotNull(vaccineFormSubmisionWrapper);
+    public void assertConstructorInitializationTest() {
+        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper);
     }
+
     @Test
-    public void assertGetOvveridesReturnsFormOverieds(){
+    public void assertGetOvveridesReturnsFormOverieds() {
         org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.getOverrides());
     }
+
     @Test
-    public void assertGetFormNameReturnsFormName(){
+    public void assertGetFormNameReturnsFormName() {
         org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.getFormName());
     }
+
     @Test
-    public void assertUpdateFormSumissionReturnsFormSubmission(){
+    public void assertUpdateFormSumissionReturnsFormSubmission() {
         org.junit.Assert.assertNull(vaccineFormSubmisionWrapper.updateFormSubmission());
     }
+
     @Test
-    public void assertMapReturnsWrappersMap(){
+    public void assertMapReturnsWrappersMap() {
         org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.map());
     }
+
     @Test
-    public void assertGetEntityIdReturnsEntityId(){
+    public void assertGetEntityIdReturnsEntityId() {
         org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.getEntityId());
     }
+
     @Test
-    public void assertUpdatesReturnsWrapperUpdateCount(){
+    public void assertUpdatesReturnsWrapperUpdateCount() {
         org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.updates());
     }
+
     @Test
     public void assertUpdateWrappeCountrAfterAdingRemovingWapper() throws Exception {
         vaccineFormSubmisionWrapper.add(wrapper);
@@ -59,6 +65,7 @@ public class VaccinateFormSubmissionWrapperTest extends BaseUnitTest {
         vaccineFormSubmisionWrapper.add(wrapper);
         org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 1);
     }
+
     @Before
     public void setUp() {
         vaccineFormSubmisionWrapper = new VaccinateFormSubmissionWrapper(null, "1", "form", null, "child");

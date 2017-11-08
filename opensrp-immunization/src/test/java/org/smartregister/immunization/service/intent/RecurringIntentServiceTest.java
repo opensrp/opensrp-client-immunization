@@ -32,17 +32,10 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
     private ImmunizationLibrary immunizationLibrary;
 
     @Mock
-    private Context context;
-
-    @Mock
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
 
     @Mock
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
-
-
-    @Mock
-    private RecurringIntentService recurringIntentService;
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
@@ -55,7 +48,7 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
+
     public void onStartCommandTest() {
         Application application = RuntimeEnvironment.application;
 
@@ -68,7 +61,7 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository()).thenReturn(recurringServiceTypeRepository);
         PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
-        PowerMockito.doReturn(1).when((IntentService)recurringIntentService).onStartCommand(intent, IntentService.START_FLAG_REDELIVERY, 1);
+        PowerMockito.doReturn(1).when((IntentService) recurringIntentService).onStartCommand(intent, IntentService.START_FLAG_REDELIVERY, 1);
 //        recurringIntentService.onStartCommand(intent,IntentService.START_FLAG_REDELIVERY,1);
     }
 
