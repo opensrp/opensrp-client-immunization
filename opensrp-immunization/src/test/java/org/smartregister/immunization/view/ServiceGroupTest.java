@@ -133,7 +133,7 @@ public class ServiceGroupTest extends BaseUnitTest {
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
         setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers);
-        wrapper= new ServiceWrapper();
+        wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
 
         view.updateWrapper(wrapper);
@@ -159,15 +159,15 @@ public class ServiceGroupTest extends BaseUnitTest {
 
     public void setDataForTest(String dateTimeString) throws Exception {
         wrappers = new ArrayList<ServiceWrapper>();
-        wrapper= new ServiceWrapper();
+        wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
 
         wrappers.add(wrapper);
-        wrapper= new ServiceWrapper();
+        wrapper = new ServiceWrapper();
 
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         wrappers.add(wrapper);
-        wrapper= new ServiceWrapper();
+        wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
 
         wrappers.add(wrapper);
@@ -176,8 +176,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         detail.put("dob", dateTimeString);
         CommonPersonObjectClient childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
         List<Alert>alertlist =  new ArrayList<Alert>();

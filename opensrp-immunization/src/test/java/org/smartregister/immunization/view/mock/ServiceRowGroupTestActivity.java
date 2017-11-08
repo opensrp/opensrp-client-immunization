@@ -31,9 +31,11 @@ public class ServiceRowGroupTestActivity extends Activity {
     public ServiceRowGroup getInstance2() {
         return new ServiceRowGroup(this,ViewAttributes.attrs);
     }
+
     public ServiceRowGroup getInstance3() {
         return new ServiceRowGroup(this,ViewAttributes.attrs,0);
     }
+
     public ServiceRowGroup getInstance1() {
         return new ServiceRowGroup(this,ViewAttributes.attrs,0,0);
     }

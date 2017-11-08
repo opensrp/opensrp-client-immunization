@@ -63,7 +63,7 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
     }
 
     public ArrayList<VaccineWrapper> vaccineWrapperList() {
-        DateTime datetime= new DateTime();
+        DateTime datetime = new DateTime();
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
         VaccineWrapper tag = new VaccineWrapper();
         tag.setId(VaccineWrapperTest.ID);
@@ -91,6 +91,7 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         taglist.add(tag);
         return taglist;
     }
+
     @Override
     protected void onStart() {
         super.onStart();

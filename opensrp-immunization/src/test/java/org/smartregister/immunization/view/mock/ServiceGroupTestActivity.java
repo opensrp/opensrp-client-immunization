@@ -13,31 +13,31 @@ import org.smartregister.immunization.view.ServiceGroup;
 
 public class ServiceGroupTestActivity extends Activity {
 
-    private LinearLayout linearLayout;
     private ServiceGroup view;
 
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
+        LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
 
 
-    public ServiceGroup getInstance(){
+    public ServiceGroup getInstance() {
         return view == null ? new ServiceGroup(this):view;
     }
 
-    public ServiceGroup getInstance2(){
+    public ServiceGroup getInstance2() {
         return new ServiceGroup(this, ViewAttributes.attrs);
     }
 
-    public ServiceGroup getInstance3(){
+    public ServiceGroup getInstance3() {
         return new ServiceGroup(this, ViewAttributes.attrs, 0);
     }
 
-    public ServiceGroup getInstance1(){
+    public ServiceGroup getInstance1() {
         return new ServiceGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
@@ -46,12 +46,10 @@ public class ServiceGroupTestActivity extends Activity {
         super.onStart();
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {
