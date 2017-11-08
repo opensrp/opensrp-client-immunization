@@ -26,6 +26,8 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     private final long magicNumber = 1509347806l;
     private final String magicType = "TYPE";
     private final String magicNAME = "NAME";
+    private final int magicNumber10 = 10;
+
     @InjectMocks
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
 
@@ -177,7 +179,6 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
         Mockito.when(recurringServiceRecordRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
-        int magicNumber10 = 10;
         Assert.assertNotNull(recurringServiceRecordRepository.findUnSyncedBeforeTime(magicNumber10));
     }
 }
