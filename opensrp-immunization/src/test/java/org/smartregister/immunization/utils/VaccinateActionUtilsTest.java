@@ -160,6 +160,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(VaccinateActionUtils.allAlertNames(magicChild));
         Assert.assertNull(VaccinateActionUtils.allAlertNames(magicNULL));
     }
+
     @Test
     public void assertUpdateJsonAndFindTestReturnsJsonObject() throws Exception {
         JSONObject object = new JSONObject();

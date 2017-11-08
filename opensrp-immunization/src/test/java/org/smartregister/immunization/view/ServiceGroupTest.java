@@ -39,14 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
-
 /**
  * Created by onaio on 30/08/2017.
  */
 
 public class ServiceGroupTest extends BaseUnitTest {
-
 
     private ServiceGroup view;
 
@@ -62,12 +59,9 @@ public class ServiceGroupTest extends BaseUnitTest {
     private org.smartregister.Context context_;
     private ArrayList<ServiceWrapper>wrappers;
     private ServiceWrapper wrapper;
-    private CommonPersonObjectClient childdetails;
-
-    private ArrayList<ServiceRecord>servcServiceRecords;
-    private ArrayList<Alert>alertlist;
-    private Map<String, List<ServiceType>> serviceTypeMap;
-    private String type = "SERVICETYPE";
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
+    private final String type = "SERVICETYPE";
+    
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -94,6 +88,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         controller = null;
 
     }
+
     private void destroyController() {
         try {
             activity.finish();
@@ -109,17 +104,17 @@ public class ServiceGroupTest extends BaseUnitTest {
     @Test
     public void verifyOnClickCallsOnUndoServiceAllClickListenerAndOnServiceClickedListener() throws Exception {
 
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateViews();
         ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
         ServiceCard serviceCard = new ServiceCard(RuntimeEnvironment.application);
-        wrapper= new ServiceWrapper();
+        wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         serviceCard.setServiceWrapper(wrapper);
         view.onClick(serviceCard);
 
-        Mockito.verify(onServiceClickedListener).onClick(any(ServiceGroup.class), any(ServiceWrapper.class));
+        Mockito.verify(onServiceClickedListener).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
@@ -129,14 +124,14 @@ public class ServiceGroupTest extends BaseUnitTest {
         parent.addView(v);
         serviceCard.addView(parent);
         view.onClick(v);
-        Mockito.verify(onServiceUndoClickListener).onUndoClick(any(ServiceGroup.class), any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
 
     }
 
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers);
         wrapper= new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
@@ -145,6 +140,7 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         Assert.assertNotNull(view.getServiceRecordList());
     }
+
     @Test
     public void assertIsModalOpenReturnsBoolean() throws Exception {
         view.setModalOpen(true);
@@ -152,13 +148,15 @@ public class ServiceGroupTest extends BaseUnitTest {
         view.setModalOpen(false);
         Assert.assertEquals(view.isModalOpen(), false);
     }
+
     @Test
     public void assertOnStateChangedCallsUpdateViews() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.onStateChanged(ServiceCard.State.DONE_CAN_BE_UNDONE);
         //calls updateViews which sets the adapter, we can check the the adapter is not null
         Assert.assertNotNull(view.getServiceRecordList());
     }
+
     public void setDataForTest(String dateTimeString) throws Exception {
         wrappers = new ArrayList<ServiceWrapper>();
         wrapper= new ServiceWrapper();
@@ -176,15 +174,15 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
-        childdetails = new CommonPersonObjectClient("1", detail, "NME");
+        CommonPersonObjectClient childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
-        alertlist =  new ArrayList<Alert>();
+        List<Alert>alertlist =  new ArrayList<Alert>();
         alertlist.add(alert);
-        serviceTypeMap = new HashMap<String, List<ServiceType>>();
+        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<String, List<ServiceType>>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
@@ -200,11 +198,11 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceType.setExpiryOffset(ServiceTypeTest.EXPIRYOFFSET);
         serviceType.setMilestoneOffset(ServiceTypeTest.MILESTONEOFFSET);
         serviceType.setUpdatedAt(0l);
-        ArrayList<ServiceType>serviceTypes= new ArrayList<ServiceType>();
+        ArrayList<ServiceType>serviceTypes = new ArrayList<ServiceType>();
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
-        servcServiceRecords = new ArrayList<ServiceRecord>();
-        ServiceRecord serviceRecord= new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+        List<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);

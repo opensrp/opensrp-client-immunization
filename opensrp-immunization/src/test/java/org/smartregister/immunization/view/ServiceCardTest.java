@@ -26,8 +26,6 @@ import org.smartregister.immunization.view.mock.ServiceCardTestActivity;
 
 public class ServiceCardTest extends BaseUnitTest {
 
-
-
     private ServiceCard view;
 
     @Mock
@@ -37,10 +35,14 @@ public class ServiceCardTest extends BaseUnitTest {
 
     @InjectMocks
     private ServiceCardTestActivity activity;
-    private Alert alert;
-    private ServiceWrapper wrapper;
+
     @Mock
     private org.smartregister.Context context_;
+
+    private final String magicDue = "due";
+    private final String magicExpired = "expired";
+    private final String magicDefault = "DEFAULT";
+    
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -60,12 +62,12 @@ public class ServiceCardTest extends BaseUnitTest {
 
     @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
-        alert = new Alert("", "", "", AlertStatus.normal, "", "");
-        wrapper = new ServiceWrapper();
+        Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        ServiceWrapper wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceCard.State.DUE);
@@ -73,9 +75,9 @@ public class ServiceCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.upcoming, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertNotNull(view.getState());
@@ -83,9 +85,9 @@ public class ServiceCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceCard.State.OVERDUE);
@@ -93,9 +95,9 @@ public class ServiceCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.expired, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("due");
+        wrapper.setStatus(magicDue);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceCard.State.EXPIRED);
@@ -103,9 +105,9 @@ public class ServiceCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceCard.State.EXPIRED);
@@ -113,9 +115,9 @@ public class ServiceCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(true);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
@@ -124,21 +126,23 @@ public class ServiceCardTest extends BaseUnitTest {
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new ServiceWrapper();
         wrapper.setSynced(false);
-        wrapper.setStatus("expired");
+        wrapper.setStatus(magicExpired);
         wrapper.setAlert(alert);
-        wrapper.setDefaultName("DEFAULT");
+        wrapper.setDefaultName(magicDefault);
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceCard.State.DONE_CAN_BE_UNDONE);
     }
+
     @Test
-    public void assertConstructorsNotNull(){
+    public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
         Assert.assertNotNull(activity.getInstance1());
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
+
     @After
     public void tearDown() {
         destroyController();
@@ -146,6 +150,7 @@ public class ServiceCardTest extends BaseUnitTest {
         controller = null;
 
     }
+
     private void destroyController() {
         try {
             activity.finish();

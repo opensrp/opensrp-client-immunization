@@ -39,11 +39,12 @@ import java.util.HashMap;
  * Created by onaio on 30/08/2017.
  */
 @PrepareForTest({ImmunizationLibrary.class})
-@Config(shadows = {FontTextViewShadow.class, ExpandableHeightGridViewShadow.class})
+@Config(shadows = {FontTextViewShadow.class})
 @PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     private ImmunizationRowGroup view;
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
 
     @Mock
     private Context context;
@@ -86,25 +87,25 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Test
     public void assertEqualsVaccineData() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineData(), vaccineData);
     }
 
     @Test
     public void assertEqualsChildDetails() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getChildDetails(), childdetails);
     }
 
     @Test
     public void assertEqualsVaccineList() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineList(), vaccinelist);
     }
 
     @Test
     public void assertEqualsAlertList() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         Assert.assertEquals(view.getAlertList(), alertlist);
     }
 
@@ -112,7 +113,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     public void assertUpdateViewsWithDifferentTimeWillSetVaccineAdapter() throws Exception {
         Assert.assertEquals(view.getDueVaccines().size(), 0);
 
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateViews();
         view.updateViews(wrappers);
         String pattern = "yyyy-MM-dd";
@@ -128,7 +129,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     @Test
     public void assertOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() throws Exception {
 //
-//        setDataForTest("1985-07-24T00:00:00.000Z");
+//        setDataForTest(magicDate);
 //        view.updateViews();
 //        view.updateViews(wrappers);
 //        ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
@@ -161,7 +162,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
-        setDataForTest("1985-07-24T00:00:00.000Z");
+        setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers);
         wrapper = new VaccineWrapper();
         wrapper.setDbKey(0l);
@@ -187,7 +188,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
 //    @Test
 //    public void assertOnStateChangedCallsUpdateViews() throws Exception {
-//        setDataForTest("1985-07-24T00:00:00.000Z");
+//        setDataForTest(magicDate);
 //        view.onStateChanged(ImmunizationRowGroup.State.DONE_CAN_BE_UNDONE);
 //        //calls updateViews which sets the adapter, we can check the the adapter is not null
 //        Assert.assertNotNull(view.getAllVaccineWrappers());
@@ -247,6 +248,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         controller = null;
 
     }
+
     private void destroyController() {
         try {
             activity.finish();

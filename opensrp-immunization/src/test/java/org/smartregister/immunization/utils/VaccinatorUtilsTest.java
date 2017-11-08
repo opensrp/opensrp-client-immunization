@@ -53,6 +53,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     
     @Mock
     private VaccinatorUtils vaccinatorUtils;
+
+    private final int magicColor = 255;
+    private final String magicOPV0 = "OPV 0";
+    private final String magicNULL = "NULL";
     
     @Before
     public void setUp() {
@@ -82,7 +86,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertVaccinatorUtilsTest() throws Exception {
-        int magicColor = 255;
+
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
@@ -117,7 +121,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(Utils.class);
         PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
-        Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "OPV 0"));
+        Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
 
     }
     
@@ -125,7 +129,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertReceivedServicesTestReturnsService() throws Exception {
         List<ServiceRecord> serviceRecordList = new ArrayList<ServiceRecord>();
         ServiceRecord serviceRecord = new ServiceRecord();
-        serviceRecord.setName("NULL");
+        serviceRecord.setName(magicNULL);
         serviceRecord.setDate(new Date());
         serviceRecordList.add(serviceRecord);
         Assert.assertNotNull(VaccinatorUtils.receivedServices(serviceRecordList));
@@ -135,7 +139,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertReceivedVaccinesTestReturnsVaccine() throws Exception {
         List<Vaccine> vaccines = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
-        v.setName("NULL");
+        v.setName(magicNULL);
         v.setDate(new Date());
         vaccines.add(v);
         Assert.assertNotNull(VaccinatorUtils.receivedVaccines(vaccines));
@@ -146,8 +150,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
         PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
-        Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, "OPV 0"), 0);
-        Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, "NULL"), -1);
+        Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicOPV0), 0);
+        Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicNULL), -1);
 
         //readspecialvaccines
         PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.special_vacines);
