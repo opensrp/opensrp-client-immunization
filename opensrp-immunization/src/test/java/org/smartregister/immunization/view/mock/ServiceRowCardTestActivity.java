@@ -13,22 +13,22 @@ import org.smartregister.immunization.view.ServiceRowCard;
 
 public class ServiceRowCardTestActivity extends Activity {
 
-    private LinearLayout linearLayout;
     private ServiceRowCard view;
 
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
+        LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
 
-    public ServiceRowCard getInstance(){
-        return view == null? new ServiceRowCard(this):view;
+    public ServiceRowCard getInstance() {
+        return view == null ? new ServiceRowCard(this):view;
     }
 
-    public ServiceRowCard getInstance2(){
+    public ServiceRowCard getInstance2() {
         return new ServiceRowCard(this, ViewAttributes.attrs);
     }
 
@@ -45,12 +45,10 @@ public class ServiceRowCardTestActivity extends Activity {
         super.onStart();
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

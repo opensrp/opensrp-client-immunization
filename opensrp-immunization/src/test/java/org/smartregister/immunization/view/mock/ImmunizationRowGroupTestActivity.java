@@ -13,20 +13,19 @@ import org.smartregister.immunization.view.ImmunizationRowGroup;
 
 public class ImmunizationRowGroupTestActivity extends Activity {
 
-    private LinearLayout linearLayout;
     private ImmunizationRowGroup view;
 
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
+        LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
 
-
     public ImmunizationRowGroup getInstance() {
-        return view == null? new ImmunizationRowGroup(this, true):view;
+        return view == null ? new ImmunizationRowGroup(this, true):view;
     }
 
     public ImmunizationRowGroup getInstance2() {
@@ -46,12 +45,10 @@ public class ImmunizationRowGroupTestActivity extends Activity {
         super.onStart();
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

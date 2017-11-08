@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class VaccineCardTestActivity extends Activity implements View.OnClickListener,
         VaccineCard.OnVaccineStateChangeListener{
 
-    private LinearLayout linearLayout;
     private VaccineCard view;
 
     @Override
@@ -42,23 +41,24 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
+        LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
 
-    public VaccineCard getInstance(){
-        return (view == null)? new VaccineCard(this):view;
+    public VaccineCard getInstance() {
+        return (view == null) ? new VaccineCard(this):view;
     }
 
-    public VaccineCard getInstance1(){
+    public VaccineCard getInstance1() {
         return new VaccineCard(this, ViewAttributes.attrs);
     }
 
-    public VaccineCard getInstance2(){
+    public VaccineCard getInstance2() {
         return new VaccineCard(this, ViewAttributes.attrs, 0);
     }
 
-    public VaccineCard getInstance3(){
+    public VaccineCard getInstance3() {
         return new VaccineCard(this, ViewAttributes.attrs, 0, 0);
     }
 
@@ -96,12 +96,10 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         super.onStart();
     }
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
     }
-
 
     @Override
     protected void onResume() {

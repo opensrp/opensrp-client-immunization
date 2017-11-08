@@ -49,9 +49,6 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     private Context context;
     
     @Mock
-    private Utils utils;
-    
-    @Mock
     private CommonRepository commonRepository;
     
     @Mock
@@ -85,15 +82,16 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertVaccinatorUtilsTest() throws Exception {
+        int magicColor = 255;
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
 
-        android.content.Context ctx = org.mockito.Mockito.mock(android.content.Context.class);
-        Resources resources = org.mockito.Mockito.mock(Resources.class);
+        android.content.Context ctx = Mockito.mock(android.content.Context.class);
+        Resources resources = Mockito.mock(Resources.class);
         PowerMockito.when(ctx.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(255);
+        PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(magicColor);
         //get color test for different status
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.normal));
@@ -117,7 +115,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertGetVaccineDisplayNameTestReturnsDisplayName() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "OPV 0"));
 
@@ -135,7 +133,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertReceivedVaccinesTestReturnsVaccine() throws Exception {
-        List<org.smartregister.immunization.domain.Vaccine> vaccines = new ArrayList<Vaccine>();
+        List<Vaccine> vaccines = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
         v.setName("NULL");
         v.setDate(new Date());
@@ -147,15 +145,15 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertGetVaccineCalculationTestReturnsCalculation() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, "OPV 0"), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, "NULL"), -1);
 
         //readspecialvaccines
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.special_vacines);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.special_vacines);
         Assert.assertEquals(VaccinatorUtils.getSpecialVaccines(context), VaccineData.special_vacines);
         //readrecurringservices
-        PowerMockito.when(org.smartregister.util.Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
         Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context), ServiceData.recurringservice);
     }
 }

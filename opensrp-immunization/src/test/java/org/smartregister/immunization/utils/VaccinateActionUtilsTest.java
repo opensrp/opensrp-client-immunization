@@ -57,6 +57,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     private final String magicNULL = "NULL";
     private final String magicBCG = "BCG";
     private final int magic400 = 400;
+    private final String magicID = "uselessentityID";
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -119,6 +121,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
 
     }
+
     @Test
     public void assertFindRowTestReturnsTableRow() throws Exception {
         String tag = "TAG";
@@ -260,9 +263,9 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         alist.add(a);
         VaccineRepo.Vaccine vaccine[] = {VaccineRepo.Vaccine.bcg};
         AlertService alertService = new AlertService(Mockito.mock(AlertRepository.class));
-        VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, "uselessentityID", new DateTime(), vaccine);
+        VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, magicID, new DateTime(), vaccine);
         VaccineRepo.Vaccine vaccine2[] = {VaccineRepo.Vaccine.bcg2};
-        VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, "uselessentityID", new DateTime(), vaccine2);
+        VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, magicID, new DateTime(), vaccine2);
 
 
         Assert.assertEquals(VaccinateActionUtils.hasAlert(alist, VaccineRepo.Vaccine.bcg2), false);

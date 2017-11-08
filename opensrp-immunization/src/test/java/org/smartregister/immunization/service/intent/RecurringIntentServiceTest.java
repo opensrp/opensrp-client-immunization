@@ -13,7 +13,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RuntimeEnvironment;
-import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -47,7 +46,6 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
         MockitoAnnotations.initMocks(this);
     }
-
 
     public void onStartCommandTest() {
         Application application = RuntimeEnvironment.application;
