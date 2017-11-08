@@ -31,6 +31,8 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
 
+    private final int magicNumber = 231231;
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -67,7 +69,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         //should return null
         junit.framework.Assert.assertNull(immunizationRowAdapter.getItem(0));
 
-        junit.framework.Assert.assertEquals(immunizationRowAdapter.getItemId(0), 231231);
+        junit.framework.Assert.assertEquals(immunizationRowAdapter.getItemId(0), magicNumber);
 
     }
 

@@ -62,7 +62,7 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     public void assertThatCallToNewInstanceCreatesAFragment() {
         View view = Mockito.mock(View.class);
         junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
-        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(new DateTime(),Collections.EMPTY_LIST, new ServiceWrapper(), view,true));
+        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(new DateTime(), Collections.EMPTY_LIST, new ServiceWrapper(), view, true));
     }
 
     @Test

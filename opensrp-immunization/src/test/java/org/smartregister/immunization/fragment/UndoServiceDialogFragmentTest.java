@@ -32,6 +32,7 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -52,6 +53,7 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
         controller = null;
 
     }
+
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(UndoServiceDialogFragment.newInstance(new ServiceWrapper()));

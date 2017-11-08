@@ -35,7 +35,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-    private VaccinationEditDialogFragment view;
 
     @Before
     public void setUp() throws Exception {
@@ -47,14 +46,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         CoreLibrary.init(context_);
         VaccineSchedule.init(new JSONArray(VaccineData.vaccines),new JSONArray(VaccineData.special_vacines),"child");
         controller.setup();
-        view = activity.getFragment();
     }
-
-//    @Test
-//    public void assertButtonIdSetOnClickCallsOnVaccinationEarlier() throws Exception{
-//        view.getView().findViewById(R.id.set).performClick();
-//
-//    }
 
     @After
     public void tearDown() {

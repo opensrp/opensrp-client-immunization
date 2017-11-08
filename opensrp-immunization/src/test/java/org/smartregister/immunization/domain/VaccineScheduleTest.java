@@ -27,7 +27,7 @@ import java.util.List;
  * Created by real on 23/10/17.
  */
 @PrepareForTest({ImmunizationLibrary.class})
-public class VaccineScheduleTest extends BaseUnitTest{
+public class VaccineScheduleTest extends BaseUnitTest {
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
@@ -43,16 +43,24 @@ public class VaccineScheduleTest extends BaseUnitTest{
 
     @Mock
     private AlertService alertService;
+    
+    private final String magic10d = "+10d";
+    
+    private final String magicChild = "child";
 
+    private final String magicOPV0 = "OPV 0";
+    
     @Mock
-    VaccineSchedule vaccineSchedule;
-    Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "OPV", 0, new Date(),
+    private VaccineSchedule vaccineSchedule;
+
+    private Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "OPV", 0, new Date(),
             VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
 
-    Vaccine newVaccine2 = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "OPV 0", 0, new Date(),
+    private Vaccine newVaccine2 = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "magicOPV0", 0, new Date(),
             VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+
     @Before
-    public void setup() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -60,7 +68,7 @@ public class VaccineScheduleTest extends BaseUnitTest{
     public void assertUpdateOfflineAlertsTestReturnsAlert() throws Exception {
 
         VaccineSchedule vaccineSchedule = new VaccineSchedule(null, null, null, null);
-        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
+        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), magicChild);
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
@@ -69,10 +77,9 @@ public class VaccineScheduleTest extends BaseUnitTest{
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
 
-        Assert.assertNotNull(vaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), "child"));
+        Assert.assertNotNull(vaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), magicChild));
 
     }
-
 
     @Test
     public void assertConstructorInitializationTest() throws Exception {
@@ -83,9 +90,9 @@ public class VaccineScheduleTest extends BaseUnitTest{
     public void assertInitAndInitVaccineWithTestData() throws Exception {
         VaccineSchedule vaccineSchedule = new VaccineSchedule(null, null, null, null);
 //        VaccineSchedule vaccineSchedule = Mockito.spy(this.vaccineSchedule);
-        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
+        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), magicChild);
         vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "");
-        Assert.assertNotNull(vaccineSchedule.getVaccineSchedule("child", "OPV 0"));
+        Assert.assertNotNull(vaccineSchedule.getVaccineSchedule(magicChild, "magicOPV0"));
         Assert.assertNull(vaccineSchedule.getVaccineSchedule("", ""));
         //vaccine cnodition test
         JSONObject object = new JSONObject();
@@ -98,13 +105,13 @@ public class VaccineScheduleTest extends BaseUnitTest{
         list.add(newVaccine2);
         Assert.assertNotNull(notgiven.passes(list));
 
-        VaccineCondition.GivenCondition given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, "+10d", VaccineCondition.GivenCondition.Comparison.AT_LEAST);
+        VaccineCondition.GivenCondition given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d, VaccineCondition.GivenCondition.Comparison.AT_LEAST);
         Assert.assertNull(given.getComparison(""));
         Assert.assertNotNull(given.passes(list));
 
-        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, "+10d", VaccineCondition.GivenCondition.Comparison.AT_MOST);
+        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d, VaccineCondition.GivenCondition.Comparison.AT_MOST);
         Assert.assertNotNull(given.passes(list));
-        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, "+10d", VaccineCondition.GivenCondition.Comparison.EXACTLY);
+        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d, VaccineCondition.GivenCondition.Comparison.EXACTLY);
         Assert.assertNotNull(given.passes(list));
 
     }

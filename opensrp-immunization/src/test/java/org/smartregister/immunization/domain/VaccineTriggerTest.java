@@ -30,16 +30,15 @@ public class VaccineTriggerTest extends BaseUnitTest {
     @Test
     public void assertGetMethodsReturnsCorrectValues() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);
-        JSONObject data2 = new JSONObject(stringdata2);
+
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         VaccineSchedule.standardiseCalendarDate(calendar);
         VaccineTrigger.init(CHILD, data1);
         junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
-//        VaccineTrigger.init(CHILD, data2);
-//        junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data2).getFireDate(Collections.EMPTY_LIST, date));
     }
+
     @Test
     public void assertGetWindowTestReturnsCurrentWindow() throws JSONException {
         JSONObject data1 = new JSONObject(stringdata1);

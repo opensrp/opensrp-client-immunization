@@ -33,12 +33,16 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
 
     @InjectMocks
     private IMDatabaseUtils imDatabaseUtils;
+
     @Mock
     private Context context;
+
     @Mock
     private ImmunizationLibrary immunizationLibrary;
+
     @Mock
     private Utils utils;
+
     @Mock
     private VaccineTypeRepository vaccineTypeRepository;
 
@@ -49,7 +53,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
     public PowerMockRule rule = new PowerMockRule();
 
     @Before
-    public void setup(){
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
@@ -61,6 +65,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         imDatabaseUtils.populateRecurringServices(context, null, recurringServiceTypeRepository);
         org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
+
     @Test
     public void accessAssetsAndFillDataBaseForVaccineTypesTest() throws Exception {
 

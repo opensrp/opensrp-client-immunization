@@ -3,8 +3,6 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 
-import junit.framework.Assert;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +17,6 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
 import org.smartregister.immunization.fragment.mock.ServiceDialogFragmentTestActivity;
 
 import java.util.Collections;
@@ -30,7 +27,6 @@ import java.util.Collections;
 @Config(shadows = {FontTextViewShadow.class})
 public class ServiceDialogFragmentTest extends BaseUnitTest {
 
-
     private ActivityController<ServiceDialogFragmentTestActivity> controller;
 
     @InjectMocks
@@ -38,6 +34,7 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -58,6 +55,7 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         controller = null;
 
     }
+
     private void destroyController() {
         try {
             activity.finish();
@@ -69,11 +67,13 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
 
         System.gc();
     }
+
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(ServiceDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper()));
-        junit.framework.Assert.assertNotNull(ServiceDialogFragment.newInstance(new DateTime(),Collections.EMPTY_LIST, new ServiceWrapper(),true));
+        junit.framework.Assert.assertNotNull(ServiceDialogFragment.newInstance(new DateTime(), Collections.EMPTY_LIST, new ServiceWrapper(), true));
     }
+
     @Test
     public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
         destroyController();
@@ -81,7 +81,7 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(ServiceDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();
-        Assert.assertNotNull(activity);
+        junit.framework.Assert.assertNotNull(activity);
     }
 
 }

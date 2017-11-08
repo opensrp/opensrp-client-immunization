@@ -20,7 +20,6 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,9 +38,6 @@ public class ServiceScheduleTest extends BaseUnitTest {
     private ImmunizationLibrary immunizationLibrary;
 
     @Mock
-    private VaccineRepository vaccineRepository;
-
-    @Mock
     private Context context;
 
     @Mock
@@ -55,6 +51,8 @@ public class ServiceScheduleTest extends BaseUnitTest {
 
     @Mock
     private ServiceTrigger expTrigger;
+    
+    private final String magicString = "TT";
 
     @Mock
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
@@ -63,17 +61,17 @@ public class ServiceScheduleTest extends BaseUnitTest {
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
 
     @Before
-    public void setup() {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() throws Exception{
+    public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() throws Exception {
 
         ServiceSchedule serviceSchedule = new ServiceSchedule(dueTrigger, expTrigger);
 
         List<String> types = new ArrayList<String>();
-        types.add("TT");
+        types.add(magicString);
 
         ServiceType serviceType = new ServiceType(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME, ServiceTypeTest.SERVICENAMEENTITY, ServiceTypeTest.SERVICENAMEENTITYID, ServiceTypeTest.DATEENTITY, ServiceTypeTest.DATEENTITYID, ServiceTypeTest.UNITS, ServiceTypeTest.SERVICELOGIC, ServiceTypeTest.PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l);
         List<ServiceType>serviceTypeList = new ArrayList<ServiceType>();
@@ -92,15 +90,15 @@ public class ServiceScheduleTest extends BaseUnitTest {
 
         //Mockito.when(serviceSchedule.getOfflineAlert(Mockito.any(ServiceType.class),Mockito.any(List.class),Mockito.any(String.class),Mockito.any(DateTime.class))).thenReturn(Mockito.mock(Alert.class));
         serviceSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime());
-        serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID, null);
-        serviceSchedule.updateOfflineAlerts("TT",VaccineTest.BASEENTITYID, new DateTime());
+        serviceSchedule.updateOfflineAlerts(magicString, VaccineTest.BASEENTITYID, null);
+        serviceSchedule.updateOfflineAlerts(magicString, VaccineTest.BASEENTITYID, new DateTime());
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         serviceRecord.setEventId("1");
         ArrayList<ServiceRecord>issuedServices = new ArrayList<ServiceRecord>();
         issuedServices.add(serviceRecord);
-        Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType,issuedServices,VaccineTest.BASEENTITYID,new DateTime()));
+        Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType,issuedServices,VaccineTest.BASEENTITYID, new DateTime()));
     }
     @Test
     public void assertAddOffsetToCalanderReturnsDateTime() throws Exception {
