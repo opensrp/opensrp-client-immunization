@@ -28,12 +28,11 @@ import java.util.List;
 
 public class UndoVaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
-    private LinearLayout linearLayout;
-
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
+        LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
         startFragment();

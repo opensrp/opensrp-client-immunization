@@ -20,7 +20,6 @@ import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,12 +28,11 @@ import java.util.List;
 
 public class VaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
-    private LinearLayout linearLayout;
-
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
+        LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
         startFragment();
@@ -46,7 +44,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
 
         List<Vaccine> issuedVaccines = new ArrayList<Vaccine>();
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(), 
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new java.util.Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         issuedVaccines.add(vaccine);
 

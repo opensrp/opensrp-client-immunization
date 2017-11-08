@@ -101,7 +101,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
 
         ServiceType serviceType = new ServiceType();
         serviceType.setId(1l);
-        RecurringServiceTypeRepository spy = org.mockito.Mockito.spy(recurringServiceTypeRepository);
+        RecurringServiceTypeRepository spy = Mockito.spy(recurringServiceTypeRepository);
         Mockito.doReturn(serviceType).when(spy).find(org.mockito.ArgumentMatchers.anyLong(), org.mockito.ArgumentMatchers.any(SQLiteDatabase.class));
         spy.add(serviceType);
         Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));

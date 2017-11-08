@@ -21,7 +21,6 @@ import org.smartregister.immunization.fragment.VaccinationEditDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,14 +41,13 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         startFragment();
     }
 
-    public void startFragment()
-    {
+    public void startFragment() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
 
         List<Vaccine> issuedVaccines = new ArrayList<Vaccine>();
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(), 
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new java.util.Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         issuedVaccines.add(vaccine);
 
@@ -87,7 +85,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         fragmentTransaction.commit();
     }
 
-    public VaccinationEditDialogFragment getFragment(){
+    public VaccinationEditDialogFragment getFragment() {
         return fragment;
     }
 

@@ -130,7 +130,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         recurringServiceRecordRepository.update(sqliteDatabase, null);
         recurringServiceRecordRepository.update(null, serviceRecord);
         recurringServiceRecordRepository.update(sqliteDatabase, serviceRecord);
-        Mockito.verify(sqliteDatabase,Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test
@@ -172,11 +172,12 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void assertFindUnSyncedBeforeTimeTest() throws Exception {
-        String[] columns = new String[] {RecurringServiceRecordRepository.ID_COLUMN,RecurringServiceRecordRepository.BASE_ENTITY_ID,RecurringServiceRecordRepository.PROGRAM_CLIENT_ID,RecurringServiceRecordRepository.RECURRING_SERVICE_ID,RecurringServiceRecordRepository.VALUE,RecurringServiceRecordRepository.DATE,RecurringServiceRecordRepository.ANMID,RecurringServiceRecordRepository.LOCATIONID,RecurringServiceRecordRepository.SYNC_STATUS,RecurringServiceRecordRepository.EVENT_ID,RecurringServiceRecordRepository.FORMSUBMISSION_ID,RecurringServiceRecordRepository.UPDATED_AT_COLUMN,RecurringServiceTypeRepository.TYPE,RecurringServiceTypeRepository.NAME};
+        String[] columns = new String[] {RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATIONID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
         Mockito.when(recurringServiceRecordRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
-        Assert.assertNotNull(recurringServiceRecordRepository.findUnSyncedBeforeTime(10));
+        int magicNumber10 = 10;
+        Assert.assertNotNull(recurringServiceRecordRepository.findUnSyncedBeforeTime(magicNumber10));
     }
 }
