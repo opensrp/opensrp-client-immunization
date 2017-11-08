@@ -2,7 +2,6 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +56,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();
-        Assert.assertNotNull(activity);
+        junit.framework.Assert.assertNotNull(activity);
     }
 
     private void destroyController() {
@@ -73,7 +72,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>()));
-        junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(),true));
+        junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), true));
     }
 
 }

@@ -44,7 +44,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-        VaccineSchedule.init(new JSONArray(VaccineData.vaccines),new JSONArray(VaccineData.special_vacines),"child");
+        VaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
         controller.setup();
     }
 
@@ -78,6 +78,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null));
-        junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null,true));
+        junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null, true));
     }
 }

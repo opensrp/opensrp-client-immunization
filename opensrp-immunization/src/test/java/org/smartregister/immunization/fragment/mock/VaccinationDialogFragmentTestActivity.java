@@ -46,7 +46,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
 
         List<Vaccine> issuedVaccines = new ArrayList<Vaccine>();
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         issuedVaccines.add(vaccine);
 
@@ -75,7 +75,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
-        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),null,null);
+        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), null, null);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add( fragment, null );

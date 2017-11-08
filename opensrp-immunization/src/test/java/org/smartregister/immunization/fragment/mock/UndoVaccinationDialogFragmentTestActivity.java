@@ -46,7 +46,7 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
 
         List<Vaccine> issuedVaccines = new ArrayList<Vaccine>();
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(), 
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         issuedVaccines.add(vaccine);
 
@@ -76,7 +76,7 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
-//        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),issuedVaccines,taglist);
+//        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), issuedVaccines, taglist);
         UndoVaccinationDialogFragment fragment = UndoVaccinationDialogFragment.newInstance(tag);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

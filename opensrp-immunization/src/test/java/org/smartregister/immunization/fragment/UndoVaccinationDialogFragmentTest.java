@@ -47,6 +47,7 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
         controller = null;
 
     }
+
     @Test
     public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
         destroyController();

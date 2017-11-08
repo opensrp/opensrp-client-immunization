@@ -86,7 +86,7 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         tag.setPhoto(photo);
         tag.setGender(ServiceWrapperTest.GENDER);
         tag.setSynced(true);
-        ServiceDialogFragment fragment = ServiceDialogFragment.newInstance(datetime,issuedServices, tag,true);
+        ServiceDialogFragment fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add( fragment, null );

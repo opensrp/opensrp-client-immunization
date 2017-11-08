@@ -87,10 +87,10 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
         tag.setPhoto(photo);
         tag.setGender(ServiceWrapperTest.GENDER);
         tag.setSynced(true);
-        ServiceEditDialogFragment fragment = ServiceEditDialogFragment.newInstance(datetime,issuedServices, tag, linearLayout,true);
+        ServiceEditDialogFragment fragment = ServiceEditDialogFragment.newInstance(datetime, issuedServices, tag, linearLayout, true);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( fragment, null );
+        fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
@@ -98,7 +98,6 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
     protected void onStart() {
         super.onStart();
     }
-
 
     @Override
     protected void onRestart() {
