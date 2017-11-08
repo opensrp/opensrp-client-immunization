@@ -22,7 +22,6 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
-import org.smartregister.immunization.customshadows.ExpandableHeightGridViewShadow;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;

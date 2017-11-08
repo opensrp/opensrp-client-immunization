@@ -16,7 +16,6 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.fragment.mock.ServiceDialogFragmentTestActivity;
 import org.smartregister.immunization.fragment.mock.UndoServiceDialogFragmentTestActivity;
 
 /**

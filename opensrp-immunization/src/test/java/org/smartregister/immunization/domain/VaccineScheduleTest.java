@@ -53,10 +53,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     @Mock
     private VaccineSchedule vaccineSchedule;
 
-    private Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "OPV", 0, new Date(),
-            VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
-
-    private Vaccine newVaccine2 = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "magicOPV0", 0, new Date(),
+    private Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, magicOPV0, 0, new Date(),
             VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
 
     @Before
@@ -92,7 +89,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
 //        VaccineSchedule vaccineSchedule = Mockito.spy(this.vaccineSchedule);
         vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), magicChild);
         vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "");
-        Assert.assertNotNull(vaccineSchedule.getVaccineSchedule(magicChild, "magicOPV0"));
+        Assert.assertNotNull(vaccineSchedule.getVaccineSchedule(magicChild, magicOPV0));
         Assert.assertNull(vaccineSchedule.getVaccineSchedule("", ""));
         //vaccine cnodition test
         JSONObject object = new JSONObject();
@@ -102,7 +99,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
 
         VaccineCondition.NotGivenCondition notgiven = new VaccineCondition.NotGivenCondition(VaccineRepo.Vaccine.opv0);
         List<Vaccine>list = new ArrayList<Vaccine>();
-        list.add(newVaccine2);
+        list.add(newVaccine);
         Assert.assertNotNull(notgiven.passes(list));
 
         VaccineCondition.GivenCondition given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d, VaccineCondition.GivenCondition.Comparison.AT_LEAST);

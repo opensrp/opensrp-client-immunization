@@ -16,8 +16,8 @@ import java.util.Date;
 public class VaccineTriggerTest extends BaseUnitTest {
 
     public static final String CHILD = "child";
-    public static final String stringdata1 = "{ \"reference\": \"dob\",\"offset\": \"+0d\"}";
-    public static final String stringdata2 = "{\"reference\": \"prerequisite\",\"prerequisite\": \"OPV 1\",\"offset\": \"+28d\"}";
+    public static final String stringdata1 = "{ \"reference\": \"dob\", \"offset\": \"+0d\"}";
+    public static final String stringdata2 = "{\"reference\": \"prerequisite\", \"prerequisite\": \"OPV 1\", \"offset\": \"+28d\"}";
 
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
@@ -45,9 +45,9 @@ public class VaccineTriggerTest extends BaseUnitTest {
         VaccineTrigger vaccineTrigger = Mockito.mock(VaccineTrigger.class);
         vaccineTrigger.init(CHILD, data1);
         String notNull = vaccineTrigger.getWindow();
-        Mockito.verify(vaccineTrigger,Mockito.times(1)).getWindow();
+        Mockito.verify(vaccineTrigger, Mockito.times(1)).getWindow();
         junit.framework.Assert.assertNull(notNull);
-        vaccineTrigger = new VaccineTrigger("","win");
+        vaccineTrigger = new VaccineTrigger("", "win");
         junit.framework.Assert.assertNotNull(vaccineTrigger.getWindow());
     }
 

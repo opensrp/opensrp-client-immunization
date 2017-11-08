@@ -3,7 +3,6 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -72,7 +71,7 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
         activity = controller.get();
         controller.setup();
-        Assert.assertNotNull(activity);
+        junit.framework.Assert.assertNotNull(activity);
     }
 
     private void destroyController() {

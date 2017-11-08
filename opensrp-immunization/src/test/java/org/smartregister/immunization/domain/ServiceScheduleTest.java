@@ -85,10 +85,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository().fetchTypes()).thenReturn(types);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
         PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository().findByType(Mockito.any(String.class))).thenReturn(serviceTypeList);
-        Alert alert = new Alert(VaccineTest.BASEENTITYID, VaccineTest.NAME, VaccineTest.NAME.toLowerCase().replace(" ", ""),
-                AlertStatus.complete, DateUtil.yyyyMMdd.format(new Date()), DateUtil.yyyyMMdd.format(new Date()), true);
 
-        //Mockito.when(serviceSchedule.getOfflineAlert(Mockito.any(ServiceType.class),Mockito.any(List.class),Mockito.any(String.class),Mockito.any(DateTime.class))).thenReturn(Mockito.mock(Alert.class));
         serviceSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime());
         serviceSchedule.updateOfflineAlerts(magicString, VaccineTest.BASEENTITYID, null);
         serviceSchedule.updateOfflineAlerts(magicString, VaccineTest.BASEENTITYID, new DateTime());
@@ -98,8 +95,9 @@ public class ServiceScheduleTest extends BaseUnitTest {
         serviceRecord.setEventId("1");
         ArrayList<ServiceRecord>issuedServices = new ArrayList<ServiceRecord>();
         issuedServices.add(serviceRecord);
-        Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType,issuedServices,VaccineTest.BASEENTITYID, new DateTime()));
+        Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType, issuedServices, VaccineTest.BASEENTITYID, new DateTime()));
     }
+
     @Test
     public void assertAddOffsetToCalanderReturnsDateTime() throws Exception {
         List<String>offsets = new ArrayList<String>();
@@ -108,7 +106,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
         offsets.add("+10y");
         offsets.add("-10d");
         offsets.add("+xxy");
-        Assert.assertNotNull(serviceSchedule.addOffsetToDateTime(new DateTime(),offsets));
+        Assert.assertNotNull(serviceSchedule.addOffsetToDateTime(new DateTime(), offsets));
     }
 
     @Test
