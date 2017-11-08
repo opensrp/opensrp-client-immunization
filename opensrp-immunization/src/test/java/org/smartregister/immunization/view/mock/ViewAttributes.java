@@ -8,7 +8,8 @@ import android.util.AttributeSet;
 
 public class ViewAttributes {
 
-    public static AttributeSet attrs = new AttributeSet(){
+    public static AttributeSet attrs = new AttributeSet() {
+
         @Override
         public int getAttributeCount() {
             return 0;

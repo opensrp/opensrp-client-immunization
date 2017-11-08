@@ -33,11 +33,11 @@ public class ServiceRowCardTestActivity extends Activity {
     }
 
     public ServiceRowCard getInstance3() {
-        return new ServiceRowCard(this,ViewAttributes.attrs, 0);
+        return new ServiceRowCard(this, ViewAttributes.attrs, 0);
     }
 
     public ServiceRowCard getInstance1() {
-        return new ServiceRowCard(this,ViewAttributes.attrs, 0, 0);
+        return new ServiceRowCard(this, ViewAttributes.attrs, 0, 0);
     }
 
     @Override
