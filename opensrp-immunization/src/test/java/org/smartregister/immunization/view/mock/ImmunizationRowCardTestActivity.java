@@ -13,7 +13,8 @@ import org.smartregister.immunization.view.ImmunizationRowCard;
 
 public class ImmunizationRowCardTestActivity extends Activity {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
+    private ImmunizationRowCard view;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -22,21 +23,27 @@ public class ImmunizationRowCardTestActivity extends Activity {
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    ImmunizationRowCard view;
-    public ImmunizationRowCard getInstance(){
+
+
+
+    public ImmunizationRowCard getInstance() {
         return view == null? new ImmunizationRowCard(this):view;
     }
+
     public ImmunizationRowCard getInstance1(){
-        return new ImmunizationRowCard(this,true);
+        return new ImmunizationRowCard(this, true);
     }
-    public ImmunizationRowCard getInstance2(){
-        return new ImmunizationRowCard(this,ViewAttributes.attrs);
+
+    public ImmunizationRowCard getInstance2() {
+        return new ImmunizationRowCard(this, ViewAttributes.attrs);
     }
-    public ImmunizationRowCard getInstance3(){
-        return new ImmunizationRowCard(this,ViewAttributes.attrs,0);
+
+    public ImmunizationRowCard getInstance3() {
+        return new ImmunizationRowCard(this, ViewAttributes.attrs, 0);
     }
-    public ImmunizationRowCard getInstance4(){
-        return new ImmunizationRowCard(this,ViewAttributes.attrs,0,0);
+
+    public ImmunizationRowCard getInstance4() {
+        return new ImmunizationRowCard(this, ViewAttributes.attrs, 0, 0);
     }
 
     @Override

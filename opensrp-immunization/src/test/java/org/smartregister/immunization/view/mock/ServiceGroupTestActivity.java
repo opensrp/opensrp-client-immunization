@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
 
 /**
@@ -14,7 +13,8 @@ import org.smartregister.immunization.view.ServiceGroup;
 
 public class ServiceGroupTestActivity extends Activity {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
+    private ServiceGroup view;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -23,19 +23,22 @@ public class ServiceGroupTestActivity extends Activity {
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    ServiceGroup view;
+
+
     public ServiceGroup getInstance(){
         return view == null? new ServiceGroup(this):view;
     }
 
     public ServiceGroup getInstance2(){
-        return new ServiceGroup(this,ViewAttributes.attrs);
+        return new ServiceGroup(this, ViewAttributes.attrs);
     }
+
     public ServiceGroup getInstance3(){
-        return new ServiceGroup(this,ViewAttributes.attrs,0);
+        return new ServiceGroup(this, ViewAttributes.attrs, 0);
     }
+
     public ServiceGroup getInstance1(){
-        return new ServiceGroup(this,ViewAttributes.attrs,0,0);
+        return new ServiceGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
     @Override

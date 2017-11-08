@@ -13,20 +13,12 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
-import org.smartregister.immunization.domain.ServiceRecord;
-import org.smartregister.immunization.domain.ServiceRecordTest;
-import org.smartregister.immunization.domain.ServiceType;
-import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
-import org.smartregister.immunization.fragment.ServiceEditDialogFragment;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
-import org.smartregister.immunization.listener.ServiceActionListener;
 import org.smartregister.immunization.listener.VaccinationActionListener;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,9 +27,9 @@ import java.util.List;
  * Created by real on 05/11/17.
  */
 
-public class VaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener{
+public class VaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -47,8 +39,8 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         setContentView(linearLayout);
         startFragment();
     }
-    public void startFragment( )
-    {
+
+    public void startFragment() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
 
@@ -83,14 +75,13 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
-//        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),issuedVaccines,taglist);
-
         VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(),null,null);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add( fragment, null );
         fragmentTransaction.commit();
     }
+
     @Override
     protected void onStart() {
         super.onStart();

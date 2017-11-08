@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 
 /**
@@ -14,7 +13,8 @@ import org.smartregister.immunization.view.ImmunizationRowGroup;
 
 public class ImmunizationRowGroupTestActivity extends Activity {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
+    private ImmunizationRowGroup view;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -23,19 +23,22 @@ public class ImmunizationRowGroupTestActivity extends Activity {
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    ImmunizationRowGroup view;
-    public ImmunizationRowGroup getInstance(){
-        return view == null? new ImmunizationRowGroup(this,true):view;
+
+
+    public ImmunizationRowGroup getInstance() {
+        return view == null? new ImmunizationRowGroup(this, true):view;
     }
 
-    public ImmunizationRowGroup getInstance2(){
-        return new ImmunizationRowGroup(this,ViewAttributes.attrs);
+    public ImmunizationRowGroup getInstance2() {
+        return new ImmunizationRowGroup(this, ViewAttributes.attrs);
     }
-    public ImmunizationRowGroup getInstance3(){
-        return new ImmunizationRowGroup(this,ViewAttributes.attrs,0);
+
+    public ImmunizationRowGroup getInstance3() {
+        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0);
     }
-    public ImmunizationRowGroup getInstance1(){
-        return new ImmunizationRowGroup(this,ViewAttributes.attrs,0,0);
+
+    public ImmunizationRowGroup getInstance1() {
+        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
     @Override

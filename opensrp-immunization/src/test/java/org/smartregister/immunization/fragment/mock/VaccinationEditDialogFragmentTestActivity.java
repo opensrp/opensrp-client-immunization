@@ -17,7 +17,6 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
-import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.fragment.VaccinationEditDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 
@@ -31,8 +30,9 @@ import java.util.List;
 
 public class VaccinationEditDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
     private VaccinationEditDialogFragment fragment;
+
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
@@ -41,6 +41,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         setContentView(linearLayout);
         startFragment();
     }
+
     public void startFragment()
     {
         DateTime datetime = new DateTime();
@@ -85,9 +86,11 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         fragmentTransaction.add( fragment, null );
         fragmentTransaction.commit();
     }
+
     public VaccinationEditDialogFragment getFragment(){
         return fragment;
     }
+
     @Override
     protected void onStart() {
         super.onStart();

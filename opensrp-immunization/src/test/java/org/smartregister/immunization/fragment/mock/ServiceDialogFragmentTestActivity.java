@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
@@ -18,9 +17,7 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.fragment.ServiceDialogFragment;
-import org.smartregister.immunization.fragment.ServiceEditDialogFragment;
 import org.smartregister.immunization.listener.ServiceActionListener;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +28,7 @@ import java.util.List;
 
 public class ServiceDialogFragmentTestActivity extends Activity implements ServiceActionListener {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -57,8 +54,7 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
 
     }
 
-    public void startFragment( )
-    {
+    public void startFragment() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
 

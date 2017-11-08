@@ -1,10 +1,6 @@
 package org.smartregister.immunization.fragment.mock;
 
-
-
-
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -13,11 +9,9 @@ import android.widget.LinearLayout;
 
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
-import org.robolectric.annotation.Config;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
 import org.smartregister.immunization.domain.ServiceType;
@@ -35,7 +29,7 @@ import java.util.List;
  */
 public class FragmentUtilActivityUsingServiceActionListener extends Activity implements ServiceActionListener {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -61,8 +55,7 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
 
     }
 
-    public void startFragment( )
-    {
+    public void startFragment() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
 

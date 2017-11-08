@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
@@ -18,9 +17,7 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
-import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +29,7 @@ import java.util.List;
 public class UndoVaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
 
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -42,8 +39,8 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         setContentView(linearLayout);
         startFragment();
     }
-    public void startFragment( )
-    {
+
+    public void startFragment() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
 
@@ -86,6 +83,7 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         fragmentTransaction.add( fragment, null );
         fragmentTransaction.commit();
     }
+
     @Override
     protected void onStart() {
         super.onStart();

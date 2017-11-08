@@ -6,14 +6,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.view.VaccineCard;
@@ -27,17 +25,19 @@ import java.util.ArrayList;
 
 public class VaccineGroupTestActivity extends Activity implements View.OnClickListener,
         VaccineCard.OnVaccineStateChangeListener{
+
+    private LinearLayout linearLayout;
+    private VaccineGroup view;
+
     @Override
     public void onClick(View view) {
 
     }
+
     @Override
     public void onStateChanged(VaccineCard.State newState) {
 
     }
-
-
-    LinearLayout linearLayout;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -46,23 +46,26 @@ public class VaccineGroupTestActivity extends Activity implements View.OnClickLi
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    VaccineGroup view;
+
     public VaccineGroup getInstance(){
         return (view == null)? new VaccineGroup(this):view;
     }
+
     public VaccineGroup getInstance1(){
-        return new VaccineGroup(this,ViewAttributes.attrs);
-    }
-    public VaccineGroup getInstance2(){
-        return new VaccineGroup(this,ViewAttributes.attrs,0);
-    }
-    public VaccineGroup getInstance3(){
-        return new VaccineGroup(this,ViewAttributes.attrs,0,0);
+        return new VaccineGroup(this, ViewAttributes.attrs);
     }
 
-    public ArrayList<VaccineWrapper> vaccineWrapperList(){
-        DateTime datetime= new DateTime();
-        Alert alert = new Alert("","","", AlertStatus.complete,"","");
+    public VaccineGroup getInstance2(){
+        return new VaccineGroup(this, ViewAttributes.attrs, 0);
+    }
+
+    public VaccineGroup getInstance3(){
+        return new VaccineGroup(this, ViewAttributes.attrs, 0, 0);
+    }
+
+    public ArrayList<VaccineWrapper> vaccineWrapperList() {
+        DateTime datetime = new DateTime();
+        Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
         VaccineWrapper tag = new VaccineWrapper();
         tag.setId(VaccineWrapperTest.ID);
         tag.setDbKey(0l);

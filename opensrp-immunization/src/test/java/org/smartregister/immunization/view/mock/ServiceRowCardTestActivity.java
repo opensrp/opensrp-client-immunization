@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.view.ServiceGroup;
 import org.smartregister.immunization.view.ServiceRowCard;
 
 /**
@@ -14,7 +13,8 @@ import org.smartregister.immunization.view.ServiceRowCard;
 
 public class ServiceRowCardTestActivity extends Activity {
 
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
+    private ServiceRowCard view;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -23,19 +23,21 @@ public class ServiceRowCardTestActivity extends Activity {
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    ServiceRowCard view;
+
     public ServiceRowCard getInstance(){
         return view == null? new ServiceRowCard(this):view;
     }
 
     public ServiceRowCard getInstance2(){
-        return new ServiceRowCard(this,ViewAttributes.attrs);
+        return new ServiceRowCard(this, ViewAttributes.attrs);
     }
-    public ServiceRowCard getInstance3(){
-        return new ServiceRowCard(this,ViewAttributes.attrs,0);
+
+    public ServiceRowCard getInstance3() {
+        return new ServiceRowCard(this,ViewAttributes.attrs, 0);
     }
-    public ServiceRowCard getInstance1(){
-        return new ServiceRowCard(this,ViewAttributes.attrs,0,0);
+
+    public ServiceRowCard getInstance1() {
+        return new ServiceRowCard(this,ViewAttributes.attrs, 0, 0);
     }
 
     @Override

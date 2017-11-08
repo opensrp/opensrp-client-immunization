@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.view.ServiceRowCard;
 import org.smartregister.immunization.view.ServiceRowGroup;
 
 /**

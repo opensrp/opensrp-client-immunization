@@ -15,7 +15,6 @@ import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.view.VaccineCard;
-import org.smartregister.immunization.view.VaccineGroup;
 
 import java.util.ArrayList;
 
@@ -25,17 +24,19 @@ import java.util.ArrayList;
 
 public class VaccineCardTestActivity extends Activity implements View.OnClickListener,
         VaccineCard.OnVaccineStateChangeListener{
+
+    private LinearLayout linearLayout;
+    private VaccineCard view;
+
     @Override
     public void onClick(View view) {
 
     }
+
     @Override
     public void onStateChanged(VaccineCard.State newState) {
 
     }
-
-
-    LinearLayout linearLayout;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -44,23 +45,26 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
     }
-    VaccineCard view;
+
     public VaccineCard getInstance(){
         return (view == null)? new VaccineCard(this):view;
     }
+
     public VaccineCard getInstance1(){
-        return new VaccineCard(this,ViewAttributes.attrs);
-    }
-    public VaccineCard getInstance2(){
-        return new VaccineCard(this,ViewAttributes.attrs,0);
-    }
-    public VaccineCard getInstance3(){
-        return new VaccineCard(this,ViewAttributes.attrs,0,0);
+        return new VaccineCard(this, ViewAttributes.attrs);
     }
 
-    public ArrayList<VaccineWrapper> vaccineWrapperList(){
+    public VaccineCard getInstance2(){
+        return new VaccineCard(this, ViewAttributes.attrs, 0);
+    }
+
+    public VaccineCard getInstance3(){
+        return new VaccineCard(this, ViewAttributes.attrs, 0, 0);
+    }
+
+    public ArrayList<VaccineWrapper> vaccineWrapperList() {
         DateTime datetime= new DateTime();
-        Alert alert = new Alert("","","", AlertStatus.complete,"","");
+        Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
         VaccineWrapper tag = new VaccineWrapper();
         tag.setId(VaccineWrapperTest.ID);
         tag.setDbKey(0l);
