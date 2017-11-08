@@ -45,6 +45,8 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
     @Mock
     protected ViewGroup parentView;
 
+    private final int magicNumber = 231231;
+
     @Before
     public void setUp() {
         serviceRowAdapter = Mockito.mock(ServiceRowAdapter.class);
@@ -72,7 +74,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         //should return null
         Assert.assertNull(serviceRowAdapter.getItem(0));
 
-        Assert.assertEquals(serviceRowAdapter.getItemId(0), 231231);
+        Assert.assertEquals(serviceRowAdapter.getItemId(0), magicNumber);
     }
 
 }

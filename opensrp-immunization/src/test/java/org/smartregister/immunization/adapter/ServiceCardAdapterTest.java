@@ -43,6 +43,8 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     @Mock
     protected ViewGroup parentView;
 
+    private final int magicNumber = 231231;
+
     @Before
     public void setUp() {
         serviceCardAdapter = Mockito.mock(ServiceCardAdapter.class);
@@ -79,7 +81,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         //should return null
         Assert.assertNull(serviceCardAdapter.getItem(0));
 
-        Assert.assertEquals(serviceCardAdapter.getItemId(0),231231);
+        Assert.assertEquals(serviceCardAdapter.getItemId(0), magicNumber);
     }
 
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {

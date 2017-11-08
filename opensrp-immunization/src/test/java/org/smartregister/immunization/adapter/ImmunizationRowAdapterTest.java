@@ -41,17 +41,8 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, vaccineGroup, true));
     }
 
-//    @Test
-//    public void assertGetViewReturnsView() throws Exception {
-//        JSONObject object = new JSONObject();
-//        object = new JSONArray(VaccineData.vaccines).getJSONObject(0);
-//        ImmunizationRowAdapter adapter = new ImmunizationRowAdapter(context, vaccineGroup, true);
-//        Mockito.when(vaccineGroup.getVaccineData()).thenReturn(object);
-//        Assert.assertNull(adapter.getView(0,null,null));
-//
-//    }
     @Test
-    public void assertgetCountTestReturnsCount() throws Exception {
+    public void assertGetCountTestReturnsCount() throws Exception {
         JSONObject vaccineData = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         jsonArray.put("testvalue1");

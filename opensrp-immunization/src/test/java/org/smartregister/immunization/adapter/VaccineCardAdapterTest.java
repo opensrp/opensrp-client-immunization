@@ -3,9 +3,6 @@ package org.smartregister.immunization.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-
-import junit.framework.Assert;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +43,8 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     @Mock
     protected ViewGroup parentView;
 
+    private final int magicNumber = 231231;
+
     @Before
     public void setUp() {
         vaccineCardAdapter = Mockito.mock(VaccineCardAdapter.class);
@@ -74,8 +73,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         org.junit.Assert.assertNotNull(vaccineCardAdapter);
         org.junit.Assert.assertEquals(jsonArray.length(), vaccineCardAdapter.getCount());
 
-
-
         //returns 0 when throwsexception
         JSONObject errData = new JSONObject();
         errData.put("err", jsonArray);
@@ -84,8 +81,8 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         junit.framework.Assert.assertEquals(0, vaccineCardAdapter.getCount());
 
         //should return null
-        Assert.assertNull(vaccineCardAdapter.getItem(0));
+        junit.framework.Assert.assertNull(vaccineCardAdapter.getItem(0));
 
-        Assert.assertEquals(vaccineCardAdapter.getItemId(0), 231231);
+        junit.framework.Assert.assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
     }
 }

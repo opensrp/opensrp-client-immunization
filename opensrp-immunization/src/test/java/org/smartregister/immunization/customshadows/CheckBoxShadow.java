@@ -13,7 +13,6 @@ import org.robolectric.shadows.ShadowCompoundButton;
 @Implements(CheckBox.class)
 public class CheckBoxShadow extends ShadowCompoundButton {
 
-
     public void __constructor__(Context context) {
 
     }
@@ -48,6 +47,5 @@ public class CheckBoxShadow extends ShadowCompoundButton {
     public void setCheckedImmediately(boolean checked) {
 
     }
-
 
 }
