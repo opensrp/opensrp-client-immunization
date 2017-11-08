@@ -25,7 +25,7 @@ public class ImmunizationRowCardTestActivity extends Activity {
     }
 
     public ImmunizationRowCard getInstance() {
-        return view == null ? new ImmunizationRowCard(this):view;
+        return (view == null) ? new ImmunizationRowCard(this):view;
     }
 
     public ImmunizationRowCard getInstance1() {

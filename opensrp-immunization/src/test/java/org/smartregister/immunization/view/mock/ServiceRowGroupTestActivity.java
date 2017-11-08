@@ -25,7 +25,7 @@ public class ServiceRowGroupTestActivity extends Activity {
     }
 
     public ServiceRowGroup getInstance() {
-        return view == null ? new ServiceRowGroup(this):view;
+        return (view == null) ? new ServiceRowGroup(this):view;
     }
 
     public ServiceRowGroup getInstance2() {

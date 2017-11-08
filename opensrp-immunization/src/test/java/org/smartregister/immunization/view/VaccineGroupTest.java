@@ -100,7 +100,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         view.updateViews(wrappers);
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-        setDataForTest(format.format(new Date()) +"T00:00:00.000Z");
+        setDataForTest(format.format(new Date()) + "T00:00:00.000Z");
         view.updateViews(wrappers);
         setDataForTest("2018-01-01T00:00:00.000Z");
         view.updateViews(wrappers);
@@ -151,7 +151,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
         view.updateWrapper(wrapper);
         wrapper = new VaccineWrapper();
-        wrapper.setName(VaccineRepo.Vaccine.bcg2.display() +"/:D");
+        wrapper.setName(VaccineRepo.Vaccine.bcg2.display() + "/:D");
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
         view.updateWrapper(wrapper);
         Assert.assertNotNull(view.getAllVaccineWrappers());
@@ -164,7 +164,6 @@ public class VaccineGroupTest extends BaseUnitTest {
         view.setModalOpen(false);
         Assert.assertEquals(view.isModalOpen(), false);
     }
-
 
     @Test
     public void assertOnStateChangedCallsUpdateViews() throws Exception {

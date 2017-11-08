@@ -57,6 +57,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
     private Context context;
 
     private ActivityController<ServiceRowCardTestActivity> controller;
+    private final String magicOne = "1";
 
     @InjectMocks
     private ServiceRowCardTestActivity activity;
@@ -79,9 +80,9 @@ public class ServiceRowCardTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
-        serviceRecord.setEventId("1");
+        serviceRecord.setEventId(magicOne);
         Event event = new Event();
-        event.setEventId("1");
+        event.setEventId(magicOne);
         event.setDateCreated(new DateTime());
 
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);

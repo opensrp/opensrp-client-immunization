@@ -26,7 +26,7 @@ public class ServiceGroupTestActivity extends Activity {
 
 
     public ServiceGroup getInstance() {
-        return view == null ? new ServiceGroup(this):view;
+        return (view == null) ? new ServiceGroup(this):view;
     }
 
     public ServiceGroup getInstance2() {

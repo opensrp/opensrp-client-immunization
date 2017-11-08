@@ -22,16 +22,12 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
-import org.smartregister.immunization.domain.Vaccine;
-import org.smartregister.immunization.domain.VaccineTest;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.mock.ServiceRowGroupTestActivity;
 
 /**

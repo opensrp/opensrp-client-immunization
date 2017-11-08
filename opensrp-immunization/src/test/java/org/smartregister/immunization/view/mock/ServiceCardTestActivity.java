@@ -25,7 +25,7 @@ public class ServiceCardTestActivity extends Activity {
     }
 
     public ServiceCard getInstance() {
-        return view == null ? new ServiceCard(this):view;
+        return (view == null) ? new ServiceCard(this):view;
     }
 
     public ServiceCard getInstance2() {
