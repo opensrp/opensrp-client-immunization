@@ -3,6 +3,7 @@ package org.smartregister.immunization.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ public class UndoServiceDialogFragment extends DialogFragment {
     private ServiceActionListener listener;
     public static final String DIALOG_TAG = "UndoServiceDialogFragment";
     public static final String WRAPPER_TAG = "tag";
+    private DialogInterface.OnDismissListener onDismissListener;
 
     public static UndoServiceDialogFragment newInstance(
             ServiceWrapper tag) {
@@ -146,5 +148,18 @@ public class UndoServiceDialogFragment extends DialogFragment {
             }
         });
 
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 }
