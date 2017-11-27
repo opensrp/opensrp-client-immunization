@@ -660,6 +660,16 @@ public class VaccinatorUtils {
         String supportedVaccinesString = org.smartregister.util.Utils.readAssetContents(context, "vaccines.json");
         return supportedVaccinesString;
     }
+    /**
+     * Returns a JSON String containing a list of supported woman vaccines
+     *
+     * @param context Current valid context to be used
+     * @return JSON String with the supported vaccines or NULL if unable to obtain the list
+     */
+    public static String getSupportedWomanVaccines(Context context) {
+       String supportedVaccinesString = org.smartregister.util.Utils.readAssetContents(context, "mother_vaccines.json");
+       return supportedVaccinesString;
+    }
 
     public static String getSpecialVaccines(Context context) {
         String specialVaccinesString = org.smartregister.util.Utils.readAssetContents(context, "special_vaccines.json");
