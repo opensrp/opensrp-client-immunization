@@ -76,7 +76,16 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         //returns 0 when throwsexception
         JSONObject errData = new JSONObject();
         errData.put("err", jsonArray);
-        vaccineGroup.setData(errData, commonPersonObjectClient, vaccineList, alerts);
+        vaccineGroup.setData(errData, commonPersonObjectClient, vaccineList, alerts,"mother");
+        Mockito.when(vaccineGroup.getVaccineData()).thenReturn(errData);
+        junit.framework.Assert.assertEquals(0, vaccineCardAdapter.getCount());
+
+        //should return null
+        junit.framework.Assert.assertNull(vaccineCardAdapter.getItem(0));
+
+        junit.framework.Assert.assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
+
+        vaccineGroup.setData(errData, commonPersonObjectClient, vaccineList, alerts,"child");
         Mockito.when(vaccineGroup.getVaccineData()).thenReturn(errData);
         junit.framework.Assert.assertEquals(0, vaccineCardAdapter.getCount());
 

@@ -145,7 +145,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
         setDataForTest(magicDate);
-        view.updateWrapperStatus(wrappers);
+        view.updateWrapperStatus(wrappers,VaccineRepository.TYPE_Synced);
         wrapper = new VaccineWrapper();
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
@@ -206,7 +206,8 @@ public class VaccineGroupTest extends BaseUnitTest {
         vaccinelist.add(vaccine);
         alertlist =  new ArrayList<Alert>();
         alertlist.add(alert);
-        view.setData(vaccineData, childdetails, vaccinelist, alertlist);
+        view.setData(vaccineData, childdetails, vaccinelist, alertlist,"mother");
+        view.setData(vaccineData, childdetails, vaccinelist, alertlist,"child");
     }
 
     @Test

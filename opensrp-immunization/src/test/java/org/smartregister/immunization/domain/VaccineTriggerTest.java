@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.db.VaccineRepo;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -47,7 +49,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
         String notNull = vaccineTrigger.getWindow();
         Mockito.verify(vaccineTrigger, Mockito.times(1)).getWindow();
         junit.framework.Assert.assertNull(notNull);
-        vaccineTrigger = new VaccineTrigger("", "win");
+        vaccineTrigger = new VaccineTrigger("", "win", VaccineRepo.Vaccine.opv0);
         junit.framework.Assert.assertNotNull(vaccineTrigger.getWindow());
     }
 
