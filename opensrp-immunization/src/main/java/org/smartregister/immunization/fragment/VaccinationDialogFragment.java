@@ -3,6 +3,7 @@ package org.smartregister.immunization.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ public class VaccinationDialogFragment extends DialogFragment {
     public static final String WRAPPER_TAG = "tag";
     private boolean disableConstraints;
     private Calendar dcToday;
+    private DialogInterface.OnDismissListener onDismissListener;
 
     public static VaccinationDialogFragment newInstance(Date dateOfBirth,
                                                         List<Vaccine> issuedVaccines,
@@ -507,7 +509,10 @@ public class VaccinationDialogFragment extends DialogFragment {
         VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
                 vaccineName);
         Date minDate = null;
-
+        if(curVaccineSchedule == null){
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
         if (curVaccineSchedule != null) {
             minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
         }
@@ -519,7 +524,10 @@ public class VaccinationDialogFragment extends DialogFragment {
         VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
                 vaccineName);
         Date maxDate = null;
-
+        if(curVaccineSchedule == null){
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
         if (curVaccineSchedule != null) {
             maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
         }
@@ -629,6 +637,19 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         }
         return null;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 
 }

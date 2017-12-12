@@ -15,7 +15,8 @@ import java.util.List;
 public class VaccineTrigger {
     private enum Reference {
         DOB,
-        PREREQUISITE
+        PREREQUISITE,
+        LMP
     }
 
     private final Reference reference;
@@ -29,9 +30,12 @@ public class VaccineTrigger {
             final String OFFSET = "offset";
             final String PREREQUISITE = "prerequisite";
             final String WINDOW = "window";
+            final String LMP = "lmp";
             if (data.getString(REFERENCE).equalsIgnoreCase(Reference.DOB.name())) {
-                return new VaccineTrigger(data.getString(OFFSET), data.has(WINDOW) ? data.getString(WINDOW) : null);
-            } else if (data.getString(REFERENCE).equalsIgnoreCase(Reference.PREREQUISITE.name())) {
+                return new VaccineTrigger(data.getString(OFFSET), data.has(WINDOW) ? data.getString(WINDOW) : null , Reference.DOB);
+            }else if (data.getString(REFERENCE).equalsIgnoreCase(Reference.LMP.name())) {
+                return new VaccineTrigger(data.getString(OFFSET),data.has(WINDOW) ? data.getString(WINDOW) : null, Reference.LMP);
+            }else if (data.getString(REFERENCE).equalsIgnoreCase(Reference.PREREQUISITE.name())) {
                 VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.getString(PREREQUISITE),
                         vaccineCategory);
                 if (prerequisite != null) {
@@ -43,8 +47,8 @@ public class VaccineTrigger {
         return null;
     }
 
-    public VaccineTrigger(String offset, String window) {
-        this.reference = Reference.DOB;
+    public VaccineTrigger(String offset, String window ,Reference reference) {
+        this.reference = reference;
         this.offset = offset;
         this.prerequisite = null;
         this.window = window;
@@ -73,7 +77,16 @@ public class VaccineTrigger {
                 dobCalendar = VaccineSchedule.addOffsetToCalendar(dobCalendar, offset);
                 return dobCalendar.getTime();
             }
-        } else if (reference.equals(Reference.PREREQUISITE)) {
+        }else if (reference.equals(Reference.LMP)) {
+            if (dob != null) {
+                Calendar dobCalendar = Calendar.getInstance();
+                dobCalendar.setTime(dob);
+                VaccineSchedule.standardiseCalendarDate(dobCalendar);
+
+                dobCalendar = VaccineSchedule.addOffsetToCalendar(dobCalendar, offset);
+                return dobCalendar.getTime();
+            }
+        }else if (reference.equals(Reference.PREREQUISITE)) {
             // Check if prerequisite is in the list of issued vaccines
             Vaccine issuedPrerequisite = null;
             for (Vaccine curVaccine : issuedVaccines) {
