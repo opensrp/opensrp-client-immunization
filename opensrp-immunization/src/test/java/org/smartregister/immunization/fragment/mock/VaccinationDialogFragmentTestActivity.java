@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -73,11 +74,13 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
-        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), null, null);
+//        VaccinationDialogFragmentMock fragment = VaccinationDialogFragmentMock.newInstance(new java.util.Date(), null, null);
+        VaccinationDialogFragmentMock fragment = VaccinationDialogFragmentMock.newInstance(new java.util.Date(), issuedVaccines, taglist);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
+
     }
 
     @Override

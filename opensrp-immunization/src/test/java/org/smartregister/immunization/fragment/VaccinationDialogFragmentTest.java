@@ -2,6 +2,8 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +12,12 @@ import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +26,7 @@ import java.util.Date;
 /**
  * Created by onaio on 30/08/2017.
  */
+@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
 public class VaccinationDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationDialogFragmentTestActivity> controller;
@@ -39,6 +45,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
         controller.setup();
+
     }
 
     @After
