@@ -73,25 +73,40 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = Mockito.spy(inflater);
-        LinearLayout vaccineNameLayout = new LinearLayout(RuntimeEnvironment.application);
-        CheckBox checkBox = new CheckBox(RuntimeEnvironment.application);
-        checkBox.setId(R.id.select);
-        RadioButton radioButton = new RadioButton(RuntimeEnvironment.application);
-        radioButton.setId(R.id.radio);
+        ViewGroup dialogViewMock = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
+        ViewGroup dialogView = Mockito.spy((ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false));
+        Mockito.doReturn(dialogView).when(this.inflater).inflate(R.layout.vaccination_dialog_view, container, false);
+        LinearLayout vaccinationNameLayout = Mockito.spy((LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout));
+        Mockito.doReturn(vaccinationNameLayout).when(dialogView).findViewById(R.id.vaccination_name_layout);
+
+        LinearLayout vaccineName = Mockito.spy(new LinearLayout(RuntimeEnvironment.application));
+        CheckBoxMock checkBox = Mockito.mock(CheckBoxMock.class);
+        RadioButtonMock radioButton = Mockito.mock(RadioButtonMock.class);//new RadioButtonMock(RuntimeEnvironment.application);
         TextView textView = new TextView(RuntimeEnvironment.application);
-        textView.setId(R.id.vaccine);
-        vaccineNameLayout.addView(checkBox);
-        vaccineNameLayout.addView(radioButton);
-        vaccineNameLayout.addView(textView);
-        Mockito.doReturn(vaccineNameLayout).when(this.inflater).inflate(R.layout.vaccination_name, null);
+        Mockito.doReturn(vaccineName).when(this.inflater).inflate(R.layout.vaccination_name, null);
+        Mockito.doReturn(radioButton).when(vaccineName).findViewById(R.id.radio);
+        Mockito.doReturn(textView).when(vaccineName).findViewById(R.id.vaccine);
+        Mockito.doReturn(checkBox).when(vaccineName).findViewById(R.id.select);
+        Mockito.doNothing().when(vaccinationNameLayout).addView(vaccineName);
+        Mockito.doReturn(1).when(vaccinationNameLayout).getChildCount();
+        Mockito.doReturn(vaccineName).when(vaccinationNameLayout).getChildAt(0);
         try{
             VaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        super.onCreateView(this.inflater, container, savedInstanceState);
 
-        return super.onCreateView(this.inflater, container, savedInstanceState);
+        dialogView.findViewById(R.id.set).performClick();
+        dialogView.findViewById(R.id.vaccinate_today).performClick();
+        dialogView.findViewById(R.id.vaccinate_earlier).performClick();
+        return dialogViewMock;
+    }
+
+    @Override
+    public void dismiss() {
+//        super.dismiss();
     }
 
     @Override
