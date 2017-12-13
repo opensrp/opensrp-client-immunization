@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
 import org.joda.time.DateTime;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class ServiceDialogFragmentTestActivity extends Activity implements ServiceActionListener {
 
+    private ServiceDialogFragment fragment;
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
@@ -36,6 +38,24 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
         startFragment();
+        startFragmentWithITN();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        View view = fragment.getView();
+        view.findViewById(R.id.yes_1).performClick();
+        view.findViewById(R.id.no_1).performClick();
+        view.findViewById(R.id.cancel_1).performClick();
+        view.findViewById(R.id.itn_date_picker).performClick();
+        view.findViewById(R.id.go_back_2).performClick();
+        view.findViewById(R.id.yes_3).performClick();
+        view.findViewById(R.id.no_3).performClick();
+        view.findViewById(R.id.go_back_3).performClick();
+        view.findViewById(R.id.set).performClick();
+        view.findViewById(R.id.given_today).performClick();
+        view.findViewById(R.id.given_earlier).performClick();
     }
 
     @Override
@@ -62,12 +82,12 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
 
         issuedServices.add(serviceRecord);
         ServiceWrapper tag = new ServiceWrapper();
-//        tag.setId(ServiceWrapperTest.ID);
+        tag.setId(ServiceWrapperTest.ID);
         tag.setDbKey(0l);
         tag.setStatus(ServiceWrapperTest.STATUS);
         tag.setVaccineDate(datetime);
         tag.setAlert(alert);
-        tag.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
+        tag.setDefaultName("Vitamin X");
         tag.setPreviousVaccine(ServiceWrapperTest.ID);
         tag.setColor(ServiceWrapperTest.COLOR);
         tag.setDob(datetime);
@@ -85,7 +105,45 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         tag.setPhoto(photo);
         tag.setGender(ServiceWrapperTest.GENDER);
         tag.setSynced(true);
-        ServiceDialogFragment fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
+        fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(fragment, null);
+        fragmentTransaction.commit();
+    }
+    public void startFragmentWithITN() {
+        DateTime datetime = new DateTime();
+        Alert alert = Mockito.mock(Alert.class);
+
+        List<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+
+        issuedServices.add(serviceRecord);
+        ServiceWrapper tag = new ServiceWrapper();
+        tag.setId(ServiceWrapperTest.ID);
+        tag.setDbKey(0l);
+        tag.setStatus(ServiceWrapperTest.STATUS);
+        tag.setVaccineDate(datetime);
+        tag.setAlert(alert);
+        tag.setDefaultName("Vitamin X");
+        tag.setPreviousVaccine(ServiceWrapperTest.ID);
+        tag.setColor(ServiceWrapperTest.COLOR);
+        tag.setDob(datetime);
+        ServiceType serviceType = new ServiceType();
+        serviceType.setUnits("units");
+        serviceType.setType("ITN");
+        serviceType.setId(0l);
+        tag.setServiceType(serviceType);
+        serviceType.setName(ServiceWrapperTest.NAME);
+        tag.setValue(ServiceWrapperTest.VALUE);
+        tag.setPatientName(ServiceWrapperTest.PATIENTNAME);
+        tag.setUpdatedVaccineDate(datetime, true);
+        tag.setPatientNumber(ServiceWrapperTest.NUMBER);
+        Photo photo = Mockito.mock(Photo.class);
+        tag.setPhoto(photo);
+        tag.setGender(ServiceWrapperTest.GENDER);
+        tag.setSynced(true);
+        fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(fragment, null);
