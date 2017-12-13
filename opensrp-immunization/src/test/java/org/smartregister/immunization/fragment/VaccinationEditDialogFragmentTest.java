@@ -11,11 +11,14 @@ import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
 
 import java.util.ArrayList;
@@ -25,7 +28,7 @@ import java.util.Date;
 /**
  * Created by onaio on 30/08/2017.
  */
-
+@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationEditDialogFragmentTestActivity> controller;
