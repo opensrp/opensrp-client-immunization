@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -30,6 +31,7 @@ import java.util.List;
 public class FragmentUtilActivityUsingServiceActionListener extends Activity implements ServiceActionListener {
 
     private LinearLayout linearLayout;
+    private ServiceEditDialogFragment fragment;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -38,6 +40,16 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
         startFragment();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        View view = fragment.getView();
+        view.findViewById(R.id.set).performClick();
+        view.findViewById(R.id.vaccinate_today).performClick();
+        view.findViewById(R.id.vaccinate_earlier).performClick();
+
     }
 
     @Override
@@ -64,7 +76,7 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
 
         issuedServices.add(serviceRecord);
         ServiceWrapper tag = new ServiceWrapper();
-//        tag.setId(ServiceWrapperTest.ID);
+        tag.setId(ServiceWrapperTest.ID);
         tag.setDbKey(0l);
         tag.setStatus(ServiceWrapperTest.STATUS);
         tag.setVaccineDate(datetime);
@@ -87,7 +99,7 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
         tag.setPhoto(photo);
         tag.setGender(ServiceWrapperTest.GENDER);
         tag.setSynced(true);
-        ServiceEditDialogFragment fragment = ServiceEditDialogFragment.newInstance(datetime, issuedServices, tag, linearLayout, true);
+        fragment = ServiceEditDialogFragment.newInstance(datetime, issuedServices, tag, linearLayout, true);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(fragment, null);

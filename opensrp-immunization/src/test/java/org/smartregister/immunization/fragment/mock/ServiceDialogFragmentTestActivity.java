@@ -48,11 +48,13 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         view.findViewById(R.id.yes_1).performClick();
         view.findViewById(R.id.no_1).performClick();
         view.findViewById(R.id.cancel_1).performClick();
-        view.findViewById(R.id.itn_date_picker).performClick();
+        view.findViewById(R.id.record_itn).performClick();
         view.findViewById(R.id.go_back_2).performClick();
         view.findViewById(R.id.yes_3).performClick();
         view.findViewById(R.id.no_3).performClick();
         view.findViewById(R.id.go_back_3).performClick();
+        //Check onClick callback
+        view.findViewById(R.id.itn_date_picker).performClick();
         view.findViewById(R.id.set).performClick();
         view.findViewById(R.id.given_today).performClick();
         view.findViewById(R.id.given_earlier).performClick();

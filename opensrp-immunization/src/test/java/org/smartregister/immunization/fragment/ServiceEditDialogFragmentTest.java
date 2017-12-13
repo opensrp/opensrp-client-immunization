@@ -18,13 +18,14 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
+import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
 import java.util.Collections;
 
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class})
+@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
 public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<FragmentUtilActivityUsingServiceActionListener> controller;
