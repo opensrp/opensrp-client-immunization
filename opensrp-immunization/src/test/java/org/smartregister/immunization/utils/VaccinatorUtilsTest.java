@@ -1,6 +1,12 @@
 package org.smartregister.immunization.utils;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.res.Resources;
+import android.view.LayoutInflater;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,6 +16,7 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.AlertStatus;
@@ -20,6 +27,7 @@ import org.smartregister.immunization.domain.ServiceData;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
+import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.JsonFormUtils;
