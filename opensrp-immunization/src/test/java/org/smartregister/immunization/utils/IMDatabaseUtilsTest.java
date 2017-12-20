@@ -1,6 +1,7 @@
 package org.smartregister.immunization.utils;
 
 import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.Utils;
+
 import java.util.ArrayList;
 
 /**

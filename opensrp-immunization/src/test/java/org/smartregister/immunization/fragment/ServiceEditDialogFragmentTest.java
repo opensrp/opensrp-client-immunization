@@ -3,6 +3,7 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -20,12 +21,13 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
+
 import java.util.Collections;
 
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<FragmentUtilActivityUsingServiceActionListener> controller;

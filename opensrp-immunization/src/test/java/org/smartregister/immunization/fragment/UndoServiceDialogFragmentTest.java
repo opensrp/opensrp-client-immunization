@@ -2,7 +2,9 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

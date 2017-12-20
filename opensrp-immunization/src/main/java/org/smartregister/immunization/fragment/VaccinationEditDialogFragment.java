@@ -439,7 +439,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     private Date getMinVaccineDate(String vaccineName) {
         VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
                 vaccineName);
-        if(curVaccineSchedule == null){
+        if (curVaccineSchedule == null) {
             curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
                     vaccineName);
         }
@@ -455,7 +455,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     private Date getMaxVaccineDate(String vaccineName) {
         VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
                 vaccineName);
-        if(curVaccineSchedule == null){
+        if (curVaccineSchedule == null) {
             curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
                     vaccineName);
         }

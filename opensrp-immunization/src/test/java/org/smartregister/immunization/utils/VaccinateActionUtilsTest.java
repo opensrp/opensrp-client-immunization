@@ -2,7 +2,9 @@ package org.smartregister.immunization.utils;
 
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
 import junit.framework.Assert;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.service.AlertService;
 import org.smartregister.util.FormUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -126,7 +129,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     public void assertFindRowTestReturnsTableRow() throws Exception {
         String tag = "TAG";
         String wrong_tag = "WRONG TAG";
-        Set<TableLayout>tables = new HashSet<TableLayout>();
+        Set<TableLayout> tables = new HashSet<TableLayout>();
         TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
         TableRow row = new TableRow(RuntimeEnvironment.application);
         row.setTag(tag);
@@ -227,7 +230,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertAddBcg2SpecialVaccineTestReturnsSpecialVaccinesOnHasVaccineAndGetVaccineMethods() throws Exception {
-        List<Vaccine>list = new ArrayList<Vaccine>();
+        List<Vaccine> list = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
         v.setName("BCG 2");
         list.add(v);
@@ -255,11 +258,11 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     @Test
     public void assertPopulateDefaultAlertsTestReturnsAlerts() throws Exception {
         VaccinateActionUtils.populateDefaultAlerts(null, null, null, null, null, null);
-        List<Vaccine>vlist = new ArrayList<Vaccine>();
+        List<Vaccine> vlist = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
         v.setName(magicBCG);
         vlist.add(v);
-        List<Alert>alist = new ArrayList<Alert>();
+        List<Alert> alist = new ArrayList<Alert>();
         Alert a = new Alert("caseID", magicBCG, magicBCG, AlertStatus.normal, new Date().toString(), new Date().toString());
         alist.add(a);
         VaccineRepo.Vaccine vaccine[] = {VaccineRepo.Vaccine.bcg};

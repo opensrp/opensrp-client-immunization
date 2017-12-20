@@ -2,7 +2,6 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
-import android.view.LayoutInflater;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,6 +18,7 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,7 +26,7 @@ import java.util.Date;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class VaccinationDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationDialogFragmentTestActivity> controller;

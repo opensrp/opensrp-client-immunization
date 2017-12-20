@@ -23,8 +23,7 @@
             android:layout_centerVertical="true"
             android:paddingLeft="20dp"
             android:text="@string/opv"
-            android:textColor="@color/dark_grey"
-            />
+            android:textColor="@color/dark_grey" />
 
         <Button
             android:id="@+id/status"

@@ -2,6 +2,7 @@ package org.smartregister.immunization.db;
 
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
+
 import java.util.ArrayList;
 
 /**

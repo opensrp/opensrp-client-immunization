@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -14,11 +15,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
-import org.junit.Test;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,9 +44,9 @@ public class VaccineScheduleTest extends BaseUnitTest {
 
     @Mock
     private AlertService alertService;
-    
+
     private final String magic10d = "+10d";
-    
+
     private final String magicChild = "child";
 
     private final String magicOPV0 = "OPV 0";
@@ -95,7 +96,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
         Assert.assertNull(vaccineCondition.init("", object));
 
         VaccineCondition.NotGivenCondition notgiven = new VaccineCondition.NotGivenCondition(VaccineRepo.Vaccine.opv0);
-        List<Vaccine>list = new ArrayList<Vaccine>();
+        List<Vaccine> list = new ArrayList<Vaccine>();
         list.add(newVaccine);
         Assert.assertNotNull(notgiven.passes(list));
 

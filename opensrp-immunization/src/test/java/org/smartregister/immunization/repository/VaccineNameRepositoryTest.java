@@ -1,7 +1,9 @@
 package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
+
 import net.sqlcipher.database.SQLiteDatabase;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

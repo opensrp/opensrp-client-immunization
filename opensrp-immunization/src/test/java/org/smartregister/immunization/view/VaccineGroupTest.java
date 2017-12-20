@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -24,6 +25,7 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.mock.ViewAttributes;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +47,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
     private VaccineWrapper wrapper;
-    private ArrayList<VaccineWrapper>wrappers;
+    private ArrayList<VaccineWrapper> wrappers;
     private final String magicDate = "1985-07-24T00:00:00.000Z";
 
     @Before
@@ -85,7 +87,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertEqualsAlertList()throws Exception {
+    public void assertEqualsAlertList() throws Exception {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getAlertList(), alertlist);
     }
@@ -145,7 +147,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
         setDataForTest(magicDate);
-        view.updateWrapperStatus(wrappers,VaccineRepository.TYPE_Synced);
+        view.updateWrapperStatus(wrappers, VaccineRepository.TYPE_Synced);
         wrapper = new VaccineWrapper();
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
@@ -189,25 +191,25 @@ public class VaccineGroupTest extends BaseUnitTest {
         wrappers.add(wrapper);
         JSONArray vaccineArray = new JSONArray(VaccineData.vaccines);
         vaccineData = vaccineArray.getJSONObject(0);
-        HashMap<String, String>detail = new HashMap<String, String>();
+        HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(), 
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
         vaccinelist = new ArrayList<Vaccine>();
         vaccinelist.add(vaccine);
-        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(), 
+        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(), 
+        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        alertlist =  new ArrayList<Alert>();
+        alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
-        view.setData(vaccineData, childdetails, vaccinelist, alertlist,"mother");
-        view.setData(vaccineData, childdetails, vaccinelist, alertlist,"child");
+        view.setData(vaccineData, childdetails, vaccinelist, alertlist, "mother");
+        view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");
     }
 
     @Test

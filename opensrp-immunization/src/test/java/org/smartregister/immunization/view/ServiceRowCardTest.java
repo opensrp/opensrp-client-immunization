@@ -3,6 +3,7 @@ package org.smartregister.immunization.view;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.After;
@@ -37,6 +38,7 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.view.mock.ServiceRowCardTestActivity;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
+
 import java.util.Date;
 
 /**
@@ -64,7 +66,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-    
+
     private final String magicDue = "due";
     private final String magicDefault = "DEFAULT";
     private final String magicExpired = "expired";
@@ -76,7 +78,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(ServiceRowCardTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-        
+
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
@@ -182,7 +184,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         view.setServiceWrapper(wrapper);
         Assert.assertEquals(view.getState(), ServiceRowCard.State.DONE_CAN_BE_UNDONE);
     }
-    
+
     @Test
     public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
@@ -190,7 +192,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
-    
+
     @After
     public void tearDown() {
         destroyController();
@@ -198,7 +200,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         controller = null;
 
     }
-    
+
     private void destroyController() {
         try {
             activity.finish();

@@ -2,6 +2,7 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +29,7 @@ import java.util.Date;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationEditDialogFragmentTestActivity> controller;

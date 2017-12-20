@@ -3,6 +3,7 @@ package org.smartregister.immunization.service.intent;
 import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
     public void onStartCommandTest() {
         Application application = RuntimeEnvironment.application;
 
-        Intent intent =  new Intent(application, RecurringIntentService.class);
+        Intent intent = new Intent(application, RecurringIntentService.class);
 
         RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
         recurringIntentService.onHandleIntent(new Intent());

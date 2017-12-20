@@ -1,19 +1,18 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -27,18 +26,16 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
-import org.smartregister.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
  */
 @PrepareForTest({ImmunizationLibrary.class})
-@Config(shadows = {FontTextViewShadow.class,ImageUtilsShadow.class,ImmunizationRowCardShadow.class})
+@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
 @PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
@@ -65,7 +62,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
         CoreLibrary.init(context_);
-        view = new ImmunizationRowGroup(RuntimeEnvironment.application,false);
+        view = new ImmunizationRowGroup(RuntimeEnvironment.application, false);
         setDataForTest(magicDate);
     }
 
@@ -94,7 +91,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     public void assertGetViewReturnsVaccineGroup() throws Exception {
         ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view, true);
 
-        junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0,null,null)!=null,true);
+        junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
 
     }
 
@@ -119,10 +116,10 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         vaccineData = vaccineArray.getJSONObject(0);
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
-        detail.put("gender","male");
-        detail.put("zeir_id","1");
-        detail.put("first_name","");
-        detail.put("last_name","");
+        detail.put("gender", "male");
+        detail.put("zeir_id", "1");
+        detail.put("first_name", "");
+        detail.put("last_name", "");
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),

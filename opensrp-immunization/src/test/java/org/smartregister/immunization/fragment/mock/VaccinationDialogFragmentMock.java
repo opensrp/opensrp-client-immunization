@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +19,7 @@ import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +89,7 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
         Mockito.doNothing().when(vaccinationNameLayout).addView(vaccineName);
         Mockito.doReturn(1).when(vaccinationNameLayout).getChildCount();
         Mockito.doReturn(vaccineName).when(vaccinationNameLayout).getChildAt(0);
-        try{
+        try {
             VaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
         } catch (JSONException e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
@@ -18,6 +19,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.fragment.UndoServiceDialogFragment;
 import org.smartregister.immunization.listener.ServiceActionListener;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

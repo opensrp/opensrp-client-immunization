@@ -3,12 +3,13 @@ package org.smartregister.immunization.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+
 import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -22,10 +23,9 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
-import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class,ImageUtilsShadow.class,ServiceCardShadow.class})
+@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceCardShadow.class})
 public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Mock
@@ -46,7 +46,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
-    private ArrayList<ServiceWrapper>wrappers;
+    private ArrayList<ServiceWrapper> wrappers;
     @Mock
     protected View convertView;
     private ServiceWrapper wrapper;
@@ -61,7 +61,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     public void setUp() throws Exception {
         view = new ServiceGroup(RuntimeEnvironment.application);
         setDataForTest(magicDate);
-        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application,view);
+        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
@@ -72,7 +72,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertGetViewReturnsServiceGroup() {
-        org.junit.Assert.assertEquals(serviceCardAdapter.getView(0,null,null) !=null, true);
+        org.junit.Assert.assertEquals(serviceCardAdapter.getView(0, null, null) != null, true);
     }
 
     @Test
@@ -97,6 +97,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         }
         return keys;
     }
+
     public void setDataForTest(String dateTimeString) throws Exception {
         wrappers = new ArrayList<ServiceWrapper>();
         wrapper = new ServiceWrapper();
@@ -114,16 +115,16 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
-        detail.put("gender","male");
-        detail.put("zeir_id","1");
-        detail.put("first_name","");
-        detail.put("last_name","");
+        detail.put("gender", "male");
+        detail.put("zeir_id", "1");
+        detail.put("first_name", "");
+        detail.put("last_name", "");
         CommonPersonObjectClient childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
 
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
-        List<Alert>alertlist =  new ArrayList<Alert>();
+        List<Alert> alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
         Map<String, List<ServiceType>> serviceTypeMap = new HashMap<String, List<ServiceType>>();
         ServiceType serviceType = new ServiceType();
@@ -141,7 +142,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         serviceType.setExpiryOffset(ServiceTypeTest.EXPIRYOFFSET);
         serviceType.setMilestoneOffset(ServiceTypeTest.MILESTONEOFFSET);
         serviceType.setUpdatedAt(0l);
-        ArrayList<ServiceType>serviceTypes = new ArrayList<ServiceType>();
+        ArrayList<ServiceType> serviceTypes = new ArrayList<ServiceType>();
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
         List<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();

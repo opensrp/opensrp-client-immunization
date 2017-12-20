@@ -1,11 +1,6 @@
 package org.smartregister.immunization.utils;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.res.Resources;
-import android.view.LayoutInflater;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +11,6 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.AlertStatus;
@@ -27,7 +21,6 @@ import org.smartregister.immunization.domain.ServiceData;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
-import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.JsonFormUtils;
@@ -36,6 +29,7 @@ import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.util.VaccineScheduleUtils;
 import org.smartregister.util.Utils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,17 +49,17 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Mock
     private Context context;
-    
+
     @Mock
     private CommonRepository commonRepository;
-    
+
     @Mock
     private VaccinatorUtils vaccinatorUtils;
 
     private final int magicColor = 255;
     private final String magicOPV0 = "OPV 0";
     private final String magicNULL = "NULL";
-    
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -132,7 +126,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
 
     }
-    
+
     @Test
     public void assertReceivedServicesTestReturnsService() throws Exception {
         List<ServiceRecord> serviceRecordList = new ArrayList<ServiceRecord>();
@@ -152,7 +146,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         vaccines.add(v);
         Assert.assertNotNull(VaccinatorUtils.receivedVaccines(vaccines));
     }
-    
+
     @Test
     public void assertGetVaccineCalculationTestReturnsCalculation() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);

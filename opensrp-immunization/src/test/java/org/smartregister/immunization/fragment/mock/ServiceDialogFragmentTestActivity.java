@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
@@ -19,6 +20,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.fragment.ServiceDialogFragment;
 import org.smartregister.immunization.listener.ServiceActionListener;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +32,7 @@ import java.util.List;
 public class ServiceDialogFragmentTestActivity extends Activity implements ServiceActionListener {
 
     private ServiceDialogFragment fragment;
+
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
@@ -113,6 +116,7 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
         fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
+
     public void startFragmentWithITN() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);

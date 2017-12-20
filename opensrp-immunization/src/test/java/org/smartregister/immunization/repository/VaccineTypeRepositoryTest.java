@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -42,9 +43,10 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Mock
     private SQLiteDatabase sqliteDatabase;
-    
+
     private final long magicL = 10l;
     private final int magic10 = 10;
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -63,7 +65,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
         PowerMockito.doReturn(list).when(spy).findIDByName(org.mockito.ArgumentMatchers.anyString());
         Assert.assertEquals(spy.getDosesPerVial(""), magic10);
     }
-    
+
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() throws Exception {
         VaccineTypeRepository vaccineRepository = new VaccineTypeRepository(repository, commonFtsObject, alertService);
@@ -112,9 +114,9 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     @Test
     public void verifyFindallVaccineTypcallsDatabaseQueryMethod1Times() throws Exception {
 //        Cursor cursor = PowerMockito.mock(Cursor.class);
-        String[] columns = new String[] {VaccineTypeRepository.ID_COLUMN, VaccineTypeRepository.DOSES, VaccineTypeRepository.NAME, VaccineTypeRepository.OPENMRS_PARENT_ENTITIY_ID, VaccineTypeRepository.OPENMRS_DATE_CONCEPT_ID, VaccineTypeRepository.OPENMRS_DOSE_CONCEPT_ID};
+        String[] columns = new String[]{VaccineTypeRepository.ID_COLUMN, VaccineTypeRepository.DOSES, VaccineTypeRepository.NAME, VaccineTypeRepository.OPENMRS_PARENT_ENTITIY_ID, VaccineTypeRepository.OPENMRS_DATE_CONCEPT_ID, VaccineTypeRepository.OPENMRS_DOSE_CONCEPT_ID};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, 1, "", "", "", ""});
+        cursor.addRow(new Object[]{1l, 1, "", "", "", ""});
 
         Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
         Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);

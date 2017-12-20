@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -35,6 +34,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
     private LinearLayout linearLayout;
     private VaccinationEditDialogFragment fragment;
     private int fragmentId = 0;
+
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
@@ -56,7 +56,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         super.onPostCreate(savedInstanceState);
 
         View view = fragment.getView();
-        if(fragmentId==0) {
+        if (fragmentId == 0) {
             view.findViewById(R.id.set).performClick();//need to mock CheckBox
             view.findViewById(R.id.vaccinate_earlier).performClick();//need to mock CheckBox
         }
@@ -99,7 +99,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
         tag = new VaccineWrapper();
         tag.setId(VaccineWrapperTest.ID);
@@ -165,7 +165,7 @@ public class VaccinationEditDialogFragmentTestActivity extends Activity implemen
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
 //        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), issuedVaccines, taglist);

@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -27,7 +26,6 @@ import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.view.ServiceRowGroup;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +34,7 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class,ImageUtilsShadow.class,ServiceRowCardShadow.class})
+@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceRowCardShadow.class})
 public class ServiceRowAdapterTest extends BaseUnitTest {
 
     @Mock
@@ -60,11 +58,12 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
     private final int magicNumber = 231231;
     private String type = "SERVICETYPE";
     private final String magicDate = "1985-07-24T00:00:00.000Z";
+
     @Before
     public void setUp() throws Exception {
-        view = new ServiceRowGroup(RuntimeEnvironment.application,true);
+        view = new ServiceRowGroup(RuntimeEnvironment.application, true);
         setDataForTest(magicDate);
-        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application,view,true);
+        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application, view, true);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
@@ -86,7 +85,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertGetViewReturnsServiceRowView() {
-        Assert.assertEquals(serviceRowAdapter.getView(0,null,null)!=null,true);
+        Assert.assertEquals(serviceRowAdapter.getView(0, null, null) != null, true);
     }
 
     public void setDataForTest(String dateTimeString) throws Exception {
@@ -106,10 +105,10 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
 
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
-        detail.put("gender","male");
-        detail.put("zeir_id","1");
-        detail.put("first_name","");
-        detail.put("last_name","");
+        detail.put("gender", "male");
+        detail.put("zeir_id", "1");
+        detail.put("first_name", "");
+        detail.put("last_name", "");
         CommonPersonObjectClient childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");

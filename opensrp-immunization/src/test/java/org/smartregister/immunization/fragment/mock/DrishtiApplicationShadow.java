@@ -7,7 +7,6 @@ import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.shadow.api.Shadow;
 import org.smartregister.repository.Repository;
-import org.smartregister.util.OpenSRPImageListener;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -18,6 +17,7 @@ import org.smartregister.view.activity.DrishtiApplication;
 public class DrishtiApplicationShadow extends Shadow {
     Repository repository;
     private static OpenSRPImageLoader openSRPImageLoader;
+
     public DrishtiApplicationShadow() {
         super();
         repository = Mockito.mock(Repository.class);
@@ -49,7 +49,7 @@ public class DrishtiApplicationShadow extends Shadow {
 
     @Implementation
     public String getPassword() {
-    return "";
+        return "";
     }
 
     @Implementation

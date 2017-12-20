@@ -3,6 +3,7 @@ package org.smartregister.immunization.view;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
@@ -42,7 +43,7 @@ public class ServiceCardTest extends BaseUnitTest {
     private final String magicDue = "due";
     private final String magicExpired = "expired";
     private final String magicDefault = "DEFAULT";
-    
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);

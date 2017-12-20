@@ -27,6 +27,7 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.mock.ViewAttributes;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
+
 import java.util.Date;
 
 /**
@@ -53,7 +54,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         view = new ImmunizationRowCard(RuntimeEnvironment.application);
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(), 
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Event event = new Event();
         event.setEventId("1");

@@ -18,6 +18,4 @@ public class ImageUtilsShadow extends Shadow {
         return new Photo();
     }
 
-
-
 }

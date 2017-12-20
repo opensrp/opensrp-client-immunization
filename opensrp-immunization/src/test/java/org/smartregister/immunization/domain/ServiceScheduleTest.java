@@ -1,6 +1,7 @@
 package org.smartregister.immunization.domain;
 
 import junit.framework.Assert;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.junit.Before;
@@ -18,6 +19,7 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.service.AlertService;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +50,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
 
     @Mock
     private ServiceTrigger expTrigger;
-    
+
     private final String magicString = "TT";
 
     @Mock
@@ -71,7 +73,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
         types.add(magicString);
 
         ServiceType serviceType = new ServiceType(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME, ServiceTypeTest.SERVICENAMEENTITY, ServiceTypeTest.SERVICENAMEENTITYID, ServiceTypeTest.DATEENTITY, ServiceTypeTest.DATEENTITYID, ServiceTypeTest.UNITS, ServiceTypeTest.SERVICELOGIC, ServiceTypeTest.PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l);
-        List<ServiceType>serviceTypeList = new ArrayList<ServiceType>();
+        List<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
         serviceTypeList.add(serviceType);
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
@@ -90,14 +92,14 @@ public class ServiceScheduleTest extends BaseUnitTest {
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         serviceRecord.setEventId("1");
-        ArrayList<ServiceRecord>issuedServices = new ArrayList<ServiceRecord>();
+        ArrayList<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
         issuedServices.add(serviceRecord);
         Assert.assertNotNull(serviceSchedule.getOfflineAlert(serviceType, issuedServices, VaccineTest.BASEENTITYID, new DateTime()));
     }
 
     @Test
     public void assertAddOffsetToCalanderReturnsDateTime() throws Exception {
-        List<String>offsets = new ArrayList<String>();
+        List<String> offsets = new ArrayList<String>();
         offsets.add("+10d");
         offsets.add("+10m");
         offsets.add("+10y");

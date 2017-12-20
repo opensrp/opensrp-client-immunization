@@ -3,6 +3,7 @@ package org.smartregister.immunization.view;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;

@@ -25,7 +25,7 @@ import java.util.Collections;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class,DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class ServiceDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<ServiceDialogFragmentTestActivity> controller;

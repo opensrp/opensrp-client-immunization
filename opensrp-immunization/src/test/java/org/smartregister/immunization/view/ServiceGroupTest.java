@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,11 +55,11 @@ public class ServiceGroupTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-    private ArrayList<ServiceWrapper>wrappers;
+    private ArrayList<ServiceWrapper> wrappers;
     private ServiceWrapper wrapper;
     private final String magicDate = "1985-07-24T00:00:00.000Z";
     private final String type = "SERVICETYPE";
-    
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -76,7 +78,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
     }
-    
+
     @After
     public void tearDown() {
         destroyController();
@@ -175,7 +177,7 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
-        List<Alert>alertlist =  new ArrayList<Alert>();
+        List<Alert> alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
         Map<String, List<ServiceType>> serviceTypeMap = new HashMap<String, List<ServiceType>>();
         ServiceType serviceType = new ServiceType();
@@ -193,7 +195,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceType.setExpiryOffset(ServiceTypeTest.EXPIRYOFFSET);
         serviceType.setMilestoneOffset(ServiceTypeTest.MILESTONEOFFSET);
         serviceType.setUpdatedAt(0l);
-        ArrayList<ServiceType>serviceTypes = new ArrayList<ServiceType>();
+        ArrayList<ServiceType> serviceTypes = new ArrayList<ServiceType>();
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
         List<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();

@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
@@ -18,6 +19,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +46,7 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
 
         List<Vaccine> issuedVaccines = new ArrayList<Vaccine>();
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(), 
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         issuedVaccines.add(vaccine);
 
@@ -71,7 +73,7 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
 //        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), issuedVaccines, taglist);

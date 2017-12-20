@@ -24,8 +24,8 @@ public class ServiceType {
 
     public ServiceType(Long id, String type, String name, String serviceNameEntity, String
             serviceNameEntityId, String dateEntity, String dateEntityId, String units, String
-            serviceLogic, String prerequisite, String preOffset, String expiryOffset, String
-            milestoneOffset, Long updatedAt) {
+                               serviceLogic, String prerequisite, String preOffset, String expiryOffset, String
+                               milestoneOffset, Long updatedAt) {
         this.id = id;
         this.type = type;
         this.name = name;

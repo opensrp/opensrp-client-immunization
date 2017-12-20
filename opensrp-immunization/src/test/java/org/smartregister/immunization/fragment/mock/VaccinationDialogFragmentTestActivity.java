@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -18,8 +17,8 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
-import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
         tag = new VaccineWrapper();
         tag.setId(VaccineWrapperTest.ID);
@@ -105,6 +104,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         fragmentTransaction.commit();
 
     }
+
     public void startFragment() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
@@ -137,7 +137,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
 //        VaccinationDialogFragmentMock fragment = VaccinationDialogFragmentMock.newInstance(new java.util.Date(), null, null);
@@ -148,6 +148,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         fragmentTransaction.commit();
 
     }
+
     public void startFragmentWithVaccineWrapper() {
         DateTime datetime = new DateTime();
         Alert alert = Mockito.mock(Alert.class);
@@ -165,7 +166,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         tag.setVaccine(null);
         tag.setVaccineDate(datetime);
         tag.setAlert(alert);
-        tag.setName(VaccineRepo.Vaccine.opv0+"/"+VaccineRepo.Vaccine.bcg);
+        tag.setName(VaccineRepo.Vaccine.opv0 + "/" + VaccineRepo.Vaccine.bcg);
         tag.setPreviousVaccine(VaccineWrapperTest.ID);
         tag.setCompact(true);
         tag.setColor(VaccineWrapperTest.COLOR);
@@ -180,7 +181,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
 //        VaccinationDialogFragmentMock fragment = VaccinationDialogFragmentMock.newInstance(new java.util.Date(), null, null);
@@ -191,6 +192,7 @@ public class VaccinationDialogFragmentTestActivity extends Activity implements V
         fragmentTransaction.commit();
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();

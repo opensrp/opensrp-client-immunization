@@ -87,7 +87,7 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         tag.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
         tag.setSynced(true);
 
-        ArrayList<VaccineWrapper>taglist = new ArrayList<VaccineWrapper>();
+        ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
         return taglist;
     }

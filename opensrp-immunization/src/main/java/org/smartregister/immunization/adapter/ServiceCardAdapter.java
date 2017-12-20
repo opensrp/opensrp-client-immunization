@@ -14,7 +14,6 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;

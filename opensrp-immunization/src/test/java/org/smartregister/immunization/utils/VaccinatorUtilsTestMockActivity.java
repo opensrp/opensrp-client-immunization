@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class VaccinatorUtilsTestMockActivity extends Activity implements VaccinationActionListener {
     VaccinatorUtils utils;
+
     @Override
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
@@ -32,24 +33,25 @@ public class VaccinatorUtilsTestMockActivity extends Activity implements Vaccina
         setContentView(linearLayout);
         utils = new VaccinatorUtils();
     }
-    public int addVaccineDetail(){
+
+    public int addVaccineDetail() {
         TableLayout tableLayout = new TableLayout(this);
-        Alert alert = new Alert("","","", AlertStatus.normal,"","");
+        Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
         wrapper.setVaccineDate(new DateTime(0l));
         wrapper.setVaccine(VaccineRepo.Vaccine.opv0);
         wrapper.setStatus("due");
         wrapper.setAlert(alert);
-        utils.addVaccineDetail(this,tableLayout,wrapper);
+        utils.addVaccineDetail(this, tableLayout, wrapper);
 
         wrapper.setAlert(null);
-        utils.addVaccineDetail(this,tableLayout,wrapper);
+        utils.addVaccineDetail(this, tableLayout, wrapper);
 
         wrapper.setStatus("done");
-        utils.addVaccineDetail(this,tableLayout,wrapper);
+        utils.addVaccineDetail(this, tableLayout, wrapper);
 
         wrapper.setStatus("expired");
-        utils.addVaccineDetail(this,tableLayout,wrapper);
+        utils.addVaccineDetail(this, tableLayout, wrapper);
 
         tableLayout.findViewById(R.id.undo).performClick();
         return tableLayout.getChildCount();
