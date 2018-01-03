@@ -35,35 +35,24 @@ public class VaccineRepoTest extends BaseUnitTest {
         ArrayList<VaccineRepo.Vaccine> vaccines = new ArrayList<VaccineRepo.Vaccine>();
         vaccines.add(VaccineRepo.Vaccine.bcg);
         vaccines.add(VaccineRepo.Vaccine.opv0);
-
         vaccines.add(VaccineRepo.Vaccine.opv1);
         vaccines.add(VaccineRepo.Vaccine.penta1);
         vaccines.add(VaccineRepo.Vaccine.pcv1);
         vaccines.add(VaccineRepo.Vaccine.rota1);
-
         vaccines.add(VaccineRepo.Vaccine.opv2);
         vaccines.add(VaccineRepo.Vaccine.penta2);
         vaccines.add(VaccineRepo.Vaccine.pcv2);
         vaccines.add(VaccineRepo.Vaccine.rota2);
-
         vaccines.add(VaccineRepo.Vaccine.opv3);
         vaccines.add(VaccineRepo.Vaccine.penta3);
         vaccines.add(VaccineRepo.Vaccine.pcv3);
-
         vaccines.add(VaccineRepo.Vaccine.measles1);
         vaccines.add(VaccineRepo.Vaccine.mr1);
         vaccines.add(VaccineRepo.Vaccine.opv4);
-
-
         vaccines.add(VaccineRepo.Vaccine.measles2);
         vaccines.add(VaccineRepo.Vaccine.mr2);
-
-
         vaccines.add(VaccineRepo.Vaccine.bcg2);
         vaccines.add(VaccineRepo.Vaccine.ipv);
-
-
-
         junit.framework.Assert.assertEquals(vaccines, VaccineRepo.getVaccines(CHILD));
     }
 

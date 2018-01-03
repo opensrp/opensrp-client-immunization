@@ -30,6 +30,7 @@
             android:layout_marginRight="5dp"
             android:background="@null"
             android:src="@drawable/ic_action_check" />
+
         <org.smartregister.view.customcontrols.CustomFontTextView
             android:id="@+id/status_text_tv"
             style="@style/CustomFontTextViewStyle.ClientList"

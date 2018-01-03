@@ -97,8 +97,8 @@ public class RecurringIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, SELECT_DATA_TYPE);
                     jsonObject.put(JsonFormUtils.VALUE, YES);
                     if (serviceType.getType().equalsIgnoreCase("ITN") && StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(CHILD_HAS_NET)) {
-                            jsonObject.put(JsonFormUtils.VALUE, NO);
-                            itnHasNet = true;
+                        jsonObject.put(JsonFormUtils.VALUE, NO);
+                        itnHasNet = true;
                     }
                     addYesNoChoices(jsonObject);
                     jsonArray.put(jsonObject);

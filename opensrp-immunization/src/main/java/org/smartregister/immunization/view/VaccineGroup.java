@@ -126,7 +126,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         recordAllTV.setOnClickListener(this);
     }
 
-    public void setData(JSONObject vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts,String type) {
+    public void setData(JSONObject vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts, String type) {
         this.vaccineData = vaccineData;
         this.childDetails = childDetails;
         this.vaccineList = vaccines;
@@ -330,13 +330,13 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         }
     }
 
-    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags,String type) {
+    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags, String type) {
         if (tags == null) {
             return;
         }
 
         for (VaccineWrapper tag : tags) {
-            updateWrapperStatus(tag ,type);
+            updateWrapperStatus(tag, type);
         }
     }
 

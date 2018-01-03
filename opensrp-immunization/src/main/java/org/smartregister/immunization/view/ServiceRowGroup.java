@@ -232,11 +232,11 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v instanceof ServiceRowCard && onServiceClickedListener != null) {
-                onServiceClickedListener.onClick(this, ((ServiceRowCard) v).getServiceWrapper());
+            onServiceClickedListener.onClick(this, ((ServiceRowCard) v).getServiceWrapper());
 
         } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ServiceRowCard) {
-                ServiceRowCard serviceRowCard = (ServiceRowCard) v.getParent().getParent();
-                onUndoClick(serviceRowCard);
+            ServiceRowCard serviceRowCard = (ServiceRowCard) v.getParent().getParent();
+            onUndoClick(serviceRowCard);
         }
     }
 

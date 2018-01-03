@@ -7,13 +7,12 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.json.XML;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.smartregister.immunization.util.VaccinateActionUtils;
 
 /**
  * Created by keyman on 22/11/2016.

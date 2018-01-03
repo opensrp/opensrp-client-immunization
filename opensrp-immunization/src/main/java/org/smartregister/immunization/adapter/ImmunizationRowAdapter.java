@@ -17,7 +17,6 @@ import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import org.smartregister.immunization.view.VaccineCard;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
