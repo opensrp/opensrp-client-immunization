@@ -33,11 +33,11 @@ public class SampleApplication extends DrishtiApplication {
 
         context.updateApplicationContext(getApplicationContext());
 
-        initOfflineSchedules();
-
         //Initialize Modules
         CoreLibrary.init(context);
         ImmunizationLibrary.init(context, getRepository(), null);
+
+        initOfflineSchedules();
 
     }
 

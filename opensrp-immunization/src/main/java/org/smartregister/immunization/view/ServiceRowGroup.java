@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
@@ -213,14 +211,9 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     private void updateServiceRowCards(ArrayList<ServiceWrapper> servicesToUpdate) {
         if (serviceRowAdapter == null) {
-            try {
-                serviceRowAdapter = new ServiceRowAdapter(context, this, editmode);
-                servicesGV.setAdapter(serviceRowAdapter);
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
+            serviceRowAdapter = new ServiceRowAdapter(context, this, editmode);
+            servicesGV.setAdapter(serviceRowAdapter);
         }
-
 
         if (serviceRowAdapter != null) {
             serviceRowAdapter.update(servicesToUpdate);

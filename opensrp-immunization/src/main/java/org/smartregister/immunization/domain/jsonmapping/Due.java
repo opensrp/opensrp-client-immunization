@@ -8,4 +8,6 @@ public class Due extends Expiry {
 
     public String window;
 
+    public String prerequisite;
+
 }

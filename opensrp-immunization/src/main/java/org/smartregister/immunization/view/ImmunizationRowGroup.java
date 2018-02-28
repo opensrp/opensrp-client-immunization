@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
@@ -203,12 +201,8 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
 
     private void updateVaccineCards(ArrayList<VaccineWrapper> vaccinesToUpdate) {
         if (vaccineCardAdapter == null) {
-            try {
-                vaccineCardAdapter = new ImmunizationRowAdapter(context, this, editmode);
-                vaccinesGV.setAdapter(vaccineCardAdapter);
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
+            vaccineCardAdapter = new ImmunizationRowAdapter(context, this, editmode);
+            vaccinesGV.setAdapter(vaccineCardAdapter);
         }
 
         if (vaccineCardAdapter != null) {

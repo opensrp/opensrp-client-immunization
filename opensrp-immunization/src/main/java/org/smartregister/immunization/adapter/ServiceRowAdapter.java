@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
@@ -35,7 +34,7 @@ public class ServiceRowAdapter extends BaseAdapter {
     private final ServiceRowGroup serviceRowGroup;
     public boolean editmode;
 
-    public ServiceRowAdapter(Context context, ServiceRowGroup serviceRowGroup, boolean editmode) throws JSONException {
+    public ServiceRowAdapter(Context context, ServiceRowGroup serviceRowGroup, boolean editmode) {
         this.context = context;
         this.editmode = editmode;
         this.serviceRowGroup = serviceRowGroup;
@@ -104,9 +103,8 @@ public class ServiceRowAdapter extends BaseAdapter {
             return serviceRowCards.get(serviceType.getName());
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
+            return null;
         }
-
-        return null;
     }
 
     public void update(ArrayList<ServiceWrapper> servicesToUpdate) {

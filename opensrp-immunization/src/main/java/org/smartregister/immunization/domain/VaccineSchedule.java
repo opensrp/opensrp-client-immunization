@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -39,7 +38,7 @@ public class VaccineSchedule {
 
     private static HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules;
 
-    public static void init(List<VaccineGroup> vaccines, List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines, String vaccineCategory) throws JSONException {
+    public static void init(List<VaccineGroup> vaccines, List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines, String vaccineCategory) {
         if (vaccineSchedules == null) {
             vaccineSchedules = new HashMap<>();
         }
@@ -58,13 +57,13 @@ public class VaccineSchedule {
         }
     }
 
-    private static void initVaccine(String vaccineCategory, org.smartregister.immunization.domain.jsonmapping.Vaccine curVaccine) throws JSONException {
+    private static void initVaccine(String vaccineCategory, org.smartregister.immunization.domain.jsonmapping.Vaccine curVaccine) {
         if (TextUtils.isEmpty(curVaccine.vaccine_separator)) {
             String vaccineName = curVaccine.name;
             VaccineSchedule vaccineSchedule;
-            if (curVaccine.schedule.values().iterator().hasNext()) {
+            if (curVaccine.schedule != null) {
                 vaccineSchedule = getVaccineSchedule(vaccineName,
-                        vaccineCategory, curVaccine.schedule.values().iterator().next());
+                        vaccineCategory, curVaccine.schedule);
                 vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
             }
         } else {
@@ -74,7 +73,7 @@ public class VaccineSchedule {
                 String vaccineName = splitNames[nameIndex];
                 VaccineSchedule vaccineSchedule = getVaccineSchedule(vaccineName,
                         vaccineCategory,
-                        curVaccine.schedule.get(vaccineName));
+                        curVaccine.schedules.get(vaccineName));
                 if (vaccineSchedule != null) {
                     vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
                 }
@@ -201,8 +200,7 @@ public class VaccineSchedule {
         return null;
     }
 
-    private static VaccineSchedule getVaccineSchedule(String vaccineName, String vaccineCategory, Schedule schedule)
-            throws JSONException {
+    private static VaccineSchedule getVaccineSchedule(String vaccineName, String vaccineCategory, Schedule schedule) {
         ArrayList<VaccineTrigger> dueTriggers = new ArrayList<>();
         for (Due due : schedule.due) {
             VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, due);
@@ -214,7 +212,7 @@ public class VaccineSchedule {
         ArrayList<VaccineTrigger> expiryTriggers = new ArrayList<>();
         if (schedule.expiry != null) {
             for (Expiry expiry : schedule.expiry) {
-                VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, expiry);
+                VaccineTrigger curTrigger = VaccineTrigger.init(expiry);
                 if (curTrigger != null) {
                     expiryTriggers.add(curTrigger);
                 }

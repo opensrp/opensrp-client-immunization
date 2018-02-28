@@ -1,6 +1,7 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -57,55 +58,59 @@ public class VaccineCardAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Vaccine vaccineData = vaccineGroup.getVaccineData().vaccines
-                .get(position);
-        String vaccineName = vaccineData.name;
-        if (!vaccineCards.containsKey(vaccineName)) {
-            VaccineCard vaccineCard = new VaccineCard(context);
-            vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-            vaccineCard.setOnClickListener(vaccineGroup);
-            vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
-            vaccineCard.setId((int) getItemId(position));
-            VaccineWrapper vaccineWrapper = new VaccineWrapper();
-            vaccineWrapper.setId(vaccineGroup.getChildDetails().entityId());
-            vaccineWrapper.setGender(vaccineGroup.getChildDetails().getDetails().get("gender"));
-            vaccineWrapper.setName(vaccineName);
-            vaccineWrapper.setDefaultName(vaccineName);
+        try {
+            Vaccine vaccineData = vaccineGroup.getVaccineData().vaccines
+                    .get(position);
+            String vaccineName = vaccineData.name;
+            if (!vaccineCards.containsKey(vaccineName)) {
+                VaccineCard vaccineCard = new VaccineCard(context);
+                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
+                vaccineCard.setOnClickListener(vaccineGroup);
+                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
+                vaccineCard.setId((int) getItemId(position));
+                VaccineWrapper vaccineWrapper = new VaccineWrapper();
+                vaccineWrapper.setId(vaccineGroup.getChildDetails().entityId());
+                vaccineWrapper.setGender(vaccineGroup.getChildDetails().getDetails().get("gender"));
+                vaccineWrapper.setName(vaccineName);
+                vaccineWrapper.setDefaultName(vaccineName);
 
-            String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
-            if (StringUtils.isNotBlank(dobString)) {
-                Calendar dobCalender = Calendar.getInstance();
-                DateTime dateTime = new DateTime(dobString);
-                dobCalender.setTime(dateTime.toDate());
-                dobCalender.add(Calendar.DATE, vaccineGroup.getVaccineData().days_after_birth_due);
-                vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
+                String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
+                if (StringUtils.isNotBlank(dobString)) {
+                    Calendar dobCalender = Calendar.getInstance();
+                    DateTime dateTime = new DateTime(dobString);
+                    dobCalender.setTime(dateTime.toDate());
+                    dobCalender.add(Calendar.DATE, vaccineGroup.getVaccineData().days_after_birth_due);
+                    vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
+                }
+
+                Photo photo = ImageUtils.profilePhotoByClient(vaccineGroup.getChildDetails());
+                vaccineWrapper.setPhoto(photo);
+
+                String zeirId = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "zeir_id", false);
+                vaccineWrapper.setPatientNumber(zeirId);
+
+                String firstName = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "first_name", true);
+                String lastName = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "last_name", true);
+                String childName = getName(firstName, lastName);
+                vaccineWrapper.setPatientName(childName.trim());
+
+                vaccineGroup.updateWrapper(vaccineWrapper);
+                vaccineGroup.updateWrapperStatus(vaccineWrapper, type);
+                vaccineCard.setVaccineWrapper(vaccineWrapper);
+
+                vaccineCards.put(vaccineName, vaccineCard);
             }
 
-            Photo photo = ImageUtils.profilePhotoByClient(vaccineGroup.getChildDetails());
-            vaccineWrapper.setPhoto(photo);
+            //If last position, toggle RecordAll
+            if (position == (getCount() - 1)) {
+                vaccineGroup.toggleRecordAllTV();
+            }
 
-            String zeirId = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "zeir_id", false);
-            vaccineWrapper.setPatientNumber(zeirId);
-
-            String firstName = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "first_name", true);
-            String lastName = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "last_name", true);
-            String childName = getName(firstName, lastName);
-            vaccineWrapper.setPatientName(childName.trim());
-
-            vaccineGroup.updateWrapper(vaccineWrapper);
-            vaccineGroup.updateWrapperStatus(vaccineWrapper, type);
-            vaccineCard.setVaccineWrapper(vaccineWrapper);
-
-            vaccineCards.put(vaccineName, vaccineCard);
+            return vaccineCards.get(vaccineName);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            return null;
         }
-
-        //If last position, toggle RecordAll
-        if (position == (getCount() - 1)) {
-            vaccineGroup.toggleRecordAllTV();
-        }
-
-
-        return vaccineCards.get(vaccineName);
     }
 
     public void update(ArrayList<VaccineWrapper> vaccinesToUpdate) {

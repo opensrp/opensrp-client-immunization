@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.util.ImageUtils;
@@ -32,7 +31,7 @@ public class ServiceCardAdapter extends BaseAdapter {
     private HashMap<String, ServiceCard> serviceCards;
     private final ServiceGroup serviceGroup;
 
-    public ServiceCardAdapter(Context context, ServiceGroup serviceGroup) throws JSONException {
+    public ServiceCardAdapter(Context context, ServiceGroup serviceGroup) {
         this.context = context;
         this.serviceGroup = serviceGroup;
         serviceCards = new HashMap<>();
@@ -103,9 +102,9 @@ public class ServiceCardAdapter extends BaseAdapter {
             return serviceCards.get(type);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
+            return null;
         }
 
-        return null;
     }
 
     public void updateAll() {

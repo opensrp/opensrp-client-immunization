@@ -16,7 +16,9 @@ public class Vaccine {
 
     public OpenMRSCalculation openmrs_calculate;
 
-    public Map<String, Schedule> schedule;
+    public Schedule schedule;
+
+    public Map<String, Schedule> schedules;
 
     public String vaccine_separator;
 

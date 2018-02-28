@@ -1,6 +1,5 @@
 package org.smartregister.immunization.domain;
 
-import org.json.JSONException;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 
@@ -20,7 +19,7 @@ public abstract class VaccineCondition {
         this.vaccine = vaccine;
     }
 
-    public static VaccineCondition init(String vaccineCategory, Condition conditionData) throws JSONException {
+    public static VaccineCondition init(String vaccineCategory, Condition conditionData) {
         if (conditionData.type.equals(TYPE_GIVEN)) {
             GivenCondition.Comparison comparison = GivenCondition.getComparison(conditionData.comparison);
             VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.vaccine,
