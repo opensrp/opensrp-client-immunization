@@ -39,7 +39,6 @@ import static org.smartregister.immunization.util.VaccinatorUtils.receivedVaccin
  */
 public class ImmunizationRowGroup extends LinearLayout implements View.OnClickListener,
         ImmunizationRowCard.OnVaccineStateChangeListener {
-    private static final String TAG = "VaccineGroup";
     private Context context;
     private TextView nameTV;
     private TextView recordAllTV;

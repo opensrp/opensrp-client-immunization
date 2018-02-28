@@ -122,7 +122,7 @@ public class VaccinatorUtils {
             map.put("provider_identifier", tm.getString("identifier"));
             map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Log.e(TAG, "", e);
         }
 
         return map;
@@ -341,7 +341,7 @@ public class VaccinatorUtils {
                 schedule.add(m);
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return schedule;
     }
@@ -384,7 +384,7 @@ public class VaccinatorUtils {
                 schedule.add(m);
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return schedule;
     }
@@ -417,7 +417,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return schedule;
     }
@@ -478,7 +478,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return null;
     }
@@ -534,7 +534,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -568,7 +568,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -591,7 +591,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -623,7 +623,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -786,7 +786,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return null;
     }

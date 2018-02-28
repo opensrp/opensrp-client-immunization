@@ -55,7 +55,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     protected ViewGroup parentView;
 
     private final int magicNumber = 231231;
-    private org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
@@ -114,7 +113,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup>>() {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
-        vaccineData = vaccines.get(0);
+        org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData = vaccines.get(0);
 
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);

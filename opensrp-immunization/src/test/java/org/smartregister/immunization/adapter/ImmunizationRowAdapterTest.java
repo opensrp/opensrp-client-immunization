@@ -49,8 +49,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Mock
     private org.smartregister.Context context_;
-
-    private VaccineGroup vaccineData;
+    
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
@@ -122,7 +121,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         }.getType();
         List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
-        vaccineData = vaccines.get(0);
+        VaccineGroup vaccineData = vaccines.get(0);
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
         detail.put("gender", "male");

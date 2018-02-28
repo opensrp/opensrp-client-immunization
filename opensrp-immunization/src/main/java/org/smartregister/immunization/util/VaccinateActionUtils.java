@@ -549,22 +549,22 @@ public class VaccinateActionUtils {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils.getSpecialVaccines(context);
 
         //Add BCG2 special vaccine to birth vaccine group
-        if (specialVaccines != null && !specialVaccines.isEmpty() && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
-            if (vaccineGroupObject.name != null
-                    && vaccineGroupObject.days_after_birth_due != null
-                    && vaccineGroupObject.vaccines != null
-                    && "Birth".equalsIgnoreCase(vaccineGroupObject.name)
-                    && "0".equalsIgnoreCase(vaccineGroupObject.days_after_birth_due.toString())) {
-                for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
-                    if (vaccine.name != null
-                            && vaccine.type != null
-                            && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
-                            && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
-                        vaccineGroupObject.vaccines.add(vaccine);
-                    }
+        if (specialVaccines != null && !specialVaccines.isEmpty()
+                && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)
+                && vaccineGroupObject.name != null
+                && vaccineGroupObject.name != null
+                && vaccineGroupObject.days_after_birth_due != null
+                && vaccineGroupObject.vaccines != null
+                && "Birth".equalsIgnoreCase(vaccineGroupObject.name)
+                && "0".equalsIgnoreCase(vaccineGroupObject.days_after_birth_due.toString())) {
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
+                if (vaccine.name != null
+                        && vaccine.type != null
+                        && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                        && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                    vaccineGroupObject.vaccines.add(vaccine);
                 }
             }
-
         }
     }
 

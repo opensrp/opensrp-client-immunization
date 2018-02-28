@@ -42,7 +42,6 @@ import static org.smartregister.immunization.util.VaccinatorUtils.receivedServic
 
 public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         ServiceCard.OnServiceStateChangeListener {
-    private static final String TAG = "ServiceGroup";
     private Context context;
     private TextView nameTV;
     private ExpandableHeightGridView servicesGV;
