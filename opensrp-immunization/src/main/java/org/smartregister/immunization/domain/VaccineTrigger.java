@@ -3,6 +3,8 @@ package org.smartregister.immunization.domain;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.jsonmapping.Due;
+import org.smartregister.immunization.domain.jsonmapping.Expiry;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +26,30 @@ public class VaccineTrigger {
     private final String window;
     private final VaccineRepo.Vaccine prerequisite;
 
-    public static VaccineTrigger init(String vaccineCategory, JSONObject data) throws JSONException {
+    public static VaccineTrigger init(String vaccineCategory, Due data) throws JSONException {
+        if (data != null) {
+            final String REFERENCE = "reference";
+            final String OFFSET = "offset";
+            final String PREREQUISITE = "prerequisite";
+            final String WINDOW = "window";
+            final String LMP = "lmp";
+            if (data.getString(REFERENCE).equalsIgnoreCase(Reference.DOB.name())) {
+                return new VaccineTrigger(data.getString(OFFSET), data.has(WINDOW) ? data.getString(WINDOW) : null, Reference.DOB);
+            } else if (data.getString(REFERENCE).equalsIgnoreCase(Reference.LMP.name())) {
+                return new VaccineTrigger(data.getString(OFFSET), data.has(WINDOW) ? data.getString(WINDOW) : null, Reference.LMP);
+            } else if (data.getString(REFERENCE).equalsIgnoreCase(Reference.PREREQUISITE.name())) {
+                VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.getString(PREREQUISITE),
+                        vaccineCategory);
+                if (prerequisite != null) {
+                    return new VaccineTrigger(data.getString(OFFSET), data.has(WINDOW) ? data.getString(WINDOW) : null, prerequisite);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static VaccineTrigger init(String vaccineCategory, Expiry data) throws JSONException {
         if (data != null) {
             final String REFERENCE = "reference";
             final String OFFSET = "offset";

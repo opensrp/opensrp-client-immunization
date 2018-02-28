@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
@@ -48,7 +47,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     private TextView recordAllTV;
     private ExpandableHeightGridView vaccinesGV;
     private VaccineCardAdapter vaccineCardAdapter;
-    private JSONObject vaccineData;
+    private org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData;
     private CommonPersonObjectClient childDetails;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
@@ -86,7 +85,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         return this.childDetails;
     }
 
-    public JSONObject getVaccineData() {
+    public org.smartregister.immunization.domain.jsonmapping.VaccineGroup getVaccineData() {
         return this.vaccineData;
     }
 
@@ -126,7 +125,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         recordAllTV.setOnClickListener(this);
     }
 
-    public void setData(JSONObject vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts, String type) {
+    public void setData(org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts, String type) {
         this.vaccineData = vaccineData;
         this.childDetails = childDetails;
         this.vaccineList = vaccines;
@@ -180,30 +179,26 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     }
 
     private void updateStatusViews() {
-        try {
-            switch (this.state) {
-                case IN_PAST:
-                    nameTV.setText(vaccineData.getString("name"));
-                    break;
-                case CURRENT:
-                    nameTV.setText(String.format(context.getString(R.string.due_),
-                            vaccineData.getString("name"), context.getString(R.string.today)));
-                    break;
-                case IN_FUTURE:
-                    String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
-                    Calendar dobCalender = Calendar.getInstance();
-                    DateTime dateTime = new DateTime(dobString);
-                    dobCalender.setTime(dateTime.toDate());
-                    dobCalender.add(Calendar.DATE, vaccineData.getInt("days_after_birth_due"));
-                    nameTV.setText(String.format(context.getString(R.string.due_),
-                            vaccineData.getString("name"),
-                            READABLE_DATE_FORMAT.format(dobCalender.getTime())));
-                    break;
-                default:
-                    break;
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+        switch (this.state) {
+            case IN_PAST:
+                nameTV.setText(vaccineData.name);
+                break;
+            case CURRENT:
+                nameTV.setText(String.format(context.getString(R.string.due_),
+                        vaccineData.name, context.getString(R.string.today)));
+                break;
+            case IN_FUTURE:
+                String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+                Calendar dobCalender = Calendar.getInstance();
+                DateTime dateTime = new DateTime(dobString);
+                dobCalender.setTime(dateTime.toDate());
+                dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
+                nameTV.setText(String.format(context.getString(R.string.due_),
+                        vaccineData.name,
+                        READABLE_DATE_FORMAT.format(dobCalender.getTime())));
+                break;
+            default:
+                break;
         }
     }
 

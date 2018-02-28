@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
@@ -21,6 +20,7 @@ import org.smartregister.immunization.adapter.ImmunizationRowAdapter;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.util.Utils;
 
@@ -47,7 +47,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     private TextView recordAllTV;
     private ExpandableHeightGridView vaccinesGV;
     private ImmunizationRowAdapter vaccineCardAdapter;
-    private JSONObject vaccineData;
+    private VaccineGroup vaccineData;
     private CommonPersonObjectClient childDetails;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
@@ -85,7 +85,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         return this.childDetails;
     }
 
-    public JSONObject getVaccineData() {
+    public VaccineGroup getVaccineData() {
         return this.vaccineData;
     }
 
@@ -120,7 +120,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         recordAllTV.setVisibility(GONE);
     }
 
-    public void setData(JSONObject vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts) {
+    public void setData(VaccineGroup vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts) {
         this.vaccineData = vaccineData;
         this.childDetails = childDetails;
         this.vaccineList = vaccines;
@@ -178,30 +178,26 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     }
 
     private void updateStatusViews() {
-        try {
-            switch (this.state) {
-                case IN_PAST:
-                    nameTV.setText(vaccineData.getString("name"));
-                    break;
-                case CURRENT:
-                    nameTV.setText(String.format(context.getString(R.string.due_),
-                            vaccineData.getString("name"), context.getString(R.string.today)));
-                    break;
-                case IN_FUTURE:
-                    String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
-                    Calendar dobCalender = Calendar.getInstance();
-                    DateTime dateTime = new DateTime(dobString);
-                    dobCalender.setTime(dateTime.toDate());
-                    dobCalender.add(Calendar.DATE, vaccineData.getInt("days_after_birth_due"));
-                    nameTV.setText(String.format(context.getString(R.string.due_),
-                            vaccineData.getString("name"),
-                            READABLE_DATE_FORMAT.format(dobCalender.getTime())));
-                    break;
-                default:
-                    break;
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+        switch (this.state) {
+            case IN_PAST:
+                nameTV.setText(vaccineData.name);
+                break;
+            case CURRENT:
+                nameTV.setText(String.format(context.getString(R.string.due_),
+                        vaccineData.name, context.getString(R.string.today)));
+                break;
+            case IN_FUTURE:
+                String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+                Calendar dobCalender = Calendar.getInstance();
+                DateTime dateTime = new DateTime(dobString);
+                dobCalender.setTime(dateTime.toDate());
+                dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
+                nameTV.setText(String.format(context.getString(R.string.due_),
+                        vaccineData.name,
+                        READABLE_DATE_FORMAT.format(dobCalender.getTime())));
+                break;
+            default:
+                break;
         }
     }
 

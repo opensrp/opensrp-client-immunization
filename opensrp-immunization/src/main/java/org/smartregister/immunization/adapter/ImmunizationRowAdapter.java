@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,7 +8,6 @@ import android.widget.BaseAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
@@ -45,12 +43,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        try {
-            return vaccineGroup.getVaccineData().getJSONArray("vaccines").length();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return 0;
+        return vaccineGroup.getVaccineData().vaccines.size();
     }
 
     @Override
@@ -65,52 +58,46 @@ public class ImmunizationRowAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        try {
-            JSONObject vaccineData = vaccineGroup.getVaccineData().getJSONArray("vaccines")
-                    .getJSONObject(position);
-            String vaccineName = vaccineData.getString("name");
-            if (!vaccineCards.containsKey(vaccineName)) {
-                ImmunizationRowCard vaccineCard = new ImmunizationRowCard(context, editmode);
-                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-                vaccineCard.setOnClickListener(vaccineGroup);
-                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
-                vaccineCard.setId((int) getItemId(position));
-                VaccineWrapper vaccineWrapper = new VaccineWrapper();
-                vaccineWrapper.setId(vaccineGroup.getChildDetails().entityId());
-                vaccineWrapper.setGender(vaccineGroup.getChildDetails().getDetails().get("gender"));
-                vaccineWrapper.setName(vaccineName);
+        org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData = vaccineGroup.getVaccineData().vaccines
+                .get(position);
+        String vaccineName = vaccineData.name;
+        if (!vaccineCards.containsKey(vaccineName)) {
+            ImmunizationRowCard vaccineCard = new ImmunizationRowCard(context, editmode);
+            vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
+            vaccineCard.setOnClickListener(vaccineGroup);
+            vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
+            vaccineCard.setId((int) getItemId(position));
+            VaccineWrapper vaccineWrapper = new VaccineWrapper();
+            vaccineWrapper.setId(vaccineGroup.getChildDetails().entityId());
+            vaccineWrapper.setGender(vaccineGroup.getChildDetails().getDetails().get("gender"));
+            vaccineWrapper.setName(vaccineName);
 
-                String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
-                if (StringUtils.isNotBlank(dobString)) {
-                    Calendar dobCalender = Calendar.getInstance();
-                    DateTime dateTime = new DateTime(dobString);
-                    dobCalender.setTime(dateTime.toDate());
-                    dobCalender.add(Calendar.DATE, vaccineGroup.getVaccineData().getInt("days_after_birth_due"));
-                    vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
-                }
-
-
-                Photo photo = ImageUtils.profilePhotoByClient(vaccineGroup.getChildDetails());
-                vaccineWrapper.setPhoto(photo);
-
-                String zeirId = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "zeir_id", false);
-                vaccineWrapper.setPatientNumber(zeirId);
-                vaccineWrapper.setPatientName(getValue(vaccineGroup.getChildDetails().getColumnmaps(), "first_name", true) + " " + getValue(vaccineGroup.getChildDetails().getColumnmaps(), "last_name", true));
-
-                vaccineGroup.updateWrapper(vaccineWrapper);
-                vaccineGroup.updateWrapperStatus(vaccineWrapper);
-                vaccineCard.setVaccineWrapper(vaccineWrapper);
-
-                vaccineCards.put(vaccineName, vaccineCard);
-                vaccineGroup.toggleRecordAllTV();
+            String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
+            if (StringUtils.isNotBlank(dobString)) {
+                Calendar dobCalender = Calendar.getInstance();
+                DateTime dateTime = new DateTime(dobString);
+                dobCalender.setTime(dateTime.toDate());
+                dobCalender.add(Calendar.DATE, vaccineGroup.getVaccineData().days_after_birth_due);
+                vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
             }
 
-            return vaccineCards.get(vaccineName);
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+
+            Photo photo = ImageUtils.profilePhotoByClient(vaccineGroup.getChildDetails());
+            vaccineWrapper.setPhoto(photo);
+
+            String zeirId = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "zeir_id", false);
+            vaccineWrapper.setPatientNumber(zeirId);
+            vaccineWrapper.setPatientName(getValue(vaccineGroup.getChildDetails().getColumnmaps(), "first_name", true) + " " + getValue(vaccineGroup.getChildDetails().getColumnmaps(), "last_name", true));
+
+            vaccineGroup.updateWrapper(vaccineWrapper);
+            vaccineGroup.updateWrapperStatus(vaccineWrapper);
+            vaccineCard.setVaccineWrapper(vaccineWrapper);
+
+            vaccineCards.put(vaccineName, vaccineCard);
+            vaccineGroup.toggleRecordAllTV();
         }
 
-        return null;
+        return vaccineCards.get(vaccineName);
     }
 
     public void update(ArrayList<VaccineWrapper> vaccinesToUpdate) {

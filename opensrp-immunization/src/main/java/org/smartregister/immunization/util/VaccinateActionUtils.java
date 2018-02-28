@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
@@ -32,6 +31,7 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.VaccinateFormSubmissionWrapper;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.service.AlertService;
 import org.smartregister.service.ZiggyService;
@@ -545,38 +545,26 @@ public class VaccinateActionUtils {
 
     }
 
-    public static void addBcg2SpecialVaccine(Context context, JSONObject vaccineGroupObject, List<Vaccine> vaccineList) {
-        String specialVaccinesString = VaccinatorUtils.getSpecialVaccines(context);
-        final String NAME = "name";
-        final String DAYS_AFTER_BIRTH_DUE = "days_after_birth_due";
-        final String VACCINES = "vaccines";
-        final String TYPE = "type";
+    public static void addBcg2SpecialVaccine(Context context, VaccineGroup vaccineGroupObject, List<Vaccine> vaccineList) {
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils.getSpecialVaccines(context);
 
-        try {
-            //Add BCG2 special vaccine to birth vaccine group
-            if (StringUtils.isNotBlank(specialVaccinesString) && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
-                JSONArray specialVaccines = new JSONArray(specialVaccinesString);
-                if (vaccineGroupObject.has(NAME)
-                        && vaccineGroupObject.has(DAYS_AFTER_BIRTH_DUE)
-                        && vaccineGroupObject.has(VACCINES)
-                        && "Birth".equalsIgnoreCase(vaccineGroupObject.getString(NAME))
-                        && "0".equalsIgnoreCase(vaccineGroupObject.getString(DAYS_AFTER_BIRTH_DUE))
-                        && vaccineGroupObject.get(VACCINES) instanceof JSONArray) {
-                    JSONArray vaccineArray = vaccineGroupObject.getJSONArray(VACCINES);
-                    for (int j = 0; j < specialVaccines.length(); j++) {
-                        JSONObject specialVaccine = specialVaccines.getJSONObject(j);
-                        if (specialVaccine.has(NAME)
-                                && specialVaccine.has(TYPE)
-                                && specialVaccine.getString(NAME).equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
-                                && specialVaccine.getString(TYPE).equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
-                            vaccineArray.put(specialVaccine);
-                        }
+        //Add BCG2 special vaccine to birth vaccine group
+        if (!specialVaccines.isEmpty() && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
+            if (vaccineGroupObject.name != null
+                    && vaccineGroupObject.days_after_birth_due != null
+                    && vaccineGroupObject.vaccines != null
+                    && "Birth".equalsIgnoreCase(vaccineGroupObject.name)
+                    && "0".equalsIgnoreCase(vaccineGroupObject.days_after_birth_due.toString())) {
+                for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
+                    if (vaccine.name != null
+                            && vaccine.type != null
+                            && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                            && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                        vaccineGroupObject.vaccines.add(vaccine);
                     }
                 }
-
             }
-        } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), Log.getStackTraceString(e));
+
         }
     }
 
