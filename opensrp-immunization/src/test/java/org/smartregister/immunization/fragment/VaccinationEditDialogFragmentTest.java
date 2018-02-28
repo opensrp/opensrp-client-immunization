@@ -3,7 +3,8 @@ package org.smartregister.immunization.fragment;
 import android.content.Intent;
 import android.util.Log;
 
-import org.json.JSONArray;
+import com.google.gson.reflect.TypeToken;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,12 +20,16 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
+import org.smartregister.util.JsonFormUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -48,7 +53,15 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-        VaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+
+        VaccineSchedule.init(vaccines, specialVaccines, "child");
         controller.setup();
     }
 

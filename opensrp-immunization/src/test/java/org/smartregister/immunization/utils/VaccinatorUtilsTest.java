@@ -2,6 +2,8 @@ package org.smartregister.immunization.utils;
 
 import android.content.res.Resources;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,6 +13,8 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.AlertStatus;
@@ -21,6 +25,7 @@ import org.smartregister.immunization.domain.ServiceData;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.JsonFormUtils;
@@ -28,8 +33,10 @@ import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.util.VaccineScheduleUtils;
+import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +45,7 @@ import java.util.List;
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class, Utils.class})
+@PrepareForTest({ImmunizationLibrary.class, Utils.class, AssetHandler.class})
 public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Rule
@@ -120,8 +127,18 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void assertGetVaccineDisplayNameTestReturnsDisplayName() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+
+        List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        PowerMockito.when(immunizationLibrary.assetJsonToJava("vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
 
@@ -150,14 +167,32 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void assertGetVaccineCalculationTestReturnsCalculation() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.vaccines);
+
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+
+        List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        PowerMockito.when(immunizationLibrary.assetJsonToJava("vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicOPV0), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicNULL), -1);
 
         //readspecialvaccines
-        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(VaccineData.special_vacines);
-        Assert.assertEquals(VaccinatorUtils.getSpecialVaccines(context), VaccineData.special_vacines);
+        Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> clazz2 = (Class) List.class;
+        Type listType2 = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType2);
+
+        PowerMockito.when(immunizationLibrary.assetJsonToJava("special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
+        JSONAssert.assertEquals(VaccineData.special_vacines,
+                JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2), JSONCompareMode.NON_EXTENSIBLE);
         //readrecurringservices
         PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
         Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context), ServiceData.recurringservice);

@@ -2,9 +2,10 @@ package org.smartregister.immunization.adapter;
 
 import android.content.Context;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,12 +25,16 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
+import org.smartregister.util.JsonFormUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -45,7 +50,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
-    private JSONObject vaccineData;
+    private VaccineGroup vaccineData;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
@@ -112,8 +117,12 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         wrapper.setName(VaccineRepo.Vaccine.measles2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.measles2);
         wrappers.add(wrapper);
-        JSONArray vaccineArray = new JSONArray(VaccineData.vaccines);
-        vaccineData = vaccineArray.getJSONObject(0);
+
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        vaccineData = vaccines.get(0);
         HashMap<String, String> detail = new HashMap<String, String>();
         detail.put("dob", dateTimeString);
         detail.put("gender", "male");

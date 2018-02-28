@@ -1,11 +1,12 @@
 package org.smartregister.immunization.domain;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.jsonmapping.Due;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -23,15 +24,15 @@ public class VaccineTriggerTest extends BaseUnitTest {
 
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
-        JSONObject data1 = new JSONObject(stringdata1);
-        JSONObject data2 = new JSONObject(stringdata2);
+        Due data1 =JsonFormUtils.gson.fromJson(stringdata1, Due.class);
+        Due data2 =JsonFormUtils.gson.fromJson(stringdata2, Due.class);
         junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data1));
         junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data2));
     }
 
     @Test
     public void assertGetMethodsReturnsCorrectValues() throws JSONException {
-        JSONObject data1 = new JSONObject(stringdata1);
+        Due data1 =JsonFormUtils.gson.fromJson(stringdata1, Due.class);
 
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -43,7 +44,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
 
     @Test
     public void assertGetWindowTestReturnsCurrentWindow() throws JSONException {
-        JSONObject data1 = new JSONObject(stringdata1);
+        Due data1 =JsonFormUtils.gson.fromJson(stringdata1, Due.class);
         VaccineTrigger vaccineTrigger = Mockito.mock(VaccineTrigger.class);
         vaccineTrigger.init(CHILD, data1);
         String notNull = vaccineTrigger.getWindow();

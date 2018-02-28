@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.google.gson.reflect.TypeToken;
+
 import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.immunization.R;
@@ -18,8 +18,11 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
+import org.smartregister.util.JsonFormUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -89,11 +92,16 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
         Mockito.doNothing().when(vaccinationNameLayout).addView(vaccineName);
         Mockito.doReturn(1).when(vaccinationNameLayout).getChildCount();
         Mockito.doReturn(vaccineName).when(vaccinationNameLayout).getChildAt(0);
-        try {
-            VaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "child");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+
+        VaccineSchedule.init(vaccines, specialVaccines, "child");
 
         super.onCreateView(this.inflater, container, savedInstanceState);
 

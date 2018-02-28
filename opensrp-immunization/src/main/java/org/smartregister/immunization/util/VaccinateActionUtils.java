@@ -549,7 +549,7 @@ public class VaccinateActionUtils {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils.getSpecialVaccines(context);
 
         //Add BCG2 special vaccine to birth vaccine group
-        if (!specialVaccines.isEmpty() && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
+        if (specialVaccines != null && !specialVaccines.isEmpty() && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)) {
             if (vaccineGroupObject.name != null
                     && vaccineGroupObject.days_after_birth_due != null
                     && vaccineGroupObject.vaccines != null
