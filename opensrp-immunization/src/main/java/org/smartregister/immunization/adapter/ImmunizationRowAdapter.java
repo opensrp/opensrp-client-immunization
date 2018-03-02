@@ -214,6 +214,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
     class ImmunizationRowTask extends AsyncTask<Void, Void, VaccineWrapper> {
 
         private ImmunizationRowCard vaccineCard;
+
         private String vaccineName;
 
         private int days_after_birth_due;

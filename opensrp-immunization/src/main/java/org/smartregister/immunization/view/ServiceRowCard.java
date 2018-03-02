@@ -143,9 +143,9 @@ public class ServiceRowCard extends LinearLayout {
 //                    this.state = State.DUE;
 //                }
             }
+            updateStateUi();
         }
 
-        updateStateUi();
     }
 
     public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {

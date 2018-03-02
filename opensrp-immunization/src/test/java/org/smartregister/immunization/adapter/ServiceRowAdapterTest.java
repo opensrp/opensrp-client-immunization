@@ -63,13 +63,13 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
     public void setUp() throws Exception {
         view = new ServiceRowGroup(RuntimeEnvironment.application, true);
         setDataForTest(magicDate);
-        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application, view, true);
+        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application, view, true, serviceTypeList, serviceRecordList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        org.junit.Assert.assertNotNull(new ServiceRowAdapter(context, view, true));
+        org.junit.Assert.assertNotNull(new ServiceRowAdapter(context, view, true, serviceTypeList, serviceRecordList, alertList));
     }
 
     @Test

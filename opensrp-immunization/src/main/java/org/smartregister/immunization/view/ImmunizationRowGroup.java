@@ -272,7 +272,9 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     }
 
     public void updateWrapperStatus(ArrayList<VaccineWrapper> wrappers) {
-        vaccineCardAdapter.updateWrapperStatus(wrappers, getChildDetails());
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.updateWrapperStatus(wrappers, getChildDetails());
+        }
     }
 
 }

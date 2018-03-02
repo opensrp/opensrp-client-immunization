@@ -18,7 +18,6 @@ import org.smartregister.immunization.adapter.ServiceRowAdapter;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -27,11 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
-import static org.smartregister.immunization.util.VaccinatorUtils.receivedServices;
 
 /**
  * Created by keyman on 15/05/2017.
@@ -52,6 +47,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     private OnServiceUndoClickListener onServiceUndoClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
+
 
     private static enum State {
         IN_PAST,
@@ -210,7 +206,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     private void updateServiceRowCards(ArrayList<ServiceWrapper> servicesToUpdate) {
         if (serviceRowAdapter == null) {
-            serviceRowAdapter = new ServiceRowAdapter(context, this, editmode);
+            serviceRowAdapter = new ServiceRowAdapter(context, this, editmode, serviceTypeList, serviceRecordList, alertList);
             servicesGV.setAdapter(serviceRowAdapter);
         }
 
@@ -260,50 +256,9 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
         this.modalOpen = modalOpen;
     }
 
-    public void updateWrapperStatus(ServiceWrapper tag) {
-
-        List<ServiceType> serviceTypes = getServiceTypes();
-
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        List<Alert> alertList = getAlertList();
-
-        Map<String, Date> receivedServices = receivedServices(serviceRecordList);
-
-        String dobString = Utils.getValue(getChildDetails().getColumnmaps(), "dob", false);
-        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
-
-
-        for (Map<String, Object> m : sch) {
-            ServiceType serviceType = (ServiceType) m.get("service");
-            if (tag.getName().toLowerCase().equalsIgnoreCase(serviceType.getName().toLowerCase())) {
-                tag.setStatus(m.get("status").toString());
-                tag.setAlert((Alert) m.get("alert"));
-                tag.setServiceType(serviceType);
-                tag.setVaccineDate((DateTime) m.get("date"));
-            }
+    public void updateWrapperStatus(ServiceWrapper serviceWrapper) {
+        if (serviceRowAdapter != null) {
+            serviceRowAdapter.updateWrapperStatus(serviceWrapper, getChildDetails());
         }
     }
-
-    public void updateWrapper(ServiceWrapper tag) {
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        if (!serviceRecordList.isEmpty()) {
-            for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (tag.getName().toLowerCase().contains(serviceRecord.getName().toLowerCase()) && serviceRecord.getDate() != null) {
-                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
-                    }
-                    tag.setDbKey(serviceRecord.getId());
-                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
-                }
-            }
-        }
-
-    }
-
-
 }
