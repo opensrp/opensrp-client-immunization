@@ -54,6 +54,7 @@
         android:background="@drawable/undo_background"
         android:text="Edit"
         android:textAllCaps="false"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:visibility="invisible"/>
 
 </LinearLayout>

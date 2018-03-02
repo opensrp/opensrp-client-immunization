@@ -126,9 +126,9 @@ public class ImmunizationRowCard extends LinearLayout {
                     }
                 }
             }
+            updateStateUi();
         }
 
-        updateStateUi();
     }
 
     public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {
