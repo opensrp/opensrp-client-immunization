@@ -129,13 +129,13 @@ public class ServiceRowAdapter extends BaseAdapter {
 
         Map<String, Date> receivedServices = VaccinatorUtils.receivedServices(serviceRecordList);
 
-        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
 
 
         for (Map<String, Object> m : sch) {
             ServiceType serviceType = (ServiceType) m.get("service");
-            if (tag.getName().toLowerCase().equalsIgnoreCase(serviceType.getName().toLowerCase())) {
+            if (tag.getName().equalsIgnoreCase(serviceType.getName())) {
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
                 tag.setServiceType(serviceType);

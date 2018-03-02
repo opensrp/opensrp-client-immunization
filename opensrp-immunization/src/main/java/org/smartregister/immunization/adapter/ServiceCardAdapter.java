@@ -168,7 +168,7 @@ public class ServiceCardAdapter extends BaseAdapter {
 
         Map<String, Date> receivedServices = VaccinatorUtils.receivedServices(serviceRecordList);
 
-        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
 
 

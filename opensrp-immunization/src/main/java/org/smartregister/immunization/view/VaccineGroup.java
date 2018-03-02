@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         VaccineCard.OnVaccineStateChangeListener {
-    private static final String TAG = "VaccineGroup";
     private Context context;
     private TextView nameTV;
     private TextView recordAllTV;

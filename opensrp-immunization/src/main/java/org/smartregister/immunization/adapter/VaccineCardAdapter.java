@@ -144,7 +144,7 @@ public class VaccineCardAdapter extends BaseAdapter {
 
         Map<String, Date> recievedVaccines = VaccinatorUtils.receivedVaccines(vaccineList);
 
-        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         List<Map<String, Object>> sch = generateScheduleList(type, new DateTime(dobString), recievedVaccines, alertList);
 
         for (Map<String, Object> m : sch) {

@@ -173,7 +173,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
 
         List<Alert> alertList = getAlertList();
         Map<String, Date> recievedVaccines = receivedVaccines(vaccineList);
-        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         DateTime dateTime = !dobString.isEmpty() ? new DateTime(dobString) : new DateTime();
         List<Map<String, Object>> sch = generateScheduleList("child", dateTime, recievedVaccines, alertList);
 
