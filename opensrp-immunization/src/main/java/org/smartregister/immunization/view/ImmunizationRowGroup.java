@@ -263,17 +263,31 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         return new ArrayList<VaccineWrapper>();
     }
 
+    public List<Vaccine> getVaccineList() {
+        return vaccineList;
+    }
 
     public void setVaccineList(List<Vaccine> vaccineList) {
         this.vaccineList = vaccineList;
-        if (vaccineCardAdapter != null) {
-            vaccineCardAdapter.setVaccineList(vaccineList);
-        }
+    }
+
+    public List<Alert> getAlertList() {
+        return alertList;
+    }
+
+    public void setAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
     }
 
     public void updateWrapperStatus(ArrayList<VaccineWrapper> wrappers) {
         if (vaccineCardAdapter != null) {
             vaccineCardAdapter.updateWrapperStatus(wrappers, getChildDetails());
+        }
+    }
+
+    public void updateWrapper(VaccineWrapper wrapper) {
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.updateWrapper(wrapper);
         }
     }
 

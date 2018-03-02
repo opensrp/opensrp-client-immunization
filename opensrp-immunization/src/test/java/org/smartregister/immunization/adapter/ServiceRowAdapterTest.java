@@ -58,6 +58,9 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
     private final int magicNumber = 231231;
     private String type = "SERVICETYPE";
     private final String magicDate = "1985-07-24T00:00:00.000Z";
+    private List<ServiceType> serviceTypeList = new ArrayList<>();
+    private List<ServiceRecord> serviceRecordList= new ArrayList<>();
+    private List<Alert> alertList = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {

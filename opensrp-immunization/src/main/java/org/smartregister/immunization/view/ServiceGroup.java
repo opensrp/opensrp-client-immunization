@@ -253,4 +253,16 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
             serviceCardAdapter.updateAllWrapperStatus(childDetails);
         }
     }
+
+    public void updateWrapper(ServiceWrapper wrapper) {
+        if (serviceCardAdapter != null) {
+            serviceCardAdapter.updateWrapper(wrapper);
+        }
+    }
+
+    public void updateWrapperStatus(ArrayList<ServiceWrapper> wrappers) {
+        if (serviceCardAdapter != null) {
+            serviceCardAdapter.updateWrapperStatus(wrappers, childDetails);
+        }
+    }
 }

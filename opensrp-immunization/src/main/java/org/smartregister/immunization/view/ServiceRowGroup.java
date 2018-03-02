@@ -48,7 +48,6 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
 
-
     private static enum State {
         IN_PAST,
         CURRENT,
@@ -259,6 +258,12 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     public void updateWrapperStatus(ServiceWrapper serviceWrapper) {
         if (serviceRowAdapter != null) {
             serviceRowAdapter.updateWrapperStatus(serviceWrapper, getChildDetails());
+        }
+    }
+
+    public void updateWrapper(ServiceWrapper wrapper) {
+        if (serviceRowAdapter != null) {
+            serviceRowAdapter.updateWrapper(wrapper);
         }
     }
 }

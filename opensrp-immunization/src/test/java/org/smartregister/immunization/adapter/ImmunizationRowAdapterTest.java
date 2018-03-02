@@ -72,14 +72,14 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, view, true, vaccineList, alertList));
+        junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
     }
 
     @Test
     public void assertGetCountTestReturnsCount() throws Exception {
 
 
-        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, view, true, vaccineList, alertList);
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist);
         junit.framework.Assert.assertNotNull(immunizationRowAdapter);
         int len = new JSONArray(VaccineData.vaccines).getJSONObject(0).getJSONArray("vaccines").length();
         junit.framework.Assert.assertEquals(len, immunizationRowAdapter.getCount());
@@ -93,7 +93,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertGetViewReturnsVaccineGroup() throws Exception {
-        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view, true, vaccineList, alertList);
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view, true, vaccinelist, alertlist);
 
         junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
 

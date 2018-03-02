@@ -287,5 +287,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         }
     }
 
+    public void updateWrapper(VaccineWrapper wrapper) {
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.updateWrapper(wrapper);
+        }
+    }
+
 
 }

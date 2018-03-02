@@ -62,6 +62,9 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     private ArrayList<VaccineWrapper> wrappers;
     private final String magicDate = "1985-07-24T00:00:00.000Z";
 
+    private List<Vaccine> vaccineList= new ArrayList<>();
+    private List<Alert> alertList = new ArrayList<>();
+
     @Before
     public void setUp() throws Exception {
         view = new VaccineGroup(RuntimeEnvironment.application);

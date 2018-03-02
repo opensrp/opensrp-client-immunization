@@ -56,6 +56,9 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     protected ViewGroup parentView;
 
     private final int magicNumber = 231231;
+    private List<ServiceRecord> serviceTypeList = new ArrayList<>();
+    private List<Alert> serviceRecordList = new ArrayList<>();
+    private Map<String,List<ServiceType>> alertList = new HashMap<>();
 
     @Before
     public void setUp() throws Exception {
