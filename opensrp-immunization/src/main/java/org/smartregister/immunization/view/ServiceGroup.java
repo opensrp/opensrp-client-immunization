@@ -18,23 +18,16 @@ import org.smartregister.immunization.adapter.ServiceCardAdapter;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
-import static org.smartregister.immunization.util.VaccinatorUtils.nextServiceDue;
-import static org.smartregister.immunization.util.VaccinatorUtils.receivedServices;
 
 /**
  * Created by keyman on 15/05/2017.
@@ -81,12 +74,6 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         return this.childDetails;
     }
 
-    public Map<String, List<ServiceType>> getServiceTypeMap() {
-        if (serviceTypeMap == null) {
-            serviceTypeMap = new LinkedHashMap<>();
-        }
-        return serviceTypeMap;
-    }
 
     public List<String> getServiceTypeKeys() {
         List<String> keys = new ArrayList<>();
@@ -209,7 +196,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
 
     private void updateServiceCards() {
         if (serviceCardAdapter == null) {
-            serviceCardAdapter = new ServiceCardAdapter(context, this);
+            serviceCardAdapter = new ServiceCardAdapter(context, this, serviceRecordList, alertList, serviceTypeMap);
             servicesGV.setAdapter(serviceCardAdapter);
         } else {
             serviceCardAdapter.updateAll();
@@ -261,101 +248,9 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         this.modalOpen = modalOpen;
     }
 
-    public void updateWrapperStatus(String type, ServiceWrapper tag) {
-
-        List<ServiceType> serviceTypes = getServiceTypeMap().get(type);
-
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        List<Alert> alertList = getAlertList();
-
-        Map<String, Date> receivedServices = receivedServices(serviceRecordList);
-
-        String dobString = Utils.getValue(getChildDetails().getColumnmaps(), "dob", false);
-        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
-
-
-        Map<String, Object> nv = null;
-        if (serviceRecordList.isEmpty()) {
-            nv = nextServiceDue(sch, serviceTypes);
-        } else {
-            ServiceRecord lastServiceRecord = null;
-            for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (serviceRecord.getSyncStatus().equalsIgnoreCase(RecurringServiceRecordRepository.TYPE_Unsynced)) {
-                    lastServiceRecord = serviceRecord;
-                }
-            }
-
-            if (lastServiceRecord != null) {
-                nv = nextServiceDue(sch, lastServiceRecord);
-            }
-        }
-
-        if (nv == null) {
-            Date lastVaccine = null;
-            if (!serviceRecordList.isEmpty()) {
-                ServiceRecord serviceRecord = serviceRecordList.get(serviceRecordList.size() - 1);
-                lastVaccine = serviceRecord.getDate();
-            }
-
-            nv = nextServiceDue(sch, lastVaccine);
-        }
-
-        if (nv != null) {
-            ServiceType nextServiceType = (ServiceType) nv.get("service");
-            tag.setStatus(nv.get("status").toString());
-            tag.setAlert((Alert) nv.get("alert"));
-            if (nv.get("date") != null && nv.get("date") instanceof DateTime) {
-                tag.setVaccineDate((DateTime) nv.get("date"));
-            }
-            tag.setServiceType(nextServiceType);
-        }
-    }
-
-    public void updateWrapperStatus(ArrayList<ServiceWrapper> tags) {
-        if (tags == null) {
-            return;
-        }
-
-        for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag);
-        }
-    }
-
     public void updateAllWrapperStatus() {
-        if (serviceCardAdapter == null) {
-            return;
-        }
-
-        List<ServiceWrapper> tags = serviceCardAdapter.allWrappers();
-        if (tags == null) {
-            return;
-        }
-
-        for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag);
+        if (serviceCardAdapter != null) {
+            serviceCardAdapter.updateAllWrapperStatus(childDetails);
         }
     }
-
-    public void updateWrapper(ServiceWrapper tag) {
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        if (!serviceRecordList.isEmpty()) {
-            for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (tag.getName().toLowerCase().contains(serviceRecord.getName().toLowerCase()) && serviceRecord.getDate() != null) {
-                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
-                    }
-                    tag.setDbKey(serviceRecord.getId());
-                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
-                }
-            }
-        }
-
-    }
-
-
 }
