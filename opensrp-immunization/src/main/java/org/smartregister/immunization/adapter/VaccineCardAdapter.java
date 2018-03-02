@@ -1,6 +1,7 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,18 +9,28 @@ import android.widget.BaseAdapter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.json.JSONException;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
+import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.domain.jsonmapping.Vaccine;
+import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.ImageUtils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
+import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
 import static org.smartregister.util.Utils.getName;
 import static org.smartregister.util.Utils.getValue;
 
@@ -33,10 +44,15 @@ public class VaccineCardAdapter extends BaseAdapter {
     private final VaccineGroup vaccineGroup;
     private final String type;
 
+    private List<Vaccine> vaccineList;
+    private List<Alert> alertList;
 
-    public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type) throws JSONException {
+    public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type,
+                              List<Vaccine> vaccineList, List<Alert> alertList) {
         this.context = context;
         this.vaccineGroup = vaccineGroup;
+        this.vaccineList = vaccineList;
+        this.alertList = alertList;
         vaccineCards = new HashMap<>();
         this.type = type;
     }
@@ -59,8 +75,8 @@ public class VaccineCardAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
-            Vaccine vaccineData = vaccineGroup.getVaccineData().vaccines
-                    .get(position);
+            org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData
+                    = vaccineGroup.getVaccineData().vaccines.get(position);
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
                 VaccineCard vaccineCard = new VaccineCard(context);
@@ -68,42 +84,11 @@ public class VaccineCardAdapter extends BaseAdapter {
                 vaccineCard.setOnClickListener(vaccineGroup);
                 vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
                 vaccineCard.setId((int) getItemId(position));
-                VaccineWrapper vaccineWrapper = new VaccineWrapper();
-                vaccineWrapper.setId(vaccineGroup.getChildDetails().entityId());
-                vaccineWrapper.setGender(vaccineGroup.getChildDetails().getDetails().get("gender"));
-                vaccineWrapper.setName(vaccineName);
-                vaccineWrapper.setDefaultName(vaccineName);
-
-                String dobString = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "dob", false);
-                if (StringUtils.isNotBlank(dobString)) {
-                    Calendar dobCalender = Calendar.getInstance();
-                    DateTime dateTime = new DateTime(dobString);
-                    dobCalender.setTime(dateTime.toDate());
-                    dobCalender.add(Calendar.DATE, vaccineGroup.getVaccineData().days_after_birth_due);
-                    vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
-                }
-
-                Photo photo = ImageUtils.profilePhotoByClient(vaccineGroup.getChildDetails());
-                vaccineWrapper.setPhoto(photo);
-
-                String zeirId = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "zeir_id", false);
-                vaccineWrapper.setPatientNumber(zeirId);
-
-                String firstName = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "first_name", true);
-                String lastName = getValue(vaccineGroup.getChildDetails().getColumnmaps(), "last_name", true);
-                String childName = getName(firstName, lastName);
-                vaccineWrapper.setPatientName(childName.trim());
-
-                vaccineGroup.updateWrapper(vaccineWrapper);
-                vaccineGroup.updateWrapperStatus(vaccineWrapper, type);
-                vaccineCard.setVaccineWrapper(vaccineWrapper);
-
                 vaccineCards.put(vaccineName, vaccineCard);
-            }
-
-            //If last position, toggle RecordAll
-            if (position == (getCount() - 1)) {
-                vaccineGroup.toggleRecordAllTV();
+                VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineName,
+                        vaccineGroup.getChildDetails(),
+                        vaccineGroup.getVaccineData().days_after_birth_due, position);
+                Utils.startAsyncTask(vaccineRowTask, null);
             }
 
             return vaccineCards.get(vaccineName);
@@ -150,6 +135,157 @@ public class VaccineCardAdapter extends BaseAdapter {
         }
 
         return allWrappers;
+    }
+
+    public void updateWrapperStatus(VaccineWrapper tag, String type, CommonPersonObjectClient childDetails) {
+        List<Vaccine> vaccineList = getVaccineList();
+
+        List<Alert> alertList = getAlertList();
+
+        Map<String, Date> recievedVaccines = VaccinatorUtils.receivedVaccines(vaccineList);
+
+        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        List<Map<String, Object>> sch = generateScheduleList(type, new DateTime(dobString), recievedVaccines, alertList);
+
+        for (Map<String, Object> m : sch) {
+            VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
+            if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
+
+                //Add exception for bcg 2
+                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
+                    continue;
+                }
+
+                if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
+                        || vaccine.equals(VaccineRepo.Vaccine.mr2)
+                        || vaccine.equals(VaccineRepo.Vaccine.measles1)
+                        || vaccine.equals(VaccineRepo.Vaccine.mr1) && tag.getAlert() != null) && tag.getStatus() != null) {
+                    break;
+                }
+                tag.setStatus(m.get("status").toString());
+                tag.setAlert((Alert) m.get("alert"));
+            }
+        }
+    }
+
+    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags, String type, CommonPersonObjectClient childDetails) {
+        if (tags == null) {
+            return;
+        }
+
+        for (VaccineWrapper tag : tags) {
+            updateWrapperStatus(tag, type, childDetails);
+        }
+    }
+
+    public void updateWrapper(VaccineWrapper tag) {
+        List<Vaccine> vaccineList = getVaccineList();
+
+        if (!vaccineList.isEmpty()) {
+            for (Vaccine vaccine : vaccineList) {
+                if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
+
+                    //Add exception for bcg 2
+                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
+                        continue;
+                    }
+
+                    long diff = vaccine.getUpdatedAt() - vaccine.getDate().getTime();
+                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
+                        tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), false);
+                    } else {
+                        tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
+                    }
+                    tag.setDbKey(vaccine.getId());
+                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    if (tag.getName().contains("/")) {
+                        String[] array = tag.getName().split("/");
+
+                        if ((array[0]).toLowerCase().contains(vaccine.getName().toLowerCase())) {
+                            tag.setName(array[0]);
+                        } else if ((array[1]).toLowerCase().contains(vaccine.getName().toLowerCase())) {
+
+                            tag.setName(array[1]);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public List<Vaccine> getVaccineList() {
+        return vaccineList;
+    }
+
+    public List<Alert> getAlertList() {
+        return alertList;
+    }
+
+    class VaccineRowTask extends AsyncTask<Void, Void, VaccineWrapper> {
+
+        private VaccineCard vaccineCard;
+
+        private String vaccineName;
+
+        private CommonPersonObjectClient childDetails;
+
+        private int days_after_birth_due;
+        private int position;
+
+        VaccineRowTask(VaccineCard vaccineCard, String vaccineName,
+                       CommonPersonObjectClient childDetails, Integer days_after_birth_due, int position) {
+            this.vaccineCard = vaccineCard;
+            this.vaccineName = vaccineName;
+            this.childDetails = childDetails;
+            this.days_after_birth_due = days_after_birth_due;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
+            vaccineCard.setVaccineWrapper(vaccineWrapper);
+
+            //If last position, toggle RecordAll
+            if (position == (getCount() - 1)) {
+                vaccineGroup.toggleRecordAllTV();
+            }
+            notifyDataSetChanged();
+        }
+
+        @Override
+        protected VaccineWrapper doInBackground(Void... params) {
+            VaccineWrapper vaccineWrapper = new VaccineWrapper();
+            vaccineWrapper.setId(childDetails.entityId());
+            vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
+            vaccineWrapper.setName(vaccineName);
+            vaccineWrapper.setDefaultName(vaccineName);
+
+            String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
+            if (StringUtils.isNotBlank(dobString)) {
+                Calendar dobCalender = Calendar.getInstance();
+                DateTime dateTime = new DateTime(dobString);
+                dobCalender.setTime(dateTime.toDate());
+                dobCalender.add(Calendar.DATE, days_after_birth_due);
+                vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
+            }
+
+            Photo photo = ImageUtils.profilePhotoByClient(childDetails);
+            vaccineWrapper.setPhoto(photo);
+
+            String zeirId = getValue(childDetails.getColumnmaps(), "zeir_id", false);
+            vaccineWrapper.setPatientNumber(zeirId);
+
+            String firstName = getValue(childDetails.getColumnmaps(), "first_name", true);
+            String lastName = getValue(childDetails.getColumnmaps(), "last_name", true);
+            String childName = getName(firstName, lastName);
+            vaccineWrapper.setPatientName(childName.trim());
+
+            updateWrapper(vaccineWrapper);
+            updateWrapperStatus(vaccineWrapper, type, childDetails);
+
+            return vaccineWrapper;
+        }
     }
 
 }
