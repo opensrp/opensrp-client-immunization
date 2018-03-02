@@ -24,9 +24,6 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -290,32 +287,23 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         if (vaccineGroups == null) {
             vaccineGroups = new ArrayList<>();
-            String supportedVaccinesString = VaccinatorUtils.getSupportedVaccines(this);
+            List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> supportedVaccines =
+                    VaccinatorUtils.getSupportedVaccines(this);
 
+            for (org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineGroupObject : supportedVaccines) {
+                //Add BCG2 special vaccine to birth vaccine group
+                VaccinateActionUtils.addBcg2SpecialVaccine(this, vaccineGroupObject, vaccineList);
 
-            try {
-                JSONArray supportedVaccines = new JSONArray(supportedVaccinesString);
-
-                for (int i = 0; i < supportedVaccines.length(); i++) {
-                    JSONObject vaccineGroupObject = supportedVaccines.getJSONObject(i);
-
-                    //Add BCG2 special vaccine to birth vaccine group
-                    VaccinateActionUtils.addBcg2SpecialVaccine(this, vaccineGroupObject, vaccineList);
-
-                    addVaccineGroup(-1, vaccineGroupObject, vaccineList, alerts);
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
+                addVaccineGroup(-1, vaccineGroupObject, vaccineList, alerts);
             }
         }
-
     }
 
 
-    private void addVaccineGroup(int canvasId, JSONObject vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
+    private void addVaccineGroup(int canvasId, org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
         LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
         VaccineGroup curGroup = new VaccineGroup(this);
-        curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts , "child");
+        curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts, "child");
         curGroup.setOnRecordAllClickListener(new VaccineGroup.OnRecordAllClickListener() {
             @Override
             public void onClick(VaccineGroup vaccineGroup, ArrayList<VaccineWrapper> dueVaccines) {
@@ -349,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             parent.removeAllViews();
         }
         parent.addView(curGroup);
-        curGroup.setTag(R.id.vaccine_group_vaccine_data, vaccineGroupData.toString());
+        curGroup.setTag(R.id.vaccine_group_vaccine_data, vaccineGroupData);
         curGroup.setTag(R.id.vaccine_group_parent_id, String.valueOf(canvasId));
         vaccineGroups.add(curGroup);
     }
@@ -837,7 +825,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 try {
                     vaccineGroups.remove(curGroup);
                     addVaccineGroup(Integer.valueOf((String) curGroup.getTag(R.id.vaccine_group_parent_id)),
-                            new JSONObject((String) curGroup.getTag(R.id.vaccine_group_vaccine_data)),
+                            //TODO if error use immediately below
+                            // (org.smartregister.immunization.domain.jsonmapping.VaccineGroup) curGroup.getTag(R.id.vaccine_group_vaccine_data),
+                            curGroup.getVaccineData(),
                             vaccineList, alerts);
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));

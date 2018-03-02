@@ -22,6 +22,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -35,9 +36,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opensrp.api.domain.Location;
@@ -56,11 +58,13 @@ import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.ServiceTrigger;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.util.IntegerUtil;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -69,6 +73,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;
 import static org.smartregister.util.Utils.convertDateFormat;
@@ -117,7 +122,7 @@ public class VaccinatorUtils {
             map.put("provider_identifier", tm.getString("identifier"));
             map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Log.e(TAG, "", e);
         }
 
         return map;
@@ -191,7 +196,7 @@ public class VaccinatorUtils {
         }
 
 
-        TextView label = (TextView) tr.findViewById(R.id.vaccine);
+        TextView label = (TextView) tr.findViewById(vaccine);
         label.setText(vaccineWrapper.getVaccine().display());
 
         String vaccineDate = "";
@@ -336,7 +341,7 @@ public class VaccinatorUtils {
                 schedule.add(m);
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return schedule;
     }
@@ -379,7 +384,7 @@ public class VaccinatorUtils {
                 schedule.add(m);
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return schedule;
     }
@@ -412,7 +417,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return schedule;
     }
@@ -473,7 +478,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return null;
     }
@@ -529,7 +534,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -563,7 +568,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -586,7 +591,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -618,7 +623,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return v;
     }
@@ -651,30 +656,36 @@ public class VaccinatorUtils {
     }
 
     /**
-     * Returns a JSON String containing a list of supported vaccines
+     * Returns a list of VaccineGroup containing a list of supported vaccines
      *
      * @param context Current valid context to be used
-     * @return JSON String with the supported vaccines or NULL if unable to obtain the list
+     * @return list of VaccineGroup with the supported vaccines
      */
-    public static String getSupportedVaccines(Context context) {
-        String supportedVaccinesString = org.smartregister.util.Utils.readAssetContents(context, "vaccines.json");
-        return supportedVaccinesString;
+    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context) {
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        return ImmunizationLibrary.getInstance().assetJsonToJava("vaccines.json", clazz, listType);
     }
 
     /**
-     * Returns a JSON String containing a list of supported woman vaccines
+     * Returns a list of VaccineGroup containing a list of supported woman vaccines
      *
      * @param context Current valid context to be used
-     * @return JSON String with the supported vaccines or NULL if unable to obtain the list
+     * @return list of VaccineGroup with the supported vaccines
      */
-    public static String getSupportedWomanVaccines(Context context) {
-        String supportedVaccinesString = org.smartregister.util.Utils.readAssetContents(context, "mother_vaccines.json");
-        return supportedVaccinesString;
+    public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context) {
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        return ImmunizationLibrary.getInstance().assetJsonToJava("mother_vaccines.json", clazz, listType);
     }
 
-    public static String getSpecialVaccines(Context context) {
-        String specialVaccinesString = org.smartregister.util.Utils.readAssetContents(context, "special_vaccines.json");
-        return specialVaccinesString;
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
+        Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        return ImmunizationLibrary.getInstance().assetJsonToJava("special_vaccines.json", clazz, listType);
     }
 
     /**
@@ -690,14 +701,11 @@ public class VaccinatorUtils {
 
     public static int getVaccineCalculation(Context context, String vaccineName)
             throws JSONException {
-        JSONArray supportedVaccines = new JSONArray(getSupportedVaccines(context));
-        for (int i = 0; i < supportedVaccines.length(); i++) {
-            JSONObject curGroup = supportedVaccines.getJSONObject(i);
-            for (int j = 0; j < curGroup.getJSONArray("vaccines").length(); j++) {
-                JSONObject curVaccine = curGroup.getJSONArray("vaccines").getJSONObject(j);
-                if (curVaccine.getString("name").equalsIgnoreCase(vaccineName)) {
-                    return curVaccine.getJSONObject("openmrs_calculate").getInt("calculation");
-                }
+        List<VaccineGroup> supportedVaccines = getSupportedVaccines(context);
+        for (VaccineGroup vaccineGroup : supportedVaccines) {
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
+                if (vaccine.name.equalsIgnoreCase(vaccineName))
+                    return vaccine.openmrs_calculate.calculation;
             }
         }
         return -1;
@@ -736,29 +744,16 @@ public class VaccinatorUtils {
      * @return
      */
     public static String getVaccineDisplayName(Context context, final String vaccineDbName) {
-        String readableName = vaccineDbName;
+        List<VaccineGroup> availableVaccines = getSupportedVaccines(context);
 
-        boolean found = false;
-        try {
-            JSONArray availableVaccines = new JSONArray(getSupportedVaccines(context));
-            for (int i = 0; i < availableVaccines.length(); i++) {
-                JSONObject currVaccineGroup = availableVaccines.getJSONObject(i);
-                for (int j = 0; j < currVaccineGroup.getJSONArray("vaccines").length(); j++) {
-                    JSONObject curVaccine = currVaccineGroup.getJSONArray("vaccines").getJSONObject(j);
-                    if (curVaccine.getString("name").toLowerCase().equals(vaccineDbName.toLowerCase())) {
-                        readableName = curVaccine.getString("name");
-                        found = true;
-                    }
-
-                    if (found) break;
-                }
-                if (found) break;
+        for (VaccineGroup vaccineGroup : availableVaccines) {
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
+                if (vaccine.name.equalsIgnoreCase(vaccineDbName))
+                    return vaccine.name;
             }
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
         }
 
-        return readableName;
+        return vaccineDbName;
     }
 
     /**
@@ -791,7 +786,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(VaccinatorUtils.class.getName(), e.toString(), e);
+            Log.e(TAG, e.toString(), e);
         }
         return null;
     }

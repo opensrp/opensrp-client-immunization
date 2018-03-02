@@ -3,10 +3,11 @@ package org.smartregister.immunization.utils;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import com.google.gson.reflect.TypeToken;
+
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,12 +27,15 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.service.AlertService;
 import org.smartregister.util.FormUtils;
+import org.smartregister.util.JsonFormUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -234,14 +238,20 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Vaccine v = new Vaccine();
         v.setName("BCG 2");
         list.add(v);
-        JSONArray vaccines = new JSONArray(VaccineData.vaccines);
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
         PowerMockito.mockStatic(VaccinatorUtils.class);
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(VaccineData.special_vacines);
-        VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.getJSONObject(0), list);
 
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
 
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(magicNULL);
-        VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.getJSONObject(0), list);
+        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(specialVaccines);
+        VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
+
+        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(null);
+        VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
         //choto related methods
 

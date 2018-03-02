@@ -6,10 +6,10 @@ import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.JsonFormUtils;
@@ -27,7 +27,7 @@ public class VaccineIntentService extends IntentService {
     public static final String EVENT_TYPE_OUT_OF_CATCHMENT = "Out of Area Service - Vaccination";
     public static final String ENTITY_TYPE = "vaccination";
     private VaccineRepository vaccineRepository;
-    private JSONArray availableVaccines;
+    private List<VaccineGroup> availableVaccines;
 
     public VaccineIntentService() {
         super("VaccineService");
@@ -36,11 +36,7 @@ public class VaccineIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (availableVaccines == null) {
-            try {
-                availableVaccines = new JSONArray(VaccinatorUtils.getSupportedVaccines(this));
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
+            availableVaccines = VaccinatorUtils.getSupportedVaccines(getBaseContext());
         }
         final String entityId = "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         final String calId = "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -98,31 +94,22 @@ public class VaccineIntentService extends IntentService {
 
     private String getParentId(String name) {
         String parentEntityId = "";
-        try {
-
-            for (int i = 0; i < availableVaccines.length(); i++) {
-                JSONObject curVaccineGroup = availableVaccines.getJSONObject(i);
-                JSONArray vaccines = curVaccineGroup.getJSONArray("vaccines");
-                for (int j = 0; j < vaccines.length(); j++) {
-                    JSONObject vaccine = vaccines.getJSONObject(j);
-                    if (StringUtils.containsIgnoreCase(vaccine.getString("name"), name)) {
-                        parentEntityId = vaccine.getJSONObject("openmrs_date").getString("parent_entity");
-                        if (parentEntityId.contains("/")) {
-                            String[] parentEntityArray = parentEntityId.split("/");
-                            if (StringUtils.containsIgnoreCase(name, "measles")) {
-                                parentEntityId = parentEntityArray[0];
-                            } else if (StringUtils.containsIgnoreCase(name, "mr")) {
-                                parentEntityId = parentEntityArray[1];
-                            }
-                            return parentEntityId;
+        for (VaccineGroup vaccineGroup : availableVaccines) {
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
+                if (StringUtils.containsIgnoreCase(vaccine.name, name)) {
+                    parentEntityId = vaccine.openmrs_date.parent_entity;
+                    if (parentEntityId.contains("/")) {
+                        String[] parentEntityArray = parentEntityId.split("/");
+                        if (StringUtils.containsIgnoreCase(name, "measles")) {
+                            parentEntityId = parentEntityArray[0];
+                        } else if (StringUtils.containsIgnoreCase(name, "mr")) {
+                            parentEntityId = parentEntityArray[1];
                         }
+                        return parentEntityId;
                     }
                 }
             }
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
         }
-
         return parentEntityId;
     }
 

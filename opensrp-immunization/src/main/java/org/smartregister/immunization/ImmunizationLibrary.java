@@ -9,6 +9,11 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.util.AssetHandler;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by keyman on 31/07/17.
@@ -28,6 +33,8 @@ public class ImmunizationLibrary {
 
     private static ImmunizationLibrary instance;
 
+    private Map<String, Object> jsonMap = new HashMap<>();
+
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject) {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject);
@@ -45,6 +52,10 @@ public class ImmunizationLibrary {
         this.repository = repository;
         this.context = context;
         this.commonFtsObject = commonFtsObject;
+    }
+
+    public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
+        return AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
     }
 
     public Repository getRepository() {

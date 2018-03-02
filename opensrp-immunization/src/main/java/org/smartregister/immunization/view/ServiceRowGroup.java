@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
@@ -20,7 +18,6 @@ import org.smartregister.immunization.adapter.ServiceRowAdapter;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -29,18 +26,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
-import static org.smartregister.immunization.util.VaccinatorUtils.receivedServices;
 
 /**
  * Created by keyman on 15/05/2017.
  */
 
 public class ServiceRowGroup extends LinearLayout implements View.OnClickListener {
-    private static final String TAG = "ServiceRowGroup";
     private Context context;
     private TextView nameTV;
     private ExpandableHeightGridView servicesGV;
@@ -213,14 +205,9 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     private void updateServiceRowCards(ArrayList<ServiceWrapper> servicesToUpdate) {
         if (serviceRowAdapter == null) {
-            try {
-                serviceRowAdapter = new ServiceRowAdapter(context, this, editmode);
-                servicesGV.setAdapter(serviceRowAdapter);
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
+            serviceRowAdapter = new ServiceRowAdapter(context, this, editmode, serviceTypeList, serviceRecordList, alertList);
+            servicesGV.setAdapter(serviceRowAdapter);
         }
-
 
         if (serviceRowAdapter != null) {
             serviceRowAdapter.update(servicesToUpdate);
@@ -268,50 +255,15 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
         this.modalOpen = modalOpen;
     }
 
-    public void updateWrapperStatus(ServiceWrapper tag) {
-
-        List<ServiceType> serviceTypes = getServiceTypes();
-
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        List<Alert> alertList = getAlertList();
-
-        Map<String, Date> receivedServices = receivedServices(serviceRecordList);
-
-        String dobString = Utils.getValue(getChildDetails().getColumnmaps(), "dob", false);
-        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
-
-
-        for (Map<String, Object> m : sch) {
-            ServiceType serviceType = (ServiceType) m.get("service");
-            if (tag.getName().toLowerCase().equalsIgnoreCase(serviceType.getName().toLowerCase())) {
-                tag.setStatus(m.get("status").toString());
-                tag.setAlert((Alert) m.get("alert"));
-                tag.setServiceType(serviceType);
-                tag.setVaccineDate((DateTime) m.get("date"));
-            }
+    public void updateWrapperStatus(ServiceWrapper serviceWrapper) {
+        if (serviceRowAdapter != null) {
+            serviceRowAdapter.updateWrapperStatus(serviceWrapper, getChildDetails());
         }
     }
 
-    public void updateWrapper(ServiceWrapper tag) {
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        if (!serviceRecordList.isEmpty()) {
-            for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (tag.getName().toLowerCase().contains(serviceRecord.getName().toLowerCase()) && serviceRecord.getDate() != null) {
-                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
-                    }
-                    tag.setDbKey(serviceRecord.getId());
-                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
-                }
-            }
+    public void updateWrapper(ServiceWrapper wrapper) {
+        if (serviceRowAdapter != null) {
+            serviceRowAdapter.updateWrapper(wrapper);
         }
-
     }
-
-
 }

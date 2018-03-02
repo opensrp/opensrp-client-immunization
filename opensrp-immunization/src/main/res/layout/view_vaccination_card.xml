@@ -14,7 +14,8 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="5dp"
         android:background="@null"
-        android:src="@drawable/ic_action_check" />
+        android:src="@drawable/ic_action_check"
+        android:visibility="invisible"/>
 
     <org.smartregister.view.customcontrols.CustomFontTextView
         android:id="@+id/name_tv"
@@ -28,7 +29,6 @@
         android:background="@null"
         android:gravity="center_vertical|left"
         android:layout_marginRight="10dp"
-        android:text="abc"
         android:singleLine="false"
         android:textColor="@color/client_list_grey"
         android:textSize="14sp" />
@@ -44,6 +44,7 @@
         android:textAllCaps="false"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

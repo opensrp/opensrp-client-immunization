@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.ImmunizationRowAdapter;
-import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -30,24 +26,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
-import static org.smartregister.immunization.util.VaccinatorUtils.receivedVaccines;
 
 /**
  * Created by raihan on 13/03/2017.
  */
 public class ImmunizationRowGroup extends LinearLayout implements View.OnClickListener,
         ImmunizationRowCard.OnVaccineStateChangeListener {
-    private static final String TAG = "VaccineGroup";
     private Context context;
     private TextView nameTV;
     private TextView recordAllTV;
     private ExpandableHeightGridView vaccinesGV;
     private ImmunizationRowAdapter vaccineCardAdapter;
-    private JSONObject vaccineData;
+    private VaccineGroup vaccineData;
     private CommonPersonObjectClient childDetails;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
@@ -85,16 +76,8 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         return this.childDetails;
     }
 
-    public JSONObject getVaccineData() {
+    public VaccineGroup getVaccineData() {
         return this.vaccineData;
-    }
-
-    public List<Vaccine> getVaccineList() {
-        return this.vaccineList;
-    }
-
-    public void setAlertList(List<Alert> alertList) {
-        this.alertList = alertList;
     }
 
 
@@ -120,7 +103,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         recordAllTV.setVisibility(GONE);
     }
 
-    public void setData(JSONObject vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts) {
+    public void setData(VaccineGroup vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts) {
         this.vaccineData = vaccineData;
         this.childDetails = childDetails;
         this.vaccineList = vaccines;
@@ -128,9 +111,6 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         updateViews();
     }
 
-    public void setVaccineList(List<Vaccine> vaccineList) {
-        this.vaccineList = vaccineList;
-    }
 
     public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
         this.onVaccineUndoClickListener = onVaccineUndoClickListener;
@@ -178,41 +158,33 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     }
 
     private void updateStatusViews() {
-        try {
-            switch (this.state) {
-                case IN_PAST:
-                    nameTV.setText(vaccineData.getString("name"));
-                    break;
-                case CURRENT:
-                    nameTV.setText(String.format(context.getString(R.string.due_),
-                            vaccineData.getString("name"), context.getString(R.string.today)));
-                    break;
-                case IN_FUTURE:
-                    String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
-                    Calendar dobCalender = Calendar.getInstance();
-                    DateTime dateTime = new DateTime(dobString);
-                    dobCalender.setTime(dateTime.toDate());
-                    dobCalender.add(Calendar.DATE, vaccineData.getInt("days_after_birth_due"));
-                    nameTV.setText(String.format(context.getString(R.string.due_),
-                            vaccineData.getString("name"),
-                            READABLE_DATE_FORMAT.format(dobCalender.getTime())));
-                    break;
-                default:
-                    break;
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+        switch (this.state) {
+            case IN_PAST:
+                nameTV.setText(vaccineData.name);
+                break;
+            case CURRENT:
+                nameTV.setText(String.format(context.getString(R.string.due_),
+                        vaccineData.name, context.getString(R.string.today)));
+                break;
+            case IN_FUTURE:
+                String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+                Calendar dobCalender = Calendar.getInstance();
+                DateTime dateTime = new DateTime(dobString);
+                dobCalender.setTime(dateTime.toDate());
+                dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
+                nameTV.setText(String.format(context.getString(R.string.due_),
+                        vaccineData.name,
+                        READABLE_DATE_FORMAT.format(dobCalender.getTime())));
+                break;
+            default:
+                break;
         }
     }
 
     private void updateVaccineCards(ArrayList<VaccineWrapper> vaccinesToUpdate) {
         if (vaccineCardAdapter == null) {
-            try {
-                vaccineCardAdapter = new ImmunizationRowAdapter(context, this, editmode);
-                vaccinesGV.setAdapter(vaccineCardAdapter);
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
+            vaccineCardAdapter = new ImmunizationRowAdapter(context, this, editmode, vaccineList, alertList);
+            vaccinesGV.setAdapter(vaccineCardAdapter);
         }
 
         if (vaccineCardAdapter != null) {
@@ -291,75 +263,32 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         return new ArrayList<VaccineWrapper>();
     }
 
+    public List<Vaccine> getVaccineList() {
+        return vaccineList;
+    }
+
+    public void setVaccineList(List<Vaccine> vaccineList) {
+        this.vaccineList = vaccineList;
+    }
+
     public List<Alert> getAlertList() {
         return alertList;
     }
 
-    public void updateWrapperStatus(VaccineWrapper tag) {
-        List<Vaccine> vaccineList = getVaccineList();
+    public void setAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
 
-        List<Alert> alertList = getAlertList();
-        Map<String, Date> recievedVaccines = receivedVaccines(vaccineList);
-        String dobString = Utils.getValue(getChildDetails().getColumnmaps(), "dob", false);
-        DateTime dateTime = !dobString.isEmpty() ? new DateTime(dobString) : new DateTime();
-        List<Map<String, Object>> sch = generateScheduleList("child", dateTime, recievedVaccines, alertList);
-
-        for (Map<String, Object> m : sch) {
-            VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
-            if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
-
-                //Add exception for bcg 2
-                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
-                    continue;
-                }
-
-                tag.setStatus(m.get("status").toString());
-                tag.setAlert((Alert) m.get("alert"));
-
-            }
+    public void updateWrapperStatus(ArrayList<VaccineWrapper> wrappers) {
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.updateWrapperStatus(wrappers, getChildDetails());
         }
     }
 
-    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags) {
-        if (tags == null) {
-            return;
-        }
-
-        for (VaccineWrapper tag : tags) {
-            updateWrapperStatus(tag);
+    public void updateWrapper(VaccineWrapper wrapper) {
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.updateWrapper(wrapper);
         }
     }
 
-    public void updateWrapper(VaccineWrapper tag) {
-        List<Vaccine> vaccineList = getVaccineList();
-
-        if (!vaccineList.isEmpty()) {
-            for (Vaccine vaccine : vaccineList) {
-                if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
-
-                    //Add exception for bcg 2
-                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
-                        continue;
-                    }
-
-                    long diff = vaccine.getUpdatedAt() - vaccine.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
-                    }
-                    tag.setDbKey(vaccine.getId());
-                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
-                    if (tag.getName().contains("/")) {
-                        String[] array = tag.getName().split("/");
-                        if ((array[0]).toLowerCase().contains(vaccine.getName())) {
-                            tag.setName(array[0]);
-                        } else if ((array[1]).toLowerCase().contains(vaccine.getName())) {
-                            tag.setName(array[1]);
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

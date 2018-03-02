@@ -1,8 +1,8 @@
 package org.smartregister.immunization.domain;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,9 +17,13 @@ import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.jsonmapping.Condition;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
+import org.smartregister.util.JsonFormUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +67,16 @@ public class VaccineScheduleTest extends BaseUnitTest {
     public void assertUpdateOfflineAlertsTestReturnsAlert() throws Exception {
 
         VaccineSchedule vaccineSchedule = new VaccineSchedule(null, null, null, null);
-        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), magicChild);
+
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+
+        vaccineSchedule.init(vaccines, specialVaccines, magicChild);
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
@@ -85,13 +98,22 @@ public class VaccineScheduleTest extends BaseUnitTest {
     public void assertInitAndInitVaccineWithTestData() throws Exception {
         VaccineSchedule vaccineSchedule = new VaccineSchedule(null, null, null, null);
 //        VaccineSchedule vaccineSchedule = Mockito.spy(this.vaccineSchedule);
-        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), magicChild);
-        vaccineSchedule.init(new JSONArray(VaccineData.vaccines), new JSONArray(VaccineData.special_vacines), "");
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+
+
+        vaccineSchedule.init(vaccines, specialVaccines, magicChild);
+        vaccineSchedule.init(vaccines, specialVaccines, "");
         Assert.assertNotNull(vaccineSchedule.getVaccineSchedule(magicChild, magicOPV0));
         Assert.assertNull(vaccineSchedule.getVaccineSchedule("", ""));
         //vaccine cnodition test
-        JSONObject object = new JSONObject();
-        object.put("type", "");
+        Condition object = new Condition();
+        object.type = "";
         VaccineCondition vaccineCondition = Mockito.mock(VaccineCondition.class);
         Assert.assertNull(vaccineCondition.init("", object));
 

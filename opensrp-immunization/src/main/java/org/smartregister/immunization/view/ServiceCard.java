@@ -133,9 +133,8 @@ public class ServiceCard extends LinearLayout {
                     this.state = State.DUE;
                 } */
             }
+            updateStateUi();
         }
-
-        updateStateUi();
     }
 
     public void setOnServiceStateChangeListener(OnServiceStateChangeListener onServiceStateChangeListener) {

@@ -126,9 +126,9 @@ public class ImmunizationRowCard extends LinearLayout {
                     }
                 }
             }
+            updateStateUi();
         }
 
-        updateStateUi();
     }
 
     public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {
@@ -160,6 +160,7 @@ public class ImmunizationRowCard extends LinearLayout {
             }
         }
 //        boolean status_for_more_than_three_months = false;
+        statusIV.setVisibility(VISIBLE);
         switch (state) {
             case NOT_DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);

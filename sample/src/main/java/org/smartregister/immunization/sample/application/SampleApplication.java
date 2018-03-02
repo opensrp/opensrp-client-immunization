@@ -2,15 +2,18 @@ package org.smartregister.immunization.sample.application;
 
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.VaccineSchedule;
+import org.smartregister.immunization.domain.jsonmapping.Vaccine;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.sample.repository.SampleRepository;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.Repository;
 import org.smartregister.view.activity.DrishtiApplication;
+
+import java.util.List;
 
 import static org.smartregister.util.Log.logError;
 
@@ -30,11 +33,11 @@ public class SampleApplication extends DrishtiApplication {
 
         context.updateApplicationContext(getApplicationContext());
 
-        initOfflineSchedules();
-
         //Initialize Modules
         CoreLibrary.init(context);
         ImmunizationLibrary.init(context, getRepository(), null);
+
+        initOfflineSchedules();
 
     }
 
@@ -63,8 +66,8 @@ public class SampleApplication extends DrishtiApplication {
 
     private void initOfflineSchedules() {
         try {
-            JSONArray childVaccines = new JSONArray(VaccinatorUtils.getSupportedVaccines(this));
-            JSONArray specialVaccines = new JSONArray(VaccinatorUtils.getSpecialVaccines(this));
+            List<VaccineGroup> childVaccines = VaccinatorUtils.getSupportedVaccines(this);
+            List<Vaccine> specialVaccines = VaccinatorUtils.getSpecialVaccines(this);
             VaccineSchedule.init(childVaccines, specialVaccines, "child");
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));

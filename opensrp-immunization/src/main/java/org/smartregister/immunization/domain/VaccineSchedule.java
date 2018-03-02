@@ -4,14 +4,16 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.jsonmapping.Condition;
+import org.smartregister.immunization.domain.jsonmapping.Due;
+import org.smartregister.immunization.domain.jsonmapping.Expiry;
+import org.smartregister.immunization.domain.jsonmapping.Schedule;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
 
@@ -36,44 +38,42 @@ public class VaccineSchedule {
 
     private static HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules;
 
-    public static void init(JSONArray vaccines, JSONArray specialVaccines, String vaccineCategory) throws JSONException {
+    public static void init(List<VaccineGroup> vaccines, List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines, String vaccineCategory) {
         if (vaccineSchedules == null) {
             vaccineSchedules = new HashMap<>();
         }
         vaccineSchedules.put(vaccineCategory, new HashMap<String, VaccineSchedule>());
 
-        for (int groupIndex = 0; groupIndex < vaccines.length(); groupIndex++) {
-            JSONObject curGroup = vaccines.getJSONObject(groupIndex);
-            JSONArray curVaccines = curGroup.getJSONArray("vaccines");
-            for (int vaccineIndex = 0; vaccineIndex < curVaccines.length(); vaccineIndex++) {
-                JSONObject curVaccine = curVaccines.getJSONObject(vaccineIndex);
-                initVaccine(vaccineCategory, curVaccine);
+        for (VaccineGroup vaccineGroup : vaccines) {
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
+                initVaccine(vaccineCategory, vaccine);
             }
         }
 
         if (specialVaccines != null) {
-            for (int vaccineIndex = 0; vaccineIndex < specialVaccines.length(); vaccineIndex++) {
-                initVaccine(vaccineCategory, specialVaccines.getJSONObject(vaccineIndex));
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
+                initVaccine(vaccineCategory, vaccine);
             }
         }
     }
 
-    private static void initVaccine(String vaccineCategory, JSONObject curVaccine) throws JSONException {
-        if (TextUtils.isEmpty(curVaccine.optString("vaccine_separator"))) {
-            String vaccineName = curVaccine.getString("name");
-            VaccineSchedule vaccineSchedule = getVaccineSchedule(vaccineName,
-                    vaccineCategory, curVaccine.getJSONObject("schedule"));
-            if (vaccineSchedule != null) {
+    private static void initVaccine(String vaccineCategory, org.smartregister.immunization.domain.jsonmapping.Vaccine curVaccine) {
+        if (TextUtils.isEmpty(curVaccine.vaccine_separator)) {
+            String vaccineName = curVaccine.name;
+            VaccineSchedule vaccineSchedule;
+            if (curVaccine.schedule != null) {
+                vaccineSchedule = getVaccineSchedule(vaccineName,
+                        vaccineCategory, curVaccine.schedule);
                 vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
             }
         } else {
-            String[] splitNames = curVaccine.getString("name")
-                    .split(curVaccine.getString("vaccine_separator"));
+            String[] splitNames = curVaccine.name
+                    .split(curVaccine.vaccine_separator);
             for (int nameIndex = 0; nameIndex < splitNames.length; nameIndex++) {
                 String vaccineName = splitNames[nameIndex];
                 VaccineSchedule vaccineSchedule = getVaccineSchedule(vaccineName,
                         vaccineCategory,
-                        curVaccine.getJSONObject("schedule").getJSONObject(vaccineName));
+                        curVaccine.schedules.get(vaccineName));
                 if (vaccineSchedule != null) {
                     vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
                 }
@@ -200,22 +200,19 @@ public class VaccineSchedule {
         return null;
     }
 
-    private static VaccineSchedule getVaccineSchedule(String vaccineName, String vaccineCategory, JSONObject schedule)
-            throws JSONException {
+    private static VaccineSchedule getVaccineSchedule(String vaccineName, String vaccineCategory, Schedule schedule) {
         ArrayList<VaccineTrigger> dueTriggers = new ArrayList<>();
-        JSONArray due = schedule.getJSONArray("due");
-        for (int i = 0; i < due.length(); i++) {
-            VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, due.getJSONObject(i));
+        for (Due due : schedule.due) {
+            VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, due);
             if (curTrigger != null) {
                 dueTriggers.add(curTrigger);
             }
         }
 
         ArrayList<VaccineTrigger> expiryTriggers = new ArrayList<>();
-        if (schedule.has("expiry")) {
-            JSONArray expiry = schedule.getJSONArray("expiry");
-            for (int i = 0; i < expiry.length(); i++) {
-                VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, expiry.getJSONObject(i));
+        if (schedule.expiry != null) {
+            for (Expiry expiry : schedule.expiry) {
+                VaccineTrigger curTrigger = VaccineTrigger.init(expiry);
                 if (curTrigger != null) {
                     expiryTriggers.add(curTrigger);
                 }
@@ -225,11 +222,10 @@ public class VaccineSchedule {
         VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(vaccineName, vaccineCategory);
         if (vaccine != null) {
             ArrayList<VaccineCondition> conditions = new ArrayList<>();
-            if (schedule.has("conditions")) {
-                JSONArray conditionsData = schedule.getJSONArray("conditions");
-                for (int conditionIndex = 0; conditionIndex < conditionsData.length(); conditionIndex++) {
+            if (schedule.conditions != null) {
+                for (Condition condition : schedule.conditions) {
                     VaccineCondition curCondition = VaccineCondition.init(vaccineCategory,
-                            conditionsData.getJSONObject(conditionIndex));
+                            condition);
                     if (curCondition != null) {
                         conditions.add(curCondition);
                     }

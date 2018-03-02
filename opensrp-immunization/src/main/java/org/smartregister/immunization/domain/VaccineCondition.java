@@ -1,8 +1,7 @@
 package org.smartregister.immunization.domain;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.jsonmapping.Condition;
 
 import java.util.Calendar;
 import java.util.List;
@@ -20,17 +19,17 @@ public abstract class VaccineCondition {
         this.vaccine = vaccine;
     }
 
-    public static VaccineCondition init(String vaccineCategory, JSONObject conditionData) throws JSONException {
-        if (conditionData.getString("type").equals(TYPE_GIVEN)) {
-            GivenCondition.Comparison comparison = GivenCondition.getComparison(conditionData.getString("comparison"));
-            VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.getString("vaccine"),
+    public static VaccineCondition init(String vaccineCategory, Condition conditionData) {
+        if (conditionData.type.equals(TYPE_GIVEN)) {
+            GivenCondition.Comparison comparison = GivenCondition.getComparison(conditionData.comparison);
+            VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.vaccine,
                     vaccineCategory);
 
             if (comparison != null && vaccine != null) {
-                return new GivenCondition(vaccine, conditionData.getString("value"), comparison);
+                return new GivenCondition(vaccine, conditionData.value, comparison);
             }
-        } else if (conditionData.getString("type").equals(TYPE_NOT_GIVEN)) {
-            VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.getString("vaccine"),
+        } else if (conditionData.type.equals(TYPE_NOT_GIVEN)) {
+            VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.vaccine,
                     vaccineCategory);
 
             if (vaccine != null) {

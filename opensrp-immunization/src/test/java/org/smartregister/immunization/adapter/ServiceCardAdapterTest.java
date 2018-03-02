@@ -56,18 +56,21 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     protected ViewGroup parentView;
 
     private final int magicNumber = 231231;
+    private List<ServiceRecord> serviceTypeList = new ArrayList<>();
+    private List<Alert> serviceRecordList = new ArrayList<>();
+    private Map<String,List<ServiceType>> alertList = new HashMap<>();
 
     @Before
     public void setUp() throws Exception {
         view = new ServiceGroup(RuntimeEnvironment.application);
         setDataForTest(magicDate);
-        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view);
+        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view, serviceTypeList, serviceRecordList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view));
+        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
     }
 
     @Test

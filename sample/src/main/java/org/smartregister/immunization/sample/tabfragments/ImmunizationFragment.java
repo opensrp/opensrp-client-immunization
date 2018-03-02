@@ -11,9 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -22,6 +19,7 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.ServiceEditDialogFragment;
 import org.smartregister.immunization.fragment.VaccinationEditDialogFragment;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -119,31 +117,24 @@ public class ImmunizationFragment extends Fragment {
                     VaccinateActionUtils.allAlertNames("child"));
         }
 
-        String supportedVaccinesString = VaccinatorUtils.getSupportedVaccines(getActivity());
-        try {
-            JSONArray supportedVaccines = new JSONArray(supportedVaccinesString);
-            for (int i = 0; i < supportedVaccines.length(); i++) {
-                JSONObject vaccineGroupObject = supportedVaccines.getJSONObject(i);
+        List<VaccineGroup> supportedVaccines = VaccinatorUtils.getSupportedVaccines(getActivity());
+        for (VaccineGroup vaccineGroupObject : supportedVaccines) {
 
-                VaccinateActionUtils.addBcg2SpecialVaccine(getActivity(), vaccineGroupObject, vaccineList);
+            VaccinateActionUtils.addBcg2SpecialVaccine(getActivity(), vaccineGroupObject, vaccineList);
 
-                ImmunizationRowGroup curGroup = new ImmunizationRowGroup(getActivity(), editmode);
-                curGroup.setData(vaccineGroupObject, childDetails, vaccineList, alertList);
-                curGroup.setOnVaccineUndoClickListener(new ImmunizationRowGroup.OnVaccineUndoClickListener() {
-                    @Override
-                    public void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine) {
-                        addVaccinationDialogFragment(Arrays.asList(vaccine), vaccineGroup);
+            ImmunizationRowGroup curGroup = new ImmunizationRowGroup(getActivity(), editmode);
+            curGroup.setData(vaccineGroupObject, childDetails, vaccineList, alertList);
+            curGroup.setOnVaccineUndoClickListener(new ImmunizationRowGroup.OnVaccineUndoClickListener() {
+                @Override
+                public void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine) {
+                    addVaccinationDialogFragment(Arrays.asList(vaccine), vaccineGroup);
 
-                    }
-                });
+                }
+            });
 
-                vaccineGroupCanvasLL.addView(curGroup);
-                vaccineGroups.add(curGroup);
-            }
-        } catch (JSONException e) {
-            Log.e(getClass().getName(), Log.getStackTraceString(e));
+            vaccineGroupCanvasLL.addView(curGroup);
+            vaccineGroups.add(curGroup);
         }
-
     }
 
     private void updateServiceViews(LinearLayout fragmentContainer, boolean editmode) {
