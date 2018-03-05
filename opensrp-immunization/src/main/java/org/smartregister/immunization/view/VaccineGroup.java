@@ -79,6 +79,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         return this.vaccineData;
     }
 
+    /**
+     * Returns list of administered vaccines by all ANMs. Therefore, there could be duplicate vaccine administration in this list
+     *
+     * @return
+     */
     public List<Vaccine> getVaccineList() {
         return this.vaccineList;
     }

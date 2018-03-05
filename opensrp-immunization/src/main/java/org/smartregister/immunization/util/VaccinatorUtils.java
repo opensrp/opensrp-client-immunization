@@ -711,6 +711,14 @@ public class VaccinatorUtils {
         return -1;
     }
 
+    /**
+     * Returns a list of vaccines which have already been administered to the patient and removes
+     * duplicate administered vaccines in a case where a single vaccine has been recorded as given by multiple ANMs
+     * to a child
+     *
+     * @param vaccines
+     * @return
+     */
     public static Map<String, Date> receivedVaccines(List<org.smartregister.immunization.domain.Vaccine> vaccines) {
         Map<String, Date> map = new LinkedHashMap<>();
         if (vaccines != null) {

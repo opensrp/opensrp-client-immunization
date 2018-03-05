@@ -444,4 +444,8 @@ public class VaccineSchedule {
 
         return calendar;
     }
+
+    public ArrayList<VaccineCondition> getConditions() {
+        return conditions;
+    }
 }

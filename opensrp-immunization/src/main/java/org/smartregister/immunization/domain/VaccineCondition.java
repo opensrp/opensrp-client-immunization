@@ -40,6 +40,10 @@ public abstract class VaccineCondition {
         return null;
     }
 
+    public VaccineRepo.Vaccine getVaccine() {
+        return vaccine;
+    }
+
     public abstract boolean passes(List<Vaccine> issuedVaccines);
 
     public static class NotGivenCondition extends VaccineCondition {
