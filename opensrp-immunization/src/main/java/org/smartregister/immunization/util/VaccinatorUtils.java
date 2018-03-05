@@ -42,13 +42,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.opensrp.api.domain.Location;
-import org.opensrp.api.util.EntityUtils;
-import org.opensrp.api.util.LocationTree;
-import org.opensrp.api.util.TreeNode;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
+import org.smartregister.domain.jsonmapping.Location;
+import org.smartregister.domain.jsonmapping.util.LocationTree;
+import org.smartregister.domain.jsonmapping.util.TreeNode;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
@@ -62,6 +61,7 @@ import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
+import org.smartregister.util.AssetHandler;
 import org.smartregister.util.IntegerUtil;
 
 import java.lang.reflect.Type;
@@ -93,7 +93,7 @@ public class VaccinatorUtils {
         org.smartregister.util.Log.logDebug("TEAM DETAILS" + getPreference(context.applicationContext(), "team", "{}"));
 
         String locationJson = context.anmLocationController().get();
-        LocationTree locationTree = EntityUtils.fromJson(locationJson, LocationTree.class);
+        LocationTree locationTree = AssetHandler.jsonStringToJava(locationJson, LocationTree.class);
 
         HashMap<String, String> map = new HashMap<>();
 
