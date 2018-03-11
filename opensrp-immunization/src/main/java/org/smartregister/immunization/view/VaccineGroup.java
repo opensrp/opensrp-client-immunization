@@ -214,6 +214,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        v.setEnabled(false);
         if ((v.equals(recordAllTV)) && (onRecordAllClickListener != null && vaccineCardAdapter != null)) {
             onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
 
@@ -224,6 +225,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
             VaccineCard vaccineCard = (VaccineCard) v.getParent().getParent();
             onUndoClick(vaccineCard);
         }
+        v.setEnabled(true);
     }
 
     @Override

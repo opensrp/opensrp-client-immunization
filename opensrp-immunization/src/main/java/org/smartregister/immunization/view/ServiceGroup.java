@@ -207,6 +207,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        v.setEnabled(false);
         if (v instanceof ServiceCard && onServiceClickedListener != null) {
             onServiceClickedListener.onClick(this, ((ServiceCard) v).getServiceWrapper());
 
@@ -214,6 +215,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
             ServiceCard serviceCard = (ServiceCard) v.getParent().getParent();
             onUndoClick(serviceCard);
         }
+        v.setEnabled(true);
     }
 
     @Override
