@@ -691,10 +691,15 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             }
 
             if (recurringServiceTypeRepository != null) {
-                List<String> types = recurringServiceTypeRepository.fetchTypes();
-                for (String type : types) {
-                    List<ServiceType> subTypes = recurringServiceTypeRepository.findByType(type);
-                    serviceTypeMap.put(type, subTypes);
+                List<ServiceType> serviceTypes = recurringServiceTypeRepository.fetchAll();
+                for (ServiceType serviceType : serviceTypes) {
+                    String type = serviceType.getType();
+                    List<ServiceType> serviceTypeList = serviceTypeMap.get(type);
+                    if (serviceTypeList == null) {
+                        serviceTypeList = new ArrayList<>();
+                    }
+                    serviceTypeList.add(serviceType);
+                    serviceTypeMap.put(type, serviceTypeList);
                 }
             }
 

@@ -17,6 +17,7 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.util.DateUtil;
 
@@ -123,7 +124,7 @@ public class ServiceRowCard extends LinearLayout {
                         } else if (alert.status().value().equalsIgnoreCase("expired")) {
                             state = State.EXPIRED;
                         }
-                    } else if (serviceWrapper.getStatus().equalsIgnoreCase("expired")) {
+                    } else if ("expired".equalsIgnoreCase(getStatus())) {
                         state = State.EXPIRED;
                     }
                 }
@@ -158,25 +159,11 @@ public class ServiceRowCard extends LinearLayout {
     }
 
     private void updateStateUi() {
-        boolean status_for_more_than_three_months = false;
-        RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
-        if (serviceWrapper.getDbKey() != null) {
-            ServiceRecord serviceRecord = recurringServiceRecordRepository.find(serviceWrapper.getDbKey());
-            EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
-
-            Event event = null;
-            if (serviceRecord.getEventId() != null) {
-                event = db.convert(db.getEventsByEventId(serviceRecord.getEventId()), Event.class);
-            } else if (serviceRecord.getFormSubmissionId() != null) {
-                event = db.convert(db.getEventsByFormSubmissionId(serviceRecord.getFormSubmissionId()), Event.class);
-            }
-
-            if (event != null) {
-                Date vaccine_create_date = event.getDateCreated().toDate();
-                status_for_more_than_three_months = DateUtil.checkIfDateThreeMonthsOlder(vaccine_create_date);
-            }
+        boolean statusForMoreThanThreeMonths = false;
+        if (getDbKey() != null) {
+            statusForMoreThanThreeMonths = VaccinateActionUtils.moreThanThreeMonths(getCreatedAt());
         }
-//        boolean status_for_more_than_three_months = false;
+
         statusIV.setVisibility(VISIBLE);
         switch (state) {
             case NOT_DUE:
@@ -201,7 +188,7 @@ public class ServiceRowCard extends LinearLayout {
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !status_for_more_than_three_months) {
+                if (editmode && !statusForMoreThanThreeMonths) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -214,7 +201,7 @@ public class ServiceRowCard extends LinearLayout {
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !status_for_more_than_three_months) {
+                if (editmode && !statusForMoreThanThreeMonths) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -291,6 +278,22 @@ public class ServiceRowCard extends LinearLayout {
         }
         return null;
     }
+
+    private Date getCreatedAt() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getCreatedAt();
+        }
+        return null;
+    }
+
+    private Long getDbKey() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getDbKey();
+        }
+        return null;
+    }
+
+
 
     public static interface OnVaccineStateChangeListener {
         void onStateChanged(final State newState);

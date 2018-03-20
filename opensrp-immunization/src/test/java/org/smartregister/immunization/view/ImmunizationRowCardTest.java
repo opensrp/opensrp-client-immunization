@@ -55,7 +55,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date());
         Event event = new Event();
         event.setEventId("1");
         event.setDateCreated(new DateTime());
