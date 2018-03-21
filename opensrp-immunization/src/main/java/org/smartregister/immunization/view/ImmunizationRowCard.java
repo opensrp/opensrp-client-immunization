@@ -11,14 +11,9 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
-import org.smartregister.domain.db.Event;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
-import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.repository.EventClientRepository;
-import org.smartregister.util.DateUtil;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -121,7 +116,7 @@ public class ImmunizationRowCard extends LinearLayout {
                                 state = State.EXPIRED;
                             }
                         }
-                    } else if ("expired".equalsIgnoreCase(vaccineWrapper.getStatus())) {
+                    } else if ("expired".equalsIgnoreCase(getStatus())) {
                         state = State.EXPIRED;
                     }
                 }
@@ -141,25 +136,11 @@ public class ImmunizationRowCard extends LinearLayout {
     }
 
     private void updateStateUi() {
-        boolean status_for_more_than_three_months = false;
-        VaccineRepository vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
-        if (vaccineWrapper.getDbKey() != null) {
-            Vaccine vaccine = vaccineRepository.find(vaccineWrapper.getDbKey());
-            EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
-
-            Event event = null;
-            if (vaccine.getEventId() != null) {
-                event = db.convert(db.getEventsByEventId(vaccine.getEventId()), Event.class);
-            } else if (vaccine.getFormSubmissionId() != null) {
-                event = db.convert(db.getEventsByFormSubmissionId(vaccine.getFormSubmissionId()), Event.class);
-            }
-
-            if (event != null) {
-                Date vaccine_create_date = event.getDateCreated().toDate();
-                status_for_more_than_three_months = DateUtil.checkIfDateThreeMonthsOlder(vaccine_create_date);
-            }
+        boolean statusForMoreThanThreeMonths = false;
+        if (getDbKey() != null) {
+            statusForMoreThanThreeMonths = VaccinateActionUtils.moreThanThreeMonths(getCreatedAt());
         }
-//        boolean status_for_more_than_three_months = false;
+
         statusIV.setVisibility(VISIBLE);
         switch (state) {
             case NOT_DUE:
@@ -184,7 +165,7 @@ public class ImmunizationRowCard extends LinearLayout {
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !status_for_more_than_three_months) {
+                if (editmode && !statusForMoreThanThreeMonths) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -197,7 +178,7 @@ public class ImmunizationRowCard extends LinearLayout {
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !status_for_more_than_three_months) {
+                if (editmode && !statusForMoreThanThreeMonths) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -271,6 +252,20 @@ public class ImmunizationRowCard extends LinearLayout {
     private String getStatus() {
         if (vaccineWrapper != null) {
             return vaccineWrapper.getStatus();
+        }
+        return null;
+    }
+
+    private Date getCreatedAt() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getCreatedAt();
+        }
+        return null;
+    }
+
+    private Long getDbKey() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getDbKey();
         }
         return null;
     }

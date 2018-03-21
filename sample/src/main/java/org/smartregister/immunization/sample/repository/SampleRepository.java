@@ -6,12 +6,14 @@ import android.util.Log;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.AllConstants;
+import org.smartregister.domain.db.Column;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
+import org.smartregister.immunization.sample.BuildConfig;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -30,7 +32,7 @@ public class SampleRepository extends Repository {
     private String password = "Sample_PASS";
 
     public SampleRepository(Context context, org.smartregister.Context openSRPContext) {
-        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.getInstance().session(), null, openSRPContext.getInstance().sharedRepositoriesArray());
+        super(context, AllConstants.DATABASE_NAME, BuildConfig.DATABASE_VERSION, openSRPContext.getInstance().session(), null, openSRPContext.getInstance().sharedRepositoriesArray());
         this.context = context;
     }
 
@@ -56,7 +58,7 @@ public class SampleRepository extends Repository {
         RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
         IMDatabaseUtils.populateRecurringServices(context, database, recurringServiceTypeRepository);
 
-        onUpgrade(database, 1, 2);
+        onUpgrade(database, 1, BuildConfig.DATABASE_VERSION);
 
     }
 
@@ -71,6 +73,9 @@ public class SampleRepository extends Repository {
             switch (upgradeTo) {
                 case 2:
                     upgradeToVersion2(db);
+                    break;
+                case 3:
+                    upgradeToVersion3(db);
                     break;
                 default:
                     break;
@@ -147,6 +152,21 @@ public class SampleRepository extends Repository {
 
         } catch (Exception e) {
             Log.e(TAG, "upgradeToVersion2 " + Log.getStackTraceString(e));
+        }
+    }
+
+    private void upgradeToVersion3(SQLiteDatabase db) {
+        try {
+            Column[] columns = {EventClientRepository.event_column.formSubmissionId};
+            EventClientRepository.createIndex(db, EventClientRepository.Table.event, columns);
+
+            db.execSQL(VaccineRepository.ALTER_ADD_CREATED_AT_COLUMN);
+            VaccineRepository.migrateCreatedAt(db);
+
+            db.execSQL(RecurringServiceRecordRepository.ALTER_ADD_CREATED_AT_COLUMN);
+            RecurringServiceRecordRepository.migrateCreatedAt(db);
+        } catch (Exception e) {
+            Log.e(TAG, "upgradeToVersion3 " + Log.getStackTraceString(e));
         }
     }
 

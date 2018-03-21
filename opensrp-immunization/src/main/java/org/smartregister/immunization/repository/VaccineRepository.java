@@ -13,9 +13,11 @@ import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,8 +41,9 @@ public class VaccineRepository extends BaseRepository {
     public static final String HIA2_STATUS = "hia2_status";
     public static final String UPDATED_AT_COLUMN = "updated_at";
     public static final String OUT_OF_AREA = "out_of_area";
+    public static final String CREATED_AT = "created_at";
 
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATIONID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA};
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATIONID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT};
 
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + VACCINE_TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
@@ -54,6 +57,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_OUT_OF_AREA_COL_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + OUT_OF_AREA + "_index ON " + VACCINE_TABLE_NAME + "(" + OUT_OF_AREA + " COLLATE NOCASE);";
 
     public static final String UPDATE_TABLE_ADD_HIA2_STATUS_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + HIA2_STATUS + " VARCHAR;";
+    public static final String ALTER_ADD_CREATED_AT_COLUMN = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CREATED_AT + " DATETIME NULL ";
 
     public static String HIA2_Within = "Within";
     public static String HIA2_Overdue = "Overdue";
@@ -101,6 +105,9 @@ public class VaccineRepository extends BaseRepository {
                     vaccine.setId(sameVaccine.getId());
                     update(database, vaccine);
                 } else {
+                    if(vaccine.getCreatedAt() == null){
+                        vaccine.setCreatedAt(new Date());
+                    }
                     vaccine.setId(database.insert(VACCINE_TABLE_NAME, null, createValuesFor(vaccine)));
                 }
             } else {
@@ -271,6 +278,17 @@ public class VaccineRepository extends BaseRepository {
                     if (vaccineName != null) {
                         vaccineName = removeHyphen(vaccineName);
                     }
+
+                    Date createdAt = null;
+                    String dateCreatedString = cursor.getString(cursor.getColumnIndex(CREATED_AT));
+                    if (StringUtils.isNotBlank(dateCreatedString)) {
+                        try {
+                            createdAt = EventClientRepository.dateFormat.parse(dateCreatedString);
+                        } catch (ParseException e) {
+                            Log.e(TAG, Log.getStackTraceString(e));
+                        }
+                    }
+
                     vaccines.add(
                             new Vaccine(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                                     cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)),
@@ -282,7 +300,11 @@ public class VaccineRepository extends BaseRepository {
                                     cursor.getString(cursor.getColumnIndex(LOCATIONID)),
                                     cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                                     cursor.getString(cursor.getColumnIndex(HIA2_STATUS)),
-                                    cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN)), cursor.getString(cursor.getColumnIndex(EVENT_ID)), cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)), cursor.getInt(cursor.getColumnIndex(OUT_OF_AREA))
+                                    cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN)),
+                                    cursor.getString(cursor.getColumnIndex(EVENT_ID)),
+                                    cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)),
+                                    cursor.getInt(cursor.getColumnIndex(OUT_OF_AREA)),
+                                    createdAt
                             ));
 
                     cursor.moveToNext();
@@ -313,6 +335,7 @@ public class VaccineRepository extends BaseRepository {
         values.put(EVENT_ID, vaccine.getEventId() != null ? vaccine.getEventId() : null);
         values.put(FORMSUBMISSION_ID, vaccine.getFormSubmissionId() != null ? vaccine.getFormSubmissionId() : null);
         values.put(OUT_OF_AREA, vaccine.getOutOfCatchment() != null ? vaccine.getOutOfCatchment() : null);
+        values.put(CREATED_AT, vaccine.getCreatedAt() != null ? EventClientRepository.dateFormat.format(vaccine.getCreatedAt()) : null);
         return values;
     }
 
@@ -380,5 +403,21 @@ public class VaccineRepository extends BaseRepository {
             return s.replace("_", " ");
         }
         return s;
+    }
+
+    public static void migrateCreatedAt(SQLiteDatabase database) {
+        try {
+            String sql = "UPDATE " + VACCINE_TABLE_NAME +
+                    " SET " + CREATED_AT + " = " +
+                    " ( SELECT " + EventClientRepository.event_column.dateCreated.name() +
+                    "   FROM " + EventClientRepository.Table.event.name() +
+                    "   WHERE " + EventClientRepository.event_column.eventId.name() + " = " + VACCINE_TABLE_NAME + "." + EVENT_ID +
+                    "   OR " + EventClientRepository.event_column.formSubmissionId.name() + " = " + VACCINE_TABLE_NAME + "." + FORMSUBMISSION_ID +
+                    " ) " +
+                    " WHERE " + CREATED_AT + " is null ";
+            database.execSQL(sql);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
     }
 }

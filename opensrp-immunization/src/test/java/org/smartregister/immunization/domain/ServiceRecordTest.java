@@ -26,7 +26,7 @@ public class ServiceRecordTest extends BaseUnitTest {
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         junit.framework.Assert.assertNotNull(new ServiceRecord());
         junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED, EVENTID, FORMSUBMISSIONID, 0l));
-        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, PROGRAMCLIENTID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED, EVENTID, FORMSUBMISSIONID, 0l));
+        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, PROGRAMCLIENTID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED, EVENTID, FORMSUBMISSIONID, 0l, new Date()));
     }
 
     @Test
