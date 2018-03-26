@@ -302,59 +302,51 @@ public class VaccinatorUtils {
         return null;
     }
 
-    public static List<Map<String, Object>> generateSchedule(String category, DateTime milestoneDate, Map<String, String> received, List<Alert> alerts) {
-        List<Map<String, Object>> schedule = new ArrayList();
-        try {
-            ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
-            for (Vaccine v : vl) {
-                Map<String, Object> m = new HashMap<>();
-                DateTime recDate = getReceivedDate(received, v);
-                if (recDate != null) {
-                    m = createVaccineMap("done", null, recDate, v);
-                } else if (milestoneDate != null && v.expiryDays() > 0 && milestoneDate.plusDays(v.expiryDays()).isBefore(DateTime.now())) {
-                    m = createVaccineMap("expired", null, milestoneDate.plusDays(v.expiryDays()), v);
-                } else if (alerts.size() > 0) {
-                    for (Alert a : alerts) {
-                        if (a.scheduleName().replaceAll(" ", "").equalsIgnoreCase(v.name())
-                                || a.visitCode().replaceAll(" ", "").equalsIgnoreCase(v.name())) {
-                            m = createVaccineMap("due", a, new DateTime(a.startDate()), v);
-                        }
-                    }
-                }
-
-                if (m.isEmpty()) {
-                    if (v.prerequisite() != null) {
-                        DateTime prereq = getReceivedDate(received, v.prerequisite());
-                        if (prereq != null) {
-                            prereq = prereq.plusDays(v.prerequisiteGapDays());
-                            m = createVaccineMap("due", null, prereq, v);
-                        } else {
-                            m = createVaccineMap("due", null, null, v);
-                        }
-                    } else if (milestoneDate != null) {
-                        m = createVaccineMap("due", null, milestoneDate.plusDays(v.milestoneGapDays()), v);
-                    } else {
-                        m = createVaccineMap("na", null, null, v);
-                    }
-                }
-
-                schedule.add(m);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
-        }
-        return schedule;
+    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts) {
+        return generateScheduleList(category, milestoneDate, received, alerts, false);
     }
 
-    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts) {
-        List<Map<String, Object>> schedule = new ArrayList();
+    /**
+     * To use generateSchedule() method just use this method and set showExpired to true
+     *
+     * @param category
+     * @param milestoneDate
+     * @param received
+     * @param alerts
+     * @param showExpired
+     * @return
+     */
+    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts, boolean showExpired) {
+        List<Map<String, Object>> schedule = new ArrayList<>();
+        boolean m1Given = false;
+        boolean m2Given = false;
+        boolean oGiven = false;
         try {
             ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
             for (Vaccine v : vl) {
+                // Check for vaccines where either can be given - mealses/mr opv0/opv4
+                if (m1Given && (VaccineRepo.Vaccine.measles1.equals(v) || VaccineRepo.Vaccine.mr1.equals(v))) {
+                    continue;
+                } else if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
+                    continue;
+                } else if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v)) || VaccineRepo.Vaccine.opv4.equals(v)) {
+                    continue;
+                }
+
                 Map<String, Object> m = new HashMap<>();
                 Date recDate = received.get(v.display().toLowerCase());
                 if (recDate != null) {
                     m = createVaccineMap("done", null, new DateTime(recDate), v);
+                    // Check for vaccines where either can be given - mealses/mr opv0/opv4
+                    if (VaccineRepo.Vaccine.measles1.equals(v) || VaccineRepo.Vaccine.mr1.equals(v)) {
+                        m1Given = true;
+                    } else if (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v)) {
+                        m2Given = true;
+                    } else if (VaccineRepo.Vaccine.opv0.equals(v) || VaccineRepo.Vaccine.opv4.equals(v)) {
+                        oGiven = true;
+                    }
+                } else if (showExpired && milestoneDate != null && v.expiryDays() > 0 && milestoneDate.plusDays(v.expiryDays()).isBefore(DateTime.now())) {
+                    m = createVaccineMap("expired", null, milestoneDate.plusDays(v.expiryDays()), v);
                 } else if (alerts.size() > 0) {
                     for (Alert a : alerts) {
                         if (a.scheduleName().replaceAll(" ", "").equalsIgnoreCase(v.name())
