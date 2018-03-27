@@ -324,15 +324,6 @@ public class VaccinatorUtils {
         try {
             ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
             for (Vaccine v : vl) {
-                // Check for vaccines where either can be given - mealses/mr opv0/opv4
-                if (m1Given && (VaccineRepo.Vaccine.measles1.equals(v) || VaccineRepo.Vaccine.mr1.equals(v))) {
-                    continue;
-                } else if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
-                    continue;
-                } else if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v)) || VaccineRepo.Vaccine.opv4.equals(v)) {
-                    continue;
-                }
-
                 Map<String, Object> m = new HashMap<>();
                 Date recDate = received.get(v.display().toLowerCase());
                 if (recDate != null) {
@@ -375,10 +366,54 @@ public class VaccinatorUtils {
 
                 schedule.add(m);
             }
+
+            // Check for vaccines where either can be given - mealses/mr opv0/opv4
+            List<Map<String, Object>> toRemove = retrieveNotDoneSchedule(schedule, m1Given, m2Given, oGiven);
+            if (toRemove != null && !toRemove.isEmpty()) {
+                schedule.removeAll(toRemove);
+            }
+
         } catch (Exception e) {
             Log.e(TAG, e.toString(), e);
         }
         return schedule;
+    }
+
+    private static List<Map<String, Object>> retrieveNotDoneSchedule(List<Map<String, Object>> schedule, boolean m1Given, boolean m2Given, boolean oGiven) {
+        if (schedule == null || schedule.isEmpty() || (!m1Given && !m2Given && !oGiven)) {
+            return new ArrayList<>();
+        }
+
+        final String STATUS = "status";
+        final String VACCINE = "vaccine";
+        final String DONE = "done";
+        List<Map<String, Object>> toRemove = new ArrayList<>();
+
+        for (Map<String, Object> m : schedule) {
+            if (m == null ||
+                    m.get(STATUS) == null ||
+                    m.get(VACCINE) == null ||
+                    !(m.get(VACCINE) instanceof Vaccine) ||
+                    DONE.equalsIgnoreCase(m.get(STATUS).toString())) {
+                continue;
+            }
+
+            Vaccine v = (Vaccine) m.get(VACCINE);
+
+            if (m1Given && (VaccineRepo.Vaccine.measles1.equals(v) || VaccineRepo.Vaccine.mr1.equals(v))) {
+                toRemove.add(m);
+            }
+
+            if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
+                toRemove.add(m);
+            }
+
+            if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v)) || VaccineRepo.Vaccine.opv4.equals(v)) {
+                toRemove.add(m);
+            }
+        }
+
+        return toRemove;
     }
 
     public static List<Map<String, Object>> generateScheduleList(List<ServiceType> serviceTypes, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts) {
