@@ -47,14 +47,17 @@ public class VaccineCardAdapter extends BaseAdapter {
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
 
+    private boolean isChildActive;
+
     public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type,
-                              List<Vaccine> vaccineList, List<Alert> alertList) {
+                              List<Vaccine> vaccineList, List<Alert> alertList, boolean isChildActive) {
         this.context = context;
         this.vaccineGroup = vaccineGroup;
         this.vaccineList = vaccineList;
         this.alertList = alertList;
         vaccineCards = new HashMap<>();
         this.type = type;
+        this.isChildActive = isChildActive;
     }
 
     @Override
@@ -79,7 +82,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                     = vaccineGroup.getVaccineData().vaccines.get(position);
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
-                VaccineCard vaccineCard = new VaccineCard(context);
+                VaccineCard vaccineCard = new VaccineCard(context, isChildActive);
                 vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
                 vaccineCard.setOnClickListener(vaccineGroup);
                 vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
@@ -110,6 +113,19 @@ public class VaccineCardAdapter extends BaseAdapter {
                         vaccineCards.get(currWrapper.getName()).setVaccineWrapper(currWrapper);
                     }
                 }
+            }
+        }
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        if (vaccineCards != null) {
+            for(VaccineCard curCard: vaccineCards.values()) {
+                curCard.setChildActive(isChildActive);
+                curCard.updateChildsActiveStatus();
             }
         }
     }

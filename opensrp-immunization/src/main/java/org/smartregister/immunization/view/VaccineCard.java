@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +37,7 @@ public class VaccineCard extends LinearLayout {
     private State state;
     private OnVaccineStateChangeListener onVaccineStateChangeListener;
     private VaccineWrapper vaccineWrapper;
+    private boolean isChildActive;
 
     public static enum State {
         DONE_CAN_BE_UNDONE,
@@ -46,24 +48,28 @@ public class VaccineCard extends LinearLayout {
         EXPIRED
     }
 
-    public VaccineCard(Context context) {
+    public VaccineCard(Context context, boolean isChildActive) {
         super(context);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public VaccineCard(Context context, AttributeSet attrs) {
+    public VaccineCard(Context context, AttributeSet attrs, boolean isChildActive) {
         super(context, attrs);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
         super(context, attrs, defStyleAttr);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, boolean isChildActive) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
@@ -135,8 +141,21 @@ public class VaccineCard extends LinearLayout {
                 } */
             }
             updateStateUi();
+            updateChildsActiveStatus();
         }
         
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            getBackground().setAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            getBackground().setAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
     }
 
     public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {

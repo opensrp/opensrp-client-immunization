@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
@@ -35,6 +36,7 @@ public class ServiceCard extends LinearLayout {
     private State state;
     private OnServiceStateChangeListener onServiceStateChangeListener;
     private ServiceWrapper serviceWrapper;
+    private boolean isChildActive;
 
     public static enum State {
         DONE_CAN_BE_UNDONE,
@@ -45,24 +47,28 @@ public class ServiceCard extends LinearLayout {
         EXPIRED
     }
 
-    public ServiceCard(Context context) {
+    public ServiceCard(Context context, boolean isChildActive) {
         super(context);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceCard(Context context, AttributeSet attrs) {
+    public ServiceCard(Context context, AttributeSet attrs, boolean isChildActive) {
         super(context, attrs);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
         super(context, attrs, defStyleAttr);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, boolean isChildActive) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
@@ -134,7 +140,20 @@ public class ServiceCard extends LinearLayout {
                 } */
             }
             updateStateUi();
+            updateChildsActiveStatus();
         }
+    }
+
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            getBackground().setAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            getBackground().setAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
     }
 
     public void setOnServiceStateChangeListener(OnServiceStateChangeListener onServiceStateChangeListener) {

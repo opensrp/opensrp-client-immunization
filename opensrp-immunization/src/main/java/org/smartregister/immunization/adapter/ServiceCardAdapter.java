@@ -50,14 +50,17 @@ public class ServiceCardAdapter extends BaseAdapter {
     private List<Alert> alertList;
     private Map<String, List<ServiceType>> serviceTypeMap;
 
+    private boolean isChildActive;
+
     public ServiceCardAdapter(Context context, ServiceGroup serviceGroup, List<ServiceRecord> serviceRecordList,
-                              List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap) {
+                              List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap, boolean isChildActive) {
         this.context = context;
         this.serviceGroup = serviceGroup;
         this.serviceRecordList = serviceRecordList;
         this.alertList = alertList;
         this.serviceTypeMap = serviceTypeMap;
         serviceCards = new HashMap<>();
+        this.isChildActive = isChildActive;
     }
 
     @Override
@@ -84,7 +87,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         try {
             String type = serviceGroup.getServiceTypeKeys().get(position);
             if (!serviceCards.containsKey(type)) {
-                ServiceCard serviceCard = new ServiceCard(context);
+                ServiceCard serviceCard = new ServiceCard(context, isChildActive);
                 serviceCard.setOnServiceStateChangeListener(serviceGroup);
                 serviceCard.setOnClickListener(serviceGroup);
                 serviceCard.getUndoB().setOnClickListener(serviceGroup);
@@ -115,6 +118,21 @@ public class ServiceCardAdapter extends BaseAdapter {
         visibilityCheck();
     }
 
+    public void updateChildsActiveStatus() {
+        if (serviceCards != null) {
+            // Update all vaccines
+            for (ServiceCard curCard : serviceCards.values()) {
+                if (curCard != null) {
+                    curCard.setChildActive(isChildActive);
+                    curCard.updateChildsActiveStatus();
+                }
+            }
+        }
+    }
+
+    public void setChildActive(boolean isChildActive) {
+        this.isChildActive = isChildActive;
+    }
 
     public void visibilityCheck() {
         // if all cards have been updated

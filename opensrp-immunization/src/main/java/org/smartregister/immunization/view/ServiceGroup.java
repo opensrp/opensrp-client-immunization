@@ -37,6 +37,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         ServiceCard.OnServiceStateChangeListener {
     private Context context;
     private TextView nameTV;
+    private TextView recordAllTV;
     private ExpandableHeightGridView servicesGV;
     private ServiceCardAdapter serviceCardAdapter;
     private Map<String, List<ServiceType>> serviceTypeMap;
@@ -49,24 +50,29 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
 
+    private boolean isChildActive;
+
     private static enum State {
         IN_PAST,
         CURRENT,
         IN_FUTURE
     }
 
-    public ServiceGroup(Context context) {
+    public ServiceGroup(Context context, boolean isChildActive) {
         super(context);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceGroup(Context context, AttributeSet attrs) {
+    public ServiceGroup(Context context, AttributeSet attrs, boolean isChildActive) {
         super(context, attrs);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ServiceGroup(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
         super(context, attrs, defStyleAttr);
+        this.isChildActive = isChildActive;
         init(context);
     }
 
@@ -120,7 +126,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         nameTV = (TextView) findViewById(R.id.name_tv);
         servicesGV = (ExpandableHeightGridView) findViewById(R.id.services_gv);
         servicesGV.setExpanded(true);
-        TextView recordAllTV = (TextView) findViewById(R.id.record_all_tv);
+        recordAllTV = (TextView) findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
     }
 
@@ -196,12 +202,24 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
 
     private void updateServiceCards() {
         if (serviceCardAdapter == null) {
-            serviceCardAdapter = new ServiceCardAdapter(context, this, serviceRecordList, alertList, serviceTypeMap);
+            serviceCardAdapter = new ServiceCardAdapter(context, this, serviceRecordList, alertList, serviceTypeMap, isChildActive);
             servicesGV.setAdapter(serviceCardAdapter);
         } else {
             serviceCardAdapter.updateAll();
         }
 
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+
+        if (serviceCardAdapter != null) {
+            serviceCardAdapter.setChildActive(isChildActive);
+            serviceCardAdapter.updateChildsActiveStatus();
+        }
     }
 
 
