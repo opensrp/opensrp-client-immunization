@@ -37,7 +37,6 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         ServiceCard.OnServiceStateChangeListener {
     private Context context;
     private TextView nameTV;
-    private TextView recordAllTV;
     private ExpandableHeightGridView servicesGV;
     private ServiceCardAdapter serviceCardAdapter;
     private Map<String, List<ServiceType>> serviceTypeMap;
@@ -126,7 +125,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         nameTV = (TextView) findViewById(R.id.name_tv);
         servicesGV = (ExpandableHeightGridView) findViewById(R.id.services_gv);
         servicesGV.setExpanded(true);
-        recordAllTV = (TextView) findViewById(R.id.record_all_tv);
+        TextView recordAllTV = (TextView) findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
     }
 
