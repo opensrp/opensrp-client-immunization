@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -565,11 +566,22 @@ public class VaccinationDialogFragment extends DialogFragment {
                 display.getSize(size);
 
                 int width = size.x;
+                double widthFactor = calculateDialogWidthFactor();
 
-                window.setLayout((int) (width * 0.7), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
                 window.setGravity(Gravity.CENTER);
             }
         });
+    }
+
+    private double calculateDialogWidthFactor() {
+        double widthFactor = 0.7;
+        int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+            widthFactor = 0.9;
+        }
+
+        return widthFactor;
     }
 
     private VaccineWrapper searchWrapperByName(String name) {
