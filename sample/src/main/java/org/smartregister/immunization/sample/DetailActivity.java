@@ -606,30 +606,4 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         }
     }
 
-    private boolean showVaccineListCheck(String eventId, String formSubmissionId) {
-
-        EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
-        org.smartregister.domain.db.Event event = null;
-        if (eventId != null) {
-            event = db.convert(db.getEventsByEventId(eventId), org.smartregister.domain.db.Event.class);
-        } else if (formSubmissionId != null) {
-            event = db.convert(db.getEventsByFormSubmissionId(formSubmissionId), org.smartregister.domain.db.Event.class);
-        }
-        if (event != null) {
-            Date vaccine_create_date = event.getDateCreated().toDate();
-            if (!check_if_date_three_months_older(vaccine_create_date)) {
-                return true;
-            }
-        } else {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    public ImmunizationLibrary getVaccinatorApplicationInstance() {
-        return ImmunizationLibrary.getInstance();
-    }
-
 }

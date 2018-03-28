@@ -27,6 +27,7 @@ import org.smartregister.domain.form.FormSubmission;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.VaccinateFormSubmissionWrapper;
 import org.smartregister.immunization.domain.Vaccine;
@@ -566,6 +567,23 @@ public class VaccinateActionUtils {
                 }
             }
         }
+    }
+
+    public static boolean moreThanThreeMonths(Date createdAt) {
+        return createdAt != null && org.smartregister.util.DateUtil.checkIfDateThreeMonthsOlder(createdAt);
+    }
+
+    public static boolean lessThanThreeMonths(Vaccine vaccine) {
+        ////////////////////////check 3 months///////////////////////////////
+        return vaccine == null || vaccine.getCreatedAt() == null || !org.smartregister.util.DateUtil.checkIfDateThreeMonthsOlder(vaccine.getCreatedAt());
+        ///////////////////////////////////////////////////////////////////////
+    }
+
+
+    public static boolean lessThanThreeMonths(ServiceRecord serviceRecord) {
+        ////////////////////////check 3 months///////////////////////////////
+        return serviceRecord == null || serviceRecord.getCreatedAt() == null || !org.smartregister.util.DateUtil.checkIfDateThreeMonthsOlder(serviceRecord.getCreatedAt());
+        ///////////////////////////////////////////////////////////////////////
     }
 
 }

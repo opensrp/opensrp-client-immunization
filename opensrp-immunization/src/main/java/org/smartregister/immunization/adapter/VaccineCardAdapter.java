@@ -147,6 +147,7 @@ public class VaccineCardAdapter extends BaseAdapter {
         String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         List<Map<String, Object>> sch = generateScheduleList(type, new DateTime(dobString), recievedVaccines, alertList);
 
+
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {

@@ -163,6 +163,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                             tag.setName(array[1]);
                         }
                     }
+                    tag.setCreatedAt(vaccine.getCreatedAt());
                 }
             }
         }

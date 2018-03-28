@@ -199,7 +199,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
         List<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l);
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);

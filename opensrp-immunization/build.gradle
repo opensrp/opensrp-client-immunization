@@ -73,7 +73,7 @@ android {
 
 dependencies {
     compile 'junit:junit:4.12'
-    compile('org.smartregister:opensrp-client-core:1.2.0@aar') {
+    compile('org.smartregister:opensrp-client-core:1.2.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
