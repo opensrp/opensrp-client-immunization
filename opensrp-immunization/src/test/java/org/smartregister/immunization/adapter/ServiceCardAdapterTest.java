@@ -62,15 +62,15 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        view = new ServiceGroup(RuntimeEnvironment.application);
+        view = new ServiceGroup(RuntimeEnvironment.application, true);
         setDataForTest(magicDate);
-        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view, serviceTypeList, serviceRecordList, alertList);
+        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view, serviceTypeList, serviceRecordList, alertList, true);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
+        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList, true));
     }
 
     @Test

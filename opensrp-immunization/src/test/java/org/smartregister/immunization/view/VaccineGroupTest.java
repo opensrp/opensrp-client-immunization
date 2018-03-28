@@ -56,7 +56,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new VaccineGroup(RuntimeEnvironment.application);
+        view = new VaccineGroup(RuntimeEnvironment.application, true);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class VaccineGroupTest extends BaseUnitTest {
 
         VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(VaccineGroup.OnVaccineClickedListener.class);
         view.setOnVaccineClickedListener(onVaccineClickListener);
-        VaccineCard vaccineCard = new VaccineCard(RuntimeEnvironment.application);
+        VaccineCard vaccineCard = new VaccineCard(RuntimeEnvironment.application, true);
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         vaccineCard.setVaccineWrapper(wrapper);
@@ -222,10 +222,10 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void asertConstructorsNotNull() {
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, true));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, true));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0, true));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0, true));
     }
 
 }

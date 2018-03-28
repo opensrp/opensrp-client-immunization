@@ -25,19 +25,19 @@ public class ServiceCardTestActivity extends Activity {
     }
 
     public ServiceCard getInstance() {
-        return (view == null) ? new ServiceCard(this) : view;
+        return (view == null) ? new ServiceCard(this, true) : view;
     }
 
     public ServiceCard getInstance2() {
-        return new ServiceCard(this, ViewAttributes.attrs);
+        return new ServiceCard(this, ViewAttributes.attrs, true);
     }
 
     public ServiceCard getInstance3() {
-        return new ServiceCard(this, ViewAttributes.attrs, 0);
+        return new ServiceCard(this, ViewAttributes.attrs, 0, true);
     }
 
     public ServiceCard getInstance1() {
-        return new ServiceCard(this, ViewAttributes.attrs, 0, 0);
+        return new ServiceCard(this, ViewAttributes.attrs, 0, 0, true);
     }
 
     @Override

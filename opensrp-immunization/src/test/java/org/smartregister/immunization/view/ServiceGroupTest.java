@@ -106,7 +106,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         view.updateViews();
         ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
-        ServiceCard serviceCard = new ServiceCard(RuntimeEnvironment.application);
+        ServiceCard serviceCard = new ServiceCard(RuntimeEnvironment.application, true);
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         serviceCard.setServiceWrapper(wrapper);

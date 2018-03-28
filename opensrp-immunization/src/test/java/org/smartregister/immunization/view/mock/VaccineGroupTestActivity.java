@@ -48,19 +48,19 @@ public class VaccineGroupTestActivity extends Activity implements View.OnClickLi
     }
 
     public VaccineGroup getInstance() {
-        return (view == null) ? new VaccineGroup(this) : view;
+        return (view == null) ? new VaccineGroup(this, true) : view;
     }
 
     public VaccineGroup getInstance1() {
-        return new VaccineGroup(this, ViewAttributes.attrs);
+        return new VaccineGroup(this, ViewAttributes.attrs, true);
     }
 
     public VaccineGroup getInstance2() {
-        return new VaccineGroup(this, ViewAttributes.attrs, 0);
+        return new VaccineGroup(this, ViewAttributes.attrs, 0, true);
     }
 
     public VaccineGroup getInstance3() {
-        return new VaccineGroup(this, ViewAttributes.attrs, 0, 0);
+        return new VaccineGroup(this, ViewAttributes.attrs, 0, 0, true);
     }
 
     public ArrayList<VaccineWrapper> vaccineWrapperList() {

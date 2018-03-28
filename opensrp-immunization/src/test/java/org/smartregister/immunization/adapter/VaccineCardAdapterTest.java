@@ -67,15 +67,15 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        view = new VaccineGroup(RuntimeEnvironment.application);
+        view = new VaccineGroup(RuntimeEnvironment.application, true);
         setDataForTest(magicDate);
-        vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList);
+        vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList, true);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
+        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList, true));
     }
 
     @Test

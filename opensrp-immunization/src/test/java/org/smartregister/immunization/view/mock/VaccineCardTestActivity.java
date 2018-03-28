@@ -47,19 +47,19 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
     }
 
     public VaccineCard getInstance() {
-        return (view == null) ? new VaccineCard(this) : view;
+        return (view == null) ? new VaccineCard(this, true) : view;
     }
 
     public VaccineCard getInstance1() {
-        return new VaccineCard(this, ViewAttributes.attrs);
+        return new VaccineCard(this, ViewAttributes.attrs, true);
     }
 
     public VaccineCard getInstance2() {
-        return new VaccineCard(this, ViewAttributes.attrs, 0);
+        return new VaccineCard(this, ViewAttributes.attrs, 0, true);
     }
 
     public VaccineCard getInstance3() {
-        return new VaccineCard(this, ViewAttributes.attrs, 0, 0);
+        return new VaccineCard(this, ViewAttributes.attrs, 0, 0, true);
     }
 
     public ArrayList<VaccineWrapper> vaccineWrapperList() {
