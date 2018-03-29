@@ -35,6 +35,7 @@ import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
+import org.smartregister.immunization.util.Utils;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -566,22 +567,12 @@ public class VaccinationDialogFragment extends DialogFragment {
                 display.getSize(size);
 
                 int width = size.x;
-                double widthFactor = calculateDialogWidthFactor();
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
 
                 window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
                 window.setGravity(Gravity.CENTER);
             }
         });
-    }
-
-    private double calculateDialogWidthFactor() {
-        double widthFactor = 0.7;
-        int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        if (screenSize >= Configuration.SCREENLAYOUT_SIZE_NORMAL && screenSize < Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            widthFactor = 0.9;
-        }
-
-        return widthFactor;
     }
 
     private VaccineWrapper searchWrapperByName(String name) {
