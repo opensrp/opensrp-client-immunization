@@ -25,15 +25,15 @@ public class ServiceGroupTestActivity extends Activity {
     }
 
     public ServiceGroup getInstance() {
-        return (view == null) ? new ServiceGroup(this, true) : view;
+        return (view == null) ? new ServiceGroup(this) : view;
     }
 
     public ServiceGroup getInstance2() {
-        return new ServiceGroup(this, ViewAttributes.attrs, true);
+        return new ServiceGroup(this, ViewAttributes.attrs);
     }
 
     public ServiceGroup getInstance3() {
-        return new ServiceGroup(this, ViewAttributes.attrs, 0, true);
+        return new ServiceGroup(this, ViewAttributes.attrs, 0);
     }
 
     public ServiceGroup getInstance1() {
