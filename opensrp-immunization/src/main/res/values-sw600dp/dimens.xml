@@ -8,6 +8,7 @@
     <dimen name="btn_padding_top">20dp</dimen>
     <dimen name="btn_padding_bottom">20dp</dimen>
     <dimen name="vaccine_text_size">21sp</dimen>
+    <dimen name="undo_view_text_size">21sp</dimen>
     <dimen name="btn_margin_bottom">20dp</dimen>
     <dimen name="break_point_margin_top">15dp</dimen>
     <dimen name="name_margin_top">20dp</dimen>
@@ -17,6 +18,8 @@
     <dimen name="vaccination_action_linear_layout_bottom_margin">10dp</dimen>
     <dimen name="vaccination_name_layout_top_margin">20dp</dimen>
     <dimen name="vaccination_name_layout_bottom_margin">20dp</dimen>
+    <dimen name="vaccination_name_top_margin">20dp</dimen>
+    <dimen name="vaccination_name_bottom_margin">20dp</dimen>
     <dimen name="itn_question_view_margin_bottom">20dp</dimen>
     <dimen name="itn_question_view_margin_top">20dp</dimen>
     <dimen name="itn_question_view_text_size">17sp</dimen>
@@ -27,4 +30,5 @@
     <dimen name="service_view_text_size">30dp</dimen>
     <dimen name="service_view_units_text_size">26sp</dimen>
     <dimen name="service_units_view_margin_top">10dp</dimen>
+    <dimen name="undo_text_view_margin_bottom">10dp</dimen>
 </resources>
