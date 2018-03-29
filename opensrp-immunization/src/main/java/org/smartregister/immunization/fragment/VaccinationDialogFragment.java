@@ -577,7 +577,7 @@ public class VaccinationDialogFragment extends DialogFragment {
     private double calculateDialogWidthFactor() {
         double widthFactor = 0.7;
         int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+        if (screenSize >= Configuration.SCREENLAYOUT_SIZE_NORMAL && screenSize < Configuration.SCREENLAYOUT_SIZE_LARGE) {
             widthFactor = 0.9;
         }
 
