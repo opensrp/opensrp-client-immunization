@@ -36,7 +36,7 @@ public class ServiceCard extends LinearLayout {
     private State state;
     private OnServiceStateChangeListener onServiceStateChangeListener;
     private ServiceWrapper serviceWrapper;
-    private boolean isChildActive;
+    private boolean isChildActive = true;
 
     public static enum State {
         DONE_CAN_BE_UNDONE,
@@ -47,28 +47,24 @@ public class ServiceCard extends LinearLayout {
         EXPIRED
     }
 
-    public ServiceCard(Context context, boolean isChildActive) {
+    public ServiceCard(Context context) {
         super(context);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceCard(Context context, AttributeSet attrs, boolean isChildActive) {
+    public ServiceCard(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
+    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, boolean isChildActive) {
+    public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.isChildActive = isChildActive;
         init(context);
     }
 

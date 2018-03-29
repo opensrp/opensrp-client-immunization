@@ -50,7 +50,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     private boolean modalOpen;
     private String type;
 
-    private boolean isChildActive;
+    private boolean isChildActive = true;
 
     private static enum State {
         IN_PAST,
@@ -58,21 +58,18 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         IN_FUTURE
     }
 
-    public VaccineGroup(Context context, boolean isChildActive) {
+    public VaccineGroup(Context context) {
         super(context);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public VaccineGroup(Context context, AttributeSet attrs, boolean isChildActive) {
+    public VaccineGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public VaccineGroup(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
+    public VaccineGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
@@ -101,9 +98,8 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public VaccineGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, boolean isChildActive) {
+    public VaccineGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.isChildActive = isChildActive;
         init(context);
     }
 

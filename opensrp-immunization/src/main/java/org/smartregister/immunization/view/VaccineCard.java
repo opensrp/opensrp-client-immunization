@@ -37,7 +37,7 @@ public class VaccineCard extends LinearLayout {
     private State state;
     private OnVaccineStateChangeListener onVaccineStateChangeListener;
     private VaccineWrapper vaccineWrapper;
-    private boolean isChildActive;
+    private boolean isChildActive = true;
 
     public static enum State {
         DONE_CAN_BE_UNDONE,
@@ -48,28 +48,24 @@ public class VaccineCard extends LinearLayout {
         EXPIRED
     }
 
-    public VaccineCard(Context context, boolean isChildActive) {
+    public VaccineCard(Context context) {
         super(context);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public VaccineCard(Context context, AttributeSet attrs, boolean isChildActive) {
+    public VaccineCard(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
+    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, boolean isChildActive) {
+    public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.isChildActive = isChildActive;
         init(context);
     }
 

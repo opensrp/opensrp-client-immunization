@@ -49,7 +49,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
 
-    private boolean isChildActive;
+    private boolean isChildActive = true;
 
     private static enum State {
         IN_PAST,
@@ -57,21 +57,18 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         IN_FUTURE
     }
 
-    public ServiceGroup(Context context, boolean isChildActive) {
+    public ServiceGroup(Context context) {
         super(context);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceGroup(Context context, AttributeSet attrs, boolean isChildActive) {
+    public ServiceGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.isChildActive = isChildActive;
         init(context);
     }
 
-    public ServiceGroup(Context context, AttributeSet attrs, int defStyleAttr, boolean isChildActive) {
+    public ServiceGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.isChildActive = isChildActive;
         init(context);
     }
 

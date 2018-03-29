@@ -50,17 +50,16 @@ public class ServiceCardAdapter extends BaseAdapter {
     private List<Alert> alertList;
     private Map<String, List<ServiceType>> serviceTypeMap;
 
-    private boolean isChildActive;
+    private boolean isChildActive = true;
 
     public ServiceCardAdapter(Context context, ServiceGroup serviceGroup, List<ServiceRecord> serviceRecordList,
-                              List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap, boolean isChildActive) {
+                              List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap) {
         this.context = context;
         this.serviceGroup = serviceGroup;
         this.serviceRecordList = serviceRecordList;
         this.alertList = alertList;
         this.serviceTypeMap = serviceTypeMap;
         serviceCards = new HashMap<>();
-        this.isChildActive = isChildActive;
     }
 
     @Override
@@ -87,7 +86,8 @@ public class ServiceCardAdapter extends BaseAdapter {
         try {
             String type = serviceGroup.getServiceTypeKeys().get(position);
             if (!serviceCards.containsKey(type)) {
-                ServiceCard serviceCard = new ServiceCard(context, isChildActive);
+                ServiceCard serviceCard = new ServiceCard(context);
+                serviceCard.setChildActive(true);
                 serviceCard.setOnServiceStateChangeListener(serviceGroup);
                 serviceCard.setOnClickListener(serviceGroup);
                 serviceCard.getUndoB().setOnClickListener(serviceGroup);
