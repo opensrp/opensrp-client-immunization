@@ -196,7 +196,8 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
 
     private void updateVaccineCards(ArrayList<VaccineWrapper> vaccinesToUpdate) {
         if (vaccineCardAdapter == null) {
-            vaccineCardAdapter = new VaccineCardAdapter(context, this, type, vaccineList, alertList, isChildActive);
+            vaccineCardAdapter = new VaccineCardAdapter(context, this, type, vaccineList, alertList);
+            vaccineCardAdapter.setChildActive(isChildActive);
             vaccinesGV.setAdapter(vaccineCardAdapter);
         }
 

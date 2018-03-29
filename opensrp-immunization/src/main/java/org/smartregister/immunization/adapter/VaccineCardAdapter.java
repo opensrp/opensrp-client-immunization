@@ -47,17 +47,16 @@ public class VaccineCardAdapter extends BaseAdapter {
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
 
-    private boolean isChildActive;
+    private boolean isChildActive = true;
 
     public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type,
-                              List<Vaccine> vaccineList, List<Alert> alertList, boolean isChildActive) {
+                              List<Vaccine> vaccineList, List<Alert> alertList) {
         this.context = context;
         this.vaccineGroup = vaccineGroup;
         this.vaccineList = vaccineList;
         this.alertList = alertList;
         vaccineCards = new HashMap<>();
         this.type = type;
-        this.isChildActive = isChildActive;
     }
 
     @Override
@@ -82,7 +81,8 @@ public class VaccineCardAdapter extends BaseAdapter {
                     = vaccineGroup.getVaccineData().vaccines.get(position);
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
-                VaccineCard vaccineCard = new VaccineCard(context, isChildActive);
+                VaccineCard vaccineCard = new VaccineCard(context);
+                vaccineCard.setChildActive(isChildActive);
                 vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
                 vaccineCard.setOnClickListener(vaccineGroup);
                 vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
