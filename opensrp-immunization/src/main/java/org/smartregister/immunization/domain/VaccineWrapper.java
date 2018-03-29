@@ -6,6 +6,7 @@ import org.smartregister.domain.Photo;
 import org.smartregister.immunization.db.VaccineRepo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by keyman on 16/11/2016.
@@ -35,6 +36,8 @@ public class VaccineWrapper implements Serializable {
 
     private boolean today;
     private boolean synced;
+
+    private Date createdAt;
 
     public String getId() {
         return id;
@@ -199,5 +202,13 @@ public class VaccineWrapper implements Serializable {
 
     public void setSynced(boolean synced) {
         this.synced = synced;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

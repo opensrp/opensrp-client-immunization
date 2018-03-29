@@ -148,7 +148,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         vaccineRepository.add(new Vaccine());
         Mockito.verify(sqliteDatabase, Mockito.times(2)).insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.any(ContentValues.class));
         Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date());
 
         VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
         Vaccine vaccineToReturn = Mockito.mock(Vaccine.class);

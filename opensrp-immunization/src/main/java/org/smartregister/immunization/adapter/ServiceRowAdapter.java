@@ -158,6 +158,7 @@ public class ServiceRowAdapter extends BaseAdapter {
                     }
                     tag.setDbKey(serviceRecord.getId());
                     tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    tag.setCreatedAt(serviceRecord.getCreatedAt());
                 }
             }
         }

@@ -20,6 +20,7 @@ public class ServiceRecord {
     private String eventId;
     private String formSubmissionId;
     private Long updatedAt;
+    private Date createdAt;
 
     protected String type;
     protected String name;
@@ -45,7 +46,7 @@ public class ServiceRecord {
 
     public ServiceRecord(Long id, String baseEntityId, String programClientId, Long
             recurringServiceId, String value, Date date, String anmId, String locationId, String
-                                 syncStatus, String eventId, String formSubmissionId, Long updatedAt) {
+                                 syncStatus, String eventId, String formSubmissionId, Long updatedAt, Date createdAt) {
         this.id = id;
         this.baseEntityId = baseEntityId;
         this.programClientId = programClientId;
@@ -58,6 +59,7 @@ public class ServiceRecord {
         this.eventId = eventId;
         this.formSubmissionId = formSubmissionId;
         this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -176,5 +178,13 @@ public class ServiceRecord {
         HashMap<String, String> identifiers = new HashMap<>();
         identifiers.put(ZEIR_ID, programClientId);
         return identifiers;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }
