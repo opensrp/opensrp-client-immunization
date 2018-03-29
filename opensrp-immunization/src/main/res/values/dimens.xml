@@ -13,5 +13,29 @@
     <dimen name="vaccine_card_width">200dp</dimen>
     <dimen name="vaccine_horizontal_spacing">20dp</dimen>
 
-
+    <dimen name="btn_text_size">15sp</dimen>
+    <dimen name="name_view_text_size">20sp</dimen>
+    <dimen name="number_view_text_size">18sp</dimen>
+    <dimen name="btn_padding_top">5dp</dimen>
+    <dimen name="btn_padding_bottom">5dp</dimen>
+    <dimen name="vaccine_text_size">17sp</dimen>
+    <dimen name="btn_margin_bottom">10dp</dimen>
+    <dimen name="btn_margin_left">20dp</dimen>
+    <dimen name="btn_margin_right">20dp</dimen>
+    <dimen name="break_point_margin_top">5dp</dimen>
+    <dimen name="name_margin_top">5dp</dimen>
+    <dimen name="profile_pic_margin_top">15dp</dimen>
+    <dimen name="vaccination_action_linear_layout_bottom_margin">5dp</dimen>
+    <dimen name="vaccination_name_layout_top_margin">5dp</dimen>
+    <dimen name="vaccination_name_layout_bottom_margin">5dp</dimen>
+    <dimen name="itn_question_view_margin_bottom">5dp</dimen>
+    <dimen name="itn_question_view_margin_top">5dp</dimen>
+    <dimen name="itn_question_view_text_size">17sp</dimen>
+    <dimen name="date_picker_margin_bottom">5dp</dimen>
+    <dimen name="date_picker_margin_top">5dp</dimen>
+    <dimen name="cancel_linear_layout_margin_bottom">5dp</dimen>
+    <dimen name="go_back_linear_layout_margin_bottom">10dp</dimen>
+    <dimen name="service_view_text_size">18dp</dimen>
+    <dimen name="service_units_view_text_size">16sp</dimen>
+    <dimen name="service_units_view_margin_top">5dp</dimen>
 </resources>
