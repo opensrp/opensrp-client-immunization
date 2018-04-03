@@ -40,6 +40,21 @@
     <dimen name="go_back_linear_layout_margin_bottom">10dp</dimen>
     <dimen name="service_view_text_size">18dp</dimen>
     <dimen name="service_units_view_text_size">16sp</dimen>
-    <dimen name="service_units_view_margin_top">5dp</dimen>
+    <dimen name="service_units_view_margin_top">5dp</dimen>d
     <dimen name="undo_text_view_margin_bottom">5dp</dimen>
+    <dimen name="immunization_row_name_view_padding_right">5dp</dimen>
+    <dimen name="immunization_row_name_view_padding_left">5dp</dimen>
+    <dimen name="immunization_row_name_view_text_size">15sp</dimen>
+    <dimen name="immunization_row_date_view_text_size">15sp</dimen>
+    <dimen name="immunization_row_margin_left">5dp</dimen>
+    <item name="immunization_row_name_layout_weight" format="float" type="dimen">0.3</item>
+    <dimen name="btn_immunization_row_margin_right">5dp</dimen>
+    <dimen name="date_view_margin_left">5dp</dimen>
+    <dimen name="date_view_margin_right">5dp</dimen>
+    <dimen name="date_view_padding_right">5dp</dimen>
+    <dimen name="status_btn_immunization_row_width">13dp</dimen>
+    <dimen name="status_btn_immunization_row_height">13dp</dimen>
+    <dimen name="immunization_row_LL_height">20dp</dimen>
+    <dimen name="immunization_row_card_linear_layout_height">30dp</dimen>
+    <dimen name="immunization_row_name_view_width">150dp</dimen>
 </resources>
