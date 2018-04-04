@@ -29,6 +29,7 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
 
 import java.util.ArrayList;
@@ -150,7 +151,7 @@ public class ServiceGroupTest extends BaseUnitTest {
     @Test
     public void assertOnStateChangedCallsUpdateViews() throws Exception {
         setDataForTest(magicDate);
-        view.onStateChanged(ServiceCard.State.DONE_CAN_BE_UNDONE);
+        view.onStateChanged(State.DONE_CAN_BE_UNDONE);
         //calls updateViews which sets the adapter, we can check the the adapter is not null
         Assert.assertNotNull(view.getServiceRecordList());
     }

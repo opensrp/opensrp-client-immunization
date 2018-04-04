@@ -19,6 +19,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
@@ -173,7 +174,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Test
     public void assertOnStateChangedCallsUpdateViews() throws Exception {
         setDataForTest(magicDate);
-        view.onStateChanged(VaccineCard.State.DONE_CAN_BE_UNDONE);
+        view.onStateChanged(State.DONE_CAN_BE_UNDONE);
         //calls updateViews which sets the adapter, we can check the the adapter is not null
         Assert.assertNotNull(view.getAllVaccineWrappers());
     }

@@ -86,7 +86,6 @@ public class ServiceCardAdapter extends BaseAdapter {
             if (!serviceCards.containsKey(type)) {
                 ServiceCard serviceCard = new ServiceCard(context);
                 serviceCard.setOnServiceStateChangeListener(serviceGroup);
-                serviceCard.setOnClickListener(serviceGroup);
                 serviceCard.getUndoB().setOnClickListener(serviceGroup);
                 serviceCard.setId((int) getItemId(position));
                 serviceCards.put(type, serviceCard);

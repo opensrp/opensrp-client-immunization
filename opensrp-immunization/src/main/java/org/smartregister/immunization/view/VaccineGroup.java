@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,8 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.VaccineCardAdapter;
+import org.smartregister.immunization.domain.GroupState;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.util.Utils;
@@ -42,19 +45,13 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     private CommonPersonObjectClient childDetails;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
-    private State state;
+    private GroupState groupState;
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
     private String type;
-
-    private static enum State {
-        IN_PAST,
-        CURRENT,
-        IN_FUTURE
-    }
 
     public VaccineGroup(Context context) {
         super(context);
@@ -143,7 +140,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
      *                         update all vaccine views
      */
     public void updateViews(ArrayList<VaccineWrapper> vaccinesToUpdate) {
-        this.state = State.IN_PAST;
+        this.groupState = GroupState.IN_PAST;
         if (this.vaccineData != null) {
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             DateTime dateTime = new DateTime(dobString);
@@ -157,11 +154,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
             long timeDiff = today.getTimeInMillis() - dob.getTime();
 
             if (timeDiff < today.getTimeInMillis()) {
-                this.state = State.IN_PAST;
+                this.groupState = GroupState.IN_PAST;
             } else if (timeDiff > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                this.state = State.IN_FUTURE;
+                this.groupState = GroupState.IN_FUTURE;
             } else {
-                this.state = State.CURRENT;
+                this.groupState = GroupState.CURRENT;
             }
             updateStatusViews();
             updateVaccineCards(vaccinesToUpdate);
@@ -169,7 +166,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     }
 
     private void updateStatusViews() {
-        switch (this.state) {
+        switch (this.groupState) {
             case IN_PAST:
                 nameTV.setText(vaccineData.name);
                 break;
@@ -196,6 +193,19 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
         if (vaccineCardAdapter == null) {
             vaccineCardAdapter = new VaccineCardAdapter(context, this, type, vaccineList, alertList);
             vaccinesGV.setAdapter(vaccineCardAdapter);
+
+            vaccinesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView parent, View v, int position, long id) {
+                    if (v instanceof VaccineCard && onVaccineClickedListener != null) {
+                        VaccineCard vaccineCard = (VaccineCard) v;
+                        State state = vaccineCard.getState();
+                        if (state != null && (State.DUE.equals(state) || State.OVERDUE.equals(state))) {
+                            onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
+                        }
+
+                    }
+                }
+            });
         }
 
         if (vaccineCardAdapter != null && vaccinesToUpdate != null) {
@@ -216,10 +226,6 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     public void onClick(View v) {
         if ((v.equals(recordAllTV)) && (onRecordAllClickListener != null && vaccineCardAdapter != null)) {
             onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
-
-        } else if (v instanceof VaccineCard && onVaccineClickedListener != null) {
-            onVaccineClickedListener.onClick(this, ((VaccineCard) v).getVaccineWrapper());
-
         } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof VaccineCard) {
             VaccineCard vaccineCard = (VaccineCard) v.getParent().getParent();
             onUndoClick(vaccineCard);
@@ -227,7 +233,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     }
 
     @Override
-    public void onStateChanged(VaccineCard.State newState) {
+    public void onStateChanged(State newState) {
         updateViews();
     }
 

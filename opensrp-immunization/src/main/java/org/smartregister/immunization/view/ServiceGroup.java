@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,9 +16,11 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.ServiceCardAdapter;
+import org.smartregister.immunization.domain.GroupState;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -43,17 +46,11 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
     private CommonPersonObjectClient childDetails;
     private List<ServiceRecord> serviceRecordList;
     private List<Alert> alertList;
-    private State state;
+    private GroupState groupState;
     private OnServiceClickedListener onServiceClickedListener;
     private OnServiceUndoClickListener onServiceUndoClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
-
-    private static enum State {
-        IN_PAST,
-        CURRENT,
-        IN_FUTURE
-    }
 
     public ServiceGroup(Context context) {
         super(context);
@@ -140,7 +137,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
      * This method will update all views, including service cards in this group
      */
     public void updateViews() {
-        this.state = State.IN_PAST;
+        this.groupState = GroupState.IN_PAST;
         if (this.serviceTypeMap != null) {
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             DateTime dateTime = new DateTime(dobString);
@@ -154,11 +151,11 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
             long timeDiff = today.getTimeInMillis() - dob.getTime();
 
             if (timeDiff < today.getTimeInMillis()) {
-                this.state = State.IN_PAST;
+                this.groupState = GroupState.IN_PAST;
             } else if (timeDiff > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                this.state = State.IN_FUTURE;
+                this.groupState = GroupState.IN_FUTURE;
             } else {
-                this.state = State.CURRENT;
+                this.groupState = GroupState.CURRENT;
             }
             updateStatusViews();
             updateServiceCards();
@@ -168,7 +165,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
     private void updateStatusViews() {
 
         String recurringServices = getResources().getString(R.string.recurring_services);
-        switch (this.state) {
+        switch (this.groupState) {
             case IN_PAST:
                 nameTV.setText(recurringServices);
                 break;
@@ -198,6 +195,19 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
         if (serviceCardAdapter == null) {
             serviceCardAdapter = new ServiceCardAdapter(context, this, serviceRecordList, alertList, serviceTypeMap);
             servicesGV.setAdapter(serviceCardAdapter);
+
+            servicesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView parent, View v, int position, long id) {
+                    if (v instanceof ServiceCard && onServiceClickedListener != null) {
+                        ServiceCard serviceCard = (ServiceCard) v;
+                        State state = serviceCard.getState();
+                        if (state != null && (State.DUE.equals(state) || State.OVERDUE.equals(state))) {
+                            onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
+                        }
+
+                    }
+                }
+            });
         } else {
             serviceCardAdapter.updateAll();
         }
@@ -207,17 +217,14 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        if (v instanceof ServiceCard && onServiceClickedListener != null) {
-            onServiceClickedListener.onClick(this, ((ServiceCard) v).getServiceWrapper());
-
-        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ServiceCard) {
+        if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ServiceCard) {
             ServiceCard serviceCard = (ServiceCard) v.getParent().getParent();
             onUndoClick(serviceCard);
         }
     }
 
     @Override
-    public void onStateChanged(ServiceCard.State newState) {
+    public void onStateChanged(State newState) {
         updateViews();
     }
 

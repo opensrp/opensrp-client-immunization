@@ -12,6 +12,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
 import org.smartregister.immunization.view.VaccineCard;
@@ -33,7 +34,7 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
     }
 
     @Override
-    public void onStateChanged(VaccineCard.State newState) {
+    public void onStateChanged(State newState) {
 
     }
 

@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
@@ -35,15 +36,6 @@ public class ServiceCard extends LinearLayout {
     private State state;
     private OnServiceStateChangeListener onServiceStateChangeListener;
     private ServiceWrapper serviceWrapper;
-
-    public static enum State {
-        DONE_CAN_BE_UNDONE,
-        DONE_CAN_NOT_BE_UNDONE,
-        DUE,
-        NOT_DUE,
-        OVERDUE,
-        EXPIRED
-    }
 
     public ServiceCard(Context context) {
         super(context);
@@ -142,7 +134,9 @@ public class ServiceCard extends LinearLayout {
     }
 
     public State getState() {
-        updateState();
+        if (this.state == null) {
+            updateState();
+        }
         return this.state;
     }
 
@@ -156,7 +150,6 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getServiceName());
-                setClickable(false);
                 setVisibility(GONE);
                 break;
             case DUE:
@@ -166,7 +159,6 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 nameTV.setText(String.format(context.getString(R.string.record_), getServiceName()));
-                setClickable(true);
                 break;
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -181,7 +173,6 @@ public class ServiceCard extends LinearLayout {
                 }
 
                 nameTV.setText(getServiceName() + " - " + dateFormatToUse.format(getDateDone()));
-                setClickable(false);
                 break;
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -190,7 +181,6 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getServiceName() + " - " + DATE_FORMAT.format(getDateDone()));
-                setClickable(false);
                 break;
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_red);
@@ -205,7 +195,6 @@ public class ServiceCard extends LinearLayout {
                 } else {
                     nameTV.setText(String.format(context.getString(R.string.record_), serviceName));
                 }
-                setClickable(true);
                 break;
             case EXPIRED:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -214,7 +203,6 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText("Expired: " + getServiceName());
-                setClickable(false);
                 break;
             default:
                 break;
