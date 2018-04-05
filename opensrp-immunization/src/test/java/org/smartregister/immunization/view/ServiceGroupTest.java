@@ -29,7 +29,6 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
-import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
 
 import java.util.ArrayList;

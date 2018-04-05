@@ -19,7 +19,6 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
-import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
