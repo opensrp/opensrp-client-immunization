@@ -201,6 +201,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
                                 onVaccineClickedListener.onClick(ImmunizationRowGroup.this, immunizationRowCard.getVaccineWrapper());
                             }
                             break;
+                        case DONE_CAN_NOT_BE_UNDONE:
                         case DONE_CAN_BE_UNDONE:
                             onUndoClick(immunizationRowCard);
                             break;
@@ -238,6 +239,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     public void onClick(View v) {
         if (v.equals(recordAllTV) && onRecordAllClickListener != null && vaccineCardAdapter != null) {
             onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
+
         }
     }
 

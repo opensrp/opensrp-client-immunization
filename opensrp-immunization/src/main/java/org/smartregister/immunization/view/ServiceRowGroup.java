@@ -224,6 +224,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
                                 onServiceClickedListener.onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
                             }
                             break;
+                        case DONE_CAN_NOT_BE_UNDONE:
                         case DONE_CAN_BE_UNDONE:
                             onUndoClick(serviceRowCard);
                             break;
