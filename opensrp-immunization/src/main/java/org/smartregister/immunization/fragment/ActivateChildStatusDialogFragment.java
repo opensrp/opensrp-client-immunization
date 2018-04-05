@@ -26,8 +26,6 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
     private DialogInterface.OnClickListener onClickListener;
     private int dialogTheme;
 
-    public ActivateChildStatusDialogFragment() {}
-
     public static ActivateChildStatusDialogFragment newInstance(String thirdPersonPronoun, String currentStatus, int theme) {
         ActivateChildStatusDialogFragment activateChildStatusDialogFragment = new ActivateChildStatusDialogFragment();
         activateChildStatusDialogFragment.setThirdPersonPronoun(thirdPersonPronoun);
