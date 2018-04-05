@@ -20,7 +20,6 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
-import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -81,8 +80,6 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
                 ImmunizationRowCard vaccineCard = new ImmunizationRowCard(context, editmode);
-                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
                 ImmunizationRowTask immunizationRowTask = new ImmunizationRowTask(vaccineCard, vaccineName,

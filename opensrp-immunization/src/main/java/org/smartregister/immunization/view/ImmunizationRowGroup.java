@@ -34,8 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by raihan on 13/03/2017.
  */
-public class ImmunizationRowGroup extends LinearLayout implements View.OnClickListener,
-        ImmunizationRowCard.OnVaccineStateChangeListener {
+public class ImmunizationRowGroup extends LinearLayout implements View.OnClickListener {
     private Context context;
     private TextView nameTV;
     private TextView recordAllTV;
@@ -185,13 +184,28 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
 
             vaccinesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView parent, View v, int position, long id) {
-                    if (v instanceof ImmunizationRowCard && onVaccineClickedListener != null) {
-                        ImmunizationRowCard immunizationRowCard = (ImmunizationRowCard) v;
-                        State state = immunizationRowCard.getState();
-                        if (state != null && (State.DUE.equals(state) || State.OVERDUE.equals(state))) {
-                            onVaccineClickedListener.onClick(ImmunizationRowGroup.this, immunizationRowCard.getVaccineWrapper());
-                        }
+                    if (!(v instanceof ImmunizationRowCard)) {
+                        return;
+                    }
 
+                    ImmunizationRowCard immunizationRowCard = (ImmunizationRowCard) v;
+                    State state = immunizationRowCard.getState();
+                    if (state == null) {
+                        return;
+                    }
+
+                    switch (state) {
+                        case DUE:
+                        case OVERDUE:
+                            if (onVaccineClickedListener != null) {
+                                onVaccineClickedListener.onClick(ImmunizationRowGroup.this, immunizationRowCard.getVaccineWrapper());
+                            }
+                            break;
+                        case DONE_CAN_BE_UNDONE:
+                            onUndoClick(immunizationRowCard);
+                            break;
+                        default:
+                            break;
                     }
                 }
             });
@@ -222,19 +236,9 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v.equals(recordAllTV)) {
-            if (onRecordAllClickListener != null && vaccineCardAdapter != null) {
-                onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
-            }
-        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ImmunizationRowCard) {
-            ImmunizationRowCard vaccineCard = (ImmunizationRowCard) v.getParent().getParent();
-            onUndoClick(vaccineCard);
+        if (v.equals(recordAllTV) && onRecordAllClickListener != null && vaccineCardAdapter != null) {
+            onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
         }
-    }
-
-    @Override
-    public void onStateChanged(State newState) {
-        updateViews();
     }
 
     public void onUndoClick(ImmunizationRowCard vaccineCard) {

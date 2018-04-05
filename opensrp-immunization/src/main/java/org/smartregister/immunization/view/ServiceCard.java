@@ -26,7 +26,6 @@ import java.util.Date;
  */
 
 public class ServiceCard extends LinearLayout {
-    private static final String TAG = "ServiceCard";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
     private static final SimpleDateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
     private Context context;
@@ -34,7 +33,6 @@ public class ServiceCard extends LinearLayout {
     private TextView nameTV;
     private Button undoB;
     private State state;
-    private OnServiceStateChangeListener onServiceStateChangeListener;
     private ServiceWrapper serviceWrapper;
 
     public ServiceCard(Context context) {
@@ -127,10 +125,6 @@ public class ServiceCard extends LinearLayout {
             }
             updateStateUi();
         }
-    }
-
-    public void setOnServiceStateChangeListener(OnServiceStateChangeListener onServiceStateChangeListener) {
-        this.onServiceStateChangeListener = onServiceStateChangeListener;
     }
 
     public State getState() {
@@ -252,11 +246,6 @@ public class ServiceCard extends LinearLayout {
             return serviceWrapper.getStatus();
         }
         return null;
-    }
-
-    public static interface OnServiceStateChangeListener {
-        void onStateChanged(final State newState);
-
     }
 
     public Button getUndoB() {

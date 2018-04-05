@@ -36,8 +36,7 @@ import java.util.concurrent.TimeUnit;
  * Created by keyman on 15/05/2017.
  */
 
-public class ServiceGroup extends LinearLayout implements View.OnClickListener,
-        ServiceCard.OnServiceStateChangeListener {
+public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     private Context context;
     private TextView nameTV;
     private ExpandableHeightGridView servicesGV;
@@ -198,13 +197,28 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
 
             servicesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView parent, View v, int position, long id) {
-                    if (v instanceof ServiceCard && onServiceClickedListener != null) {
-                        ServiceCard serviceCard = (ServiceCard) v;
-                        State state = serviceCard.getState();
-                        if (state != null && (State.DUE.equals(state) || State.OVERDUE.equals(state))) {
-                            onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
-                        }
+                    if (!(v instanceof ServiceCard)) {
+                        return;
+                    }
 
+                    ServiceCard serviceCard = (ServiceCard) v;
+                    State state = serviceCard.getState();
+                    if (state == null) {
+                        return;
+                    }
+
+                    switch (state) {
+                        case DUE:
+                        case OVERDUE:
+                            if (onServiceClickedListener != null) {
+                                onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
+                            }
+                            break;
+                        case DONE_CAN_BE_UNDONE:
+                            onUndoClick(serviceCard);
+                            break;
+                        default:
+                            break;
                     }
                 }
             });
@@ -217,15 +231,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ServiceCard) {
-            ServiceCard serviceCard = (ServiceCard) v.getParent().getParent();
-            onUndoClick(serviceCard);
-        }
-    }
-
-    @Override
-    public void onStateChanged(State newState) {
-        updateViews();
+        // TODO implement in case of Record ALL
     }
 
     public void onUndoClick(ServiceCard serviceCard) {

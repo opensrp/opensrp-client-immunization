@@ -171,14 +171,6 @@ public class VaccineGroupTest extends BaseUnitTest {
         Assert.assertEquals(view.isModalOpen(), false);
     }
 
-    @Test
-    public void assertOnStateChangedCallsUpdateViews() throws Exception {
-        setDataForTest(magicDate);
-        view.onStateChanged(State.DONE_CAN_BE_UNDONE);
-        //calls updateViews which sets the adapter, we can check the the adapter is not null
-        Assert.assertNotNull(view.getAllVaccineWrappers());
-    }
-
     public void setDataForTest(String dateTimeString) throws Exception {
         wrappers = new ArrayList<VaccineWrapper>();
         wrapper = new VaccineWrapper();

@@ -24,7 +24,6 @@ import java.util.Date;
  */
 
 public class ImmunizationRowCard extends LinearLayout {
-    private static final String TAG = "ImmunizationRowCard";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private Context context;
     private Button statusIV;
@@ -32,7 +31,6 @@ public class ImmunizationRowCard extends LinearLayout {
     private TextView StatusTV;
     private Button undoB;
     private State state;
-    private OnVaccineStateChangeListener onVaccineStateChangeListener;
     private VaccineWrapper vaccineWrapper;
     public boolean editmode;
 
@@ -116,10 +114,6 @@ public class ImmunizationRowCard extends LinearLayout {
             updateStateUi();
         }
 
-    }
-
-    public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {
-        this.onVaccineStateChangeListener = onVaccineStateChangeListener;
     }
 
     public State getState() {
@@ -256,11 +250,6 @@ public class ImmunizationRowCard extends LinearLayout {
             return vaccineWrapper.getDbKey();
         }
         return null;
-    }
-
-    public static interface OnVaccineStateChangeListener {
-        void onStateChanged(final State newState);
-
     }
 
     public Button getUndoB() {

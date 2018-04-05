@@ -34,8 +34,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Jason Rogena - jrogena@ona.io on 21/02/2017.
  */
 
-public class VaccineGroup extends LinearLayout implements View.OnClickListener,
-        VaccineCard.OnVaccineStateChangeListener {
+public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private Context context;
     private TextView nameTV;
     private TextView recordAllTV;
@@ -196,13 +195,28 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
 
             vaccinesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView parent, View v, int position, long id) {
-                    if (v instanceof VaccineCard && onVaccineClickedListener != null) {
-                        VaccineCard vaccineCard = (VaccineCard) v;
-                        State state = vaccineCard.getState();
-                        if (state != null && (State.DUE.equals(state) || State.OVERDUE.equals(state))) {
-                            onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
-                        }
+                    if (!(v instanceof VaccineCard)) {
+                        return;
+                    }
 
+                    VaccineCard vaccineCard = (VaccineCard) v;
+                    State state = vaccineCard.getState();
+                    if (state == null) {
+                        return;
+                    }
+
+                    switch (state) {
+                        case DUE:
+                        case OVERDUE:
+                            if (onVaccineClickedListener != null) {
+                                onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
+                            }
+                            break;
+                        case DONE_CAN_BE_UNDONE:
+                            onUndoClick(vaccineCard);
+                            break;
+                        default:
+                            break;
                     }
                 }
             });
@@ -226,15 +240,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener,
     public void onClick(View v) {
         if ((v.equals(recordAllTV)) && (onRecordAllClickListener != null && vaccineCardAdapter != null)) {
             onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
-        } else if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof VaccineCard) {
-            VaccineCard vaccineCard = (VaccineCard) v.getParent().getParent();
-            onUndoClick(vaccineCard);
         }
-    }
-
-    @Override
-    public void onStateChanged(State newState) {
-        updateViews();
     }
 
     public void onUndoClick(VaccineCard vaccineCard) {

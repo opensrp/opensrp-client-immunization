@@ -207,13 +207,28 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
             servicesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView parent, View v, int position, long id) {
-                    if (v instanceof ServiceRowCard && onServiceClickedListener != null) {
-                        ServiceRowCard serviceRowCard = (ServiceRowCard) v;
-                        State state = serviceRowCard.getState();
-                        if (state != null && (State.DUE.equals(state) || State.OVERDUE.equals(state))) {
-                            onServiceClickedListener.onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
-                        }
+                    if (!(v instanceof ServiceRowCard)) {
+                        return;
+                    }
 
+                    ServiceRowCard serviceRowCard = (ServiceRowCard) v;
+                    State state = serviceRowCard.getState();
+                    if (state == null) {
+                        return;
+                    }
+
+                    switch (state) {
+                        case DUE:
+                        case OVERDUE:
+                            if (onServiceClickedListener != null) {
+                                onServiceClickedListener.onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
+                            }
+                            break;
+                        case DONE_CAN_BE_UNDONE:
+                            onUndoClick(serviceRowCard);
+                            break;
+                        default:
+                            break;
                     }
                 }
             });
@@ -228,10 +243,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.undo_b && v.getParent().getParent() instanceof ServiceRowCard) {
-            ServiceRowCard serviceRowCard = (ServiceRowCard) v.getParent().getParent();
-            onUndoClick(serviceRowCard);
-        }
+        // TODO implement in case of Record ALL
     }
 
 

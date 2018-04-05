@@ -23,18 +23,12 @@ import java.util.ArrayList;
  * Created by real on 05/11/17.
  */
 
-public class VaccineCardTestActivity extends Activity implements View.OnClickListener,
-        VaccineCard.OnVaccineStateChangeListener {
+public class VaccineCardTestActivity extends Activity implements View.OnClickListener {
 
     private VaccineCard view;
 
     @Override
     public void onClick(View view) {
-
-    }
-
-    @Override
-    public void onStateChanged(State newState) {
 
     }
 

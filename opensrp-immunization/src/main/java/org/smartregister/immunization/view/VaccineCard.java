@@ -27,7 +27,6 @@ import java.util.Date;
  */
 
 public class VaccineCard extends LinearLayout {
-    private static final String TAG = "VaccineCard";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
     private static final SimpleDateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
     private Context context;
@@ -35,7 +34,6 @@ public class VaccineCard extends LinearLayout {
     private TextView nameTV;
     private Button undoB;
     private State state;
-    private OnVaccineStateChangeListener onVaccineStateChangeListener;
     private VaccineWrapper vaccineWrapper;
 
     public VaccineCard(Context context) {
@@ -129,10 +127,6 @@ public class VaccineCard extends LinearLayout {
             updateStateUi();
         }
 
-    }
-
-    public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {
-        this.onVaccineStateChangeListener = onVaccineStateChangeListener;
     }
 
     public State getState() {
@@ -256,11 +250,6 @@ public class VaccineCard extends LinearLayout {
             return vaccineWrapper.getStatus();
         }
         return null;
-    }
-
-    public static interface OnVaccineStateChangeListener {
-        void onStateChanged(final State newState);
-
     }
 
     public Button getUndoB() {

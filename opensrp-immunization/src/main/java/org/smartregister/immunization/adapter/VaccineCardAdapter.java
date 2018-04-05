@@ -81,10 +81,9 @@ public class VaccineCardAdapter extends BaseAdapter {
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
                 VaccineCard vaccineCard = new VaccineCard(context);
-                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
+
                 VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineName,
                         vaccineGroup.getChildDetails(),
                         vaccineGroup.getVaccineData().days_after_birth_due, position);
