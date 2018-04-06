@@ -24,11 +24,12 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:paddingLeft="0dp"
+        android:paddingRight="0dp"
         android:layout_toRightOf="@id/status_iv"
         android:background="@null"
         android:gravity="center_vertical|left"
-        android:layout_marginRight="10dp"
         android:singleLine="false"
         android:textColor="@color/client_list_grey"
         android:textSize="14sp" />

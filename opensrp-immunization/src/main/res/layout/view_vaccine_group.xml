@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="20dp">
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,8 +54,8 @@
                 android:id="@+id/vaccines_gv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:columnWidth="@dimen/vaccine_card_width"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/vaccine_horizontal_spacing"
