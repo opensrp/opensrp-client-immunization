@@ -286,4 +286,12 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
             serviceRowAdapter.updateWrapper(wrapper);
         }
     }
+
+    public ExpandableHeightGridView getServicesGV() {
+        return servicesGV;
+    }
+
+    public ServiceRowAdapter getServiceRowAdapter() {
+        return serviceRowAdapter;
+    }
 }

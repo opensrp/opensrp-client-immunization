@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -23,12 +24,14 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.adapter.ServiceCardAdapter;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
 
 import java.util.ArrayList;
@@ -104,27 +107,69 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         setDataForTest(magicDate);
         view.updateViews();
+
         ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
+
+        ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
+        ServiceCardAdapter adapter = view.getServiceCardAdapter();
+
         ServiceCard serviceCard = new ServiceCard(RuntimeEnvironment.application);
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         serviceCard.setServiceWrapper(wrapper);
-        view.onClick(serviceCard);
 
-        Mockito.verify(onServiceClickedListener).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        serviceCard.setState(State.NOT_DUE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
+        serviceCard.setState(State.DONE_CAN_BE_UNDONE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.EXPIRED);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.DUE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceClickedListener, Mockito.times(1)).onClick(view, wrapper);
+
+        serviceCard.setState(State.OVERDUE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceClickedListener, Mockito.times(2)).onClick(view, wrapper);
+
+        // UNDO
         ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
-        View v = new View(RuntimeEnvironment.application);
-        v.setId(R.id.undo_b);
-        ViewGroup parent = new LinearLayout(RuntimeEnvironment.application);
-        parent.addView(v);
-        serviceCard.addView(parent);
-        view.onClick(v);
-        Mockito.verify(onServiceUndoClickListener).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
+        serviceCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
+        serviceCard.setState(State.DUE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.OVERDUE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.EXPIRED);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.NOT_DUE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceCard.setState(State.DONE_CAN_BE_UNDONE);
+        expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.times(1)).onUndoClick(view, wrapper);
     }
 
     @Test

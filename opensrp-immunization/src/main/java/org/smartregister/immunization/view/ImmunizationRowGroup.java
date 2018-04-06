@@ -304,4 +304,11 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         }
     }
 
+    public ExpandableHeightGridView getVaccinesGV() {
+        return vaccinesGV;
+    }
+
+    public ImmunizationRowAdapter getVaccineCardAdapter() {
+        return vaccineCardAdapter;
+    }
 }

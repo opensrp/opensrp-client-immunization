@@ -123,6 +123,10 @@ public class ImmunizationRowCard extends LinearLayout {
         return this.state;
     }
 
+    public void setState(State state) {
+        this.state = state;
+    }
+
     private void updateStateUi() {
         boolean statusForMoreThanThreeMonths = false;
         if (getDbKey() != null) {

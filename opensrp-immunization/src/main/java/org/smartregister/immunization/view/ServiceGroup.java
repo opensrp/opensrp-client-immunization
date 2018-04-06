@@ -278,4 +278,12 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
             serviceCardAdapter.updateWrapperStatus(wrappers, childDetails);
         }
     }
+
+    public ExpandableHeightGridView getServicesGV() {
+        return servicesGV;
+    }
+
+    public ServiceCardAdapter getServiceCardAdapter() {
+        return serviceCardAdapter;
+    }
 }
