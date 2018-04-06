@@ -1,9 +1,6 @@
 package org.smartregister.immunization.view;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -18,11 +15,8 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
-import org.smartregister.immunization.adapter.ServiceCardAdapter;
 import org.smartregister.immunization.adapter.VaccineCardAdapter;
 import org.smartregister.immunization.db.VaccineRepo;
-import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
