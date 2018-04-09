@@ -241,6 +241,10 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
             serviceCardAdapter.setChildActive(isChildActive);
             serviceCardAdapter.updateChildsActiveStatus();
         }
+
+        if (servicesGV != null) {
+            servicesGV.invalidateViews();
+        }
     }
 
 

@@ -241,6 +241,10 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
             vaccineCardAdapter.setChildActive(isChildActive);
             vaccineCardAdapter.updateChildsActiveStatus();
         }
+
+        if (vaccinesGV != null) {
+            vaccinesGV.invalidateViews();
+        }
     }
 
     public void toggleRecordAllTV() {
