@@ -14,7 +14,6 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
-import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
 
 import java.util.ArrayList;
@@ -23,18 +22,12 @@ import java.util.ArrayList;
  * Created by kaderchowdhury on 05/11/17.
  */
 
-public class VaccineGroupTestActivity extends Activity implements View.OnClickListener,
-        VaccineCard.OnVaccineStateChangeListener {
+public class VaccineGroupTestActivity extends Activity implements View.OnClickListener {
 
     private VaccineGroup view;
 
     @Override
     public void onClick(View view) {
-
-    }
-
-    @Override
-    public void onStateChanged(VaccineCard.State newState) {
 
     }
 
