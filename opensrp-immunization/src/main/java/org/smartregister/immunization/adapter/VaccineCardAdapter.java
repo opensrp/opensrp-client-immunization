@@ -13,6 +13,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
@@ -83,11 +84,9 @@ public class VaccineCardAdapter extends BaseAdapter {
             if (!vaccineCards.containsKey(vaccineName)) {
                 VaccineCard vaccineCard = new VaccineCard(context);
                 vaccineCard.setChildActive(isChildActive);
-                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-                vaccineCard.setOnClickListener(vaccineGroup);
-                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
+
                 VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineName,
                         vaccineGroup.getChildDetails(),
                         vaccineGroup.getVaccineData().days_after_birth_due, position);
@@ -134,8 +133,8 @@ public class VaccineCardAdapter extends BaseAdapter {
         ArrayList<VaccineWrapper> dueVaccines = new ArrayList<>();
         if (vaccineCards != null) {
             for (VaccineCard curCard : vaccineCards.values()) {
-                if (curCard != null && (curCard.getState().equals(VaccineCard.State.DUE)
-                        || curCard.getState().equals(VaccineCard.State.OVERDUE))) {
+                if (curCard != null && (curCard.getState().equals(State.DUE)
+                        || curCard.getState().equals(State.OVERDUE))) {
                     dueVaccines.add(curCard.getVaccineWrapper());
                 }
             }
