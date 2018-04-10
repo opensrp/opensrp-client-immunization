@@ -8,8 +8,6 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_child_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        layout="@layout/child_detail_with_rounded_pic" />
 
 </android.support.v4.widget.DrawerLayout>
