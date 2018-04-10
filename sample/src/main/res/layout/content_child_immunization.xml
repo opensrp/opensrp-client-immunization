@@ -19,16 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#208CC5">
+            android:background="#218CC5"
+            android:id="@+id/profile_name_layout">
 
-            <org.smartregister.immunization.sample.view.CircularImageView
+            <org.smartregister.immunization.sample.view.RoundedImageView
                 android:id="@+id/profile_image_iv"
-                android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_centerInParent="true"
+                android:layout_width="100dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:gravity="center" />
+                android:layout_marginTop="10dp"/>
 
             <org.smartregister.view.customcontrols.CustomFontTextView
                 android:id="@+id/name_tv"
@@ -43,7 +42,6 @@
                 android:layout_marginTop="5dp"/>
 
             <LinearLayout
-                android:id="@+id/profile_name_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
