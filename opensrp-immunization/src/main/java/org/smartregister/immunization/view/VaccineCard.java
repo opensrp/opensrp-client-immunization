@@ -137,10 +137,14 @@ public class VaccineCard extends LinearLayout {
 
     public void updateChildsActiveStatus() {
         if (isChildActive) {
-            getBackground().setAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+            setBackgroundAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
         } else {
-            getBackground().setAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+            setBackgroundAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
         }
+    }
+
+    private void setBackgroundAlpha(int alpha) {
+        getBackground().setAlpha(alpha);
     }
 
     public State getState() {

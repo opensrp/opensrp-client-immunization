@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -236,6 +237,44 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);
         view.setData(childdetails, serviceTypeMap, servcServiceRecords, alertlist);
+    }
+
+    @Test
+    public void updateChildsActiveStatusShouldCheckIfServiceCardAdapterIsNull() {
+        // If there is no null check, then this test should fail
+        ServiceCardAdapter serviceCardAdapter = view.getServiceCardAdapter();
+        ServiceCardAdapter nullServiceCardAdapter = null;
+
+        Whitebox.setInternalState(view, "serviceCardAdapter", nullServiceCardAdapter);
+        view.updateChildsActiveStatus();
+
+        Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
+
+    }
+
+    @Test
+    public void updateChildsActivateStatusShouldCheckIfGridViewIsNull() {
+        // If there is no null check, then this test should fail
+        ExpandableHeightGridView servicesGV = view.getServicesGV();
+        ExpandableHeightGridView nullServicesGV = null;
+
+        Whitebox.setInternalState(view, "servicesGV", nullServicesGV);
+        view.updateChildsActiveStatus();
+
+        Whitebox.setInternalState(view, "servicesGV", servicesGV);
+
+    }
+
+    @Test
+    public void updateAllWrapperStatusShouldCheckIfAdapterIsNull() {
+        // If there is no null check, then this test should fail
+        ServiceCardAdapter serviceCardAdapter = view.getServiceCardAdapter();
+        ServiceCardAdapter nullServiceCardAdapter = null;
+
+        Whitebox.setInternalState(view, "serviceCardAdapter", nullServiceCardAdapter);
+        view.updateAllWrapperStatus();
+
+        Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
     }
 
 }
