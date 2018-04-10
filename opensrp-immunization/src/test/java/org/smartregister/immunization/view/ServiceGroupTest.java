@@ -246,10 +246,13 @@ public class ServiceGroupTest extends BaseUnitTest {
         ServiceCardAdapter nullServiceCardAdapter = null;
 
         Whitebox.setInternalState(view, "serviceCardAdapter", nullServiceCardAdapter);
-        view.updateChildsActiveStatus();
 
-        Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
-
+        try {
+            view.updateChildsActiveStatus();
+        } catch (Exception e) {
+            Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
+            Assert.fail();
+        }
     }
 
     @Test
@@ -259,10 +262,13 @@ public class ServiceGroupTest extends BaseUnitTest {
         ExpandableHeightGridView nullServicesGV = null;
 
         Whitebox.setInternalState(view, "servicesGV", nullServicesGV);
-        view.updateChildsActiveStatus();
 
-        Whitebox.setInternalState(view, "servicesGV", servicesGV);
-
+        try {
+            view.updateChildsActiveStatus();
+        } catch (Exception e) {
+            Whitebox.setInternalState(view, "servicesGV", servicesGV);
+            Assert.fail();
+        }
     }
 
     @Test
@@ -272,9 +278,13 @@ public class ServiceGroupTest extends BaseUnitTest {
         ServiceCardAdapter nullServiceCardAdapter = null;
 
         Whitebox.setInternalState(view, "serviceCardAdapter", nullServiceCardAdapter);
-        view.updateAllWrapperStatus();
 
-        Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
+        try {
+            view.updateAllWrapperStatus();
+        } catch (Exception e) {
+            Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
+            Assert.fail();
+        }
     }
 
 }

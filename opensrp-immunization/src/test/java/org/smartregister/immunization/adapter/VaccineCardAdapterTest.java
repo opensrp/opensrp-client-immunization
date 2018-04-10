@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -152,8 +154,12 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
         Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", nullVaccineCards);
 
-        vaccineCardAdapter.updateChildsActiveStatus();
-        Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
+        try {
+            vaccineCardAdapter.updateChildsActiveStatus();
+            Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
+        } catch (Exception e) {
+            Assert.fail();
+        }
     }
 
 }
