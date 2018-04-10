@@ -61,7 +61,14 @@
                     android:layout_marginLeft="10dp"
                     android:text="Age"
                     android:textColor="@color/white" />
-
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/status"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Status: Active"
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
 
