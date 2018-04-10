@@ -1,13 +1,19 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_base"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.smartregister.immunization.sample.MainActivity"
+    tools:showIn="@layout/content_main" >
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#218CC5"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,10 +27,10 @@
                 android:layout_height="100dp"
                 android:layout_width="100dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="10dp"/>
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/name"
+                android:id="@+id/name_tv"
                 style="@style/CustomFontTextViewStyle.ClientList.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,11 +47,11 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
-                android:paddingBottom="10dp">
+                android:paddingBottom="20dp">
 
 
                 <org.smartregister.view.customcontrols.CustomFontTextView
-                    android:id="@+id/idforclient"
+                    android:id="@+id/child_id_tv"
                     style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,41 +60,64 @@
                     android:textSize="@dimen/activity_sub_title_size" />
 
                 <org.smartregister.view.customcontrols.CustomFontTextView
-                    android:id="@+id/ageforclient"
+                    android:id="@+id/age_tv"
                     style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="Age"
                     android:textColor="@color/white" />
+
                 <org.smartregister.view.customcontrols.CustomFontTextView
-                    android:id="@+id/status"
+                    android:id="@+id/dob_tv"
                     style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="Status: Active"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:text="Birth Date"/>
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="#E2E16D"
-            app:tabIndicatorHeight="4dp"
-            app:tabMaxWidth="0dp"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextAppearance="@style/CustomFontTextViewStyle.tabIndicator" />
-    </android.support.design.widget.AppBarLayout>
+        <org.smartregister.view.customcontrols.CustomFontTextView
+            style="@style/CustomFontTextViewStyle.ClientList"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/label_immunization_records"
+            android:textColor="#919191"
+            android:textSize="@dimen/activity_sub_title_size"
+            android:gravity="center_vertical"
+            android:background="#eeeeee" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAlignment="center"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/card_category_horizontal_margin"
+            android:clickable="false"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardElevation="0dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/service_group_canvas_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/vaccine_group_canvas_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+</ScrollView>
