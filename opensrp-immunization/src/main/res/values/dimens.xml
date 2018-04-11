@@ -16,7 +16,7 @@
     <dimen name="number_view_text_size">18sp</dimen>
     <dimen name="btn_padding_top">5dp</dimen>
     <dimen name="btn_padding_bottom">5dp</dimen>
-    <dimen name="vaccine_text_size">17sp</dimen>
+    <dimen name="vaccine_text_size">15sp</dimen>
     <dimen name="undo_view_text_size">17sp</dimen>
     <dimen name="btn_margin_bottom">10dp</dimen>
     <dimen name="btn_margin_left">20dp</dimen>
@@ -41,7 +41,8 @@
     <dimen name="service_units_view_margin_top">5dp</dimen>d
     <dimen name="undo_text_view_margin_bottom">5dp</dimen>
     <dimen name="immunization_row_name_view_padding_right">5dp</dimen>
-    <dimen name="immunization_row_name_view_padding_left">5dp</dimen>
+    <dimen name="immunization_row_name_view_padding_left">10dp</dimen>
+    <dimen name="date_view_text_size">14sp</dimen>
     <dimen name="immunization_row_name_view_text_size">15sp</dimen>
     <dimen name="immunization_row_date_view_text_size">15sp</dimen>
     <dimen name="immunization_row_margin_left">5dp</dimen>
@@ -53,7 +54,7 @@
     <dimen name="status_btn_immunization_row_width">13dp</dimen>
     <dimen name="status_btn_immunization_row_height">13dp</dimen>
     <dimen name="immunization_row_LL_height">20dp</dimen>
-    <dimen name="immunization_row_name_view_width">100dp</dimen>
+    <dimen name="immunization_row_name_view_width">140dp</dimen>
     <dimen name="immunization_profile_pic_height">50dp</dimen>
     <dimen name="immunization_profile_pic_width">50dp</dimen>
 </resources>
