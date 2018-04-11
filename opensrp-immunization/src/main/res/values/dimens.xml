@@ -42,7 +42,7 @@
     <dimen name="undo_text_view_margin_bottom">5dp</dimen>
     <dimen name="immunization_row_name_view_padding_right">5dp</dimen>
     <dimen name="immunization_row_name_view_padding_left">10dp</dimen>
-    <dimen name="date_view_text_size">14sp</dimen>
+    <dimen name="date_view_text_size">15sp</dimen>
     <dimen name="immunization_row_name_view_text_size">15sp</dimen>
     <dimen name="immunization_row_date_view_text_size">15sp</dimen>
     <dimen name="immunization_row_margin_left">0dp</dimen>

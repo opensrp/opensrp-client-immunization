@@ -17,7 +17,7 @@
     <dimen name="profile_pic_margin_top">20dp</dimen>
     <dimen name="vaccination_action_linear_layout_bottom_margin">10dp</dimen>
     <dimen name="vaccination_name_layout_top_margin">20dp</dimen>
-    <dimen name="vaccination_name_layout_bottom_margin">20dp</dimen>
+    <dimen name="vaccination_name_layout_bottom_margin">5dp</dimen>
     <dimen name="vaccination_name_top_margin">20dp</dimen>
     <dimen name="vaccination_name_bottom_margin">20dp</dimen>
     <dimen name="itn_question_view_margin_bottom">20dp</dimen>
@@ -35,7 +35,7 @@
     <dimen name="immunization_row_date_view_padding_right">10dp</dimen>
     <dimen name="immunization_row_name_view_text_size">16sp</dimen>
     <dimen name="immunization_row_date_view_text_size">16sp</dimen>
-    <dimen name="date_view_text_size">18sp</dimen>
+    <dimen name="date_view_text_size">24sp</dimen>
     <dimen name="immunization_row_margin_left">20dp</dimen>
     <dimen name="immunization_row_name_view_padding_left">10dp</dimen>
     <item name="immunization_row_name_layout_weight" format="integer" type="dimen">1</item>

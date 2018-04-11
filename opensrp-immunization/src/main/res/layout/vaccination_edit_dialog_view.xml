@@ -71,7 +71,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/vaccination_name_layout_bottom_margin"
-                android:layout_marginTop="@dimen/vaccination_name_layout_top_margin"
                 android:orientation="vertical" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
@@ -82,7 +81,9 @@
                 android:paddingLeft="0dp"
                 android:text="number"
                 android:textColor="@color/client_list_grey"
-                android:textSize="@dimen/date_view_text_size" />
+                android:textSize="@dimen/date_view_text_size"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"/>
 
             <Button
                 android:id="@+id/vaccinate_today"
