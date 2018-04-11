@@ -32,7 +32,8 @@ public class ImmunizationRowCard extends LinearLayout {
     private Button undoB;
     private State state;
     private VaccineWrapper vaccineWrapper;
-    public boolean editmode;
+    private boolean editmode;
+    private boolean statusForMoreThanThreeMonths = false;
 
     public ImmunizationRowCard(Context context, boolean editmode) {
         super(context);
@@ -128,7 +129,6 @@ public class ImmunizationRowCard extends LinearLayout {
     }
 
     private void updateStateUi() {
-        boolean statusForMoreThanThreeMonths = false;
         if (getDbKey() != null) {
             statusForMoreThanThreeMonths = VaccinateActionUtils.moreThanThreeMonths(getCreatedAt());
         }
@@ -258,5 +258,13 @@ public class ImmunizationRowCard extends LinearLayout {
 
     public Button getUndoB() {
         return undoB;
+    }
+
+    public boolean isEditmode() {
+        return editmode;
+    }
+
+    public boolean isStatusForMoreThanThreeMonths() {
+        return statusForMoreThanThreeMonths;
     }
 }
