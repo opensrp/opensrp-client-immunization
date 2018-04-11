@@ -15,7 +15,7 @@
         android:layout_marginRight="5dp"
         android:background="@null"
         android:src="@drawable/ic_action_check"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <org.smartregister.view.customcontrols.CustomFontTextView
         android:id="@+id/name_tv"
@@ -41,11 +41,14 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/undo_background"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:text="Undo"
         android:textAllCaps="false"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
 </RelativeLayout>
