@@ -6,8 +6,8 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/vaccine_green_tick_width"
+        android:layout_height="@dimen/vaccine_green_tick_height"
         android:id="@+id/imageView"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_yes_large"
