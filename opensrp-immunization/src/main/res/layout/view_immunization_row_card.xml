@@ -15,7 +15,6 @@
             style="@style/CustomFontTextViewStyle.ClientList"
             android:layout_width="@dimen/immunization_row_name_view_width"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@null"
             android:textColor="@color/text_black"
             android:textSize="@dimen/immunization_row_name_view_text_size"
