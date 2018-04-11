@@ -52,6 +52,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private boolean modalOpen;
     private String type;
 
+    private boolean isChildActive = true;
     public VaccineGroup(Context context) {
         super(context);
         init(context);
@@ -191,6 +192,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private void updateVaccineCards(ArrayList<VaccineWrapper> vaccinesToUpdate) {
         if (vaccineCardAdapter == null) {
             vaccineCardAdapter = new VaccineCardAdapter(context, this, type, vaccineList, alertList);
+            vaccineCardAdapter.setChildActive(isChildActive);
             vaccinesGV.setAdapter(vaccineCardAdapter);
 
             vaccinesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -228,8 +230,25 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        toggleRecordAllTV();
+
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.setChildActive(isChildActive);
+            vaccineCardAdapter.updateChildsActiveStatus();
+        }
+
+        if (vaccinesGV != null) {
+            vaccinesGV.invalidateViews();
+        }
+    }
+
     public void toggleRecordAllTV() {
-        if (vaccineCardAdapter.getDueVaccines().size() > 0) {
+        if (vaccineCardAdapter.getDueVaccines().size() > 0 && isChildActive) {
             recordAllTV.setVisibility(VISIBLE);
         } else {
             recordAllTV.setVisibility(GONE);

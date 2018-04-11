@@ -17,4 +17,9 @@ public class VaccineCardShadow extends ShadowViewGroup {
 
     }
 
+    @Implementation
+    public void updateChildsActiveStatus() {
+        // Nothing to update this is not possible on the local JVM
+    }
+
 }

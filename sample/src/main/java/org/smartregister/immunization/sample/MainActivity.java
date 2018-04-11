@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private static final ArrayList<String> COMBINED_VACCINES;
     private static final HashMap<String, String> COMBINED_VACCINES_MAP;
 
+    private static final boolean isChildActive = true;
+
     static {
         COMBINED_VACCINES = new ArrayList<>();
         COMBINED_VACCINES_MAP = new HashMap<>();
@@ -263,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             LinearLayout serviceGroupCanvasLL = (LinearLayout) findViewById(R.id.service_group_canvas_ll);
 
             ServiceGroup curGroup = new ServiceGroup(this);
+            curGroup.setChildActive(isChildActive);
             curGroup.setData(childDetails, foundServiceTypeMap, serviceRecordList, alerts);
             curGroup.setOnServiceClickedListener(new ServiceGroup.OnServiceClickedListener() {
                 @Override
@@ -303,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private void addVaccineGroup(int canvasId, org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
         LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
         VaccineGroup curGroup = new VaccineGroup(this);
+        curGroup.setChildActive(isChildActive);
         curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts, "child");
         curGroup.setOnRecordAllClickListener(new VaccineGroup.OnRecordAllClickListener() {
             @Override
