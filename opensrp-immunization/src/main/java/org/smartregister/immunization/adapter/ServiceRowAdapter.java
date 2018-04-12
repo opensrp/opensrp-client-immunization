@@ -86,8 +86,6 @@ public class ServiceRowAdapter extends BaseAdapter {
             ServiceType serviceType = serviceRowGroup.getServiceTypes().get(position);
             if (!serviceRowCards.containsKey(serviceType.getName())) {
                 ServiceRowCard serviceRowCard = new ServiceRowCard(context, editmode);
-                serviceRowCard.setOnClickListener(serviceRowGroup);
-                serviceRowCard.getUndoB().setOnClickListener(serviceRowGroup);
                 serviceRowCard.setId((int) getItemId(position));
                 serviceRowCards.put(serviceType.getName(), serviceRowCard);
 
@@ -158,6 +156,7 @@ public class ServiceRowAdapter extends BaseAdapter {
                     }
                     tag.setDbKey(serviceRecord.getId());
                     tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    tag.setCreatedAt(serviceRecord.getCreatedAt());
                 }
             }
         }

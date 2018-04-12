@@ -43,4 +43,6 @@
 
     <color name="vaccinate_popup_light_grey">#F0F0F0</color>
 
+    <color name="dialog_message_text_color">#757575</color>
+
 </resources>

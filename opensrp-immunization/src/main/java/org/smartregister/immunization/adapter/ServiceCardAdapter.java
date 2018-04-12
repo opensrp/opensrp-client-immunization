@@ -50,6 +50,8 @@ public class ServiceCardAdapter extends BaseAdapter {
     private List<Alert> alertList;
     private Map<String, List<ServiceType>> serviceTypeMap;
 
+    private boolean isChildActive = true;
+
     public ServiceCardAdapter(Context context, ServiceGroup serviceGroup, List<ServiceRecord> serviceRecordList,
                               List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap) {
         this.context = context;
@@ -85,15 +87,12 @@ public class ServiceCardAdapter extends BaseAdapter {
             String type = serviceGroup.getServiceTypeKeys().get(position);
             if (!serviceCards.containsKey(type)) {
                 ServiceCard serviceCard = new ServiceCard(context);
-                serviceCard.setOnServiceStateChangeListener(serviceGroup);
-                serviceCard.setOnClickListener(serviceGroup);
-                serviceCard.getUndoB().setOnClickListener(serviceGroup);
+                serviceCard.setChildActive(isChildActive);
                 serviceCard.setId((int) getItemId(position));
                 serviceCards.put(type, serviceCard);
 
                 ServiceCardTask serviceRowTask = new ServiceCardTask(serviceCard, serviceGroup.getChildDetails(), type);
                 Utils.startAsyncTask(serviceRowTask, null);
-
             }
 
             return serviceCards.get(type);
@@ -115,6 +114,21 @@ public class ServiceCardAdapter extends BaseAdapter {
         visibilityCheck();
     }
 
+    public void updateChildsActiveStatus() {
+        if (serviceCards != null) {
+            // Update all vaccines
+            for (ServiceCard curCard : serviceCards.values()) {
+                if (curCard != null) {
+                    curCard.setChildActive(isChildActive);
+                    curCard.updateChildsActiveStatus();
+                }
+            }
+        }
+    }
+
+    public void setChildActive(boolean isChildActive) {
+        this.isChildActive = isChildActive;
+    }
 
     public void visibilityCheck() {
         // if all cards have been updated

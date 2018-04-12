@@ -6,10 +6,13 @@ import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -23,6 +26,7 @@ import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
 import org.smartregister.util.JsonFormUtils;
 
@@ -140,6 +144,22 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");
+    }
+
+    @Test
+    public void updateChildsActiveStatusShouldCheckVaccineCardsForNull() {
+        // An exception will be thrown and the test will fail if there is no null check
+        HashMap<String, VaccineCard> vaccineCards = Whitebox.getInternalState(vaccineCardAdapter, "vaccineCards");
+        HashMap<String, VaccineCard> nullVaccineCards = null;
+
+        Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", nullVaccineCards);
+
+        try {
+            vaccineCardAdapter.updateChildsActiveStatus();
+            Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
+        } catch (Exception e) {
+            Assert.fail();
+        }
     }
 
 }

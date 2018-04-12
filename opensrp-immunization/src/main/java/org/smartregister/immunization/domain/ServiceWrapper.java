@@ -5,6 +5,7 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by keyman on 16/11/2016.
@@ -33,6 +34,8 @@ public class ServiceWrapper implements Serializable {
 
     private ServiceType serviceType;
     private String value;
+
+    private Date createdAt;
 
     public String getId() {
         return id;
@@ -210,5 +213,13 @@ public class ServiceWrapper implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

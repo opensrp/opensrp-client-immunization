@@ -9,8 +9,10 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,7 +34,9 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     public static final String LOCATIONID = "location_id";
     public static final String SYNC_STATUS = "sync_status";
     public static final String UPDATED_AT_COLUMN = "updated_at";
-    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATIONID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN};
+    public static final String CREATED_AT = "created_at";
+
+    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATIONID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, CREATED_AT};
 
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     public static final String RECURRING_SERVICE_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + RECURRING_SERVICE_ID + "_index ON " + TABLE_NAME + "(" + RECURRING_SERVICE_ID + ");";
@@ -40,8 +44,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     public static final String FORMSUBMISSION_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + FORMSUBMISSION_ID + "_index ON " + TABLE_NAME + "(" + FORMSUBMISSION_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
 
-    public static String TYPE_Unsynced = "Unsynced";
-    public static String TYPE_Synced = "Synced";
+    public static final String ALTER_ADD_CREATED_AT_COLUMN = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + CREATED_AT + " DATETIME NULL ";
 
     public RecurringServiceRecordRepository(Repository repository) {
         super(repository);
@@ -81,6 +84,9 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                     serviceRecord.setId(sameServiceRecord.getId());
                     update(database, serviceRecord);
                 } else {
+                    if (serviceRecord.getCreatedAt() == null) {
+                        serviceRecord.setCreatedAt(new Date());
+                    }
                     serviceRecord.setId(database.insert(TABLE_NAME, null, createValuesFor(serviceRecord)));
                 }
             } else {
@@ -225,7 +231,15 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
 
-
+                    Date createdAt = null;
+                    String dateCreatedString = cursor.getString(cursor.getColumnIndex(CREATED_AT));
+                    if (StringUtils.isNotBlank(dateCreatedString)) {
+                        try {
+                            createdAt = EventClientRepository.dateFormat.parse(dateCreatedString);
+                        } catch (ParseException e) {
+                            Log.e(TAG, Log.getStackTraceString(e));
+                        }
+                    }
                     ServiceRecord serviceRecord = new ServiceRecord(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                             cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)),
                             cursor.getString(cursor.getColumnIndex(PROGRAM_CLIENT_ID)),
@@ -237,7 +251,8 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                             cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                             cursor.getString(cursor.getColumnIndex(EVENT_ID)),
                             cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)),
-                            cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN)));
+                            cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN)),
+                            createdAt);
 
 
                     if (cursor.getColumnIndex(RecurringServiceTypeRepository.TYPE) > -1) {
@@ -286,6 +301,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         values.put(EVENT_ID, serviceRecord.getEventId() != null ? serviceRecord.getEventId() : null);
         values.put(FORMSUBMISSION_ID, serviceRecord.getFormSubmissionId() != null ? serviceRecord.getFormSubmissionId() : null);
         values.put(UPDATED_AT_COLUMN, serviceRecord.getUpdatedAt() != null ? serviceRecord.getUpdatedAt() : null);
+        values.put(CREATED_AT, serviceRecord.getCreatedAt() != null ? EventClientRepository.dateFormat.format(serviceRecord.getCreatedAt()) : null);
         return values;
     }
 
@@ -294,5 +310,21 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             return s.replace("_", " ");
         }
         return s;
+    }
+
+    public static void migrateCreatedAt(SQLiteDatabase database) {
+        try {
+            String sql = "UPDATE " + TABLE_NAME +
+                    " SET " + CREATED_AT + " = " +
+                    " ( SELECT " + EventClientRepository.event_column.dateCreated.name() +
+                    "   FROM " + EventClientRepository.Table.event.name() +
+                    "   WHERE " + EventClientRepository.event_column.eventId.name() + " = " + TABLE_NAME + "." + EVENT_ID +
+                    "   OR " + EventClientRepository.event_column.formSubmissionId.name() + " = " + TABLE_NAME + "." + FORMSUBMISSION_ID +
+                    " ) " +
+                    " WHERE " + CREATED_AT + " is null ";
+            database.execSQL(sql);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
     }
 }

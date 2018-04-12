@@ -14,7 +14,9 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +28,6 @@ import java.util.Date;
  */
 
 public class VaccineCard extends LinearLayout {
-    private static final String TAG = "VaccineCard";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
     private static final SimpleDateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
     private Context context;
@@ -34,17 +35,8 @@ public class VaccineCard extends LinearLayout {
     private TextView nameTV;
     private Button undoB;
     private State state;
-    private OnVaccineStateChangeListener onVaccineStateChangeListener;
     private VaccineWrapper vaccineWrapper;
-
-    public static enum State {
-        DONE_CAN_BE_UNDONE,
-        DONE_CAN_NOT_BE_UNDONE,
-        DUE,
-        NOT_DUE,
-        OVERDUE,
-        EXPIRED
-    }
+    private boolean isChildActive = true;
 
     public VaccineCard(Context context) {
         super(context);
@@ -135,17 +127,35 @@ public class VaccineCard extends LinearLayout {
                 } */
             }
             updateStateUi();
+            updateChildsActiveStatus();
         }
-        
     }
 
-    public void setOnVaccineStateChangeListener(OnVaccineStateChangeListener onVaccineStateChangeListener) {
-        this.onVaccineStateChangeListener = onVaccineStateChangeListener;
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            setBackgroundAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            setBackgroundAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
+    }
+
+    private void setBackgroundAlpha(int alpha) {
+        getBackground().setAlpha(alpha);
     }
 
     public State getState() {
-        updateState();
+        if (this.state == null) {
+            updateState();
+        }
         return this.state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     private void updateStateUi() {
@@ -157,7 +167,6 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getVaccineName());
-                setClickable(false);
                 break;
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_blue);
@@ -170,7 +179,6 @@ public class VaccineCard extends LinearLayout {
                 if (vaccineName.toLowerCase().contains("measles") || vaccineName.toLowerCase().contains("mr")) {
                     nameTV.setText(vaccineName);
                 }
-                setClickable(true);
                 break;
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -185,7 +193,6 @@ public class VaccineCard extends LinearLayout {
                 }
 
                 nameTV.setText(getVaccineName() + " - " + dateFormatToUse.format(getDateDone()));
-                setClickable(false);
                 break;
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -194,7 +201,6 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getVaccineName() + " - " + DATE_FORMAT.format(getDateDone()));
-                setClickable(false);
                 break;
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_red);
@@ -209,7 +215,6 @@ public class VaccineCard extends LinearLayout {
                     nameTV.setText(String.format(context.getString(R.string.mr_due_),
                             vName, DATE_FORMAT.format(getDateDue())));
                 }
-                setClickable(true);
                 break;
             case EXPIRED:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -218,7 +223,6 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText("Expired: " + getVaccineName());
-                setClickable(false);
                 break;
             default:
                 break;
@@ -268,11 +272,6 @@ public class VaccineCard extends LinearLayout {
             return vaccineWrapper.getStatus();
         }
         return null;
-    }
-
-    public static interface OnVaccineStateChangeListener {
-        void onStateChanged(final State newState);
-
     }
 
     public Button getUndoB() {

@@ -13,6 +13,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
@@ -47,6 +48,8 @@ public class VaccineCardAdapter extends BaseAdapter {
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
 
+    private boolean isChildActive = true;
+
     public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type,
                               List<Vaccine> vaccineList, List<Alert> alertList) {
         this.context = context;
@@ -80,11 +83,10 @@ public class VaccineCardAdapter extends BaseAdapter {
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
                 VaccineCard vaccineCard = new VaccineCard(context);
-                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-                vaccineCard.setOnClickListener(vaccineGroup);
-                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
+                vaccineCard.setChildActive(isChildActive);
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
+
                 VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineName,
                         vaccineGroup.getChildDetails(),
                         vaccineGroup.getVaccineData().days_after_birth_due, position);
@@ -114,12 +116,25 @@ public class VaccineCardAdapter extends BaseAdapter {
         }
     }
 
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        if (vaccineCards != null) {
+            for(VaccineCard curCard: vaccineCards.values()) {
+                curCard.setChildActive(isChildActive);
+                curCard.updateChildsActiveStatus();
+            }
+        }
+    }
+
     public ArrayList<VaccineWrapper> getDueVaccines() {
         ArrayList<VaccineWrapper> dueVaccines = new ArrayList<>();
         if (vaccineCards != null) {
             for (VaccineCard curCard : vaccineCards.values()) {
-                if (curCard != null && (curCard.getState().equals(VaccineCard.State.DUE)
-                        || curCard.getState().equals(VaccineCard.State.OVERDUE))) {
+                if (curCard != null && (curCard.getState().equals(State.DUE)
+                        || curCard.getState().equals(State.OVERDUE))) {
                     dueVaccines.add(curCard.getVaccineWrapper());
                 }
             }
@@ -146,6 +161,7 @@ public class VaccineCardAdapter extends BaseAdapter {
 
         String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         List<Map<String, Object>> sch = generateScheduleList(type, new DateTime(dobString), recievedVaccines, alertList);
+
 
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");

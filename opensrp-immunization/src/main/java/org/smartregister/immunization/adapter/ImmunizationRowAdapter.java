@@ -13,13 +13,13 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
-import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -80,9 +80,6 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
                 ImmunizationRowCard vaccineCard = new ImmunizationRowCard(context, editmode);
-                vaccineCard.setOnVaccineStateChangeListener(vaccineGroup);
-                vaccineCard.setOnClickListener(vaccineGroup);
-                vaccineCard.getUndoB().setOnClickListener(vaccineGroup);
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
                 ImmunizationRowTask immunizationRowTask = new ImmunizationRowTask(vaccineCard, vaccineName,
@@ -117,8 +114,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         ArrayList<VaccineWrapper> dueVaccines = new ArrayList<>();
         if (vaccineCards != null) {
             for (ImmunizationRowCard curCard : vaccineCards.values()) {
-                if (curCard != null && (curCard.getState().equals(VaccineCard.State.DUE)
-                        || curCard.getState().equals(VaccineCard.State.OVERDUE))) {
+                if (curCard != null && (curCard.getState().equals(State.DUE)
+                        || curCard.getState().equals(State.OVERDUE))) {
                     dueVaccines.add(curCard.getVaccineWrapper());
                 }
             }
@@ -163,6 +160,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                             tag.setName(array[1]);
                         }
                     }
+                    tag.setCreatedAt(vaccine.getCreatedAt());
                 }
             }
         }

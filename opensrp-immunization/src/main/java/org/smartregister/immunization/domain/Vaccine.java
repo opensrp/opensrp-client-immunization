@@ -22,6 +22,7 @@ public class Vaccine {
     private String eventId;
     private String formSubmissionId;
     private Integer outOfCatchment;
+    private Date createdAt;
 
     public Vaccine() {
     }
@@ -49,7 +50,7 @@ public class Vaccine {
     public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
             calculation, Date date, String anmId, String locationId, String syncStatus, String
                            hia2Status, Long updatedAt, String eventId, String formSubmissionId, Integer
-                           outOfCatchment) {
+                           outOfCatchment, Date createdAt) {
         this.id = id;
         this.baseEntityId = baseEntityId;
         this.programClientId = programClientId;
@@ -64,6 +65,7 @@ public class Vaccine {
         this.eventId = eventId;
         this.formSubmissionId = formSubmissionId;
         this.outOfCatchment = outOfCatchment;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -185,5 +187,13 @@ public class Vaccine {
 
     public void setOutOfCatchment(Integer outOfCatchment) {
         this.outOfCatchment = outOfCatchment;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

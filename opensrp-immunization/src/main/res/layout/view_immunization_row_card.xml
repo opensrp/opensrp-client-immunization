@@ -5,22 +5,22 @@
     android:background="@null">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:layout_gravity="center_vertical">
+        android:orientation="horizontal">
 
         <org.smartregister.view.customcontrols.CustomFontTextView
             android:id="@+id/name_tv"
             style="@style/CustomFontTextViewStyle.ClientList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@null"
             android:paddingRight="10dp"
             android:textColor="@color/text_black"
-            android:textSize="16sp"
-            android:layout_weight="1" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/status_iv"
@@ -29,22 +29,25 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="5dp"
             android:background="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:src="@drawable/ic_action_check"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <org.smartregister.view.customcontrols.CustomFontTextView
             android:id="@+id/status_text_tv"
             style="@style/CustomFontTextViewStyle.ClientList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:paddingRight="10dp"
-            android:textColor="@color/text_black"
-            android:textSize="16sp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
             android:layout_weight="0.5"
-            android:gravity="center_vertical" />
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <Button
@@ -52,9 +55,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@drawable/undo_background"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:text="Edit"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
 </LinearLayout>

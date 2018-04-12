@@ -20,6 +20,7 @@ import org.smartregister.domain.db.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
@@ -55,7 +56,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date());
         Event event = new Event();
         event.setEventId("1");
         event.setDateCreated(new DateTime());
@@ -91,7 +92,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setVaccineDate(new DateTime());
         wrapper.setDbKey(0l);
         view.setVaccineWrapper(wrapper);
-        Assert.assertEquals(view.getState(), ImmunizationRowCard.State.DUE);
+        Assert.assertEquals(view.getState(), State.DUE);
 
         alert = new Alert("", "", "", AlertStatus.upcoming, "", "");
         wrapper = new VaccineWrapper();
@@ -111,7 +112,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setName(magicMR);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
-        Assert.assertEquals(view.getState(), ImmunizationRowCard.State.OVERDUE);
+        Assert.assertEquals(view.getState(), State.OVERDUE);
 
         alert = new Alert("", "", "", AlertStatus.expired, "", "");
         wrapper = new VaccineWrapper();
@@ -121,7 +122,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setName(magicMeasles);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
-        Assert.assertEquals(view.getState(), ImmunizationRowCard.State.EXPIRED);
+        Assert.assertEquals(view.getState(), State.EXPIRED);
 
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new VaccineWrapper();
@@ -131,7 +132,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setName(magicMeasles);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
-        Assert.assertEquals(view.getState(), ImmunizationRowCard.State.EXPIRED);
+        Assert.assertEquals(view.getState(), State.EXPIRED);
 
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new VaccineWrapper();
@@ -142,7 +143,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
-        Assert.assertEquals(view.getState(), ImmunizationRowCard.State.DONE_CAN_NOT_BE_UNDONE);
+        Assert.assertEquals(view.getState(), State.DONE_CAN_NOT_BE_UNDONE);
 
         alert = new Alert("", "", "", AlertStatus.normal, "", "");
         wrapper = new VaccineWrapper();
@@ -153,7 +154,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setUpdatedVaccineDate(new DateTime(), true);
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
-        Assert.assertEquals(view.getState(), ImmunizationRowCard.State.DONE_CAN_BE_UNDONE);
+        Assert.assertEquals(view.getState(), State.DONE_CAN_BE_UNDONE);
     }
 
 }
