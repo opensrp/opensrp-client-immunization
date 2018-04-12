@@ -2,7 +2,6 @@ package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Point;
