@@ -2,12 +2,14 @@ package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -513,7 +515,15 @@ public class ServiceDialogFragment extends DialogFragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                Window window = getDialog().getWindow();
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
                 Point size = new Point();
 
                 Display display = window.getWindowManager().getDefaultDisplay();
@@ -523,6 +533,7 @@ public class ServiceDialogFragment extends DialogFragment {
 
                 window.setLayout((int) (width * 0.7), FrameLayout.LayoutParams.WRAP_CONTENT);
                 window.setGravity(Gravity.CENTER);
+
             }
         });
     }

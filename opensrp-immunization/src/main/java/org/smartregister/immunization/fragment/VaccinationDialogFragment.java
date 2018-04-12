@@ -558,7 +558,15 @@ public class VaccinationDialogFragment extends DialogFragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                Window window = getDialog().getWindow();
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
                 Point size = new Point();
 
                 Display display = window.getWindowManager().getDefaultDisplay();
