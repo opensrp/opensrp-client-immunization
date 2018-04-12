@@ -137,7 +137,15 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                Window window = getDialog().getWindow();
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
                 Point size = new Point();
 
                 Display display = window.getWindowManager().getDefaultDisplay();
@@ -147,6 +155,7 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
 
                 window.setLayout((int) (width * 0.7), FrameLayout.LayoutParams.WRAP_CONTENT);
                 window.setGravity(Gravity.CENTER);
+
             }
         });
 

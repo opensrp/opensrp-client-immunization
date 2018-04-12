@@ -204,25 +204,27 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
                         return;
                     }
 
+                    v.setEnabled(false);
+
                     ServiceCard serviceCard = (ServiceCard) v;
                     State state = serviceCard.getState();
-                    if (state == null) {
-                        return;
+                    if (state != null) {
+                        switch (state) {
+                            case DUE:
+                            case OVERDUE:
+                                if (onServiceClickedListener != null) {
+                                    onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
+                                }
+                                break;
+                            case DONE_CAN_BE_UNDONE:
+                                onUndoClick(serviceCard);
+                                break;
+                            default:
+                                break;
+                        }
                     }
 
-                    switch (state) {
-                        case DUE:
-                        case OVERDUE:
-                            if (onServiceClickedListener != null) {
-                                onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
-                            }
-                            break;
-                        case DONE_CAN_BE_UNDONE:
-                            onUndoClick(serviceCard);
-                            break;
-                        default:
-                            break;
-                    }
+                    v.setEnabled(true);
                 }
             });
         } else {
@@ -246,7 +248,6 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
             servicesGV.invalidateViews();
         }
     }
-
 
     @Override
     public void onClick(View v) {
