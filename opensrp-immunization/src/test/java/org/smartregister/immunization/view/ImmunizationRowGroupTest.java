@@ -187,7 +187,64 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineClickListener, Mockito.times(2)).onClick(view, wrapper);
 
-        // UNDO
+        // UNDO never called since isEditmode is false and isStatusForMoreThanThreeMonths is true
+        ImmunizationRowGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineUndoClickListener.class);
+        view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
+
+        immunizationRowCard.setState(State.DUE);
+        expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+
+        immunizationRowCard.setState(State.OVERDUE);
+        expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+
+        immunizationRowCard.setState(State.EXPIRED);
+        expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+
+        immunizationRowCard.setState(State.NOT_DUE);
+        expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+
+        immunizationRowCard.setState(State.DONE_CAN_BE_UNDONE);
+        expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(view, wrapper);
+
+        immunizationRowCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
+        expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(view, wrapper);
+    }
+
+    @Test
+    public void assertOnClickCallsUndoClickedListener() throws Exception {
+
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        setDataForTest(simpleDateFormat.format(date));
+        view.updateViews();
+        view.updateViews(wrappers);
+
+        // Record All
+        ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
+        view.setOnRecordAllClickListener(onRecordAllClickListener);
+
+        view.onClick((android.widget.TextView) view.findViewById(R.id.record_all_tv));
+        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(ArrayList.class));
+
+        // Vaccine Clicked
+        ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineClickedListener.class);
+        view.setOnVaccineClickedListener(onVaccineClickListener);
+
+        ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
+        ImmunizationRowAdapter adapter = view.getVaccineCardAdapter();
+
+        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(RuntimeEnvironment.application, true);
+        wrapper = new VaccineWrapper();
+        wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
+        wrapper.setVaccineDate(DateTime.now());
+        immunizationRowCard.setVaccineWrapper(wrapper);
+
         ImmunizationRowGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineUndoClickListener.class);
         view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
 

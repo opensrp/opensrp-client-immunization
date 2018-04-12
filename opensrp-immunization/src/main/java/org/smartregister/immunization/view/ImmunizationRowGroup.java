@@ -202,7 +202,9 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
                                 break;
                             case DONE_CAN_NOT_BE_UNDONE:
                             case DONE_CAN_BE_UNDONE:
-                                onUndoClick(immunizationRowCard);
+                                if (immunizationRowCard.isEditmode() && !immunizationRowCard.isStatusForMoreThanThreeMonths()) {
+                                    onUndoClick(immunizationRowCard);
+                                }
                                 break;
                             default:
                                 break;

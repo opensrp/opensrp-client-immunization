@@ -30,6 +30,7 @@ import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.listener.ServiceActionListener;
 import org.smartregister.immunization.util.ImageUtils;
+import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
@@ -240,11 +241,11 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
 
         if (maxDate.getMillis() >= minDate.getMillis()) {
-            set.setVisibility(View.INVISIBLE);
+            set.setVisibility(View.GONE);
             datePicker.setMinDate(minDate.getMillis());
             datePicker.setMaxDate(maxDate.getMillis());
         } else {
-            set.setVisibility(View.INVISIBLE);
+            set.setVisibility(View.GONE);
             Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
         }
     }
@@ -330,7 +331,9 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
                 int width = size.x;
 
-                window.setLayout((int) (width * 0.7), FrameLayout.LayoutParams.WRAP_CONTENT);
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
+
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
                 window.setGravity(Gravity.CENTER);
 
             }

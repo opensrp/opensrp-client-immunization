@@ -6,120 +6,69 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FAFAFA"
+        android:background="#218CC5"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#218CC5"
+            android:id="@+id/profile_name_layout">
+
+            <org.smartregister.immunization.sample.view.RoundedImageView
+                android:id="@+id/profile_image_iv"
+                android:layout_height="100dp"
+                android:layout_width="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"/>
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/name"
+                style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Joyce Mwansa"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/activity_title_size"
+                android:paddingLeft="0dp"
+                android:layout_marginTop="5dp"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/immun_child_card_height"
-                android:layout_margin="20dp"
-                android:background="@drawable/border"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp">
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/profile_image_iv"
-                        android:layout_width="@dimen/immun_child_card_height"
-                        android:layout_height="@dimen/immun_child_card_height"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/child_boy_infant" />
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="@dimen/navigation_icon_size"
-                        android:layout_height="@dimen/navigation_icon_size"
-                        android:layout_gravity="left|top" />
-                </FrameLayout>
-
-                <LinearLayout
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/idforclient"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:text="ID"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/activity_sub_title_size" />
 
-                    <org.smartregister.view.customcontrols.CustomFontTextView
-                        android:id="@+id/name"
-                        style="@style/CustomFontTextViewStyle.ClientList.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Joyce Mwansa"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/activity_title_size" />
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <org.smartregister.view.customcontrols.CustomFontTextView
-                            android:id="@+id/idforclient"
-                            style="@style/CustomFontTextViewStyle.ClientList.Light"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ZEIR: 5425428"
-                            android:textColor="@color/dark_grey"
-                            android:textSize="@dimen/activity_sub_title_size" />
-
-                        <org.smartregister.view.customcontrols.CustomFontTextView
-                            android:id="@+id/ageforclient"
-                            style="@style/CustomFontTextViewStyle.ClientList.Light"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:text="Age: 6w 4d"
-                            android:textColor="@color/dark_grey"
-                            android:textSize="@dimen/activity_sub_title_size" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/statusview"
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/ageforclient"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="25dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/statusimage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:scaleType="fitCenter"
-                        android:tint="@color/alert_completed" />
-
-                    <TextView
-                        android:id="@+id/statusname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Active"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="#31B404" />
-
-                    <TextView
-                        android:id="@+id/status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:singleLine="false"
-                        android:text="status"
-                        android:textAlignment="center"
-                        android:textColor="@color/dark_grey" />
-                </LinearLayout>
+                    android:text="Age"
+                    android:textColor="@color/white" />
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/status"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Status: Active"
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -128,11 +77,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/female_dark_pink"
+            app:tabIndicatorColor="#E2E16D"
             app:tabIndicatorHeight="4dp"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/female_dark_pink"
+            app:tabSelectedTextColor="@color/white"
             app:tabTextAppearance="@style/CustomFontTextViewStyle.tabIndicator" />
     </android.support.design.widget.AppBarLayout>
 
@@ -142,5 +91,4 @@
         android:layout_height="match_parent"
         android:textAlignment="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 </android.support.design.widget.CoordinatorLayout>

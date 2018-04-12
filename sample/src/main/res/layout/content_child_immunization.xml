@@ -7,156 +7,115 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.smartregister.path.activity.ChildImmunizationActivity"
-    tools:showIn="@layout/content_main">
+    tools:context="org.smartregister.immunization.sample.MainActivity"
+    tools:showIn="@layout/content_main" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:orientation="vertical" >
 
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/immun_child_card_height"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/card_view_corner_radius"
-            app:cardElevation="@dimen/card_elevation">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#218CC5"
+            android:id="@+id/profile_name_layout">
+
+            <org.smartregister.immunization.sample.view.RoundedImageView
+                android:id="@+id/profile_image_iv"
+                android:layout_height="100dp"
+                android:layout_width="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/name_tv"
+                style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Joyce Mwansa"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/activity_title_size"
+                android:paddingLeft="0dp"
+                android:layout_marginTop="5dp"/>
 
             <LinearLayout
-                android:id="@+id/profile_name_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-
-                <ImageView
-                    android:id="@+id/profile_image_iv"
-                    android:layout_width="@dimen/immun_child_card_height"
-                    android:layout_height="@dimen/immun_child_card_height"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/child_transgender_inflant" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="20dp">
-
-                    <org.smartregister.view.customcontrols.CustomFontTextView
-                        android:id="@+id/name_tv"
-                        style="@style/CustomFontTextViewStyle.ClientList.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text="Joyce Mwansa"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/activity_title_size" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <org.smartregister.view.customcontrols.CustomFontTextView
-                            android:id="@+id/child_id_tv"
-                            style="@style/CustomFontTextViewStyle.ClientList.Light"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="EIR"
-                            android:textColor="@color/dark_grey"
-                            android:textSize="@dimen/activity_sub_title_size" />
-
-                        <org.smartregister.view.customcontrols.CustomFontTextView
-                            android:id="@+id/age_tv"
-                            style="@style/CustomFontTextViewStyle.ClientList.Light"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Age"
-                            android:textColor="@color/dark_grey"
-                            android:textSize="@dimen/activity_sub_title_size" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:layout_marginRight="12.5dp"
-                android:src="@drawable/ic_more_vert" />
-        </android.support.v7.widget.CardView>
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="20dp">
+
+
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/child_id_tv"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/activity_sub_title_size" />
+
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/age_tv"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Age"
+                    android:textColor="@color/white" />
+
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/dob_tv"
+                    style="@style/CustomFontTextViewStyle.ClientList.Light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/white"
+                    android:text="Birth Date"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <org.smartregister.view.customcontrols.CustomFontTextView
+            style="@style/CustomFontTextViewStyle.ClientList"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/label_immunization_records"
+            android:textColor="#919191"
+            android:textSize="@dimen/activity_sub_title_size"
+            android:gravity="center_vertical"
+            android:background="#eeeeee" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/card_category_horizontal_margin"
-            android:background="@color/white"
             android:clickable="false"
             android:foreground="?android:attr/selectableItemBackground"
             app:cardCornerRadius="@dimen/card_view_corner_radius"
-            app:cardElevation="@dimen/card_elevation">
+            app:cardElevation="0dp" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="10dp">
-
-                    <org.smartregister.view.customcontrols.CustomFontTextView
-                        style="@style/CustomFontTextViewStyle.ClientList"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:text="@string/label_immunization_records"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/activity_sub_title_size" />
-
-                    <org.smartregister.view.customcontrols.CustomFontTextView
-                        android:id="@+id/dob_tv"
-                        style="@style/CustomFontTextViewStyle.ClientList"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="right"
-                        android:gravity="right"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/activity_sub_title_size" />
-                </RelativeLayout>
-
                 <LinearLayout
                     android:id="@+id/service_group_canvas_ll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                </LinearLayout>
+                    android:orientation="vertical" />
 
                 <LinearLayout
                     android:id="@+id/vaccine_group_canvas_ll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                </LinearLayout>
+                    android:orientation="vertical" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>

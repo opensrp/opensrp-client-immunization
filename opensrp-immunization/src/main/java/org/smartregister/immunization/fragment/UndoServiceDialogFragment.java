@@ -22,6 +22,7 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.listener.ServiceActionListener;
 import org.smartregister.immunization.util.ImageUtils;
+import org.smartregister.immunization.util.Utils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -150,8 +151,9 @@ public class UndoServiceDialogFragment extends DialogFragment {
                 display.getSize(size);
 
                 int width = size.x;
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
 
-                window.setLayout((int) (width * 0.7), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
                 window.setGravity(Gravity.CENTER);
             }
         });

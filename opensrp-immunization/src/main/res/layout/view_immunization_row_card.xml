@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/immunization_row_LL_height"
     android:background="@null">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/immunization_row_LL_height"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true">
 
         <org.smartregister.view.customcontrols.CustomFontTextView
             android:id="@+id/name_tv"
             style="@style/CustomFontTextViewStyle.ClientList"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/immunization_row_name_view_width"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:background="@null"
-            android:paddingRight="10dp"
+            android:paddingLeft="@dimen/immunization_row_name_view_padding_left"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/immunization_row_name_view_text_size" />
 
         <Button
             android:id="@+id/status_iv"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="@dimen/status_btn_immunization_row_width"
+            android:layout_height="@dimen/status_btn_immunization_row_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/immunization_row_margin_left"
+            android:layout_marginRight="@dimen/btn_immunization_row_margin_right"
             android:background="@null"
             android:clickable="false"
             android:focusable="false"
@@ -38,22 +39,23 @@
         <org.smartregister.view.customcontrols.CustomFontTextView
             android:id="@+id/status_text_tv"
             style="@style/CustomFontTextViewStyle.ClientList"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="0.5"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/date_view_margin_left"
+            android:layout_marginRight="@dimen/date_view_margin_right"
             android:background="@null"
-            android:gravity="center_vertical"
-            android:paddingRight="10dp"
+            android:paddingRight="@dimen/date_view_padding_right"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/immunization_row_date_view_text_size" />
     </LinearLayout>
 
     <Button
         android:id="@+id/undo_b"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/immunization_row_card_undo_btn_width"
         android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/undo_background"
         android:clickable="false"
         android:focusable="false"
@@ -61,6 +63,7 @@
         android:text="Edit"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
+        android:textSize="14sp"
         android:visibility="invisible" />
 
-</LinearLayout>
+</RelativeLayout>

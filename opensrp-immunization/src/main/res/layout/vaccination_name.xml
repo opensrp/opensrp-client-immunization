@@ -34,5 +34,6 @@
         android:layout_height="wrap_content"
         android:text="vaccine"
         android:textColor="@color/text_black"
-        android:textSize="30sp" />
+        android:textSize="@dimen/vaccine_text_size"
+        android:paddingLeft="0dp"/>
 </LinearLayout>
