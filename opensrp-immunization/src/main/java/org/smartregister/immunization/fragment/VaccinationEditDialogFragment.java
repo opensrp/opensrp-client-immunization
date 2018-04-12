@@ -301,6 +301,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View view) {
                     CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
+                    if (childSelect == null) {
+                        return;
+                    }
                     childSelect.toggle();
                 }
             });

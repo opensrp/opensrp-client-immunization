@@ -241,11 +241,11 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
 
         if (maxDate.getMillis() >= minDate.getMillis()) {
-            set.setVisibility(View.INVISIBLE);
+            set.setVisibility(View.GONE);
             datePicker.setMinDate(minDate.getMillis());
             datePicker.setMaxDate(maxDate.getMillis());
         } else {
-            set.setVisibility(View.INVISIBLE);
+            set.setVisibility(View.GONE);
             Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
         }
     }

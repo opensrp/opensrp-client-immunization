@@ -53,11 +53,12 @@
     <dimen name="date_view_padding_right">5dp</dimen>
     <dimen name="status_btn_immunization_row_width">13dp</dimen>
     <dimen name="status_btn_immunization_row_height">13dp</dimen>
-    <dimen name="immunization_row_LL_height">40dp</dimen>
+    <dimen name="immunization_row_LL_height">45dp</dimen>
     <dimen name="immunization_row_name_view_width">135dp</dimen>
     <dimen name="immunization_profile_pic_height">50dp</dimen>
     <dimen name="immunization_profile_pic_width">50dp</dimen>
     <dimen name="immunization_row_card_undo_btn_width">70dp</dimen>
     <dimen name="vaccine_green_tick_width">30dp</dimen>
     <dimen name="vaccine_green_tick_height">30dp</dimen>
+    <dimen name="date_picker_height">160dp</dimen>
 </resources>
