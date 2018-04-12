@@ -29,6 +29,7 @@ import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceRowGroupTestActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -139,6 +140,55 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         serviceRowCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onServiceClickedListener, Mockito.times(2)).onClick(view, wrapper);
+
+        // UNDO never called since isEditmode is false and isStatusForMoreThanThreeMonths is true
+        ServiceRowGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceRowGroup.OnServiceUndoClickListener.class);
+        view.setOnServiceUndoClickListener(onServiceUndoClickListener);
+
+        serviceRowCard.setState(State.DUE);
+        expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceRowGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceRowCard.setState(State.OVERDUE);
+        expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceRowGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceRowCard.setState(State.EXPIRED);
+        expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceRowGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceRowCard.setState(State.NOT_DUE);
+        expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceRowGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+
+        serviceRowCard.setState(State.DONE_CAN_BE_UNDONE);
+        expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(view, wrapper);
+
+        serviceRowCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
+        expandableHeightGridView.performItemClick(serviceRowCard, 0, adapter.getItemId(0));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(view, wrapper);
+
+    }
+
+    @Test
+    public void assertOnClickCallsOnUndoServiceAllClickListener() throws Exception {
+
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        setDataForTest(simpleDateFormat.format(date));
+        view.updateViews();
+
+        ServiceRowGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceRowGroup.OnServiceClickedListener.class);
+        view.setOnServiceClickedListener(onServiceClickedListener);
+
+        ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
+        ServiceRowAdapter adapter = view.getServiceRowAdapter();
+
+        ServiceRowCard serviceRowCard = new ServiceRowCard(RuntimeEnvironment.application, true);
+        wrapper = new ServiceWrapper();
+        wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
+        serviceRowCard.setServiceWrapper(wrapper);
 
         // UNDO
         ServiceRowGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceRowGroup.OnServiceUndoClickListener.class);

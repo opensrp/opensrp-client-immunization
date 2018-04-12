@@ -51,6 +51,8 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
 
+    private boolean isChildActive = true;
+
     public ServiceGroup(Context context) {
         super(context);
         init(context);
@@ -193,6 +195,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     private void updateServiceCards() {
         if (serviceCardAdapter == null) {
             serviceCardAdapter = new ServiceCardAdapter(context, this, serviceRecordList, alertList, serviceTypeMap);
+            serviceCardAdapter.setChildActive(isChildActive);
             servicesGV.setAdapter(serviceCardAdapter);
 
             servicesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -226,6 +229,22 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
             serviceCardAdapter.updateAll();
         }
 
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+
+        if (serviceCardAdapter != null) {
+            serviceCardAdapter.setChildActive(isChildActive);
+            serviceCardAdapter.updateChildsActiveStatus();
+        }
+
+        if (servicesGV != null) {
+            servicesGV.invalidateViews();
+        }
     }
 
 

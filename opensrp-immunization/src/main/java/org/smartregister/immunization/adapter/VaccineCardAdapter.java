@@ -48,6 +48,8 @@ public class VaccineCardAdapter extends BaseAdapter {
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
 
+    private boolean isChildActive = true;
+
     public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type,
                               List<Vaccine> vaccineList, List<Alert> alertList) {
         this.context = context;
@@ -81,6 +83,7 @@ public class VaccineCardAdapter extends BaseAdapter {
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
                 VaccineCard vaccineCard = new VaccineCard(context);
+                vaccineCard.setChildActive(isChildActive);
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
 
@@ -109,6 +112,19 @@ public class VaccineCardAdapter extends BaseAdapter {
                         vaccineCards.get(currWrapper.getName()).setVaccineWrapper(currWrapper);
                     }
                 }
+            }
+        }
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        if (vaccineCards != null) {
+            for(VaccineCard curCard: vaccineCards.values()) {
+                curCard.setChildActive(isChildActive);
+                curCard.updateChildsActiveStatus();
             }
         }
     }
