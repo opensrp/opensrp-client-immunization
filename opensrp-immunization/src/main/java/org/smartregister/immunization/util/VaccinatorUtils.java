@@ -402,13 +402,9 @@ public class VaccinatorUtils {
 
             if (m1Given && (VaccineRepo.Vaccine.measles1.equals(v) || VaccineRepo.Vaccine.mr1.equals(v))) {
                 toRemove.add(m);
-            }
-
-            if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
+            } else if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
                 toRemove.add(m);
-            }
-
-            if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v)) || VaccineRepo.Vaccine.opv4.equals(v)) {
+            } else if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v) || VaccineRepo.Vaccine.opv4.equals(v))) {
                 toRemove.add(m);
             }
         }
