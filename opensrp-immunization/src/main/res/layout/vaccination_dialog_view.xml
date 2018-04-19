@@ -108,7 +108,7 @@
             <DatePicker
                 android:id="@+id/earlier_date_picker"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/date_picker_height"
                 android:calendarViewShown="false"
                 android:descendantFocusability="blocksDescendants"
                 android:visibility="gone" />
