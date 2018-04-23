@@ -74,7 +74,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.smartregister.immunization.R.id.action_mode_bar;
 import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;

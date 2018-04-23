@@ -1,6 +1,5 @@
 package org.smartregister.immunization.adapter;
 
-import android.app.Service;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
