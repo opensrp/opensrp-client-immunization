@@ -40,6 +40,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Months;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
@@ -73,6 +74,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.immunization.R.id.action_mode_bar;
 import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;
@@ -416,6 +418,14 @@ public class VaccinatorUtils {
         List<Map<String, Object>> schedule = new ArrayList();
         try {
             for (ServiceType s : serviceTypes) {
+                final String VIT_A_IFC_2 = "Vit A IFC 2";
+                if (VIT_A_IFC_2.equals(s.getName())) {
+                    int months = Months.monthsBetween(milestoneDate, DateTime.now()).getMonths();
+                    if (months >= 6) {
+                        continue;
+                    }
+
+                }
                 Map<String, Object> m = new HashMap<>();
                 Date recDate = received.get(s.getName());
                 if (recDate != null) {
