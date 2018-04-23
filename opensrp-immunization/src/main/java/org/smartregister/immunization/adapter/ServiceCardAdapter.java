@@ -176,7 +176,12 @@ public class ServiceCardAdapter extends BaseAdapter {
 
         List<ServiceType> serviceTypes = getServiceTypeMap().get(type);
 
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
+        List<ServiceRecord> serviceRecordList = new ArrayList<>();
+        for (ServiceRecord serviceRecord : getServiceRecordList()) {
+            if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+                serviceRecordList.add(serviceRecord);
+            }
+        }
 
         List<Alert> alertList = getAlertList();
 
@@ -273,6 +278,9 @@ public class ServiceCardAdapter extends BaseAdapter {
     }
 
     public List<ServiceRecord> getServiceRecordList() {
+        if (serviceRecordList == null) {
+            serviceRecordList = new ArrayList<>();
+        }
         return serviceRecordList;
     }
 
