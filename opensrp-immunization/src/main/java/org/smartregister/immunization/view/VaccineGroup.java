@@ -20,6 +20,7 @@ import org.smartregister.immunization.domain.GroupState;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private String type;
 
     private boolean isChildActive = true;
+    private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
 
     public VaccineGroup(Context context) {
         super(context);
@@ -334,5 +336,17 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
 
     public VaccineCardAdapter getVaccineCardAdapter() {
         return vaccineCardAdapter;
+    }
+
+    public VaccineCardAdapterLoadingListener getVaccineCardAdapterLoadingListener() {
+        return vaccineCardAdapterLoadingListener;
+    }
+
+    public void setVaccineCardAdapterLoadingListener(VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener) {
+        this.vaccineCardAdapterLoadingListener = vaccineCardAdapterLoadingListener;
+
+        if (vaccineCardAdapterLoadingListener != null && vaccineCardAdapter != null) {
+            vaccineCardAdapter.setVaccineCardAdapterLoadingListener(vaccineCardAdapterLoadingListener);
+        }
     }
 }

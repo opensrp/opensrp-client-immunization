@@ -16,6 +16,7 @@ import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
@@ -49,6 +50,8 @@ public class VaccineCardAdapter extends BaseAdapter {
     private List<Alert> alertList;
 
     private boolean isChildActive = true;
+    private int remainingAsyncTasks;
+    private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
 
     public VaccineCardAdapter(Context context, VaccineGroup vaccineGroup, String type,
                               List<Vaccine> vaccineList, List<Alert> alertList) {
@@ -58,6 +61,7 @@ public class VaccineCardAdapter extends BaseAdapter {
         this.alertList = alertList;
         vaccineCards = new HashMap<>();
         this.type = type;
+        remainingAsyncTasks = vaccineGroup.getVaccineData().vaccines.size();
     }
 
     @Override
@@ -238,6 +242,27 @@ public class VaccineCardAdapter extends BaseAdapter {
         return alertList;
     }
 
+    private void notifyAsyncTaskCompleted() {
+        remainingAsyncTasks--;
+        checkRemainingAsyncTasksStatus();
+    }
+
+    private void checkRemainingAsyncTasksStatus() {
+        if (remainingAsyncTasks == 0 && vaccineCardAdapterLoadingListener != null) {
+            vaccineCardAdapterLoadingListener.onFinishedLoadingVaccineWrappers();
+        }
+    }
+
+    public VaccineCardAdapterLoadingListener getVaccineCardAdapterLoadingListener() {
+        return vaccineCardAdapterLoadingListener;
+    }
+
+    public void setVaccineCardAdapterLoadingListener(VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener) {
+        this.vaccineCardAdapterLoadingListener = vaccineCardAdapterLoadingListener;
+
+        checkRemainingAsyncTasksStatus();
+    }
+
     class VaccineRowTask extends AsyncTask<Void, Void, VaccineWrapper> {
 
         private VaccineCard vaccineCard;
@@ -267,6 +292,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                 vaccineGroup.toggleRecordAllTV();
             }
             notifyDataSetChanged();
+            notifyAsyncTaskCompleted();
         }
 
         @Override
