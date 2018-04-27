@@ -28,7 +28,7 @@ public class VaccineIntentService extends IntentService {
     public static final String ENTITY_TYPE = "vaccination";
     private VaccineRepository vaccineRepository;
     private List<VaccineGroup> availableVaccines;
-    List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines;
+    private List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines;
 
 
     public VaccineIntentService() {
@@ -96,7 +96,8 @@ public class VaccineIntentService extends IntentService {
         }
     }
 
-    private String getParentId(String name) {
+    private String getParentId(String vaccineName) {
+        String name = vaccineName;
         String parentEntityId = "";
         if (availableVaccines != null && !availableVaccines.isEmpty()) {
             for (VaccineGroup vaccineGroup : availableVaccines) {
