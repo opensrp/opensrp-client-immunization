@@ -28,6 +28,8 @@ public class VaccineIntentService extends IntentService {
     public static final String ENTITY_TYPE = "vaccination";
     private VaccineRepository vaccineRepository;
     private List<VaccineGroup> availableVaccines;
+    List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines;
+
 
     public VaccineIntentService() {
         super("VaccineService");
@@ -37,7 +39,9 @@ public class VaccineIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (availableVaccines == null) {
             availableVaccines = VaccinatorUtils.getSupportedVaccines(getBaseContext());
+            specialVaccines = VaccinatorUtils.getSpecialVaccines(getBaseContext());
         }
+
         final String entityId = "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         final String calId = "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         final String dateDataType = "date";
@@ -94,24 +98,44 @@ public class VaccineIntentService extends IntentService {
 
     private String getParentId(String name) {
         String parentEntityId = "";
-        for (VaccineGroup vaccineGroup : availableVaccines) {
-            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
-                if (StringUtils.containsIgnoreCase(vaccine.name, name)) {
-                    parentEntityId = vaccine.openmrs_date.parent_entity;
-                    if (parentEntityId.contains("/")) {
-                        String[] parentEntityArray = parentEntityId.split("/");
-                        if (StringUtils.containsIgnoreCase(name, "measles")) {
-                            parentEntityId = parentEntityArray[0];
-                        } else if (StringUtils.containsIgnoreCase(name, "mr")) {
-                            parentEntityId = parentEntityArray[1];
-                        }
-                        return parentEntityId;
+        if (availableVaccines != null && !availableVaccines.isEmpty()) {
+            for (VaccineGroup vaccineGroup : availableVaccines) {
+                for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
+                    if (StringUtils.containsIgnoreCase(vaccine.name, name)) {
+                        return getParentId(vaccine, name);
                     }
                 }
             }
         }
+
+        if (StringUtils.isBlank(parentEntityId) && specialVaccines != null && !specialVaccines.isEmpty()) {
+            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
+                if (StringUtils.containsIgnoreCase(vaccine.name, name)) {
+                    return getParentId(vaccine, name);
+                }
+            }
+        }
+
+        if (StringUtils.isBlank(parentEntityId) && StringUtils.containsWhitespace(name)) {
+            name = name.split("\\s+")[0];
+            return getParentId(name);
+        }
         return parentEntityId;
     }
+
+    private String getParentId(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine, String name) {
+        String parentEntityId = vaccine.openmrs_date.parent_entity;
+        if (parentEntityId.contains("/")) {
+            String[] parentEntityArray = parentEntityId.split("/");
+            if (StringUtils.containsIgnoreCase(name, "measles")) {
+                parentEntityId = parentEntityArray[0];
+            } else if (StringUtils.containsIgnoreCase(name, "mr")) {
+                parentEntityId = parentEntityArray[1];
+            }
+        }
+        return parentEntityId;
+    }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
