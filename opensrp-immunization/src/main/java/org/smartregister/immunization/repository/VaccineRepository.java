@@ -42,6 +42,8 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATED_AT_COLUMN = "updated_at";
     public static final String OUT_OF_AREA = "out_of_area";
     public static final String CREATED_AT = "created_at";
+    public static final String TEAM_ID = "team_id";
+    public static final String TEAM = "team";
 
     public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATIONID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT};
 
@@ -58,6 +60,10 @@ public class VaccineRepository extends BaseRepository {
 
     public static final String UPDATE_TABLE_ADD_HIA2_STATUS_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + HIA2_STATUS + " VARCHAR;";
     public static final String ALTER_ADD_CREATED_AT_COLUMN = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CREATED_AT + " DATETIME NULL ";
+
+    public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
+    public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
+
 
     public static String HIA2_Within = "Within";
     public static String HIA2_Overdue = "Overdue";
@@ -105,7 +111,7 @@ public class VaccineRepository extends BaseRepository {
                     vaccine.setId(sameVaccine.getId());
                     update(database, vaccine);
                 } else {
-                    if(vaccine.getCreatedAt() == null){
+                    if (vaccine.getCreatedAt() == null) {
                         vaccine.setCreatedAt(new Date());
                     }
                     vaccine.setId(database.insert(VACCINE_TABLE_NAME, null, createValuesFor(vaccine)));
@@ -288,24 +294,27 @@ public class VaccineRepository extends BaseRepository {
                             Log.e(TAG, Log.getStackTraceString(e));
                         }
                     }
+                    Vaccine vaccine = new Vaccine(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+                            cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)),
+                            cursor.getString(cursor.getColumnIndex(PROGRAM_CLIENT_ID)),
+                            vaccineName,
+                            cursor.getInt(cursor.getColumnIndex(CALCULATION)),
+                            new Date(cursor.getLong(cursor.getColumnIndex(DATE))),
+                            cursor.getString(cursor.getColumnIndex(ANMID)),
+                            cursor.getString(cursor.getColumnIndex(LOCATIONID)),
+                            cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
+                            cursor.getString(cursor.getColumnIndex(HIA2_STATUS)),
+                            cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN)),
+                            cursor.getString(cursor.getColumnIndex(EVENT_ID)),
+                            cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)),
+                            cursor.getInt(cursor.getColumnIndex(OUT_OF_AREA)),
+                            createdAt
+                    );
 
-                    vaccines.add(
-                            new Vaccine(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
-                                    cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)),
-                                    cursor.getString(cursor.getColumnIndex(PROGRAM_CLIENT_ID)),
-                                    vaccineName,
-                                    cursor.getInt(cursor.getColumnIndex(CALCULATION)),
-                                    new Date(cursor.getLong(cursor.getColumnIndex(DATE))),
-                                    cursor.getString(cursor.getColumnIndex(ANMID)),
-                                    cursor.getString(cursor.getColumnIndex(LOCATIONID)),
-                                    cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
-                                    cursor.getString(cursor.getColumnIndex(HIA2_STATUS)),
-                                    cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN)),
-                                    cursor.getString(cursor.getColumnIndex(EVENT_ID)),
-                                    cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)),
-                                    cursor.getInt(cursor.getColumnIndex(OUT_OF_AREA)),
-                                    createdAt
-                            ));
+                    vaccine.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));
+                    vaccine.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
+
+                    vaccines.add(vaccine);
 
                     cursor.moveToNext();
                 }
@@ -329,6 +338,8 @@ public class VaccineRepository extends BaseRepository {
         values.put(DATE, vaccine.getDate() != null ? vaccine.getDate().getTime() : null);
         values.put(ANMID, vaccine.getAnmId());
         values.put(LOCATIONID, vaccine.getLocationId());
+        values.put(TEAM, vaccine.getTeam());
+        values.put(TEAM_ID, vaccine.getTeamId());
         values.put(SYNC_STATUS, vaccine.getSyncStatus());
         values.put(HIA2_STATUS, vaccine.getHia2Status());
         values.put(UPDATED_AT_COLUMN, vaccine.getUpdatedAt() != null ? vaccine.getUpdatedAt() : null);
