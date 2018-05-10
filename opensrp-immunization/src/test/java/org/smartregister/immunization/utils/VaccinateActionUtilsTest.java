@@ -331,7 +331,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
         dateTime = new DateTime();
         dateTime = dateTime.minusMonths(3);
-        dateTime = dateTime.minusDays(1);
+        dateTime = dateTime.minusWeeks(2);
 
         Assert.assertTrue(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
