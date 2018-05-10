@@ -312,4 +312,45 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
 
     }
+
+
+    @Test
+    public void assertMoreThanThreeMonthsReturnsTrueForDatesMoreThanThreeMonths() throws Exception {
+        DateTime dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(2);
+
+        Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+
+
+        Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+
+        dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(3);
+
+        Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+
+        dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(3);
+        dateTime = dateTime.minusDays(1);
+
+        Assert.assertTrue(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+
+    }
+
+    @Test
+    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtVaccineDatesLessThanThreeMonths() throws Exception {
+
+        Vaccine vaccine = new Vaccine();
+        DateTime dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(2);
+        vaccine.setCreatedAt(new Date(dateTime.getMillis()));
+        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+
+        vaccine = new Vaccine();
+        dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(5);
+        vaccine.setCreatedAt(new Date(dateTime.getMillis()));
+        Assert.assertFalse(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+
+    }
 }
