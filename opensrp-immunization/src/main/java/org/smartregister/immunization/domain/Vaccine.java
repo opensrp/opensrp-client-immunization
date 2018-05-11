@@ -16,6 +16,8 @@ public class Vaccine {
     private Date date;
     private String anmId;
     private String locationId;
+    private String team;
+    private String teamId;
     private String syncStatus;
     private String hia2Status;
     private Long updatedAt;
@@ -195,5 +197,21 @@ public class Vaccine {
 
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

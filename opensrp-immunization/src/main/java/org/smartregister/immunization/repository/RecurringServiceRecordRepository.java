@@ -35,8 +35,10 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     public static final String SYNC_STATUS = "sync_status";
     public static final String UPDATED_AT_COLUMN = "updated_at";
     public static final String CREATED_AT = "created_at";
+    public static final String TEAM_ID = "team_id";
+    public static final String TEAM = "team";
 
-    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATIONID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, CREATED_AT};
+    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATIONID, TEAM, TEAM_ID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, CREATED_AT};
 
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     public static final String RECURRING_SERVICE_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + RECURRING_SERVICE_ID + "_index ON " + TABLE_NAME + "(" + RECURRING_SERVICE_ID + ");";
@@ -45,6 +47,9 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
 
     public static final String ALTER_ADD_CREATED_AT_COLUMN = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + CREATED_AT + " DATETIME NULL ";
+
+    public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
+    public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
 
     public RecurringServiceRecordRepository(Repository repository) {
         super(repository);
@@ -271,6 +276,8 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                         }
                     }
 
+                    serviceRecord.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));
+                    serviceRecord.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
                     serviceRecords.add(serviceRecord);
 
                     cursor.moveToNext();
@@ -297,6 +304,8 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         values.put(DATE, serviceRecord.getDate() != null ? serviceRecord.getDate().getTime() : null);
         values.put(ANMID, serviceRecord.getAnmId());
         values.put(LOCATIONID, serviceRecord.getLocationId());
+        values.put(TEAM, serviceRecord.getTeam());
+        values.put(TEAM_ID, serviceRecord.getTeamId());
         values.put(SYNC_STATUS, serviceRecord.getSyncStatus());
         values.put(EVENT_ID, serviceRecord.getEventId() != null ? serviceRecord.getEventId() : null);
         values.put(FORMSUBMISSION_ID, serviceRecord.getFormSubmissionId() != null ? serviceRecord.getFormSubmissionId() : null);

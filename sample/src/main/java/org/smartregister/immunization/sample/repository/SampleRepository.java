@@ -77,6 +77,9 @@ public class SampleRepository extends Repository {
                 case 3:
                     upgradeToVersion3(db);
                     break;
+                case 4:
+                    upgradeToVersion4(db);
+                    break;
                 default:
                     break;
             }
@@ -167,6 +170,18 @@ public class SampleRepository extends Repository {
             RecurringServiceRecordRepository.migrateCreatedAt(db);
         } catch (Exception e) {
             Log.e(TAG, "upgradeToVersion3 " + Log.getStackTraceString(e));
+        }
+    }
+
+    private void upgradeToVersion4(SQLiteDatabase db) {
+        try {
+
+            db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_TEAM_COL);
+            db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_TEAM_ID_COL);
+            db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_TEAM_COL);
+            db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_TEAM_ID_COL);
+        } catch (Exception e) {
+            Log.e(TAG, "upgradeToVersion4 " + Log.getStackTraceString(e));
         }
     }
 
