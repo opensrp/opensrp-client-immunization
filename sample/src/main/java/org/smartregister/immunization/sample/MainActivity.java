@@ -44,6 +44,8 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.util.SampleUtil;
+import org.smartregister.immunization.service.intent.RecurringIntentService;
+import org.smartregister.immunization.service.intent.VaccineIntentService;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             serviceGroups = null;
         }
         updateViews();
+
+        startServices();
     }
 
     private boolean isDataOk() {
@@ -490,6 +494,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         } else {
             vaccine.setCalculation(-1);
         }
+
+        vaccine.setTeam("testTeam");
+        vaccine.setTeamId("testTeamId");
         vaccineRepository.add(vaccine);
         tag.setDbKey(vaccine.getId());
     }
@@ -525,6 +532,15 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
             });
         }
+    }
+
+    public void startServices() {
+        Intent vaccineIntent = new Intent(this, VaccineIntentService.class);
+        startService(vaccineIntent);
+
+        Intent serviceIntent = new Intent(this, RecurringIntentService.class);
+        startService(serviceIntent);
+
     }
 
     private class SaveVaccinesTask extends AsyncTask<VaccineWrapper, Void, Pair<ArrayList<VaccineWrapper>, List<Vaccine>>> {

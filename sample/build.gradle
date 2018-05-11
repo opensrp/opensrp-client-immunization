@@ -39,11 +39,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "int", "DATABASE_VERSION", '3'
+            buildConfigField "int", "DATABASE_VERSION", '4'
         }
 
         debug {
-            buildConfigField "int", "DATABASE_VERSION", '3'
+            buildConfigField "int", "DATABASE_VERSION", '4'
         }
     }
 
