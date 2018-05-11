@@ -56,6 +56,8 @@ public class VaccinationDialogFragment extends DialogFragment {
     private boolean disableConstraints;
     private Calendar dcToday;
     private DialogInterface.OnDismissListener onDismissListener;
+    private Integer defaultImageResourceID;
+    private Integer defaultErrorImageResourceID;
 
     public static VaccinationDialogFragment newInstance(Date dateOfBirth,
                                                         List<Vaccine> issuedVaccines,
@@ -232,7 +234,10 @@ public class VaccinationDialogFragment extends DialogFragment {
             if (tags.get(0).getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tags.get(0).getId());
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, ImageUtils.profileImageResourceByGender(tags.get(0).getGender()), ImageUtils.profileImageResourceByGender(tags.get(0).getGender())));
+
+                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
+                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, defaultImageResId, errorImageResId));
             }
         }
 
@@ -662,4 +667,19 @@ public class VaccinationDialogFragment extends DialogFragment {
         this.onDismissListener = onDismissListener;
     }
 
+    public Integer getDefaultImageResourceID() {
+        return defaultImageResourceID;
+    }
+
+    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
+        this.defaultImageResourceID = defaultImageResourceID;
+    }
+
+    public Integer getDefaultErrorImageResourceID() {
+        return defaultErrorImageResourceID;
+    }
+
+    public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {
+        this.defaultErrorImageResourceID = defaultErrorImageResourceID;
+    }
 }

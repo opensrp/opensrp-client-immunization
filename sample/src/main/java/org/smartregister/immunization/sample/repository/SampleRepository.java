@@ -178,6 +178,8 @@ public class SampleRepository extends Repository {
 
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_TEAM_COL);
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_TEAM_ID_COL);
+            db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_TEAM_COL);
+            db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_TEAM_ID_COL);
         } catch (Exception e) {
             Log.e(TAG, "upgradeToVersion4 " + Log.getStackTraceString(e));
         }

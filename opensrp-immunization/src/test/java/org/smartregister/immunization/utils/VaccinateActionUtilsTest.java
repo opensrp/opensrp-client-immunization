@@ -23,6 +23,7 @@ import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
@@ -65,6 +66,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     private final String magicBCG = "BCG";
     private final int magic400 = 400;
     private final String magicID = "uselessentityID";
+    private final int magic2 = 2;
+    private final int magic12 = 12;
 
     @Before
     public void setUp() throws Exception {
@@ -299,16 +302,19 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
         dateTime = new DateTime();
-        dateTime = dateTime.plusDays(2);
+        dateTime = dateTime.plusDays(magic2);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
         dateTime = new DateTime();
-        dateTime = dateTime.minusDays(2);
+        dateTime = dateTime.minusDays(magic2);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
         dateTime = new DateTime();
         dateTime = dateTime.plusDays(magic400);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
         dateTime = new DateTime();
         dateTime = dateTime.minusDays(magic400);
+        Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
+        dateTime = new DateTime();
+        dateTime = dateTime.minusDays(magic12);
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
 
     }
@@ -317,7 +323,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     @Test
     public void assertMoreThanThreeMonthsReturnsTrueForDatesMoreThanThreeMonths() throws Exception {
         DateTime dateTime = new DateTime();
-        dateTime = dateTime.minusMonths(2);
+        dateTime = dateTime.minusMonths(magic2);
 
         Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
@@ -331,7 +337,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
         dateTime = new DateTime();
         dateTime = dateTime.minusMonths(3);
-        dateTime = dateTime.minusWeeks(2);
+        dateTime = dateTime.minusWeeks(magic2);
 
         Assert.assertTrue(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
@@ -340,9 +346,15 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     @Test
     public void assertLessThanThreeMonthsReturnsTrueForCreatedAtVaccineDatesLessThanThreeMonths() throws Exception {
 
-        Vaccine vaccine = new Vaccine();
+        Vaccine vaccine = null;
+        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+
+        vaccine = new Vaccine();
+        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+
+        vaccine = new Vaccine();
         DateTime dateTime = new DateTime();
-        dateTime = dateTime.minusMonths(2);
+        dateTime = dateTime.minusMonths(magic2);
         vaccine.setCreatedAt(new Date(dateTime.getMillis()));
         Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
 
@@ -351,6 +363,31 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         dateTime = dateTime.minusMonths(5);
         vaccine.setCreatedAt(new Date(dateTime.getMillis()));
         Assert.assertFalse(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+
+
+    }
+
+    @Test
+    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtServiceRecordDatesLessThanThreeMonths() throws Exception {
+
+        ServiceRecord serviceRecord = null;
+        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+
+        serviceRecord = new ServiceRecord();
+        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+
+        serviceRecord = new ServiceRecord();
+        DateTime dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(magic2);
+        serviceRecord.setCreatedAt(new Date(dateTime.getMillis()));
+        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+
+        serviceRecord = new ServiceRecord();
+        dateTime = new DateTime();
+        dateTime = dateTime.minusMonths(5);
+        serviceRecord.setCreatedAt(new Date(dateTime.getMillis()));
+        Assert.assertFalse(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+
 
     }
 }
