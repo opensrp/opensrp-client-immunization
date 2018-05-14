@@ -118,6 +118,9 @@ public class RecurringServiceUtils {
             serviceRecord.setAnmId(providerId);
             serviceRecord.setValue(tag.getValue());
             serviceRecord.setLocationId(locationId);
+
+            serviceRecord.setTeam("testTeam");
+            serviceRecord.setTeamId("testTeamId");
         }
 
         recurringServiceRecordRepository.add(serviceRecord);
