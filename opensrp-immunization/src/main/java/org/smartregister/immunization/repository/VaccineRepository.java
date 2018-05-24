@@ -315,6 +315,7 @@ public class VaccineRepository extends BaseRepository {
 
                     vaccine.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));
                     vaccine.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
+                    vaccine.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILDLOCATIONID)));
 
                     vaccines.add(vaccine);
 

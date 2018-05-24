@@ -16,6 +16,7 @@ public class Vaccine {
     private Date date;
     private String anmId;
     private String locationId;
+    private String childLocationId;
     private String team;
     private String teamId;
     private String syncStatus;
@@ -213,5 +214,13 @@ public class Vaccine {
 
     public void setTeamId(String teamId) {
         this.teamId = teamId;
+    }
+
+    public String getChildLocationId() {
+        return childLocationId;
+    }
+
+    public void setChildLocationId(String childLocationId) {
+        this.childLocationId = childLocationId;
     }
 }
