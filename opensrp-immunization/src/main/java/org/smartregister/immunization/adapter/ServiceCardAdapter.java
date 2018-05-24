@@ -50,6 +50,8 @@ public class ServiceCardAdapter extends BaseAdapter {
     private List<Alert> alertList;
     private Map<String, List<ServiceType>> serviceTypeMap;
 
+    private boolean isChildActive = true;
+
     public ServiceCardAdapter(Context context, ServiceGroup serviceGroup, List<ServiceRecord> serviceRecordList,
                               List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap) {
         this.context = context;
@@ -85,6 +87,7 @@ public class ServiceCardAdapter extends BaseAdapter {
             String type = serviceGroup.getServiceTypeKeys().get(position);
             if (!serviceCards.containsKey(type)) {
                 ServiceCard serviceCard = new ServiceCard(context);
+                serviceCard.setChildActive(isChildActive);
                 serviceCard.setId((int) getItemId(position));
                 serviceCards.put(type, serviceCard);
 
@@ -111,6 +114,21 @@ public class ServiceCardAdapter extends BaseAdapter {
         visibilityCheck();
     }
 
+    public void updateChildsActiveStatus() {
+        if (serviceCards != null) {
+            // Update all vaccines
+            for (ServiceCard curCard : serviceCards.values()) {
+                if (curCard != null) {
+                    curCard.setChildActive(isChildActive);
+                    curCard.updateChildsActiveStatus();
+                }
+            }
+        }
+    }
+
+    public void setChildActive(boolean isChildActive) {
+        this.isChildActive = isChildActive;
+    }
 
     public void visibilityCheck() {
         // if all cards have been updated
@@ -158,7 +176,12 @@ public class ServiceCardAdapter extends BaseAdapter {
 
         List<ServiceType> serviceTypes = getServiceTypeMap().get(type);
 
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
+        List<ServiceRecord> serviceRecordList = new ArrayList<>();
+        for (ServiceRecord serviceRecord : getServiceRecordList()) {
+            if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+                serviceRecordList.add(serviceRecord);
+            }
+        }
 
         List<Alert> alertList = getAlertList();
 
@@ -255,6 +278,9 @@ public class ServiceCardAdapter extends BaseAdapter {
     }
 
     public List<ServiceRecord> getServiceRecordList() {
+        if (serviceRecordList == null) {
+            serviceRecordList = new ArrayList<>();
+        }
         return serviceRecordList;
     }
 

@@ -211,28 +211,31 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
                         return;
                     }
 
+                    v.setEnabled(false);
+
                     ServiceRowCard serviceRowCard = (ServiceRowCard) v;
                     State state = serviceRowCard.getState();
-                    if (state == null) {
-                        return;
+                    if (state != null) {
+                        switch (state) {
+                            case DUE:
+                            case OVERDUE:
+                                if (onServiceClickedListener != null) {
+                                    onServiceClickedListener.onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
+                                }
+                                break;
+                            case DONE_CAN_NOT_BE_UNDONE:
+                            case DONE_CAN_BE_UNDONE:
+                                if (serviceRowCard.isEditmode() && !serviceRowCard.isStatusForMoreThanThreeMonths()) {
+                                    onUndoClick(serviceRowCard);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
 
-                    switch (state) {
-                        case DUE:
-                        case OVERDUE:
-                            if (onServiceClickedListener != null) {
-                                onServiceClickedListener.onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
-                            }
-                            break;
-                        case DONE_CAN_NOT_BE_UNDONE:
-                        case DONE_CAN_BE_UNDONE:
-                            if (serviceRowCard.isEditmode() && !serviceRowCard.isStatusForMoreThanThreeMonths()) {
-                                onUndoClick(serviceRowCard);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    v.setEnabled(true);
+
                 }
             });
         }
@@ -243,12 +246,10 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     }
 
-
     @Override
     public void onClick(View v) {
         // TODO implement in case of Record ALL
     }
-
 
     public void onUndoClick(ServiceRowCard serviceRowCard) {
         if (this.onServiceUndoClickListener != null) {

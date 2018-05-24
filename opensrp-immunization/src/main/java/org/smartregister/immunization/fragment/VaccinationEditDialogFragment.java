@@ -52,8 +52,8 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     private List<Vaccine> issuedVaccines;
     private boolean disableConstraints;
     private Calendar dcToday;
-
-    public static final String DIALOG_TAG = "VaccinationEditDialogFragment";
+    private Integer defaultImageResourceID;
+    private Integer defaultErrorImageResourceID;
 
     private VaccinationEditDialogFragment(
             Context context, Date dateOfBirth,
@@ -166,7 +166,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             if (tags.get(0).getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tags.get(0).getId());
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, ImageUtils.profileImageResourceByGender(tags.get(0).getGender()), ImageUtils.profileImageResourceByGender(tags.get(0).getGender())));
+                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
+                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener(mImageView, defaultImageResId, errorImageResId));
             }
         }
 
@@ -495,7 +497,15 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                Window window = getDialog().getWindow();
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
                 Point size = new Point();
 
                 Display display = window.getWindowManager().getDefaultDisplay();
@@ -528,5 +538,21 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         }
         return null;
+    }
+
+    public Integer getDefaultImageResourceID() {
+        return defaultImageResourceID;
+    }
+
+    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
+        this.defaultImageResourceID = defaultImageResourceID;
+    }
+
+    public Integer getDefaultErrorImageResourceID() {
+        return defaultErrorImageResourceID;
+    }
+
+    public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {
+        this.defaultErrorImageResourceID = defaultErrorImageResourceID;
     }
 }

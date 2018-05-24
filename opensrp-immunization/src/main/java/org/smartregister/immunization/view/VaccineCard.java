@@ -16,6 +16,7 @@ import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
@@ -35,6 +36,7 @@ public class VaccineCard extends LinearLayout {
     private Button undoB;
     private State state;
     private VaccineWrapper vaccineWrapper;
+    private boolean isChildActive = true;
 
     public VaccineCard(Context context) {
         super(context);
@@ -125,8 +127,24 @@ public class VaccineCard extends LinearLayout {
                 } */
             }
             updateStateUi();
+            updateChildsActiveStatus();
         }
+    }
 
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            setBackgroundAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            setBackgroundAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
+    }
+
+    private void setBackgroundAlpha(int alpha) {
+        getBackground().setAlpha(alpha);
     }
 
     public State getState() {

@@ -20,6 +20,7 @@ import org.smartregister.immunization.domain.GroupState;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -51,6 +52,9 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
     private String type;
+
+    private boolean isChildActive = true;
+    private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
 
     public VaccineGroup(Context context) {
         super(context);
@@ -191,6 +195,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private void updateVaccineCards(ArrayList<VaccineWrapper> vaccinesToUpdate) {
         if (vaccineCardAdapter == null) {
             vaccineCardAdapter = new VaccineCardAdapter(context, this, type, vaccineList, alertList);
+            vaccineCardAdapter.setChildActive(isChildActive);
             vaccinesGV.setAdapter(vaccineCardAdapter);
 
             vaccinesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -199,25 +204,27 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                         return;
                     }
 
+                    v.setEnabled(false);
+
                     VaccineCard vaccineCard = (VaccineCard) v;
                     State state = vaccineCard.getState();
-                    if (state == null) {
-                        return;
+                    if (state != null) {
+                        switch (state) {
+                            case DUE:
+                            case OVERDUE:
+                                if (onVaccineClickedListener != null) {
+                                    onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
+                                }
+                                break;
+                            case DONE_CAN_BE_UNDONE:
+                                onUndoClick(vaccineCard);
+                                break;
+                            default:
+                                break;
+                        }
                     }
 
-                    switch (state) {
-                        case DUE:
-                        case OVERDUE:
-                            if (onVaccineClickedListener != null) {
-                                onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
-                            }
-                            break;
-                        case DONE_CAN_BE_UNDONE:
-                            onUndoClick(vaccineCard);
-                            break;
-                        default:
-                            break;
-                    }
+                    v.setEnabled(true);
                 }
             });
         }
@@ -228,8 +235,25 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
+    }
+
+    public void updateChildsActiveStatus() {
+        toggleRecordAllTV();
+
+        if (vaccineCardAdapter != null) {
+            vaccineCardAdapter.setChildActive(isChildActive);
+            vaccineCardAdapter.updateChildsActiveStatus();
+        }
+
+        if (vaccinesGV != null) {
+            vaccinesGV.invalidateViews();
+        }
+    }
+
     public void toggleRecordAllTV() {
-        if (vaccineCardAdapter.getDueVaccines().size() > 0) {
+        if (vaccineCardAdapter.getDueVaccines().size() > 0 && isChildActive) {
             recordAllTV.setVisibility(VISIBLE);
         } else {
             recordAllTV.setVisibility(GONE);
@@ -238,9 +262,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        v.setEnabled(false);
         if ((v.equals(recordAllTV)) && (onRecordAllClickListener != null && vaccineCardAdapter != null)) {
             onRecordAllClickListener.onClick(this, vaccineCardAdapter.getDueVaccines());
         }
+        v.setEnabled(true);
     }
 
     public void onUndoClick(VaccineCard vaccineCard) {
@@ -310,5 +336,17 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
 
     public VaccineCardAdapter getVaccineCardAdapter() {
         return vaccineCardAdapter;
+    }
+
+    public VaccineCardAdapterLoadingListener getVaccineCardAdapterLoadingListener() {
+        return vaccineCardAdapterLoadingListener;
+    }
+
+    public void setVaccineCardAdapterLoadingListener(VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener) {
+        this.vaccineCardAdapterLoadingListener = vaccineCardAdapterLoadingListener;
+
+        if (vaccineCardAdapterLoadingListener != null && vaccineCardAdapter != null) {
+            vaccineCardAdapter.setVaccineCardAdapterLoadingListener(vaccineCardAdapterLoadingListener);
+        }
     }
 }

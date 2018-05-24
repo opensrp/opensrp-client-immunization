@@ -34,6 +34,9 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                     .withFormSubmissionId(vaccine.getFormSubmissionId() == null ? generateRandomUUIDString() : vaccine.getFormSubmissionId())
                     .withDateCreated(new Date());
 
+            event.setTeam(vaccine.getTeam());
+            event.setTeamId(vaccine.getTeamId());
+
             if (fields != null && fields.length() != 0)
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject jsonObject = getJSONObject(fields, i);
@@ -76,6 +79,9 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                     .withEntityType(entityType)
                     .withFormSubmissionId(serviceRecord.getFormSubmissionId() == null ? generateRandomUUIDString() : serviceRecord.getFormSubmissionId())
                     .withDateCreated(new Date());
+
+            event.setTeam(serviceRecord.getTeam());
+            event.setTeamId(serviceRecord.getTeamId());
 
             if (fields != null && fields.length() != 0)
                 for (int i = 0; i < fields.length(); i++) {

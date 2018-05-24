@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.util.DisplayUtils;
 
@@ -34,6 +35,7 @@ public class ServiceCard extends LinearLayout {
     private Button undoB;
     private State state;
     private ServiceWrapper serviceWrapper;
+    private boolean isChildActive = true;
 
     public ServiceCard(Context context) {
         super(context);
@@ -124,7 +126,20 @@ public class ServiceCard extends LinearLayout {
                 } */
             }
             updateStateUi();
+            updateChildsActiveStatus();
         }
+    }
+
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            getBackground().setAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            getBackground().setAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
+    }
+
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
     }
 
     public State getState() {

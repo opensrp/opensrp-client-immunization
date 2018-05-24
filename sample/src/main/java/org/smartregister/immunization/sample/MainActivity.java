@@ -44,6 +44,8 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.util.SampleUtil;
+import org.smartregister.immunization.service.intent.RecurringIntentService;
+import org.smartregister.immunization.service.intent.VaccineIntentService;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
@@ -83,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     private static final ArrayList<String> COMBINED_VACCINES;
     private static final HashMap<String, String> COMBINED_VACCINES_MAP;
+
+    private static final boolean isChildActive = true;
 
     static {
         COMBINED_VACCINES = new ArrayList<>();
@@ -153,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             serviceGroups = null;
         }
         updateViews();
+
+        startServices();
     }
 
     private boolean isDataOk() {
@@ -263,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             LinearLayout serviceGroupCanvasLL = (LinearLayout) findViewById(R.id.service_group_canvas_ll);
 
             ServiceGroup curGroup = new ServiceGroup(this);
+            curGroup.setChildActive(isChildActive);
             curGroup.setData(childDetails, foundServiceTypeMap, serviceRecordList, alerts);
             curGroup.setOnServiceClickedListener(new ServiceGroup.OnServiceClickedListener() {
                 @Override
@@ -303,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private void addVaccineGroup(int canvasId, org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
         LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
         VaccineGroup curGroup = new VaccineGroup(this);
+        curGroup.setChildActive(isChildActive);
         curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts, "child");
         curGroup.setOnRecordAllClickListener(new VaccineGroup.OnRecordAllClickListener() {
             @Override
@@ -486,6 +494,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         } else {
             vaccine.setCalculation(-1);
         }
+
+        vaccine.setTeam("testTeam");
+        vaccine.setTeamId("testTeamId");
         vaccineRepository.add(vaccine);
         tag.setDbKey(vaccine.getId());
     }
@@ -521,6 +532,15 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
             });
         }
+    }
+
+    public void startServices() {
+        Intent vaccineIntent = new Intent(this, VaccineIntentService.class);
+        startService(vaccineIntent);
+
+        Intent serviceIntent = new Intent(this, RecurringIntentService.class);
+        startService(serviceIntent);
+
     }
 
     private class SaveVaccinesTask extends AsyncTask<VaccineWrapper, Void, Pair<ArrayList<VaccineWrapper>, List<Vaccine>>> {

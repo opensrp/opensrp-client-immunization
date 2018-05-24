@@ -40,6 +40,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Months;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
@@ -402,13 +403,9 @@ public class VaccinatorUtils {
 
             if (m1Given && (VaccineRepo.Vaccine.measles1.equals(v) || VaccineRepo.Vaccine.mr1.equals(v))) {
                 toRemove.add(m);
-            }
-
-            if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
+            } else if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
                 toRemove.add(m);
-            }
-
-            if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v)) || VaccineRepo.Vaccine.opv4.equals(v)) {
+            } else if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v) || VaccineRepo.Vaccine.opv4.equals(v))) {
                 toRemove.add(m);
             }
         }
@@ -420,6 +417,14 @@ public class VaccinatorUtils {
         List<Map<String, Object>> schedule = new ArrayList();
         try {
             for (ServiceType s : serviceTypes) {
+                final String VIT_A_IFC_2 = "Vit A IFC 2";
+                if (VIT_A_IFC_2.equals(s.getName())) {
+                    int months = Months.monthsBetween(milestoneDate, DateTime.now()).getMonths();
+                    if (months >= 6) {
+                        continue;
+                    }
+
+                }
                 Map<String, Object> m = new HashMap<>();
                 Date recDate = received.get(s.getName());
                 if (recDate != null) {
