@@ -31,14 +31,15 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     public static final String RECURRING_SERVICE_ID = "recurring_service_id";
     public static final String DATE = "date";
     public static final String ANMID = "anmid";
-    public static final String LOCATIONID = "location_id";
+    public static final String LOCATION_ID = "location_id";
     public static final String SYNC_STATUS = "sync_status";
     public static final String UPDATED_AT_COLUMN = "updated_at";
     public static final String CREATED_AT = "created_at";
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
+    public static final String CHILD_LOCATION_ID = "child_location_id";
 
-    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATIONID, TEAM, TEAM_ID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, CREATED_AT};
+    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, CREATED_AT};
 
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     public static final String RECURRING_SERVICE_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + RECURRING_SERVICE_ID + "_index ON " + TABLE_NAME + "(" + RECURRING_SERVICE_ID + ");";
@@ -50,6 +51,8 @@ public class RecurringServiceRecordRepository extends BaseRepository {
 
     public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
+
+    public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
 
     public RecurringServiceRecordRepository(Repository repository) {
         super(repository);
@@ -252,7 +255,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                             cursor.getString(cursor.getColumnIndex(VALUE)),
                             new Date(cursor.getLong(cursor.getColumnIndex(DATE))),
                             cursor.getString(cursor.getColumnIndex(ANMID)),
-                            cursor.getString(cursor.getColumnIndex(LOCATIONID)),
+                            cursor.getString(cursor.getColumnIndex(LOCATION_ID)),
                             cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                             cursor.getString(cursor.getColumnIndex(EVENT_ID)),
                             cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)),
@@ -278,6 +281,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
 
                     serviceRecord.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));
                     serviceRecord.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
+                    serviceRecord.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILD_LOCATION_ID)));
                     serviceRecords.add(serviceRecord);
 
                     cursor.moveToNext();
@@ -303,9 +307,10 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         values.put(VALUE, serviceRecord.getValue());
         values.put(DATE, serviceRecord.getDate() != null ? serviceRecord.getDate().getTime() : null);
         values.put(ANMID, serviceRecord.getAnmId());
-        values.put(LOCATIONID, serviceRecord.getLocationId());
+        values.put(LOCATION_ID, serviceRecord.getLocationId());
         values.put(TEAM, serviceRecord.getTeam());
         values.put(TEAM_ID, serviceRecord.getTeamId());
+        values.put(CHILD_LOCATION_ID, serviceRecord.getChildLocationId());
         values.put(SYNC_STATUS, serviceRecord.getSyncStatus());
         values.put(EVENT_ID, serviceRecord.getEventId() != null ? serviceRecord.getEventId() : null);
         values.put(FORMSUBMISSION_ID, serviceRecord.getFormSubmissionId() != null ? serviceRecord.getFormSubmissionId() : null);

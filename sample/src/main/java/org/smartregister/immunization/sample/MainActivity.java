@@ -63,6 +63,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import static org.smartregister.util.Utils.getName;
 
@@ -487,7 +488,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         vaccine.setDate(tag.getUpdatedVaccineDate().toDate());
         vaccine.setAnmId(ImmunizationLibrary.getInstance().context().allSharedPreferences().fetchRegisteredANM());
 
-
         String lastChar = vaccine.getName().substring(vaccine.getName().length() - 1);
         if (StringUtils.isNumeric(lastChar)) {
             vaccine.setCalculation(Integer.valueOf(lastChar));
@@ -497,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         vaccine.setTeam("testTeam");
         vaccine.setTeamId("testTeamId");
+        vaccine.setChildLocationId("testChildLocationId");
         vaccineRepository.add(vaccine);
         tag.setDbKey(vaccine.getId());
     }

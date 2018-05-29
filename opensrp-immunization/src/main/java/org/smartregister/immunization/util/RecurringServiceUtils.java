@@ -121,6 +121,7 @@ public class RecurringServiceUtils {
 
             serviceRecord.setTeam("testTeam");
             serviceRecord.setTeamId("testTeamId");
+            serviceRecord.setChildLocationId("testChildLocationId");
         }
 
         recurringServiceRecordRepository.add(serviceRecord);
