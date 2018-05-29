@@ -40,11 +40,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "int", "DATABASE_VERSION", '4'
+            buildConfigField "int", "DATABASE_VERSION", '5'
         }
 
         debug {
-            buildConfigField "int", "DATABASE_VERSION", '4'
+            buildConfigField "int", "DATABASE_VERSION", '5'
         }
     }
 
@@ -77,7 +77,7 @@ dependencies {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
-    implementation('org.smartregister:opensrp-client-native-form:1.2.1-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.2.2-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
