@@ -83,6 +83,7 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
 
             event.setTeam(serviceRecord.getTeam());
             event.setTeamId(serviceRecord.getTeamId());
+            event.setChildLocationId(serviceRecord.getChildLocationId());
 
             if (fields != null && fields.length() != 0)
                 for (int i = 0; i < fields.length(); i++) {

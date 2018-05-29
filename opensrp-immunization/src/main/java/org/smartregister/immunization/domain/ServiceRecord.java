@@ -26,6 +26,7 @@ public class ServiceRecord {
     protected String name;
     private String team;
     private String teamId;
+    private String childLocationId;
 
     public ServiceRecord() {
     }
@@ -206,4 +207,11 @@ public class ServiceRecord {
         this.teamId = teamId;
     }
 
+    public String getChildLocationId() {
+        return childLocationId;
+    }
+
+    public void setChildLocationId(String childLocationId) {
+        this.childLocationId = childLocationId;
+    }
 }
