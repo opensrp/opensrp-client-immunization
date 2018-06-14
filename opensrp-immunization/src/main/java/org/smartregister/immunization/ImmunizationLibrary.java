@@ -31,13 +31,16 @@ public class ImmunizationLibrary {
     private VaccineNameRepository vaccineNameRepository;
     private CommonFtsObject commonFtsObject;
 
+    private int applicationVersion;
+    private int databaseVersion;
+
     private static ImmunizationLibrary instance;
 
     private Map<String, Object> jsonMap = new HashMap<>();
 
-    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject) {
+    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         if (instance == null) {
-            instance = new ImmunizationLibrary(context, repository, commonFtsObject);
+            instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
         }
     }
 
@@ -48,10 +51,12 @@ public class ImmunizationLibrary {
         return instance;
     }
 
-    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject) {
+    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         this.repository = repository;
         this.context = context;
         this.commonFtsObject = commonFtsObject;
+        this.applicationVersion = applicationVersion;
+        this.databaseVersion = databaseVersion;
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
@@ -114,4 +119,11 @@ public class ImmunizationLibrary {
         return commonFtsObject;
     }
 
+    public int getApplicationVersion() {
+        return applicationVersion;
+    }
+
+    public int getDatabaseVersion() {
+        return databaseVersion;
+    }
 }

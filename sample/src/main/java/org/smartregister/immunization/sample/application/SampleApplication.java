@@ -8,6 +8,7 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.jsonmapping.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
+import org.smartregister.immunization.sample.BuildConfig;
 import org.smartregister.immunization.sample.repository.SampleRepository;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.Repository;
@@ -35,7 +36,7 @@ public class SampleApplication extends DrishtiApplication {
 
         //Initialize Modules
         CoreLibrary.init(context);
-        ImmunizationLibrary.init(context, getRepository(), null);
+        ImmunizationLibrary.init(context, getRepository(), null, BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         initOfflineSchedules();
 

@@ -38,6 +38,9 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             event.setTeamId(vaccine.getTeamId());
             event.setChildLocationId(vaccine.getChildLocationId());
 
+            event.setClientApplicationVersion(ImmunizationLibrary.getInstance().getApplicationVersion());
+            event.setClientDatabaseVersion(ImmunizationLibrary.getInstance().getDatabaseVersion());
+
             if (fields != null && fields.length() != 0)
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject jsonObject = getJSONObject(fields, i);
@@ -84,6 +87,9 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             event.setTeam(serviceRecord.getTeam());
             event.setTeamId(serviceRecord.getTeamId());
             event.setChildLocationId(serviceRecord.getChildLocationId());
+
+            event.setClientApplicationVersion(ImmunizationLibrary.getInstance().getApplicationVersion());
+            event.setClientDatabaseVersion(ImmunizationLibrary.getInstance().getDatabaseVersion());
 
             if (fields != null && fields.length() != 0)
                 for (int i = 0; i < fields.length(); i++) {
