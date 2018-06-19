@@ -93,7 +93,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito.mock(RecurringServiceRecordRepository.class);
-        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class));
+        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 0, 0);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
         PowerMockito.when(recurringServiceRecordRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(serviceRecord);

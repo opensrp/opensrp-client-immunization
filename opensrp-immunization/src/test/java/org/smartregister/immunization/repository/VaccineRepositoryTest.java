@@ -88,7 +88,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Repository repository = Mockito.mock(Repository.class);
         org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
-        ImmunizationLibrary.init(context, repository, commonFtsObject);
+        ImmunizationLibrary.init(context, repository, commonFtsObject, 0, 0);
         vaccineRepository.alertService();
     }
 

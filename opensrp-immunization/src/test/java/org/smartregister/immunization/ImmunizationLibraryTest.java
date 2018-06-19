@@ -18,7 +18,7 @@ public class ImmunizationLibraryTest extends BaseUnitTest {
         Repository repository = Mockito.mock(Repository.class);
         Context context = Mockito.mock(Context.class);
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
-        ImmunizationLibrary.init(context, repository, commonFtsObject);
+        ImmunizationLibrary.init(context, repository, commonFtsObject,0,0);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
