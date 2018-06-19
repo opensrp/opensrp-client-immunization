@@ -64,7 +64,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
-        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class));
+        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 0, 0);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
         PowerMockito.when(vaccineRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(vaccine);
