@@ -19,6 +19,7 @@ public class Vaccine {
     private String childLocationId;
     private String team;
     private String teamId;
+    private String vaccineStatus;
     private String syncStatus;
     private String hia2Status;
     private Long updatedAt;
@@ -222,5 +223,13 @@ public class Vaccine {
 
     public void setChildLocationId(String childLocationId) {
         this.childLocationId = childLocationId;
+    }
+
+    public String getVaccineStatus() {
+        return vaccineStatus;
+    }
+
+    public void setVaccineStatus(String vaccineStatus) {
+        this.vaccineStatus = vaccineStatus;
     }
 }
