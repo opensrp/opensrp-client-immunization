@@ -319,6 +319,7 @@ public class VaccineRepository extends BaseRepository {
                     vaccine.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));
                     vaccine.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
                     vaccine.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILD_LOCATION_ID)));
+                    vaccine.setVaccineStatus(cursor.getString(cursor.getColumnIndex(VACCINE_STATUS)));
 
                     vaccines.add(vaccine);
 
@@ -347,6 +348,7 @@ public class VaccineRepository extends BaseRepository {
         values.put(TEAM, vaccine.getTeam());
         values.put(TEAM_ID, vaccine.getTeamId());
         values.put(CHILD_LOCATION_ID, vaccine.getChildLocationId());
+        values.put(VACCINE_STATUS, vaccine.getVaccineStatus());
         values.put(SYNC_STATUS, vaccine.getSyncStatus());
         values.put(HIA2_STATUS, vaccine.getHia2Status());
         values.put(UPDATED_AT_COLUMN, vaccine.getUpdatedAt() != null ? vaccine.getUpdatedAt() : null);
