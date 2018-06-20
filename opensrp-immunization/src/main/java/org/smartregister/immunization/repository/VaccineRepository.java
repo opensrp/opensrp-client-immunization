@@ -38,6 +38,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String ANMID = "anmid";
     public static final String LOCATION_ID = "location_id";
     public static final String CHILD_LOCATION_ID = "child_location_id";
+    public static final String VACCINE_STATUS = "vaccine_status";
     public static final String SYNC_STATUS = "sync_status";
     public static final String HIA2_STATUS = "hia2_status";
     public static final String UPDATED_AT_COLUMN = "updated_at";
@@ -46,7 +47,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
 
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT};
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, VACCINE_STATUS, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT};
 
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + VACCINE_TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
@@ -66,6 +67,8 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
 
     public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
+
+    public static final String UPDATE_TABLE_ADD_VACCINE_STATUS = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + VACCINE_STATUS + " VARCHAR;";
 
     public static String HIA2_Within = "Within";
     public static String HIA2_Overdue = "Overdue";
