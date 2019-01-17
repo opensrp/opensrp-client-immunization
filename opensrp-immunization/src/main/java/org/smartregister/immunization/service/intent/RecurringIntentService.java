@@ -27,7 +27,7 @@ public class RecurringIntentService extends IntentService {
     private static final String TAG = RecurringIntentService.class.getCanonicalName();
     public static final String ITN_PROVIDED = "ITN_Provided";
     public static final String CHILD_HAS_NET = "Child_Has_Net";
-
+    private static final String EXCLUSIVE_BREASTFEEDING = "Exclusive breastfeeding";
     public static final String EVENT_TYPE = "Recurring Service";
     public static final String ENTITY_TYPE = "recurring_service";
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
@@ -99,6 +99,9 @@ public class RecurringIntentService extends IntentService {
                     if (serviceType.getType().equalsIgnoreCase("ITN") && StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(CHILD_HAS_NET)) {
                         jsonObject.put(JsonFormUtils.VALUE, NO);
                         itnHasNet = true;
+                    }
+                    if (serviceType.getType().equalsIgnoreCase(EXCLUSIVE_BREASTFEEDING) && StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(NO)) {
+                        jsonObject.put(JsonFormUtils.VALUE, NO);
                     }
                     addYesNoChoices(jsonObject);
                     jsonArray.put(jsonObject);
