@@ -78,8 +78,8 @@ import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;
 import static org.smartregister.util.Utils.convertDateFormat;
-import static org.smartregister.util.Utils.getPreference;
 import static org.smartregister.util.Utils.getValue;
+
 /**
  * Class containing some static utility methods.
  */
@@ -90,7 +90,7 @@ public class VaccinatorUtils {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
         org.smartregister.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
         org.smartregister.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation());
-        org.smartregister.util.Log.logDebug("TEAM DETAILS" + getPreference(context.applicationContext(), "team", "{}"));
+        org.smartregister.util.Log.logDebug("TEAM DETAILS" + context.allSharedPreferences().getPreference("team"));
 
         String locationJson = context.anmLocationController().get();
         LocationTree locationTree = AssetHandler.jsonStringToJava(locationJson, LocationTree.class);
@@ -117,7 +117,7 @@ public class VaccinatorUtils {
         }
 
         try {
-            JSONObject tm = new JSONObject(getPreference(context.applicationContext(), "team", "{}"));
+            JSONObject tm = new JSONObject(context.allSharedPreferences().getPreference("team"));
             map.put("provider_name", tm.getJSONObject("person").getString("display"));
             map.put("provider_identifier", tm.getString("identifier"));
             map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
@@ -130,7 +130,7 @@ public class VaccinatorUtils {
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type) {
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'";
-        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted);
+        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted, new String[]{});
     }
 
     public static int getWasted(String startDate, String endDate, String type, String... variables) {
@@ -154,7 +154,7 @@ public class VaccinatorUtils {
         q += " ) e ";
 
         Log.i("DD", q);
-        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q);
+        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[]{});
     }
 
     public static int getTotalUsed(String startDate, String endDate, String table, String... vaccines) {
