@@ -80,7 +80,6 @@ import static org.smartregister.util.Utils.addToRow;
 import static org.smartregister.util.Utils.convertDateFormat;
 import static org.smartregister.util.Utils.getPreference;
 import static org.smartregister.util.Utils.getValue;
-
 /**
  * Class containing some static utility methods.
  */
