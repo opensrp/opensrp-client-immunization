@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
+
 /**
  * Created by onaio on 29/08/2017.
  */
@@ -80,7 +82,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
         VaccinatorUtils.getWasted("", "", "");
         VaccinatorUtils.getWasted("", "", "", "");
-        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString());
+        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[]{}));
     }
 
     @Test
@@ -90,7 +92,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
         VaccinatorUtils.getUsed("", "", "", new String[]{"", ""});
-        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString());
+        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[]{}));
     }
 
     @Test

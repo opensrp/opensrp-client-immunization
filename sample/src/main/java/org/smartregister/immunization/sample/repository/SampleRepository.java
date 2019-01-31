@@ -40,9 +40,9 @@ public class SampleRepository extends Repository {
     public void onCreate(SQLiteDatabase database) {
         super.onCreate(database);
         EventClientRepository.createTable(database, EventClientRepository.Table.client, EventClientRepository.client_column.values());
-        EventClientRepository.createTable(database, EventClientRepository.Table.address, EventClientRepository.address_column.values());
+        //EventClientRepository.createTable(database, EventClientRepository.Table.address, EventClientRepository.address_column.values());
         EventClientRepository.createTable(database, EventClientRepository.Table.event, EventClientRepository.event_column.values());
-        EventClientRepository.createTable(database, EventClientRepository.Table.obs, EventClientRepository.obs_column.values());
+        //EventClientRepository.createTable(database, EventClientRepository.Table.obs, EventClientRepository.obs_column.values());
 
         VaccineRepository.createTable(database);
         VaccineNameRepository.createTable(database);
@@ -151,7 +151,7 @@ public class SampleRepository extends Repository {
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_OUT_OF_AREA_COL);
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_OUT_OF_AREA_COL_INDEX);
 
-            EventClientRepository.createTable(db, EventClientRepository.Table.path_reports, EventClientRepository.report_column.values());
+            //EventClientRepository.createTable(db, EventClientRepository.Table.path_reports, EventClientRepository.report_column.values());
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_HIA2_STATUS_COL);
 
             IMDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, db);
