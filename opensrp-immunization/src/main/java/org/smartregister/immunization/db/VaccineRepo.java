@@ -25,7 +25,7 @@ public class VaccineRepo {
         mr1("MR 1", null, -1, 274, 0, "child"),
         opv4("OPV 4", null, 1830, 274, 28, "child"),
         mcv1("MCV 1", null, -1, 274, 0, "child"),
-        yf("YF", null, -1, 274, 0, "child"),
+        yf("Yellow Fever", null, -1, 274, 0, "child"),
 
 
         mcv2("MCV 2", mcv1, -1, 456, 183, "child"),
