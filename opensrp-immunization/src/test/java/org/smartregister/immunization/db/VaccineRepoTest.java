@@ -36,6 +36,7 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.bcg);
         vaccines.add(VaccineRepo.Vaccine.opv0);
         vaccines.add(VaccineRepo.Vaccine.opv1);
+        vaccines.add(VaccineRepo.Vaccine.fipv1);
         vaccines.add(VaccineRepo.Vaccine.penta1);
         vaccines.add(VaccineRepo.Vaccine.pcv1);
         vaccines.add(VaccineRepo.Vaccine.rota1);
@@ -44,6 +45,7 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.pcv2);
         vaccines.add(VaccineRepo.Vaccine.rota2);
         vaccines.add(VaccineRepo.Vaccine.opv3);
+        vaccines.add(VaccineRepo.Vaccine.fipv2);
         vaccines.add(VaccineRepo.Vaccine.penta3);
         vaccines.add(VaccineRepo.Vaccine.pcv3);
         vaccines.add(VaccineRepo.Vaccine.measles1);

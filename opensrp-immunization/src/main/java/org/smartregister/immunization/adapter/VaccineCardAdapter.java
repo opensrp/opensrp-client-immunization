@@ -169,18 +169,15 @@ public class VaccineCardAdapter extends BaseAdapter {
 
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
-            if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
-
-                //Add exception for bcg 2
-                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
-                    continue;
-                }
-
-                if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
+            if ((tag.getName().toLowerCase().contains(vaccine.display().toLowerCase()))) {
+                if (vaccine.equals(VaccineRepo.Vaccine.measles2)
                         || vaccine.equals(VaccineRepo.Vaccine.mr2)
                         || vaccine.equals(VaccineRepo.Vaccine.measles1)
-                        || vaccine.equals(VaccineRepo.Vaccine.mr1) && tag.getAlert() != null) && tag.getStatus() != null) {
-                    break;
+                        || vaccine.equals(VaccineRepo.Vaccine.mr1)
+                        || vaccine.equals(VaccineRepo.Vaccine.ipv)) {
+                    if (tag.getAlert() != null && tag.getStatus() != null) {
+                        break;
+                    }
                 }
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
