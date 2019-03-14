@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">opensrp-immunization</string>
+    <string name="action_settings">Paramètres</string>
+
+    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi</string>
+    <string name="immunizations">IMMUNISATIONS</string>
+    <string name="recurring">SERVICES RÉCURRENTS</string>
+    <string name="done_today">Fait aujourd\'hui</string>
+    <string name="undo">Annuler</string>
+
+    <string name="record_all">Enregistrer tous</string>
+    <string name="record_">Enregistrer %1$s</string>
+    <string name="record_due_">Enregistrer %1$s - dû %2$s</string>
+    <string name="mr_due_">%1$s - dû %2$s</string>
+    <string name="due_">%1$s: dû %2$s</string>
+    <string name="today">Aujourd\'hui</string>
+
+    <!-- Recurring Services -->
+    <string name="recurring_services">Services récurrentes</string>
+    <string name="itn_under_net">L\'enfant dors-t-il ou elle sous un moustiquaire?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="go_back">Retourner</string>
+    <string name="undo_service">Annuler service?</string>
+    <string name="yes_undo_service">Oui, annuler service</string>
+    <string name="cannot_record_vaccine">Ne peut pas enregistrer %1$s</string>
+
+    <string name="activate_child_status_dialog_title">l\'État de l\'enfant est %1$s. Activer %2$s ?</string>
+    <string name="activate_child_status_dialog_message">l\'Activation de l\'enfant va relancer l\'horaire de service de l\'application et vous permettra d\'enregistrer les services.</string>
+    <string name="make_active">Activer</string>
+
+</resources>

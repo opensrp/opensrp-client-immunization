@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class VaccineRepo {
     public enum Vaccine {
         bcg("BCG", null, 366, 0, 0, "child"),
+        HepB("HepB", null, 366, 0, 0, "child"),
         opv0("OPV 0", null, 13, 0, 0, "child"),
 
         opv1("OPV 1", null, 1768, 42, 0, "child"),
@@ -27,6 +28,7 @@ public class VaccineRepo {
         opv4("OPV 4", null, 1830, 274, 28, "child"),
         mcv1("MCV 1", null, -1, 274, 0, "child"),
         yf("Yellow Fever", null, -1, 274, 0, "child"),
+        meningococcal("Meningococcal", null, 548, 274, 28, "child"),
 
 
         mcv2("MCV 2", mcv1, -1, 456, 183, "child"),
