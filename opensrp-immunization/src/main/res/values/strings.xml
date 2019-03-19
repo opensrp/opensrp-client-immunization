@@ -7,6 +7,20 @@
     <string name="immunizations">IMMUNISATIONS</string>
     <string name="recurring">SERVICES RÉCURRENTS</string>
     <string name="done_today">Fait aujourd\'hui</string>
+    <string name="vaccine_done_today">Vaccin fait aujourd\'hui</string>
+    <string name="vaccination_done_earlier">Vaccin fait plus tôt</string>
+    <string name="vaccine_name">prénom</string>
+    <string name="vaccine_number">nombre</string>
+    <string name="vaccine">vaccin</string>
+    <string name="set">ensemble</string>
+    <string name="undo_record_vaccination">Annuler la vaccination?</string>
+    <string name="change_service_date">Changer date de service</string>
+    <string name="birth">Naissance</string>
+    <string name="yes_undo_vaccination">Oui, annuler la vaccination</string>
+    <string name="no_go_back">Non, retourne</string>
+    <string name="service">un service</string>
+    <string name="units">des unités</string>
+    <string name="edit">modifier</string>
     <string name="undo">Annuler</string>
 
     <string name="record_all">Enregistrer tous</string>

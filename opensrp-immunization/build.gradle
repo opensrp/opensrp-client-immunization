@@ -86,7 +86,7 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation('org.smartregister:opensrp-client-core:1.5.16-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:workshop1@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }

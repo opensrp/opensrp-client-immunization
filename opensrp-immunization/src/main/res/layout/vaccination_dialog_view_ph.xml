@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="name"
+                android:text="@string/vaccine_name"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
@@ -33,7 +33,7 @@
                 android:id="@+id/number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="number"
+                android:text="@string/vaccine_number"
                 android:textColor="@color/text_black"
                 android:textSize="14sp" />
 
@@ -56,7 +56,7 @@
                     style="@style/CustomFontTextViewStyle.ListView.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="vaccine"
+                    android:text="@string/vaccine"
                     android:textColor="@color/text_black"
                     android:textSize="21sp"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                 android:background="@drawable/vaccination_today_bg"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:text="Vaccination done today"
+                android:text="@string/vaccine_done_today"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
@@ -86,7 +86,7 @@
                 android:background="@drawable/vaccination_earlier_bg"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:text="Vaccination done earlier"
+                android:text="@string/vaccination_done_earlier"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue"
                 android:textSize="17sp" />
@@ -115,7 +115,7 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"
+                    android:text="@string/cancel"
                     android:layout_weight="1"
                     android:textAllCaps="false"
                     android:textColor="@color/silver"
@@ -126,7 +126,7 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Set"
+                    android:text="@string/set"
                     android:layout_weight="1"
                     android:textAllCaps="false"
                     android:textColor="@color/silver"

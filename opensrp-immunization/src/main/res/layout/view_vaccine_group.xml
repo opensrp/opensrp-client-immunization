@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="Birth"
+                    android:text="@string/birth"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/activity_sub_title_size" />
 

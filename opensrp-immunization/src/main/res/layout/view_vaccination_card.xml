@@ -44,7 +44,7 @@
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Undo"
+        android:text="@string/undo"
         android:textAllCaps="false"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white"
