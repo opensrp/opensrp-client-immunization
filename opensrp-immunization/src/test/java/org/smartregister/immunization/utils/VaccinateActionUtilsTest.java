@@ -70,7 +70,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     private final int magic12 = 12;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         Assert.assertNotNull(vaccinateActionUtils);
     }
@@ -99,7 +99,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 //    }
 
     @Test
-    public void assertAddDialogHookCustomFilterTestForDifferentAgeAndVaccines() throws Exception {
+    public void assertAddDialogHookCustomFilterTestForDifferentAgeAndVaccines() {
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("36");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv1);
@@ -133,10 +133,10 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertFindRowTestReturnsTableRow() throws Exception {
+    public void assertFindRowTestReturnsTableRow() {
         String tag = "TAG";
         String wrong_tag = "WRONG TAG";
-        Set<TableLayout> tables = new HashSet<TableLayout>();
+        Set<TableLayout> tables = new HashSet<>();
         TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
         TableRow row = new TableRow(RuntimeEnvironment.application);
         row.setTag(tag);
@@ -149,7 +149,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertRetrieveFieldOveridesTestReturnsFieldOverieds() throws Exception {
+    public void assertRetrieveFieldOveridesTestReturnsFieldOverieds() {
         String s = "{\"fieldOverrides\":\"{}\"}";
         Assert.assertNotNull(VaccinateActionUtils.retrieveFieldOverides(s));
         //throws Exception
@@ -157,10 +157,10 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAllAlertNamesTestReturnsAlertForACategory() throws Exception {
+    public void assertAllAlertNamesTestReturnsAlertForACategory() {
 
-        List<ServiceType> typeList = new ArrayList<ServiceType>();
-        HashMap<String, List<ServiceType>> collection = new HashMap<String, List<ServiceType>>();
+        List<ServiceType> typeList = new ArrayList<>();
+        HashMap<String, List<ServiceType>> collection = new HashMap<>();
         ServiceType st = new ServiceType();
         st.setName("SERVICE NAME");
         collection.put("1", typeList);
@@ -200,7 +200,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertPreviousStateKeyTestWithVariousVaccineNames() throws Exception {
+    public void assertPreviousStateKeyTestWithVariousVaccineNames() {
         Assert.assertNull(VaccinateActionUtils.previousStateKey(null, null));
         Vaccine v = new Vaccine();
         v.setName(magicBCG);
@@ -228,7 +228,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertHyphenTestReturnsHyphenatedString() throws Exception {
+    public void assertHyphenTestReturnsHyphenatedString() {
         Assert.assertNotNull(VaccinateActionUtils.addHyphen(""));
         Assert.assertNotNull(VaccinateActionUtils.addHyphen("a b"));
         Assert.assertNotNull(VaccinateActionUtils.removeHyphen(""));
@@ -236,8 +236,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAddBcg2SpecialVaccineTestReturnsSpecialVaccinesOnHasVaccineAndGetVaccineMethods() throws Exception {
-        List<Vaccine> list = new ArrayList<Vaccine>();
+    public void assertAddBcg2SpecialVaccineTestReturnsSpecialVaccinesOnHasVaccineAndGetVaccineMethods() {
+        List<Vaccine> list = new ArrayList<>();
         Vaccine v = new Vaccine();
         v.setName("BCG 2");
         list.add(v);
@@ -269,9 +269,9 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertPopulateDefaultAlertsTestReturnsAlerts() throws Exception {
+    public void assertPopulateDefaultAlertsTestReturnsAlerts() {
         VaccinateActionUtils.populateDefaultAlerts(null, null, null, null, null, null);
-        List<Vaccine> vlist = new ArrayList<Vaccine>();
+        List<Vaccine> vlist = new ArrayList<>();
         Vaccine v = new Vaccine();
         v.setName(magicBCG);
         vlist.add(v);
@@ -297,7 +297,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertCreateDefaultAlertTestReturnsAlert() throws Exception {
+    public void assertCreateDefaultAlertTestReturnsAlert() {
         DateTime dateTime = new DateTime();
 
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
@@ -321,7 +321,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
 
     @Test
-    public void assertMoreThanThreeMonthsReturnsTrueForDatesMoreThanThreeMonths() throws Exception {
+    public void assertMoreThanThreeMonthsReturnsTrueForDatesMoreThanThreeMonths() {
         DateTime dateTime = new DateTime();
         dateTime = dateTime.minusMonths(magic2);
 
@@ -331,7 +331,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
         dateTime = new DateTime();
-        dateTime = dateTime.minusMonths(3);
+        dateTime = dateTime.minusMonths(3).minusHours(1);
 
         Assert.assertTrue(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
@@ -344,7 +344,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtVaccineDatesLessThanThreeMonths() throws Exception {
+    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtVaccineDatesLessThanThreeMonths() {
 
         Vaccine vaccine = null;
         Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
@@ -368,7 +368,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtServiceRecordDatesLessThanThreeMonths() throws Exception {
+    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtServiceRecordDatesLessThanThreeMonths() {
 
         ServiceRecord serviceRecord = null;
         Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));

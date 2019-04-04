@@ -34,6 +34,7 @@ public class VaccineRepoTest extends BaseUnitTest {
 
         ArrayList<VaccineRepo.Vaccine> vaccines = new ArrayList<VaccineRepo.Vaccine>();
         vaccines.add(VaccineRepo.Vaccine.bcg);
+        vaccines.add(VaccineRepo.Vaccine.HepB);
         vaccines.add(VaccineRepo.Vaccine.opv0);
         vaccines.add(VaccineRepo.Vaccine.opv1);
         vaccines.add(VaccineRepo.Vaccine.penta1);
@@ -52,6 +53,7 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.opv4);
         vaccines.add(VaccineRepo.Vaccine.mcv1);
         vaccines.add(VaccineRepo.Vaccine.yf);
+        vaccines.add(VaccineRepo.Vaccine.meningococcal);
         vaccines.add(VaccineRepo.Vaccine.mcv2);
         vaccines.add(VaccineRepo.Vaccine.measles2);
         vaccines.add(VaccineRepo.Vaccine.mr2);
