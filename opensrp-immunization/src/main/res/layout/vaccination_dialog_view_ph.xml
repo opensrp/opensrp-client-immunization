@@ -4,8 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -70,8 +70,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/vaccination_today_bg"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
                 android:text="@string/vaccine_done_today"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/vaccination_earlier_bg"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
                 android:text="@string/vaccination_done_earlier"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue"

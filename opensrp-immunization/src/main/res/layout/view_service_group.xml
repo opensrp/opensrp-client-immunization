@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp">
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                     style="@style/CustomFontTextViewStyle.ClientList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:text="@string/recurring_services"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/activity_sub_title_size" />
@@ -43,8 +43,8 @@
                     style="@style/CustomFontTextViewStyle.ClientList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/record_all"
                     android:textColor="@color/light_blue"
                     android:textSize="@dimen/activity_sub_title_size"
@@ -55,8 +55,8 @@
                 android:id="@+id/services_gv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:columnWidth="@dimen/vaccine_card_width"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/vaccine_horizontal_spacing"
