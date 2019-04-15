@@ -179,6 +179,11 @@ public class VaccineRepository extends BaseRepository {
         Cursor cursor = database.query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS, BASE_ENTITY_ID + " = ? " + COLLATE_NOCASE + " ORDER BY " + UPDATED_AT_COLUMN, new String[]{entityId}, null, null, null, null);
         return readAllVaccines(cursor);
     }
+    public List<Vaccine> findLatestTwentyFourHoursByEntityId(String entityId) {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS, BASE_ENTITY_ID + " = ? and ("+UPDATED_AT_COLUMN+"/1000 < strftime('%s',datetime('now','-1 day')))", new String[]{entityId}, null, null, null, null);
+        return readAllVaccines(cursor);
+    }
 
     public Vaccine find(Long caseId) {
         Vaccine vaccine = null;

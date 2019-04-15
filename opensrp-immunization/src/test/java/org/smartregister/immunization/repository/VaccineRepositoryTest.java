@@ -182,6 +182,17 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         vaccineRepository.findByEntityId(ENTITYID);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class));
     }
+    @Test
+    public void verifyFindTwentyFourTestCallsDatabaseQuery1Time() throws Exception {
+        String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
+        MatrixCursor cursor = new MatrixCursor(columns);
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+
+        Mockito.when(sqliteDatabase.query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
+        Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+        vaccineRepository.findLatestTwentyFourHoursByEntityId(ENTITYID);
+        Mockito.verify(sqliteDatabase, Mockito.times(1)).query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class));
+    }
 
     @Test
     public void verifyFindTestCallsDatabaseQuery1Time() throws Exception {
