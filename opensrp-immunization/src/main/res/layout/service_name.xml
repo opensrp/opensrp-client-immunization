@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="service"
+        android:text="@string/service"
         android:textColor="@color/text_black"
         android:textSize="@dimen/service_view_text_size" />
 
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/service_units_view_margin_top"
         android:gravity="center_horizontal"
-        android:text="units"
+        android:text="@string/units"
         android:textColor="@color/text_black"
         android:textSize="@dimen/service_units_view_text_size"
         android:visibility="gone" />
