@@ -877,7 +877,7 @@ public class VaccinatorUtils {
         }
     }
     
-    private static String getFileName(String prefix, String fileName) {
+    private static String getFileName(String fileName, String prefix) {
         if(prefix != null) {
             return prefix + "_" + fileName;
         } else {
