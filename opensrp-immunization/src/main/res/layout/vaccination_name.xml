@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="3dp"
+        android:layout_marginEnd="3dp"
         android:checked="true"
         android:clickable="true" />
 
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="3dp"
+        android:layout_marginEnd="3dp"
         android:backgroundTint="@color/white"
         android:buttonTint="@color/light_blue"
         android:checked="true"
@@ -35,5 +35,5 @@
         android:text="vaccine"
         android:textColor="@color/text_black"
         android:textSize="@dimen/vaccine_text_size"
-        android:paddingLeft="0dp"/>
+        android:paddingStart="0dp"/>
 </LinearLayout>

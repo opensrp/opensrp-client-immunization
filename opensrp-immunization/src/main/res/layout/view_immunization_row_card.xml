@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/immunization_row_LL_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true">
 
         <org.smartregister.view.customcontrols.CustomFontTextView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@null"
-            android:paddingLeft="@dimen/immunization_row_name_view_padding_left"
+            android:paddingStart="@dimen/immunization_row_name_view_padding_left"
             android:textColor="@color/text_black"
             android:textSize="@dimen/immunization_row_name_view_text_size" />
 
@@ -27,8 +27,8 @@
             android:layout_width="@dimen/status_btn_immunization_row_width"
             android:layout_height="@dimen/status_btn_immunization_row_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/immunization_row_margin_left"
-            android:layout_marginRight="@dimen/btn_immunization_row_margin_right"
+            android:layout_marginStart="@dimen/immunization_row_margin_left"
+            android:layout_marginEnd="@dimen/btn_immunization_row_margin_right"
             android:background="@null"
             android:clickable="false"
             android:focusable="false"
@@ -42,10 +42,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/date_view_margin_left"
-            android:layout_marginRight="@dimen/date_view_margin_right"
+            android:layout_marginStart="@dimen/date_view_margin_left"
+            android:layout_marginEnd="@dimen/date_view_margin_right"
             android:background="@null"
-            android:paddingRight="@dimen/date_view_padding_right"
+            android:paddingEnd="@dimen/date_view_padding_right"
             android:textColor="@color/text_black"
             android:textSize="@dimen/immunization_row_date_view_text_size" />
     </LinearLayout>
@@ -54,13 +54,13 @@
         android:id="@+id/undo_b"
         android:layout_width="@dimen/immunization_row_card_undo_btn_width"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:background="@drawable/undo_background"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Edit"
+        android:text="@ed"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="14sp"

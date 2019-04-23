@@ -1,37 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">opensrp-immunization</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Paramètres</string>
 
-    <string name="problem_applying_vaccine_constraints">Could not apply vaccine constraints.</string>
-    <string name="immunizations">IMMUNIZATIONS</string>
-    <string name="recurring">RECURRING SERVICES</string>
-    <string name="done_today">Done Today</string>
-    <string name="undo">Undo</string>
+    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi</string>
+    <string name="immunizations">IMMUNISATIONS</string>
+    <string name="recurring">SERVICES RÉCURRENTS</string>
+    <string name="done_today">Fait aujourd\'hui</string>
+    <string name="vaccine_done_today">Vaccin fait aujourd\'hui</string>
+    <string name="vaccination_done_earlier">Vaccin fait plus tôt</string>
+    <string name="vaccine_name">prénom</string>
+    <string name="vaccine_number">nombre</string>
+    <string name="vaccine">vaccin</string>
+    <string name="set">ensemble</string>
+    <string name="undo_record_vaccination">Annuler la vaccination?</string>
+    <string name="change_service_date">Changer date de service</string>
+    <string name="birth">Naissance</string>
+    <string name="yes_undo_vaccination">Oui, annuler la vaccination</string>
+    <string name="no_go_back">Non, retourne</string>
+    <string name="service">un service</string>
+    <string name="units">des unités</string>
+    <string name="edit">modifier</string>
+    <string name="undo">Annuler</string>
 
-    <string name="record_all">Record all</string>
-    <string name="record_">Record %1$s</string>
-    <string name="record_due_">Record %1$s - due %2$s</string>
-    <string name="mr_due_">%1$s - due %2$s</string>
-    <string name="due_">%1$s: due %2$s</string>
-    <string name="today">today</string>
+    <string name="record_all">Enregistrer tous</string>
+    <string name="record_">Enregistrer %1$s</string>
+    <string name="record_due_">Enregistrer %1$s - dû %2$s</string>
+    <string name="mr_due_">%1$s - dû %2$s</string>
+    <string name="due_">%1$s: dû %2$s</string>
+    <string name="today">Aujourd\'hui</string>
 
     <!-- Recurring Services -->
-    <string name="recurring_services">Recurring Services</string>
-    <string name="given_today">%1$s given today</string>
-    <string name="given_earlier">%1$s given earlier</string>
-    <string name="itn_given">Has the child been\ngiven an ITN?</string>
-    <string name="itn_date">Date that the ITN\nwas provided:</string>
-    <string name="itn_under_net">Is the child sleeping\nunder a net?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="record_itn">Record ITN provided</string>
-    <string name="go_back">Go back</string>
-    <string name="undo_service">Undo Service?</string>
-    <string name="yes_undo_service">Yes, undo service</string>
-    <string name="cannot_record_vaccine">Cannot record %1$s</string>
+    <string name="recurring_services">Services récurrentes</string>
+    <string name="itn_under_net">L\'enfant dors-t-il ou elle sous un moustiquaire?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="go_back">Retourner</string>
+    <string name="undo_service">Annuler service?</string>
+    <string name="yes_undo_service">Oui, annuler service</string>
+    <string name="cannot_record_vaccine">Ne peut pas enregistrer %1$s</string>
 
-    <string name="activate_child_status_dialog_title">This child\'s status is %1$s. Make %2$s active?</string>
-    <string name="activate_child_status_dialog_message">Making the child active will resume the ZEIR service schedules and lets you record services.</string>
-    <string name="make_active">Make Active</string>
+    <string name="activate_child_status_dialog_title">l\'État de l\'enfant est %1$s. Activer %2$s ?</string>
+    <string name="activate_child_status_dialog_message">l\'Activation de l\'enfant va relancer l\'horaire de service de l\'application et vous permettra d\'enregistrer les services.</string>
+    <string name="make_active">Activer</string>
+
+    <string name="given_today">%1$s donné aujourd\'hui</string>
+    <string name="itn_date">Date à laquelle l\'ITN a été fourni:</string>
+    <string name="given_earlier">%1$s donné plus tôt</string>
+    <string name="itn_given">Est-ce que l\'enfant a reçu un ITN?</string>
+    <string name="record_itn">Enregistrement ITN fourni</string>
 
 </resources>
