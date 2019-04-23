@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -99,14 +100,14 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void assertVaccinatorUtilsTest() throws Exception {
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        PowerMockito.assertGetVaccineDisplayNameTestReturnsDisplayNamewhen(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(ArgumentMatchers.anyString())).thenReturn(commonRepository);
 
         android.content.Context ctx = Mockito.mock(android.content.Context.class);
         Resources resources = Mockito.mock(Resources.class);
         PowerMockito.when(ctx.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(magicColor);
+        PowerMockito.when(resources.getColor(ArgumentMatchers.anyInt())).thenReturn(magicColor);
         //get color test for different status
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.normal));

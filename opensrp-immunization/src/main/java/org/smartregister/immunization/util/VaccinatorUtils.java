@@ -712,8 +712,7 @@ public class VaccinatorUtils {
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
-        getFileName(prefix);
-        return ImmunizationLibrary.getInstance().assetJsonToJava(vaccines_file, clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file,prefix), clazz, listType);
     }
 
     /**
@@ -736,8 +735,7 @@ public class VaccinatorUtils {
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
-        getFileName(prefix);
-        return ImmunizationLibrary.getInstance().assetJsonToJava(mother_vaccines_file, clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(mother_vaccines_file,prefix), clazz, listType);
     }
 
     public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
@@ -748,8 +746,7 @@ public class VaccinatorUtils {
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
-        getFileName(prefix);
-        return ImmunizationLibrary.getInstance().assetJsonToJava(special_vaccines_file, clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(special_vaccines_file,prefix), clazz, listType);
     }
 
     /**
@@ -769,8 +766,7 @@ public class VaccinatorUtils {
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context, String prefix) {
-        getFileName(prefix);
-        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, recurring_service_types_file);
+        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, getFileName(recurring_service_types_file, prefix));
         return supportedServicesString;
     }
 
@@ -881,13 +877,11 @@ public class VaccinatorUtils {
         }
     }
     
-    private static void getFileName(String prefix) {
+    private static String getFileName(String prefix, String fileName) {
         if(prefix != null) {
-            prefix += "_";
-            vaccines_file = prefix + vaccines_file;
-            mother_vaccines_file = prefix + mother_vaccines_file;
-            recurring_service_types_file = prefix + recurring_service_types_file;
-            special_vaccines_file = prefix + special_vaccines_file;
+            return prefix + "_" + fileName;
+        } else {
+            return fileName;
         }
     }
 }
