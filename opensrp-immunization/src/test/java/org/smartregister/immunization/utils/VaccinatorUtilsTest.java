@@ -107,6 +107,14 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Resources resources = Mockito.mock(Resources.class);
         PowerMockito.when(ctx.getResources()).thenReturn(resources);
         PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(magicColor);
+
+        //get file name with prefix
+        Assert.assertEquals(vaccinatorUtils.getFileName("vaccines.json", "tz"), "tz_vaccines.json");
+
+        //get file name without prefix
+        Assert.assertEquals(vaccinatorUtils.getFileName("vaccines.json", null), "vaccines.json");
+
+
         //get color test for different status
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
         Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.normal));

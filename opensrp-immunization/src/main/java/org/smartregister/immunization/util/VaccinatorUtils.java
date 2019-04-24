@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.json.JSONException;
@@ -85,6 +86,11 @@ import static org.smartregister.util.Utils.getValue;
  */
 public class VaccinatorUtils {
     private static final String TAG = "VaccinatorUtils";
+    
+    private static String vaccines_file = "vaccines.json";
+    private static String mother_vaccines_file = "mother_vaccines.json";
+    private static String special_vaccines_file = "special_vaccines.json";
+    private static String recurring_service_types_file = "recurring_service_types.json";
 
     public static HashMap<String, String> providerDetails() {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
@@ -693,10 +699,21 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context) {
+        return getSupportedVaccines(context, null);
+    }
+
+    /**
+     * Returns a list of VaccineGroup containing a list of supported vaccines
+     *
+     * @param context Current valid context to be used
+     * @param prefix Country prefix
+     * @return list of VaccineGroup with the supported vaccines
+     */
+    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava("vaccines.json", clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file,prefix), clazz, listType);
     }
 
     /**
@@ -706,17 +723,31 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context) {
+        return getSupportedWomanVaccines(context, null);
+    }
+
+    /**
+     * Returns a list of VaccineGroup containing a list of supported woman vaccines
+     *
+     * @param context Current valid context to be used
+     * @return list of VaccineGroup with the supported vaccines
+     */
+    public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava("mother_vaccines.json", clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(mother_vaccines_file,prefix), clazz, listType);
     }
 
     public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
+        return getSpecialVaccines(context, null);
+    }
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context, String prefix) {
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava("special_vaccines.json", clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(special_vaccines_file,prefix), clazz, listType);
     }
 
     /**
@@ -726,7 +757,17 @@ public class VaccinatorUtils {
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context) {
-        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, "recurring_service_types.json");
+        return getSupportedRecurringServices(context, null);
+    }
+
+    /**
+     * Returns a JSON String containing a list of supported services
+     *
+     * @param context Current valid context to be used
+     * @return JSON String with the supported vaccines or NULL if unable to obtain the list
+     */
+    public static String getSupportedRecurringServices(Context context, String prefix) {
+        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, getFileName(recurring_service_types_file, prefix));
         return supportedServicesString;
     }
 
@@ -834,6 +875,14 @@ public class VaccinatorUtils {
             return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_urgent)).substring(2);
         } else {
             return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_na)).substring(2);
+        }
+    }
+
+    public static String getFileName(String fileName, String prefix) {
+        if(prefix != null) {
+            return prefix + "_" + fileName;
+        } else {
+            return fileName;
         }
     }
 }
