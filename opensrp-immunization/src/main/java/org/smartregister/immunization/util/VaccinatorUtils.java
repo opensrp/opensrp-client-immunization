@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.json.JSONException;
@@ -876,8 +877,8 @@ public class VaccinatorUtils {
             return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_na)).substring(2);
         }
     }
-    
-    private static String getFileName(String fileName, String prefix) {
+
+    public static String getFileName(String fileName, String prefix) {
         if(prefix != null) {
             return prefix + "_" + fileName;
         } else {
