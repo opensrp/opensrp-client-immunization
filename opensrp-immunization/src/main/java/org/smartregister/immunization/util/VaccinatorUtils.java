@@ -39,7 +39,6 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Contract;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.json.JSONException;
