@@ -1,5 +1,7 @@
 package org.smartregister.immunization;
 
+import android.util.Log;
+
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -11,6 +13,7 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AssetHandler;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +63,19 @@ public class ImmunizationLibrary {
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
-        return AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
+        String locale = context.applicationContext().getResources().getConfiguration().locale.getLanguage();
+        locale = locale.equalsIgnoreCase("en") ? "" : "-"+locale;
+
+        String filePathName = "vaccines" + locale + "/" + fileName;
+
+        T res = AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), filePathName, clazz, type);
+        if (res == null) {
+            //  file for the language not found, defaulting to english language
+            filePathName = "vaccines/" + fileName;
+            res = AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), filePathName, clazz, type);
+            return res;
+        }
+        return res;
     }
 
     public Repository getRepository() {
