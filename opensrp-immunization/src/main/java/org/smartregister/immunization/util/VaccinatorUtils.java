@@ -87,10 +87,10 @@ import static org.smartregister.util.Utils.getValue;
 public class VaccinatorUtils {
     private static final String TAG = "VaccinatorUtils";
     
-    private static String vaccines_file = "vaccines.json";
-    private static String mother_vaccines_file = "mother_vaccines.json";
-    private static String special_vaccines_file = "special_vaccines.json";
-    private static String recurring_service_types_file = "recurring_service_types.json";
+    public static final String vaccines_file = "vaccines.json";
+    public static final String mother_vaccines_file = "mother_vaccines.json";
+    public static final String special_vaccines_file = "special_vaccines.json";
+    public static final String recurring_service_types_file = "recurring_service_types.json";
 
     public static HashMap<String, String> providerDetails() {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
