@@ -9,6 +9,7 @@ import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AssetHandler;
@@ -63,9 +64,9 @@ public class ImmunizationLibrary {
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
         String locale = context.applicationContext().getResources().getConfiguration().locale.getLanguage();
-        locale = locale.equalsIgnoreCase("en") ? "" : "-"+locale;
+        locale = locale.equalsIgnoreCase("en") ? "" : "-" + locale;
 
-        String filePathName = "vaccines" + locale + "/" + fileName;
+        String filePathName = VaccinatorUtils.vaccines_folder + locale + "/" + fileName;
 
         T res = AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), filePathName, clazz, type);
         if (res == null) {
