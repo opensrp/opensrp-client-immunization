@@ -2,9 +2,7 @@
 <resources>
     <string name="app_name">opensrp-immunization</string>
     <string name="action_settings">Paramètres</string>
-    <string name="language_suffix">fr</string>
-
-    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi</string>
+    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi.</string>
     <string name="immunizations">IMMUNISATIONS</string>
     <string name="recurring">SERVICES RÉCURRENTS</string>
     <string name="done_today">Fait aujourd\'hui</string>
