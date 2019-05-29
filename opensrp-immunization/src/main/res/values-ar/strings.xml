@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نظام التسجيل الذكي المفتوح-التلقيح</string>
+    <string name="action_settings">الإعدادات</string>
+    <string name="problem_applying_vaccine_constraints">مشكلة في تطبيق قيود اللقاح.</string>
+    <string name="immunizations">التلقيحات</string>
+    <string name="recurring">الخدمات المتكررة</string>
+    <string name="done_today">انجز اليوم</string>
+    <string name="vaccine_done_today">أعطي اللقاح اليوم</string>
+    <string name="vaccination_done_earlier">أعطي اللقاح في وقت سابق</string>
+    <string name="vaccine_name">اللقب</string>
+    <string name="vaccine_number">العدد</string>
+    <string name="vaccine">اللقاح</string>
+    <string name="set">معا</string>
+    <string name="undo_record_vaccination">إلغاء التلقيح؟</string>
+    <string name="change_service_date">تغيير تاريخ الخدمة</string>
+    <string name="birth">الولادة</string>
+    <string name="yes_undo_vaccination">نعم ، قم بإلغاء التلقيح</string>
+    <string name="no_go_back">لا ، العودة</string>
+    <string name="service">خدمة</string>
+    <string name="units">وحدات</string>
+    <string name="edit">تغيير</string>
+    <string name="undo">إلغاء</string>
+
+    <string name="record_all">تسجيل الكل</string>
+    <string name="record_">تسجيل %1$s</string>
+    <string name="record_due_">تسجيل 1%1$s- مستحق 2%2$s</string>
+    <string name="mr_due_">%1$s - مستحق %2$s</string>
+    <string name="due_">%1$s: مستحق %2$s</string>
+    <string name="today">اليوم</string>
+
+    <!-- Recurring Services -->
+    <string name="recurring_services">خدمات متكررة</string>
+    <string name="itn_under_net">هل ينام الطفل تحت ناموسية؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="go_back">العودة</string>
+    <string name="undo_service">إلغاء الخدمة؟</string>
+    <string name="yes_undo_service">نعم،إلغاء الخدمة</string>
+    <string name="cannot_record_vaccine">لايمكن تسجىل %1$s</string>
+
+    <string name="activate_child_status_dialog_title">حالة الطفل %1$s. تمكين %2$s</string>
+    <string name="activate_child_status_dialog_message">سيقوم تنشيط الطفل بإعادة تشغيل جدول خدمة التطبيق وسيسمح لك بتسجيل الخدمات.</string>
+    <string name="make_active">تنشيط</string>
+
+    <string name="given_today"> اعطي اليوم %1$s</string>
+    <string name="itn_date"> تاريخ التزيد بالناموسيات المعالجة</string>
+    <string name="given_earlier">%1$s اعطي في وقت سابق</string>
+    <string name="itn_given">هل حصل الطفل على ناموسية؟ معالجة بالمبيدات الحشرية؟</string>
+    <string name="record_itn">تسجيل الناموسية المعالجة بالمبيدات</string>
+
+</resources>
