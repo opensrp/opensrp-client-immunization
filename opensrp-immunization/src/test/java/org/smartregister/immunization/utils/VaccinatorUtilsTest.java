@@ -40,6 +40,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -96,9 +97,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertVaccinatorUtilsTest() throws Exception {
+    public void assertVaccinatorUtilsTest() {
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
@@ -135,10 +137,11 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetVaccineDisplayNameTestReturnsDisplayName() throws Exception {
+    public void assertGetVaccineDisplayNameTestReturnsDisplayName() {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(ImmunizationLibrary.class);
 
+        PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Class<List<VaccineGroup>> clazz = (Class) List.class;
@@ -155,7 +158,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertReceivedServicesTestReturnsService() throws Exception {
+    public void assertReceivedServicesTestReturnsService() {
         List<ServiceRecord> serviceRecordList = new ArrayList<ServiceRecord>();
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setName(magicNULL);
@@ -165,7 +168,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertReceivedVaccinesTestReturnsVaccine() throws Exception {
+    public void assertReceivedVaccinesTestReturnsVaccine() {
         List<Vaccine> vaccines = new ArrayList<Vaccine>();
         Vaccine v = new Vaccine();
         v.setName(magicNULL);
@@ -180,6 +183,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.mockStatic(Utils.class);
 
+        PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Class<List<VaccineGroup>> clazz = (Class) List.class;

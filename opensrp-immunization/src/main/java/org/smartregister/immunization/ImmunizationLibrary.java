@@ -16,6 +16,7 @@ import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -140,5 +141,9 @@ public class ImmunizationLibrary {
 
     public int getDatabaseVersion() {
         return databaseVersion;
+    }
+
+    public Locale getLocale() {
+        return ImmunizationLibrary.getInstance().context().applicationContext().getResources().getConfiguration().locale;
     }
 }

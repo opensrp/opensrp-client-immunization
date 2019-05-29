@@ -896,7 +896,7 @@ public class VaccinatorUtils {
             file = fileName;
         }
 
-        String locale = ImmunizationLibrary.getInstance().context().applicationContext().getResources().getConfiguration().locale.getLanguage();
+        String locale = ImmunizationLibrary.getInstance().getLocale().getLanguage();
         locale = locale.equalsIgnoreCase("en") ? "" : "-" + locale;
 
         String localeFilePath = vaccines_folder + locale + "/" + file;
