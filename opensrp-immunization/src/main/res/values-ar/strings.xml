@@ -2,8 +2,7 @@
 <resources>
     <string name="app_name">نظام التسجيل الذكي المفتوح-التلقيح</string>
     <string name="action_settings">الإعدادات</string>
-
-    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi</string>
+    <string name="problem_applying_vaccine_constraints">مشكلة في تطبيق قيود اللقاح.</string>
     <string name="immunizations">التلقيحات</string>
     <string name="recurring">الخدمات المتكررة</string>
     <string name="done_today">انجز اليوم</string>
