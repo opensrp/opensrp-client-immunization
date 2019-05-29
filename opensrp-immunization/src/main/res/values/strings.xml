@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">opensrp-immunization</string>
     <string name="action_settings">Settings</string>
-    <string name="problem_applying_vaccine_constraints">مشكلة في تطبيق قيود اللقاح.</string>
+    <string name="problem_applying_vaccine_constraints">Problem applying vaccine constraints.</string>
     <string name="immunizations">IMMUNIZATIONS</string>
     <string name="recurring">RECURRING SERVICES</string>
     <string name="done_today">Done Today</string>
