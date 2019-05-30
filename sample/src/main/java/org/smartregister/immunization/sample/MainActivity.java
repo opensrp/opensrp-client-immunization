@@ -63,7 +63,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import static org.smartregister.util.Utils.getName;
 
@@ -107,10 +106,10 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,13 +146,13 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     protected void onResume() {
         super.onResume();
         if (vaccineGroups != null) {
-            LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
+            LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
             vaccineGroupCanvasLL.removeAllViews();
             vaccineGroups = null;
         }
 
         if (serviceGroups != null) {
-            LinearLayout serviceGroupCanvasLL = (LinearLayout) findViewById(R.id.service_group_canvas_ll);
+            LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
             serviceGroupCanvasLL.removeAllViews();
             serviceGroups = null;
         }
@@ -201,9 +200,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             childId = Utils.getValue(childDetails.getColumnmaps(), "zeir_id", false);
         }
 
-        TextView nameTV = (TextView) findViewById(R.id.name_tv);
+        TextView nameTV = findViewById(R.id.name_tv);
         nameTV.setText(name);
-        TextView childIdTV = (TextView) findViewById(R.id.child_id_tv);
+        TextView childIdTV = findViewById(R.id.child_id_tv);
         childIdTV.setText(String.format("%s: %s", "ID", childId));
     }
 
@@ -223,9 +222,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
             }
         }
-        TextView dobTV = (TextView) findViewById(R.id.dob_tv);
+        TextView dobTV = findViewById(R.id.dob_tv);
         dobTV.setText(String.format("%s: %s", "Birth Date", formattedDob));
-        TextView ageTV = (TextView) findViewById(R.id.age_tv);
+        TextView ageTV = findViewById(R.id.age_tv);
         ageTV.setText(String.format("%s: %s", "Age", formattedAge));
     }
 
@@ -309,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
 
     private void addVaccineGroup(int canvasId, org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
-        LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
+        LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
         VaccineGroup curGroup = new VaccineGroup(this);
         curGroup.setChildActive(isChildActive);
         curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts, "child");
@@ -342,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             parent.setId(canvasId);
             vaccineGroupCanvasLL.addView(parent);
         } else {
-            parent = (LinearLayout) findViewById(canvasId);
+            parent = findViewById(canvasId);
             parent.removeAllViews();
         }
         parent.addView(curGroup);

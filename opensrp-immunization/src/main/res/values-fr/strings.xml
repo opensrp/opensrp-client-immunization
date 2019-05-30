@@ -2,11 +2,24 @@
 <resources>
     <string name="app_name">opensrp-immunization</string>
     <string name="action_settings">Paramètres</string>
-
-    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi</string>
+    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi.</string>
     <string name="immunizations">IMMUNISATIONS</string>
     <string name="recurring">SERVICES RÉCURRENTS</string>
     <string name="done_today">Fait aujourd\'hui</string>
+    <string name="vaccine_done_today">Vaccin fait aujourd\'hui</string>
+    <string name="vaccination_done_earlier">Vaccin fait plus tôt</string>
+    <string name="vaccine_name">prénom</string>
+    <string name="vaccine_number">nombre</string>
+    <string name="vaccine">vaccin</string>
+    <string name="set">ensemble</string>
+    <string name="undo_record_vaccination">Annuler la vaccination?</string>
+    <string name="change_service_date">Changer date de service</string>
+    <string name="birth">Naissance</string>
+    <string name="yes_undo_vaccination">Oui, annuler la vaccination</string>
+    <string name="no_go_back">Non, retourne</string>
+    <string name="service">un service</string>
+    <string name="units">des unités</string>
+    <string name="edit">modifier</string>
     <string name="undo">Annuler</string>
 
     <string name="record_all">Enregistrer tous</string>
@@ -18,9 +31,14 @@
 
     <!-- Recurring Services -->
     <string name="recurring_services">Services récurrentes</string>
+    <string name="given_today">%1$s donné aujourd\'hui</string>
+    <string name="given_earlier">%1$s donné plus tôt</string>
+    <string name="itn_given">Est-ce que l\'enfant a reçu un ITN?</string>
+    <string name="itn_date">Date à laquelle l\'ITN a été fourni:</string>
     <string name="itn_under_net">L\'enfant dors-t-il ou elle sous un moustiquaire?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="record_itn">Enregistrement ITN fourni</string>
     <string name="go_back">Retourner</string>
     <string name="undo_service">Annuler service?</string>
     <string name="yes_undo_service">Oui, annuler service</string>
@@ -29,5 +47,7 @@
     <string name="activate_child_status_dialog_title">l\'État de l\'enfant est %1$s. Activer %2$s ?</string>
     <string name="activate_child_status_dialog_message">l\'Activation de l\'enfant va relancer l\'horaire de service de l\'application et vous permettra d\'enregistrer les services.</string>
     <string name="make_active">Activer</string>
+
+
 
 </resources>

@@ -108,10 +108,10 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
-        nameTV = (TextView) findViewById(R.id.name_tv);
-        vaccinesGV = (ExpandableHeightGridView) findViewById(R.id.vaccines_gv);
+        nameTV = findViewById(R.id.name_tv);
+        vaccinesGV = findViewById(R.id.vaccines_gv);
         vaccinesGV.setExpanded(true);
-        recordAllTV = (TextView) findViewById(R.id.record_all_tv);
+        recordAllTV = findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
     }
 
