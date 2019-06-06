@@ -13,7 +13,7 @@
     <string name="vaccine">Vaccine</string>
     <string name="set">Set</string>
     <string name="undo_record_vaccination">Undo record vaccination?</string>
-    <string name="change_service_date">Changer service date</string>
+    <string name="change_service_date">Change service date</string>
     <string name="birth">Birth</string>
     <string name="yes_undo_vaccination">Yes undo vaccination</string>
     <string name="no_go_back">Non, go back</string>
