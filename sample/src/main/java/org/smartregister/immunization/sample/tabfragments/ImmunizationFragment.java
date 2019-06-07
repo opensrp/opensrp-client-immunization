@@ -1,8 +1,8 @@
 package org.smartregister.immunization.sample.tabfragments;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -200,8 +200,8 @@ public class ImmunizationFragment extends Fragment {
     }
 
     public void addVaccinationDialogFragment(List<VaccineWrapper> vaccineWrappers, ImmunizationRowGroup vaccineGroup) {
-        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-        android.app.Fragment prev = getActivity().getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -223,8 +223,8 @@ public class ImmunizationFragment extends Fragment {
     }
 
     public void addServiceDialogFragment(ServiceWrapper serviceWrapper, ServiceRowGroup serviceRowGroup) {
-        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-        android.app.Fragment prev = getActivity().getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }

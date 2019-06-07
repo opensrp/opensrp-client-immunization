@@ -2,12 +2,12 @@ package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;

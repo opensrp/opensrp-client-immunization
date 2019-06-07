@@ -17,12 +17,13 @@
 package org.smartregister.immunization.util;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -247,8 +248,8 @@ public class VaccinatorUtils {
         u.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
-                Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(UndoVaccinationDialogFragment.DIALOG_TAG);
+                FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+                Fragment prev = ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag(UndoVaccinationDialogFragment.DIALOG_TAG);
                 if (prev != null) {
                     ft.remove(prev);
                 }
@@ -277,8 +278,9 @@ public class VaccinatorUtils {
             tr.setOnClickListener(new TableRow.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
-                    Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                    FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+                    Fragment prev =
+                            ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
                     if (prev != null) {
                         ft.remove(prev);
                     }
