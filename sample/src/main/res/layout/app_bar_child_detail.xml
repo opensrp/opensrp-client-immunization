@@ -32,7 +32,7 @@
                 android:text="Joyce Mwansa"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/activity_title_size"
-                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:layout_marginTop="5dp"/>
 
             <LinearLayout
@@ -58,7 +58,7 @@
                     style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:text="Age"
                     android:textColor="@color/white" />
                 <org.smartregister.view.customcontrols.CustomFontTextView
@@ -66,7 +66,7 @@
                     style="@style/CustomFontTextViewStyle.ClientList.Light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:text="Status: Active"
                     android:textColor="@color/white"/>
             </LinearLayout>

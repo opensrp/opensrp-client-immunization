@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class VaccineRepo {
     public enum Vaccine {
         bcg("BCG", null, 366, 0, 0, "child"),
+        HepB("HepB", null, 366, 0, 0, "child"),
         opv0("OPV 0", null, 13, 0, 0, "child"),
 
         opv1("OPV 1", null, 1768, 42, 0, "child"),
@@ -18,18 +19,26 @@ public class VaccineRepo {
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
 
         opv3("OPV 3", opv2, 1830, 98, 28, "child"),
+        ipv("IPV", null, 1830, 98, 0, "child"),
         penta3("PENTA 3", penta2, 1830, 98, 28, "child"),
         pcv3("PCV 3", pcv2, 1830, 98, 28, "child"),
 
         measles1("MEASLES 1", null, -1, 274, 0, "child"),
         mr1("MR 1", null, -1, 274, 0, "child"),
         opv4("OPV 4", null, 1830, 274, 28, "child"),
+        mcv1("MCV 1", null, -1, 274, 0, "child"),
+        yf("Yellow Fever", null, -1, 274, 0, "child"),
+        meningococcal("Meningococcal", null, 548, 274, 28, "child"),
+
+
+        mcv2("MCV 2", mcv1, -1, 456, 183, "child"),
+
 
         measles2("MEASLES 2", measles1, -1, 548, 274, "child"),
         mr2("MR 2", mr1, -1, 548, 274, "child"),
 
+
         bcg2("BCG 2", null, 366, 0, 84, "child"),
-        ipv("IPV", opv3, 1830, 274, 28, "child"),
 
         tt1("TT 1", null, 0, 0, 0, "woman"),
         tt2("TT 2", tt1, 366, 0, 28, "woman"),

@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.1.2"
+        classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
@@ -19,13 +19,13 @@ allprojects {
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
         applicationId "org.smartregister.immunization.sample"
-        minSdkVersion 18
-        targetSdkVersion 27
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -72,19 +72,22 @@ android {
 
 dependencies {
 
-    testImplementation 'junit:junit:4.12'
-    implementation('org.smartregister:opensrp-client-core:1.3.5-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.27-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
-    implementation('org.smartregister:opensrp-client-native-form:1.2.2-SNAPSHOT@aar') {
+
+    implementation('org.smartregister:opensrp-client-native-form:1.6.7-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
 
-    implementation project(':opensrp-immunization')
 
-    implementation('com.android.support:design:27.1.1') {
+    implementation('com.android.support:design:28.0.0') {
         exclude group: 'com.android.support'
     }
+
+    implementation project(':opensrp-immunization')
+
+    testImplementation 'junit:junit:4.12'
 }

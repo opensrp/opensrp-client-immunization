@@ -90,11 +90,11 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
-        nameTV = (TextView) findViewById(R.id.name_tv);
+        nameTV = findViewById(R.id.name_tv);
         nameTV.setVisibility(GONE);
-        vaccinesGV = (ExpandableHeightGridView) findViewById(R.id.vaccines_gv);
+        vaccinesGV = findViewById(R.id.vaccines_gv);
         vaccinesGV.setExpanded(true);
-        recordAllTV = (TextView) findViewById(R.id.record_all_tv);
+        recordAllTV = findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
         recordAllTV.setVisibility(GONE);
     }

@@ -36,14 +36,14 @@
                         android:id="@+id/imageView2"
                         android:layout_width="@dimen/navigation_icon_size"
                         android:layout_height="@dimen/navigation_icon_size"
-                        android:layout_gravity="left|top" />
+                        android:layout_gravity="start|top" />
                 </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -67,7 +67,7 @@
                             style="@style/CustomFontTextViewStyle.ClientList.Light"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ZEIR: 5425428"
+                            android:text="ID: 5425428"
                             android:textColor="@color/dark_grey"
                             android:textSize="@dimen/activity_sub_title_size" />
 
@@ -76,7 +76,7 @@
                             style="@style/CustomFontTextViewStyle.ClientList.Light"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:text="Age: 6w 4d"
                             android:textColor="@color/dark_grey"
                             android:textSize="@dimen/activity_sub_title_size" />
@@ -88,8 +88,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="25dp"
                     android:orientation="vertical">
 
                     <ImageView

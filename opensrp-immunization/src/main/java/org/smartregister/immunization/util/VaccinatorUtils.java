@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -66,6 +67,7 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.IntegerUtil;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,7 +81,6 @@ import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;
 import static org.smartregister.util.Utils.convertDateFormat;
-import static org.smartregister.util.Utils.getPreference;
 import static org.smartregister.util.Utils.getValue;
 
 /**
@@ -88,11 +89,17 @@ import static org.smartregister.util.Utils.getValue;
 public class VaccinatorUtils {
     private static final String TAG = "VaccinatorUtils";
 
+    public static final String vaccines_file = "vaccines.json";
+    public static final String mother_vaccines_file = "mother_vaccines.json";
+    public static final String special_vaccines_file = "special_vaccines.json";
+    public static final String recurring_service_types_file = "recurring_service_types.json";
+    public static final String vaccines_folder = "vaccines";
+
     public static HashMap<String, String> providerDetails() {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
         org.smartregister.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
         org.smartregister.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation());
-        org.smartregister.util.Log.logDebug("TEAM DETAILS" + getPreference(context.applicationContext(), "team", "{}"));
+        org.smartregister.util.Log.logDebug("TEAM DETAILS" + context.allSharedPreferences().getPreference("team"));
 
         String locationJson = context.anmLocationController().get();
         LocationTree locationTree = AssetHandler.jsonStringToJava(locationJson, LocationTree.class);
@@ -119,7 +126,7 @@ public class VaccinatorUtils {
         }
 
         try {
-            JSONObject tm = new JSONObject(getPreference(context.applicationContext(), "team", "{}"));
+            JSONObject tm = new JSONObject(context.allSharedPreferences().getPreference("team"));
             map.put("provider_name", tm.getJSONObject("person").getString("display"));
             map.put("provider_identifier", tm.getString("identifier"));
             map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
@@ -132,7 +139,7 @@ public class VaccinatorUtils {
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type) {
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'";
-        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted);
+        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted, new String[]{});
     }
 
     public static int getWasted(String startDate, String endDate, String type, String... variables) {
@@ -156,7 +163,7 @@ public class VaccinatorUtils {
         q += " ) e ";
 
         Log.i("DD", q);
-        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q);
+        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[]{});
     }
 
     public static int getTotalUsed(String startDate, String endDate, String table, String... vaccines) {
@@ -696,10 +703,21 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context) {
+        return getSupportedVaccines(context, null);
+    }
+
+    /**
+     * Returns a list of VaccineGroup containing a list of supported vaccines
+     *
+     * @param context Current valid context to be used
+     * @param prefix  Country prefix
+     * @return list of VaccineGroup with the supported vaccines
+     */
+    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava("vaccines.json", clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file, prefix), clazz, listType);
     }
 
     /**
@@ -709,17 +727,37 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context) {
+        return getSupportedWomanVaccines(context, null);
+    }
+
+    /**
+     * Returns a list of VaccineGroup containing a list of supported woman vaccines
+     *
+     * @param context Current valid context to be used
+     * @return list of VaccineGroup with the supported vaccines
+     */
+    public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava("mother_vaccines.json", clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(mother_vaccines_file, prefix), clazz, listType);
     }
 
     public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
-        Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> clazz = (Class) List.class;
+        return getSpecialVaccines(context, null);
+    }
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context, String prefix) {
+
+        return getJsonVaccineGroup(getFileName(special_vaccines_file, prefix));
+    }
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(@NonNull String filename) {
+
+        Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava("special_vaccines.json", clazz, listType);
+        return ImmunizationLibrary.getInstance().assetJsonToJava(filename, classType, listType);
     }
 
     /**
@@ -729,7 +767,17 @@ public class VaccinatorUtils {
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context) {
-        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, "recurring_service_types.json");
+        return getSupportedRecurringServices(context, null);
+    }
+
+    /**
+     * Returns a JSON String containing a list of supported services
+     *
+     * @param context Current valid context to be used
+     * @return JSON String with the supported vaccines or NULL if unable to obtain the list
+     */
+    public static String getSupportedRecurringServices(Context context, String prefix) {
+        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, getFileName(recurring_service_types_file, prefix));
         return supportedServicesString;
     }
 
@@ -838,5 +886,22 @@ public class VaccinatorUtils {
         } else {
             return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_na)).substring(2);
         }
+    }
+
+    public static String getFileName(String fileName, String prefix) {
+
+        String file;
+
+        if (prefix != null) {
+            file = prefix + "_" + fileName;
+        } else {
+            file = fileName;
+        }
+
+        String locale = ImmunizationLibrary.getInstance().getLocale().getLanguage();
+        locale = locale.equalsIgnoreCase("en") ? "" : "-" + locale;
+
+        String localeFilePath = vaccines_folder + locale + "/" + file;
+        return new File(localeFilePath).exists() ? localeFilePath : file;
     }
 }

@@ -1,11 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">opensrp-immunization</string>
     <string name="action_settings">Settings</string>
-
-    <string name="problem_applying_vaccine_constraints">Could not apply vaccine constraints.</string>
+    <string name="problem_applying_vaccine_constraints">Problem applying vaccine constraints.</string>
     <string name="immunizations">IMMUNIZATIONS</string>
     <string name="recurring">RECURRING SERVICES</string>
     <string name="done_today">Done Today</string>
+    <string name="vaccine_done_today">Vaccine done today</string>
+    <string name="vaccination_done_earlier">Vaccine done earlier</string>
+    <string name="vaccine_name">Vaccine name</string>
+    <string name="vaccine_number">Vaccine number</string>
+    <string name="vaccine">Vaccine</string>
+    <string name="set">Set</string>
+    <string name="undo_record_vaccination">Undo record vaccination?</string>
+    <string name="change_service_date">Changer service date</string>
+    <string name="birth">Birth</string>
+    <string name="yes_undo_vaccination">Yes undo vaccination</string>
+    <string name="no_go_back">Non, go back</string>
+    <string name="service">service</string>
+    <string name="units">units</string>
+    <string name="edit">edit</string>
     <string name="undo">Undo</string>
 
     <string name="record_all">Record all</string>
@@ -15,7 +29,7 @@
     <string name="due_">%1$s: due %2$s</string>
     <string name="today">today</string>
 
-    //Recurring Services
+    <!-- Recurring Services -->
     <string name="recurring_services">Recurring Services</string>
     <string name="given_today">%1$s given today</string>
     <string name="given_earlier">%1$s given earlier</string>

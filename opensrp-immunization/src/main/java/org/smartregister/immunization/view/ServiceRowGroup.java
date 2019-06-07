@@ -110,11 +110,11 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
-        nameTV = (TextView) findViewById(R.id.name_tv);
+        nameTV = findViewById(R.id.name_tv);
         nameTV.setVisibility(GONE);
-        servicesGV = (ExpandableHeightGridView) findViewById(R.id.vaccines_gv);
+        servicesGV = findViewById(R.id.vaccines_gv);
         servicesGV.setExpanded(true);
-        TextView recordAllTV = (TextView) findViewById(R.id.record_all_tv);
+        TextView recordAllTV = findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
         recordAllTV.setVisibility(GONE);
     }
