@@ -44,7 +44,11 @@ public class VaccineRepo {
         tt2("TT 2", tt1, 366, 0, 28, "woman"),
         tt3("TT 3", tt2, 366, 0, 26 * 7, "woman"),
         tt4("TT 4", tt3, 366, 0, 52 * 7, "woman"),
-        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),;
+        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),
+
+        IPTp_SP1("IPTp-SP 1", null, 0, 0, 0, "woman"),
+        IPTp_SP2("IPTp-SP 2", IPTp_SP1, 366, 0, 28, "woman"),
+        IPTp_SP3("IPTp-SP 3", IPTp_SP2, 366, 0, 26 * 7, "woman"),;
 
         private String display;
         private Vaccine prerequisite;
