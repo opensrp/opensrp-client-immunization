@@ -316,6 +316,7 @@ public class VaccinateActionUtils {
             case penta3:
             case pcv3:
             case ipv:
+            case rota3:
                 return "14 weeks";
 
             case measles1:
@@ -323,9 +324,12 @@ public class VaccinateActionUtils {
             case opv4:
             case yf:
             case mcv1:
+            case rubella1:
+            case menA:
                 return "9 months";
 
             case mcv2:
+            case rubella2:
                 return "15 months";
 
             case measles2:
