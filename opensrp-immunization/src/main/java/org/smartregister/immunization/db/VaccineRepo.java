@@ -22,17 +22,20 @@ public class VaccineRepo {
         ipv("IPV", null, 1830, 98, 0, "child"),
         penta3("PENTA 3", penta2, 1830, 98, 28, "child"),
         pcv3("PCV 3", pcv2, 1830, 98, 28, "child"),
+        rota3("ROTA 3", rota2, 1830, 98, 28, "child"),
 
         measles1("MEASLES 1", null, -1, 274, 0, "child"),
         mr1("MR 1", null, -1, 274, 0, "child"),
         opv4("OPV 4", null, 1830, 274, 28, "child"),
         mcv1("MCV 1", null, -1, 274, 0, "child"),
+        rubella1("Rubella 1", null, 1830, 274, 0, "child"),
         yf("Yellow Fever", null, -1, 274, 0, "child"),
+        menA("MenA", null, 1830, 274, 0, "child"),
         meningococcal("Meningococcal", null, 548, 274, 28, "child"),
 
 
         mcv2("MCV 2", mcv1, -1, 456, 183, "child"),
-
+        rubella2("Rubella 2", null, -1, 456, 183, "child"),
 
         measles2("MEASLES 2", measles1, -1, 548, 274, "child"),
         mr2("MR 2", mr1, -1, 548, 274, "child"),
