@@ -119,7 +119,7 @@ public class ServiceDialogFragment extends DialogFragment {
 
         String name = VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
         if (name.contains("Vit")) {
-          //  name = name.replace("Vit", "Vitamin");
+            //  name = name.replace("Vit", "Vitamin");
         }
         TextView serviceView = (TextView) serviceName.findViewById(R.id.service);
         serviceView.setText(name);
@@ -302,8 +302,8 @@ public class ServiceDialogFragment extends DialogFragment {
                 }
             });
 
-            Button givenToday = (Button) defaultActions.findViewById(R.id.given_today);
-            givenToday.setText(String.format(getString(R.string.given_today), tag.getName()));
+            Button givenToday = defaultActions.findViewById(R.id.given_today);
+            givenToday.setText(String.format(getString(R.string.given_today), VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
             givenToday.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -317,8 +317,8 @@ public class ServiceDialogFragment extends DialogFragment {
                 }
             });
 
-            final Button givenEarlier = (Button) defaultActions.findViewById(R.id.given_earlier);
-            givenEarlier.setText(String.format(getString(R.string.given_earlier), tag.getName()));
+            final Button givenEarlier = defaultActions.findViewById(R.id.given_earlier);
+            givenEarlier.setText(String.format(getString(R.string.given_earlier), VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
             givenEarlier.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -332,7 +332,7 @@ public class ServiceDialogFragment extends DialogFragment {
 
             updateDateRanges(givenToday, givenEarlier, set, earlierDatePicker);
 
-            Button cancel = (Button) defaultActions.findViewById(R.id.cancel);
+            Button cancel = defaultActions.findViewById(R.id.cancel);
             cancel.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
