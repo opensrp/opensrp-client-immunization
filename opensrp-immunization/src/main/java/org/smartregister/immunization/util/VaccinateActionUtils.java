@@ -294,30 +294,34 @@ public class VaccinateActionUtils {
 
 
     public static String stateKey(VaccineRepo.Vaccine vaccine) {
-
+        String key;
         switch (vaccine) {
             case opv0:
             case bcg:
-                return "at birth";
-
+            case HepB:
+                key = "at birth";
+                break;
             case opv1:
             case penta1:
             case pcv1:
             case rota1:
-                return "6 weeks";
+                key = "6 weeks";
+                break;
 
             case opv2:
             case penta2:
             case pcv2:
             case rota2:
-                return "10 weeks";
+                key = "10 weeks";
+                break;
 
             case opv3:
             case penta3:
             case pcv3:
             case ipv:
             case rota3:
-                return "14 weeks";
+                key = "14 weeks";
+                break;
 
             case measles1:
             case mr1:
@@ -326,30 +330,40 @@ public class VaccinateActionUtils {
             case mcv1:
             case rubella1:
             case menA:
-                return "9 months";
+            case meningococcal:
+                key = "9 months";
+                break;
 
             case mcv2:
             case rubella2:
-                return "15 months";
+                key = "15 months";
+                break;
 
             case measles2:
             case mr2:
-                return "18 months";
+                key = "18 months";
+                break;
             case tt1:
-                return "After LMP";
+                key = "After LMP";
+                break;
             case tt2:
-                return "4 Weeks after TT 1";
+                key = "4 Weeks after TT 1";
+                break;
             case tt3:
-                return "26 Weeks after TT 2";
+                key = "26 Weeks after TT 2";
+                break;
             case tt4:
-                return " 1 Year after  TT 3 ";
+                key = " 1 Year after  TT 3 ";
+                break;
             case tt5:
-                return " 1 Year after  TT 4 ";
+                key = " 1 Year after  TT 4 ";
+                break;
             default:
+                key = "";
                 break;
         }
 
-        return "";
+        return key;
     }
 
     public static String previousStateKey(String category, Vaccine v) {

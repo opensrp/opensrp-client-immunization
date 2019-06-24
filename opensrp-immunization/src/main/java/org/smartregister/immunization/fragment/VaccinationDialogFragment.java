@@ -35,6 +35,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -155,7 +156,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                     TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
 
                     String name = names[i].trim();
-                    vaccineView.setText(name);
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), name));
 
                     View select = vaccinationName.findViewById(R.id.select);
                     select.setVisibility(View.GONE);
@@ -188,7 +189,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
                 TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
 
-                vaccineView.setText(vName);
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vName));
 
                 View select = vaccinationName.findViewById(R.id.select);
                 select.setVisibility(View.GONE);
@@ -203,9 +204,9 @@ public class VaccinationDialogFragment extends DialogFragment {
 
                 VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
                 if (vaccineWrapper.getVaccine() != null) {
-                    vaccineView.setText(vaccine.display());
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccine.display()));
                 } else {
-                    vaccineView.setText(vaccineWrapper.getName());
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
                 }
 
                 vaccinationNameLayout.addView(vaccinationName);

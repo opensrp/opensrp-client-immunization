@@ -68,6 +68,7 @@ import org.smartregister.util.IntegerUtil;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -871,7 +872,6 @@ public class VaccinatorUtils {
         return null;
     }
 
-
     public static String getColorValue(Context cxt, AlertStatus alertStatus) {
         if (alertStatus.equals(AlertStatus.upcoming)) {
             return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_upcoming)).substring(2);
@@ -901,5 +901,42 @@ public class VaccinatorUtils {
 
         String localeFilePath = vaccines_folder + locale + "/" + file;
         return new File(localeFilePath).exists() ? localeFilePath : file;
+    }
+
+    public static String getTranslatedVaccineName(Context context, String name_) {
+        String name = name_;
+        String[] vcn = name.contains("/") ? name.split("/") : null;
+
+        if (vcn != null && vcn.length > 0) {
+            String name2 = vcn[1].trim().toLowerCase();
+            name = name2.startsWith("ipv") || name2.startsWith("mr") ? name2 : name;//To Do remove these
+        }
+        int identifier = context.getResources().getIdentifier(name.toLowerCase().replaceAll(" ", "_"), "string", context.getPackageName());
+        if (identifier > 0) {
+            name = context.getResources().getString(identifier);
+
+        } else {
+            Log.d(TAG, name_ + " is NOT in strings.xml");
+        }
+
+        return name;
+    }
+
+    public static String getTranslatedGroupName(String name) {
+        String val = name.contains(" ") ? name.substring(0, name.indexOf(" ")) : "";
+
+        if (!StringUtils.isBlank(val)) {
+            try {
+                val = name.replace(val, NumberFormat.getInstance().format(Long.valueOf(val)));
+            } catch (NumberFormatException e) {
+
+                val = name;
+            }
+
+        } else {
+            val = name;
+        }
+
+        return val;
     }
 }

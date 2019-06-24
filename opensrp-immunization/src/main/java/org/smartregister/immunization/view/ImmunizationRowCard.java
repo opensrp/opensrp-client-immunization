@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -15,6 +16,7 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.VaccinateActionUtils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -199,7 +201,15 @@ public class ImmunizationRowCard extends LinearLayout {
 
     private String getVaccineName() {
         if (vaccineWrapper != null) {
-            return vaccineWrapper.getName();
+            String name = vaccineWrapper.getName();
+
+            try {
+                name = VaccinatorUtils.getTranslatedVaccineName(context, name);
+            } catch (Exception e) {
+                Log.i(VaccineGroup.class.getCanonicalName(), e.getMessage(), e);
+            }
+
+            return name;
         }
         return null;
     }

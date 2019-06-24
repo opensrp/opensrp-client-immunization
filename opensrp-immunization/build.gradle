@@ -23,6 +23,7 @@ jacoco {
 allprojects {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
         mavenLocal()
     }
 }
@@ -86,7 +87,7 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation('org.smartregister:opensrp-client-core:1.6.27-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.37-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }

@@ -117,9 +117,9 @@ public class ServiceDialogFragment extends DialogFragment {
 
         View serviceName = inflater.inflate(R.layout.service_name, null);
 
-        String name = tag.getName();
+        String name = VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
         if (name.contains("Vit")) {
-            name = name.replace("Vit", "Vitamin");
+          //  name = name.replace("Vit", "Vitamin");
         }
         TextView serviceView = (TextView) serviceName.findViewById(R.id.service);
         serviceView.setText(name);
