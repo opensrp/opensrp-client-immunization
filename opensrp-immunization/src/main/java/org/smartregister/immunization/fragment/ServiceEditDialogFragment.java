@@ -109,7 +109,9 @@ public class ServiceEditDialogFragment extends DialogFragment {
         View vaccinationName = inflater.inflate(R.layout.vaccination_name_edit_dialog, null);
         TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
 
-        vaccineView.setText(tag.getName());
+
+        String name =VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
+        vaccineView.setText(name);
         vaccinationNameLayout.addView(vaccinationName);
 
 

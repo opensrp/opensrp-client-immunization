@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,8 +16,9 @@ import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
-import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.domain.State;
+import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
@@ -223,10 +225,15 @@ public class ServiceCard extends LinearLayout {
     }
 
     private String getServiceName() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getName();
+        String name = serviceWrapper.getName();
+
+        try {
+            name = VaccinatorUtils.getTranslatedVaccineName(context, name);
+        } catch (Exception e) {
+            Log.i(VaccineGroup.class.getCanonicalName(), e.getMessage(), e);
         }
-        return null;
+
+        return name;
     }
 
     private Date getDateDue() {

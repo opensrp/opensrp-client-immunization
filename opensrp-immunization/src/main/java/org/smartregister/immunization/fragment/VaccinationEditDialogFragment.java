@@ -33,6 +33,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -130,9 +131,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             VaccineWrapper vaccineWrapper = tags.get(0);
             VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
             if (vaccine != null) {
-                vaccineView.setText(vaccine.display());
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccine.display()));
             } else {
-                vaccineView.setText(vaccineWrapper.getName());
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccineWrapper.getName()));
             }
             ImageView select = (ImageView) vaccinationName.findViewById(R.id.imageView);
 //            select.setVisibility(View.GONE);
@@ -146,9 +147,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
 
                 VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
                 if (vaccineWrapper.getVaccine() != null) {
-                    vaccineView.setText(vaccine.display());
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccine.display()));
                 } else {
-                    vaccineView.setText(vaccineWrapper.getName());
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccineWrapper.getName()));
                 }
 
                 vaccinationNameLayout.addView(vaccinationName);

@@ -21,6 +21,7 @@ import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -28,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,7 +49,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
-    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
+    private SimpleDateFormat READABLE_DATE_FORMAT;
     private boolean modalOpen;
     private String type;
 
@@ -108,6 +108,9 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
+
+        READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy");
+
         nameTV = findViewById(R.id.name_tv);
         vaccinesGV = findViewById(R.id.vaccines_gv);
         vaccinesGV.setExpanded(true);
@@ -171,11 +174,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private void updateStatusViews() {
         switch (this.groupState) {
             case IN_PAST:
-                nameTV.setText(vaccineData.name);
+                nameTV.setText(VaccinatorUtils.getTranslatedGroupName(vaccineData.name));
                 break;
             case CURRENT:
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        vaccineData.name, context.getString(R.string.today)));
+                        VaccinatorUtils.getTranslatedGroupName(vaccineData.name), context.getString(R.string.today)));
                 break;
             case IN_FUTURE:
                 String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
@@ -184,7 +187,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                 dobCalender.setTime(dateTime.toDate());
                 dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        vaccineData.name,
+                        VaccinatorUtils.getTranslatedGroupName(vaccineData.name),
                         READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                 break;
             default:

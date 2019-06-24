@@ -146,5 +146,16 @@ This section will provide a brief description how to build and install the appli
 
 1. Import the project into Android Studio by: **Import a gradle project** option
    _All the plugins required are explicitly stated, therefore it can work with any Android Studio version - Just enable it to download any packages not available offline_
-1. Open Genymotion and Run the Virtual Device created previously.
-1. Run the app on Android Studio and chose the Genymotion Emulator as the ` Deployment Target`
+2. Open Genymotion and Run the Virtual Device created previously.
+3. Run the app on Android Studio and chose the Genymotion Emulator as the ` Deployment Target`
+
+## Multi Language Support
+
+The library supports translated vaccines e.g. in Arabic `OPV 0` is called `الشلل فموي ۰`
+In order to use this in your implementation,
+
+1. Create translations the corresponding string.xml files
+2. The key of the resource identifier should be the english key(vaccine name) used in the vaccine configuration for that vaccine converted to lowercase
+3. For the vaccines with spaces, replace with underscore.
+
+Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in the `strings.xml` resource file

@@ -24,6 +24,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -80,9 +81,11 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
         TextView vaccineView = (TextView) dialogView.findViewById(R.id.vaccine);
         VaccineRepo.Vaccine vaccine = tag.getVaccine();
         if (vaccine != null) {
-            vaccineView.setText(tag.getVaccine().display());
+            vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getVaccine().display()));
         } else {
-            vaccineView.setText(tag.getName());
+
+            String name = VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
+            vaccineView.setText(name);
         }
 
 
