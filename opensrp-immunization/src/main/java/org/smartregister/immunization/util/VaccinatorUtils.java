@@ -903,25 +903,46 @@ public class VaccinatorUtils {
         return new File(localeFilePath).exists() ? localeFilePath : file;
     }
 
+    /**
+     * @param context Context
+     * @param name_   vaccine name to translate
+     * @return translated value
+     */
     public static String getTranslatedVaccineName(Context context, String name_) {
         String name = name_;
         String[] vcn = name.contains("/") ? name.split("/") : null;
 
-        if (vcn != null && vcn.length > 0) {
-            String name2 = vcn[1].trim().toLowerCase();
-            name = name2.startsWith("ipv") || name2.startsWith("mr") ? name2 : name;//To Do remove these
-        }
-        int identifier = context.getResources().getIdentifier(name.toLowerCase().replaceAll(" ", "_"), "string", context.getPackageName());
-        if (identifier > 0) {
-            name = context.getResources().getString(identifier);
+        if (vcn != null && vcn.length > 1) {
+
+            name = translate(context, vcn[0]) + " / " + translate(context, vcn[1]);
 
         } else {
-            Log.d(TAG, name_ + " is NOT in strings.xml");
+            name = translate(context, name);
         }
+
 
         return name;
     }
 
+    /**
+     * @param context     Context
+     * @param vaccineName vaccine name which is converted to a string key/identifier in strings xml of string to translate
+     * @return translated value
+     */
+    public static String translate(Context context, String vaccineName) {
+        String resourceIdentifierKey = vaccineName;
+        int identifier = context.getResources().getIdentifier(resourceIdentifierKey.trim().toLowerCase().replaceAll(" ", "_"), "string", context.getPackageName());
+        if (identifier > 0) {
+            resourceIdentifierKey = context.getResources().getString(identifier);
+
+        }
+        return resourceIdentifierKey;
+    }
+
+    /**
+     * @param name Group name to translate
+     * @return translated group name
+     */
     public static String getTranslatedGroupName(String name) {
         String val = name.contains(" ") ? name.substring(0, name.indexOf(" ")) : "";
 

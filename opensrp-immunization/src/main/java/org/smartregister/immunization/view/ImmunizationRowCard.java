@@ -26,7 +26,7 @@ import java.util.Date;
  */
 
 public class ImmunizationRowCard extends LinearLayout {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    private static SimpleDateFormat DATE_FORMAT;
     private Context context;
     private Button statusIV;
     private TextView nameTV;
@@ -68,10 +68,11 @@ public class ImmunizationRowCard extends LinearLayout {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
-        statusIV = (Button) findViewById(R.id.status_iv);
-        StatusTV = (TextView) findViewById(R.id.status_text_tv);
-        nameTV = (TextView) findViewById(R.id.name_tv);
-        undoB = (Button) findViewById(R.id.undo_b);
+        statusIV = findViewById(R.id.status_iv);
+        StatusTV = findViewById(R.id.status_text_tv);
+        nameTV = findViewById(R.id.name_tv);
+        undoB = findViewById(R.id.undo_b);
+        DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     }
 
     public void setVaccineWrapper(VaccineWrapper vaccineWrapper) {

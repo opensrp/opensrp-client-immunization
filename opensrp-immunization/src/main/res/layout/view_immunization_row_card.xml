@@ -19,6 +19,7 @@
             android:background="@null"
             android:minWidth="@dimen/immunization_row_name_view_width"
             android:paddingStart="@dimen/immunization_row_name_view_padding_left"
+            android:paddingEnd="@dimen/immunization_row_name_view_padding_left"
             android:textColor="@color/text_black"
             android:textSize="@dimen/immunization_row_name_view_text_size" />
 
@@ -45,6 +46,7 @@
             android:layout_marginStart="@dimen/date_view_margin_left"
             android:layout_marginEnd="@dimen/date_view_margin_right"
             android:background="@null"
+            android:paddingStart="@dimen/date_view_padding_right"
             android:paddingEnd="@dimen/date_view_padding_right"
             android:textColor="@color/text_black"
             android:textSize="@dimen/immunization_row_date_view_text_size" />
