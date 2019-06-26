@@ -257,6 +257,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void testTranlslateGroupNameInvokesCorrectApiMethods() {
 
         android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(Utils.class);
+        PowerMockito.when(context.getResources()).thenReturn(resources);
+        PowerMockito.when(resources.getString(123)).thenReturn(TRANSLATED);
+        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(123);
 
         VaccineGroup vaccineGroup = new VaccineGroup();
         vaccineGroup.name = UNTRANSLATED_GROUP_NAME;
