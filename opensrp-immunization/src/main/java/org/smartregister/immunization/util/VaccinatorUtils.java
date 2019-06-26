@@ -66,15 +66,14 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.IntegerUtil;
 
-import java.io.File;
 import java.lang.reflect.Type;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.smartregister.immunization.R.id.vaccine;
@@ -334,7 +333,7 @@ public class VaccinatorUtils {
             ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
             for (Vaccine v : vl) {
                 Map<String, Object> m = new HashMap<>();
-                Date recDate = received.get(v.display().toLowerCase());
+                Date recDate = received.get(v.display().toLowerCase(Locale.ENGLISH));
                 if (recDate != null) {
                     m = createVaccineMap("done", null, new DateTime(recDate), v);
                     // Check for vaccines where either can be given - mealses/mr opv0/opv4
@@ -358,7 +357,7 @@ public class VaccinatorUtils {
 
                 if (m.isEmpty()) {
                     if (v.prerequisite() != null) {
-                        Date prereq = received.get(v.prerequisite().display().toLowerCase());
+                        Date prereq = received.get(v.prerequisite().display().toLowerCase(Locale.ENGLISH));
                         if (prereq != null) {
                             DateTime prereqDateTime = new DateTime(prereq);
                             prereqDateTime = prereqDateTime.plusDays(v.prerequisiteGapDays());
@@ -887,20 +886,11 @@ public class VaccinatorUtils {
     }
 
     public static String getFileName(String fileName, String prefix) {
-
-        String file;
-
         if (prefix != null) {
-            file = prefix + "_" + fileName;
+            return prefix + "_" + fileName;
         } else {
-            file = fileName;
+            return fileName;
         }
-
-        String locale = ImmunizationLibrary.getInstance().getLocale().getLanguage();
-        locale = locale.equalsIgnoreCase("en") ? "" : "-" + locale;
-
-        String localeFilePath = vaccines_folder + locale + "/" + file;
-        return new File(localeFilePath).exists() ? localeFilePath : file;
     }
 
     /**
@@ -931,7 +921,7 @@ public class VaccinatorUtils {
      */
     public static String translate(Context context, String vaccineName) {
         String resourceIdentifierKey = vaccineName;
-        int identifier = context.getResources().getIdentifier(resourceIdentifierKey.trim().toLowerCase().replaceAll(" ", "_"), "string", context.getPackageName());
+        int identifier = context.getResources().getIdentifier(resourceIdentifierKey.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), "string", context.getPackageName());
         if (identifier > 0) {
             resourceIdentifierKey = context.getResources().getString(identifier);
 
@@ -940,24 +930,15 @@ public class VaccinatorUtils {
     }
 
     /**
-     * @param name Group name to translate
+     * @param vaccineGroup Vaccine Group object with name to translate
      * @return translated group name
      */
-    public static String getTranslatedGroupName(String name) {
-        String val = name.contains(" ") ? name.substring(0, name.indexOf(" ")) : "";
+    public static String getTranslatedGroupName(Context context, VaccineGroup vaccineGroup) {
 
-        if (!StringUtils.isBlank(val)) {
-            try {
-                val = name.replace(val, NumberFormat.getInstance().format(Long.valueOf(val)));
-            } catch (NumberFormatException e) {
+        String translation = translate(context, vaccineGroup.id.toLowerCase(Locale.ENGLISH));
 
-                val = name;
-            }
+        //Check if translated otherwise return original
+        return vaccineGroup.id.equals(translation) ? vaccineGroup.name : translation;
 
-        } else {
-            val = name;
-        }
-
-        return val;
     }
 }

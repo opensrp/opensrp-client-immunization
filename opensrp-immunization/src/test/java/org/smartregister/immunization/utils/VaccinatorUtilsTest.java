@@ -256,9 +256,15 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void testTranlslateGroupNameInvokesCorrectApiMethods() {
 
-        String translated = VaccinatorUtils.getTranslatedGroupName(UNTRANSLATED_GROUP_NAME);
-        Assert.assertEquals(UNTRANSLATED_GROUP_NAME, translated);//Default on error
+        android.content.Context context = Mockito.mock(android.content.Context.class);
 
+        VaccineGroup vaccineGroup = new VaccineGroup();
+        vaccineGroup.name = UNTRANSLATED_GROUP_NAME;
+        vaccineGroup.id = UNTRANSLATED_GROUP_NAME;
+
+        String translated = VaccinatorUtils.getTranslatedGroupName(context, vaccineGroup);
+
+        Assert.assertEquals(UNTRANSLATED_GROUP_NAME, translated);//Default on error
 
         Assert.assertEquals(TRANSLATED_GROUP_NAME, translated);
     }

@@ -49,5 +49,33 @@
     <string name="make_active">Activer</string>
 
 
+    <!-- Immunization Names-->
+    <string name="bcg">BCG</string>
+    <string name="hepb">HepB à la naissance</string>
+    <string name="opv_0">Polio Oral 0</string>
+    <string name="opv_1">Polio Oral 1</string>
+    <string name="pcv_1">Pneumo 1</string>
+    <string name="penta_1">Penta 1</string>
+    <string name="rota_1">Rota virus 1</string>
+    <string name="opv_2">Polio Oral 2</string>
+    <string name="pcv_2">Pneumo 2</string>
+    <string name="penta_2">Penta 2</string>
+    <string name="rota_2">Rota virus 2</string>
+    <string name="opv_3">Polio Oral 3</string>
+    <string name="ipv">Polio Injectable</string>
+    <string name="pcv_3">Pneumo 3</string>
+    <string name="penta_3">Penta 3</string>
+    <string name="meningococcal">Men A</string>
+    <string name="yellow_fever">F. Jaune (VAA)</string>
+    <string name="mr_1">RR 1</string>
+    <string name="mr_2">RR 2</string>
+    <string name="vit_a_1">Vit A 6 Mois</string>
+    <string name="vit_a_2">Vit A 12 Mois</string>
+    <string name="six_wks">6 semaines</string>
+    <string name="ten_wks">10 semaines</string>
+    <string name="fourteen_weeks">14 semaines</string>
+    <string name="nine_months">9 mois</string>
+    <string name="eighteen_months">18 mois</string>
+
 
 </resources>
