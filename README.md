@@ -161,8 +161,11 @@ In order to use this in your implementation,
 3. For the vaccines with spaces, replace with underscore.
 
 Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in the _strings.xml_ resource file
-        English `<string name="opv_1">OPV</string>`
-        French `<string name="opv_1">VPO</string>`
+
+ ```
+           English <string name="opv_1">OPV</string>
+           French <string name="opv_1">VPO</string>
+ ```
 
 ### Vaccine Groups
 
@@ -175,5 +178,7 @@ The reason for this is that the groups usually begin with a digit. Keys which st
 
 Example: `6 Weeks` group name has an id `Six_Wks` thus the key in _strings.xml_ should be `six_wks`.
 
-        English `<string name="six_weeks">6 weeks</string>`
-        French `<string name="six_wks">6 semaines</string>`
+```
+        English <string name="six_weeks">6 weeks</string>
+        French <string name="six_wks">6 semaines</string>
+```
