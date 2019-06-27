@@ -1,7 +1,5 @@
 package org.smartregister.immunization;
 
-import android.util.Log;
-
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -9,7 +7,6 @@ import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
-import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AssetHandler;
@@ -64,19 +61,7 @@ public class ImmunizationLibrary {
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
-        String locale = context.applicationContext().getResources().getConfiguration().locale.getLanguage();
-        locale = locale.equalsIgnoreCase("en") ? "" : "-" + locale;
-
-        String filePathName = VaccinatorUtils.vaccines_folder + locale + "/" + fileName;
-
-        T res = AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), filePathName, clazz, type);
-        if (res == null) {
-            Log.d("ISNULL", "yeah");
-            //  file for the language not found, defaulting to english language
-            res = AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
-            return res;
-        }
-        return res;
+        return AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
     }
 
     public Repository getRepository() {

@@ -48,4 +48,34 @@
     <string name="activate_child_status_dialog_message">Making the child active will resume the service schedules and lets you record services.</string>
     <string name="make_active">Make Active</string>
 
+    <!-- Immunization Names-->
+    <string name="bcg">BCG</string>
+    <string name="hepb">HepB</string>
+    <string name="opv_0">OPV 0</string>
+    <string name="opv_1">OPV 1</string>
+    <string name="pcv_1">PCV 1</string>
+    <string name="penta_1">Penta 1</string>
+    <string name="rota_1">Rota 1</string>
+    <string name="opv_2">OPV 2</string>
+    <string name="pcv_2">PCV 2</string>
+    <string name="penta_2">Penta 2</string>
+    <string name="rota_2">Rota 2</string>
+    <string name="opv_3">OPV 3</string>
+    <string name="ipv">IPV</string>
+    <string name="pcv_3">PCV 3</string>
+    <string name="penta_3">Penta 3</string>
+    <string name="meningococcal">Meningococcal</string>
+    <string name="yellow_fever">Yellow Fever</string>
+    <string name="mr_1">MR 1</string>
+    <string name="mr_2">MR 2</string>
+    <string name="vit_a_1">Vit A 6 Months</string>
+    <string name="vit_a_2">Vit A 12 Months</string>
+
+    <string name="six_wks">6 Weeks</string>
+    <string name="ten_wks">10 Weeks</string>
+    <string name="fourteen_weeks">14 Weeks</string>
+    <string name="nine_months">9 Months</string>
+    <string name="eighteen_months">18 Months</string>
+
+
 </resources>
