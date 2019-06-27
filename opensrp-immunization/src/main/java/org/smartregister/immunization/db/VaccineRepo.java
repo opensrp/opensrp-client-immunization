@@ -18,6 +18,12 @@ public class VaccineRepo {
         pcv2("PCV 2", pcv1, 1799, 70, 28, "child"),
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
 
+
+        mv1("MV 1", null, 304, 152, 0, "child"),
+        mv2("MV 2", null, 608, 183, 0, "child"),
+        mv3("MV 3", null, 639, 213, 0, "child"),
+        mv4("MV 4", null, 1095, 669, 0, "child"),
+
         opv3("OPV 3", opv2, 1830, 98, 28, "child"),
         ipv("IPV", null, 1830, 98, 0, "child"),
         penta3("PENTA 3", penta2, 1830, 98, 28, "child"),
