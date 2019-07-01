@@ -23,6 +23,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.listener.ServiceActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -75,7 +76,8 @@ public class UndoServiceDialogFragment extends DialogFragment {
         numberView.setText(tag.getPatientNumber());
 
         TextView textView = (TextView) dialogView.findViewById(R.id.vaccine);
-        textView.setText(tag.getName());
+        String name = VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
+        textView.setText(name);
 
 
         if (tag.getId() != null) {

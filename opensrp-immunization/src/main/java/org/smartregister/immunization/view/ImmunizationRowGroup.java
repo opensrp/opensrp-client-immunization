@@ -279,7 +279,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         if (vaccineCardAdapter != null) {
             return vaccineCardAdapter.getDueVaccines();
         }
-        return new ArrayList<VaccineWrapper>();
+        return new ArrayList<>();
     }
 
     public List<Vaccine> getVaccineList() {

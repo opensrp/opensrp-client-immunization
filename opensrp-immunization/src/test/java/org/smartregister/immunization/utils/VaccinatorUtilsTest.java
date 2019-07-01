@@ -66,9 +66,18 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Mock
     private VaccinatorUtils vaccinatorUtils;
 
+    @Mock
+    private Resources resources;
+
     private final int magicColor = 255;
     private final String magicOPV0 = "OPV 0";
     private final String magicNULL = "NULL";
+    private final String UNTRANSLATED = "translate";
+    private final String TRANSLATED = "tafsiri";
+    private final int RESOURCE_ID = 123456;
+
+    private final String UNTRANSLATED_GROUP_NAME = "6 weeks";
+    private final String TRANSLATED_GROUP_NAME = "6 weeks";
 
     @Before
     public void setUp() {
@@ -211,4 +220,47 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
         Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context), ServiceData.recurringservice);
     }
+
+    @Test
+    public void testTranslateNameInvokesCorrectApiMethods() {
+
+        android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(Utils.class);
+        PowerMockito.when(context.getResources()).thenReturn(resources);
+        PowerMockito.when(resources.getString(RESOURCE_ID)).thenReturn(TRANSLATED);
+        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(RESOURCE_ID);
+
+        String translated = VaccinatorUtils.translate(context, UNTRANSLATED);
+
+        Assert.assertEquals(TRANSLATED, translated);
+    }
+
+    @Test
+    public void testGetTranslatedVaccineName() {
+
+        android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(Utils.class);
+        PowerMockito.when(context.getResources()).thenReturn(resources);
+        PowerMockito.when(resources.getString(123)).thenReturn(TRANSLATED);
+        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(123);
+
+        String translated = VaccinatorUtils.getTranslatedVaccineName(context, UNTRANSLATED);
+        Assert.assertEquals(TRANSLATED, translated);
+
+        //Combo Vaccines
+        translated = VaccinatorUtils.getTranslatedVaccineName(context, UNTRANSLATED + " / " + UNTRANSLATED);
+        Assert.assertEquals(TRANSLATED + " / " + TRANSLATED, translated);
+
+    }
+
+    @Test
+    public void testTranlslateGroupNameInvokesCorrectApiMethods() {
+
+        String translated = VaccinatorUtils.getTranslatedGroupName(UNTRANSLATED_GROUP_NAME);
+        Assert.assertEquals(UNTRANSLATED_GROUP_NAME, translated);//Default on error
+
+
+        Assert.assertEquals(TRANSLATED_GROUP_NAME, translated);
+    }
+
 }
