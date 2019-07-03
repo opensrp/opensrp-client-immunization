@@ -107,13 +107,13 @@ public class ServiceDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.service_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tag.getPatientNumber());
 
         // service name
-        final LinearLayout nameLayout = (LinearLayout) dialogView.findViewById(R.id.service_name_layout);
+        final LinearLayout nameLayout = dialogView.findViewById(R.id.service_name_layout);
 
         View serviceName = inflater.inflate(R.layout.service_name, null);
 
@@ -121,10 +121,10 @@ public class ServiceDialogFragment extends DialogFragment {
         if (name.contains("Vit")) {
             //  name = name.replace("Vit", "Vitamin");
         }
-        TextView serviceView = (TextView) serviceName.findViewById(R.id.service);
+        TextView serviceView = serviceName.findViewById(R.id.service);
         serviceView.setText(name);
 
-        TextView unitsView = (TextView) serviceName.findViewById(R.id.units);
+        TextView unitsView = serviceName.findViewById(R.id.units);
         unitsView.setVisibility(View.GONE);
         if (StringUtils.isNotBlank(tag.getUnits())) {
             unitsView.setText(tag.getUnits());
@@ -135,16 +135,16 @@ public class ServiceDialogFragment extends DialogFragment {
 
         // image view
         if (tag.getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tag.getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tag.getId());
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()), ImageUtils.profileImageResourceByGender(tag.getGender())));
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader.getStaticImageListener(mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()), ImageUtils.profileImageResourceByGender(tag.getGender())));
             }
         }
 
         String color = tag.getColor();
-        Button status = (Button) dialogView.findViewById(R.id.status);
+        Button status = dialogView.findViewById(R.id.status);
         if (status != null) {
             status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         }
@@ -169,7 +169,7 @@ public class ServiceDialogFragment extends DialogFragment {
             step3.setVisibility(View.GONE);
 
             // step 1
-            Button yes1 = (Button) step1.findViewById(R.id.yes_1);
+            Button yes1 = step1.findViewById(R.id.yes_1);
             yes1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -181,7 +181,7 @@ public class ServiceDialogFragment extends DialogFragment {
             });
 
 
-            Button no1 = (Button) step1.findViewById(R.id.no_1);
+            Button no1 = step1.findViewById(R.id.no_1);
             no1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -192,7 +192,7 @@ public class ServiceDialogFragment extends DialogFragment {
                 }
             });
 
-            Button cancel1 = (Button) step1.findViewById(R.id.cancel_1);
+            Button cancel1 = step1.findViewById(R.id.cancel_1);
             cancel1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -201,10 +201,10 @@ public class ServiceDialogFragment extends DialogFragment {
             });
 
             // step 2
-            final DatePicker itnDatePicker = (DatePicker) step2.findViewById(R.id.itn_date_picker);
+            final DatePicker itnDatePicker = step2.findViewById(R.id.itn_date_picker);
             DatePickerUtils.themeDatePicker(itnDatePicker, new char[]{'d', 'm', 'y'});
 
-            Button recordItn = (Button) step2.findViewById(R.id.record_itn);
+            Button recordItn = step2.findViewById(R.id.record_itn);
             recordItn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,7 +225,7 @@ public class ServiceDialogFragment extends DialogFragment {
             });
 
 
-            Button goBack2 = (Button) step2.findViewById(R.id.go_back_2);
+            Button goBack2 = step2.findViewById(R.id.go_back_2);
             goBack2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,7 +237,7 @@ public class ServiceDialogFragment extends DialogFragment {
             });
 
             // step 3
-            Button yes3 = (Button) step3.findViewById(R.id.yes_3);
+            Button yes3 = step3.findViewById(R.id.yes_3);
             yes3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -252,7 +252,7 @@ public class ServiceDialogFragment extends DialogFragment {
                 }
             });
 
-            Button no_3 = (Button) step3.findViewById(R.id.no_3);
+            Button no_3 = step3.findViewById(R.id.no_3);
             no_3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -263,7 +263,7 @@ public class ServiceDialogFragment extends DialogFragment {
                 }
             });
 
-            Button goBack3 = (Button) step3.findViewById(R.id.go_back_3);
+            Button goBack3 = step3.findViewById(R.id.go_back_3);
             goBack3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -280,9 +280,9 @@ public class ServiceDialogFragment extends DialogFragment {
         } else {
             defaultActions.setVisibility(View.VISIBLE);
 
-            final DatePicker earlierDatePicker = (DatePicker) defaultActions.findViewById(R.id.earlier_date_picker);
+            final DatePicker earlierDatePicker = defaultActions.findViewById(R.id.earlier_date_picker);
 
-            final Button set = (Button) defaultActions.findViewById(R.id.set);
+            final Button set = defaultActions.findViewById(R.id.set);
             set.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

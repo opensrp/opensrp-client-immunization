@@ -1,5 +1,8 @@
 package org.smartregister.immunization.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.util.Log;
 
@@ -38,7 +41,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     private org.smartregister.Context context_;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, VaccinationDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
@@ -82,4 +85,16 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), true));
     }
 
+    @Test
+    public void testCreatingFragment() {
+        VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>());
+        startFragment(vaccinationDialogFragment);
+    }
+
+    private void startFragment( Fragment fragment ) {
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(fragment, null );
+        fragmentTransaction.commit();
+    }
 }
