@@ -53,19 +53,19 @@ public class VaccineGroupTest extends BaseUnitTest {
     private final String magicDate = "1985-07-24T00:00:00.000Z";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         view = new VaccineGroup(RuntimeEnvironment.application);
     }
 
     @Test
-    public void assertGetAlertListNotNull() throws Exception {
+    public void assertGetAlertListNotNull() {
         view.setAlertList(new ArrayList<Alert>());
         Assert.assertNotNull(view.getAlertList());
     }
 
     @Test
-    public void assertGetVaccineListNotNull() throws Exception {
+    public void assertGetVaccineListNotNull() {
         view.setVaccineList(new ArrayList<Vaccine>());
         Assert.assertNotNull(view.getVaccineList());
     }
@@ -123,7 +123,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         VaccineGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(VaccineGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
-        view.onClick((android.widget.TextView) view.findViewById(R.id.record_all_tv));
+        view.onClick(view.findViewById(R.id.record_all_tv));
         Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
@@ -207,15 +207,15 @@ public class VaccineGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertIsModalOpenReturnsBoolean() throws Exception {
+    public void assertIsModalOpenReturnsBoolean() {
         view.setModalOpen(true);
         Assert.assertEquals(view.isModalOpen(), true);
         view.setModalOpen(false);
         Assert.assertEquals(view.isModalOpen(), false);
     }
 
-    public void setDataForTest(String dateTimeString) throws Exception {
-        wrappers = new ArrayList<VaccineWrapper>();
+    public void setDataForTest(String dateTimeString) {
+        wrappers = new ArrayList<>();
         wrapper = new VaccineWrapper();
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
@@ -242,7 +242,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
-        vaccinelist = new ArrayList<Vaccine>();
+        vaccinelist = new ArrayList<>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
@@ -250,7 +250,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        alertlist = new ArrayList<Alert>();
+        alertlist = new ArrayList<>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist, "mother");
         view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");

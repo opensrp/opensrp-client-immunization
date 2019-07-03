@@ -72,7 +72,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     private ImmunizationRowGroupTestActivity activity;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, ImmunizationRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ImmunizationRowGroupTestActivity.class, intent);
@@ -84,43 +84,43 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetAlertListNotNull() throws Exception {
+    public void assertGetAlertListNotNull() {
         view.setAlertList(new ArrayList<Alert>());
         Assert.assertNotNull(view.getAlertList());
     }
 
     @Test
-    public void assertGetVaccineListNotNull() throws Exception {
+    public void assertGetVaccineListNotNull() {
         view.setVaccineList(new ArrayList<Vaccine>());
         Assert.assertNotNull(view.getVaccineList());
     }
 
     @Test
-    public void assertEqualsVaccineData() throws Exception {
+    public void assertEqualsVaccineData() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineData(), vaccineData);
     }
 
     @Test
-    public void assertEqualsChildDetails() throws Exception {
+    public void assertEqualsChildDetails() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getChildDetails(), childdetails);
     }
 
     @Test
-    public void assertEqualsVaccineList() throws Exception {
+    public void assertEqualsVaccineList() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineList(), vaccinelist);
     }
 
     @Test
-    public void assertEqualsAlertList() throws Exception {
+    public void assertEqualsAlertList() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getAlertList(), alertlist);
     }
 
     @Test
-    public void assertUpdateViewsWithDifferentTimeWillSetVaccineAdapter() throws Exception {
+    public void assertUpdateViewsWithDifferentTimeWillSetVaccineAdapter() {
         Assert.assertEquals(view.getDueVaccines().size(), 0);
 
         setDataForTest(magicDate);
@@ -137,7 +137,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() throws Exception {
+    public void assertOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() {
 
         setDataForTest(magicDate);
         view.updateViews();
@@ -147,7 +147,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
-        view.onClick((android.widget.TextView) view.findViewById(R.id.record_all_tv));
+        view.onClick(view.findViewById(R.id.record_all_tv));
         Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
@@ -229,7 +229,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
-        view.onClick((android.widget.TextView) view.findViewById(R.id.record_all_tv));
+        view.onClick(view.findViewById(R.id.record_all_tv));
         Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class), org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
@@ -274,7 +274,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
+    public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() {
         setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers);
         wrapper = new VaccineWrapper();
@@ -307,8 +307,8 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 //        Assert.assertNotNull(view.getAllVaccineWrappers());
 //    }
 
-    public void setDataForTest(String dateTimeString) throws Exception {
-        wrappers = new ArrayList<VaccineWrapper>();
+    public void setDataForTest(String dateTimeString) {
+        wrappers = new ArrayList<>();
         wrapper = new VaccineWrapper();
         wrapper.setDbKey(0l);
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
@@ -336,7 +336,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
-        vaccinelist = new ArrayList<Vaccine>();
+        vaccinelist = new ArrayList<>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
@@ -344,7 +344,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        alertlist = new ArrayList<Alert>();
+        alertlist = new ArrayList<>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist);
     }
