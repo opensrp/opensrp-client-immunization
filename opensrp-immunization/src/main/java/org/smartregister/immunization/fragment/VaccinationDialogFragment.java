@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -139,7 +140,7 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         if (tags.size() == 1) {
 
-            String vName = "";
+            String vName;
             VaccineWrapper vaccineWrapper = tags.get(0);
             VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
             if (vaccine != null) {
@@ -235,6 +236,41 @@ public class VaccinationDialogFragment extends DialogFragment {
                     }
                 });
             }
+
+            // handle for when actual checkbox is clicked
+            for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                final View chilView = vaccinationNameLayout.getChildAt(i);
+                CheckBox childSelect = chilView.findViewById(R.id.select);
+
+                childSelect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (chilView.getTag(R.id.not_give_condition_id) != null) {
+                            View chilView2 = vaccinationNameLayout.findViewWithTag(chilView.getTag(R.id.not_give_condition_id));
+                            if (chilView2 != null) {
+                                CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                                childSelect2.setChecked(!((CompoundButton) v).isChecked());
+                            }
+                        }
+                    }
+                });
+            }
+
+            //uncheck mutually exclusive vaccines on starting up
+            for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                final View chilView = vaccinationNameLayout.getChildAt(i);
+                CheckBox childSelect = chilView.findViewById(R.id.select);
+
+                if (chilView.getTag(R.id.not_give_condition_id) != null) {
+                    View chilView2 = vaccinationNameLayout.findViewWithTag(chilView.getTag(R.id.not_give_condition_id));
+                    if (chilView2 != null) {
+                        CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                        childSelect2.setChecked(!childSelect.isChecked());
+                    }
+                }
+            }
+
+
 
             Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
             vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
