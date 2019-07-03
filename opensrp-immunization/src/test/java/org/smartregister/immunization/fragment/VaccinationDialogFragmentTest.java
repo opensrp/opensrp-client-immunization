@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -89,6 +91,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     public void testCreatingFragment() {
         VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>());
         startFragment(vaccinationDialogFragment);
+        assertEquals(activity.getFragmentManager().getFragments().size(), 4);
     }
 
     private void startFragment( Fragment fragment ) {
