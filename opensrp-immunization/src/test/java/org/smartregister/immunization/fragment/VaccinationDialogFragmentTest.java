@@ -1,8 +1,5 @@
 package org.smartregister.immunization.fragment;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.util.Log;
 
@@ -25,8 +22,6 @@ import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTes
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created by onaio on 30/08/2017.

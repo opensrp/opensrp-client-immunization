@@ -78,13 +78,13 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
-        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
+        junit.framework.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
     }
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() {
 
-        org.junit.Assert.assertEquals(2, vaccineCardAdapter.getCount());
+        junit.framework.Assert.assertEquals(2, vaccineCardAdapter.getCount());
 
         //should return null
         junit.framework.Assert.assertNull(vaccineCardAdapter.getItem(0));
@@ -164,25 +164,25 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     @Test
     public void testGetDueVaccines() {
         ArrayList<VaccineWrapper> dueVaccines = vaccineCardAdapter.getDueVaccines();
-        org.junit.Assert.assertEquals(0, dueVaccines.size());
+        junit.framework.Assert.assertEquals(0, dueVaccines.size());
     }
 
     @Test
     public void testGetAllVaccineWrappers() {
         ArrayList<VaccineWrapper> vaccineWrappers = vaccineCardAdapter.getAllVaccineWrappers();
-        org.junit.Assert.assertEquals(0, vaccineWrappers.size());
+        junit.framework.Assert.assertEquals(0, vaccineWrappers.size());
     }
 
     @Test
     public void testGetVaccineList() {
         List<Vaccine> vaccineList =  vaccineCardAdapter.getVaccineList();
-        org.junit.Assert.assertEquals(0, vaccineList.size());
+        junit.framework.Assert.assertEquals(0, vaccineList.size());
     }
 
     @Test
     public void testGetAlertList() {
         List<Alert> alerts = vaccineCardAdapter.getAlertList();
-        org.junit.Assert.assertEquals(0, alerts.size());
+        junit.framework.Assert.assertEquals(0, alerts.size());
     }
 
 }
