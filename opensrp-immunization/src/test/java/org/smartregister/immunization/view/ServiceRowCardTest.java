@@ -73,7 +73,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
     private final String magicExpired = "expired";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowCardTestActivity.class, intent);
@@ -105,7 +105,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
+    public void assertgetStateCallsUpdateStateReturnsWrapperState() {
         Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
         wrapper.setSynced(true);

@@ -291,7 +291,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertIsModalOpenReturnsBoolean() throws Exception {
+    public void assertIsModalOpenReturnsBoolean() {
         view.setModalOpen(true);
         Assert.assertEquals(view.isModalOpen(), true);
         view.setModalOpen(false);
@@ -329,7 +329,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
         vaccineData = vaccines.get(0);
-        HashMap<String, String> detail = new HashMap<String, String>();
+        HashMap<String, String> detail = new HashMap<>();
         detail.put("dob", dateTimeString);
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);

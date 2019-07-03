@@ -71,31 +71,31 @@ public class VaccineGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertEqualsVaccineData() throws Exception {
+    public void assertEqualsVaccineData() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineData(), vaccineData);
     }
 
     @Test
-    public void assertEqualsChildDetails() throws Exception {
+    public void assertEqualsChildDetails() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getChildDetails(), childdetails);
     }
 
     @Test
-    public void assertEqualsVaccineList() throws Exception {
+    public void assertEqualsVaccineList() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineList(), vaccinelist);
     }
 
     @Test
-    public void assertEqualsAlertList() throws Exception {
+    public void assertEqualsAlertList() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getAlertList(), alertlist);
     }
 
     @Test
-    public void assertUpdateViewsWithDifferentTimeWillSetVaccineAdapter() throws Exception {
+    public void assertUpdateViewsWithDifferentTimeWillSetVaccineAdapter() {
         Assert.assertEquals(view.getDueVaccines().size(), 0);
         Assert.assertEquals(view.getAllVaccineWrappers().size(), 0);
 
@@ -113,7 +113,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() throws Exception {
+    public void verifyOnClickCallsOnRecordAllClickListenerAndOnVaccineClickedListener() {
 
         setDataForTest(magicDate);
         view.updateViews();
@@ -192,7 +192,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
+    public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() {
         setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers, VaccineRepository.TYPE_Synced);
         wrapper = new VaccineWrapper();

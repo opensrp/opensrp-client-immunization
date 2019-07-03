@@ -71,12 +71,12 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
         org.junit.Assert.assertNotNull(new ServiceRowAdapter(context, view, true, serviceTypeList, serviceRecordList, alertList));
     }
 
     @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
+    public void assertGetCountReturnsTheCorrectNumberOfItems() {
 
         junit.framework.Assert.assertEquals(1, serviceRowAdapter.getCount());
 
@@ -91,8 +91,8 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         Assert.assertEquals(serviceRowAdapter.getView(0, null, null) != null, true);
     }
 
-    public void setDataForTest(String dateTimeString) throws Exception {
-        ArrayList<ServiceWrapper> wrappers = new ArrayList<ServiceWrapper>();
+    public void setDataForTest(String dateTimeString) {
+        ArrayList<ServiceWrapper> wrappers = new ArrayList<>();
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
 
@@ -106,7 +106,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
 
         wrappers.add(wrapper);
 
-        HashMap<String, String> detail = new HashMap<String, String>();
+        HashMap<String, String> detail = new HashMap<>();
         detail.put("dob", dateTimeString);
         detail.put("gender", "male");
         detail.put("zeir_id", "1");
@@ -118,7 +118,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
 
         ArrayList<Alert> alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
-        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<String, List<ServiceType>>();
+        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
@@ -134,10 +134,10 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         serviceType.setExpiryOffset(ServiceTypeTest.EXPIRYOFFSET);
         serviceType.setMilestoneOffset(ServiceTypeTest.MILESTONEOFFSET);
         serviceType.setUpdatedAt(0l);
-        ArrayList<ServiceType> serviceTypes = new ArrayList<ServiceType>();
+        ArrayList<ServiceType> serviceTypes = new ArrayList<>();
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
-        ArrayList<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();
+        ArrayList<ServiceRecord> servcServiceRecords = new ArrayList<>();
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);

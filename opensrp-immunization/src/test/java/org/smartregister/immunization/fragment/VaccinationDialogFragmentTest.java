@@ -86,18 +86,4 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>()));
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), true));
     }
-
-    @Test
-    public void testCreatingFragment() {
-        VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>());
-        startFragment(vaccinationDialogFragment);
-        assertEquals(activity.getFragmentManager().getFragments().size(), 4);
-    }
-
-    private void startFragment( Fragment fragment ) {
-        FragmentManager fragmentManager = activity.getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(fragment, null );
-        fragmentTransaction.commit();
-    }
 }

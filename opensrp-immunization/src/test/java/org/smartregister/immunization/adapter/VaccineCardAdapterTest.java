@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 
 import junit.framework.Assert;
 
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -70,7 +69,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     private List<Alert> alertList = new ArrayList<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         view = new VaccineGroup(RuntimeEnvironment.application);
         setDataForTest(magicDate);
         vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList);
@@ -78,12 +77,12 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
         org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
     }
 
     @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
+    public void assertGetCountReturnsTheCorrectNumberOfItems() {
 
         org.junit.Assert.assertEquals(2, vaccineCardAdapter.getCount());
 
@@ -122,7 +121,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
         org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData = vaccines.get(0);
 
-        HashMap<String, String> detail = new HashMap<String, String>();
+        HashMap<String, String> detail = new HashMap<>();
         detail.put("dob", dateTimeString);
         detail.put("gender", "male");
         detail.put("zeir_id", "1");
@@ -160,6 +159,30 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         } catch (Exception e) {
             Assert.fail();
         }
+    }
+
+    @Test
+    public void testGetDueVaccines() {
+        ArrayList<VaccineWrapper> dueVaccines = vaccineCardAdapter.getDueVaccines();
+        org.junit.Assert.assertEquals(0, dueVaccines.size());
+    }
+
+    @Test
+    public void testGetAllVaccineWrappers() {
+        ArrayList<VaccineWrapper> vaccineWrappers = vaccineCardAdapter.getAllVaccineWrappers();
+        org.junit.Assert.assertEquals(0, vaccineWrappers.size());
+    }
+
+    @Test
+    public void testGetVaccineList() {
+        List<Vaccine> vaccineList =  vaccineCardAdapter.getVaccineList();
+        org.junit.Assert.assertEquals(0, vaccineList.size());
+    }
+
+    @Test
+    public void testGetAlertList() {
+        List<Alert> alerts = vaccineCardAdapter.getAlertList();
+        org.junit.Assert.assertEquals(0, alerts.size());
     }
 
 }
