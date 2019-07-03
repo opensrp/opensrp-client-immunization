@@ -6,8 +6,6 @@ import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -157,7 +155,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
             vaccineCardAdapter.updateChildsActiveStatus();
             Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
         } catch (Exception e) {
-            Assert.fail();
+            junit.framework.Assert.fail();
         }
     }
 
