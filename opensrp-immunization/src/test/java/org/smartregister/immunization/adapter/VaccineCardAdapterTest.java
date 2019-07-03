@@ -33,6 +33,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -76,24 +81,24 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
-        junit.framework.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
+        assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
     }
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() {
 
-        junit.framework.Assert.assertEquals(2, vaccineCardAdapter.getCount());
+        assertEquals(2, vaccineCardAdapter.getCount());
 
         //should return null
-        junit.framework.Assert.assertNull(vaccineCardAdapter.getItem(0));
+        assertNull(vaccineCardAdapter.getItem(0));
 
-        junit.framework.Assert.assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
+        assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
 
     }
 
     @Test
     public void assertGetViewReturnsVaccineCard() {
-        junit.framework.Assert.assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
+        assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -155,32 +160,32 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
             vaccineCardAdapter.updateChildsActiveStatus();
             Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
         } catch (Exception e) {
-            junit.framework.Assert.fail();
+            fail();
         }
     }
 
     @Test
     public void testGetDueVaccines() {
         ArrayList<VaccineWrapper> dueVaccines = vaccineCardAdapter.getDueVaccines();
-        junit.framework.Assert.assertEquals(0, dueVaccines.size());
+        assertEquals(0, dueVaccines.size());
     }
 
     @Test
     public void testGetAllVaccineWrappers() {
         ArrayList<VaccineWrapper> vaccineWrappers = vaccineCardAdapter.getAllVaccineWrappers();
-        junit.framework.Assert.assertEquals(0, vaccineWrappers.size());
+        assertEquals(0, vaccineWrappers.size());
     }
 
     @Test
     public void testGetVaccineList() {
         List<Vaccine> vaccineList =  vaccineCardAdapter.getVaccineList();
-        junit.framework.Assert.assertEquals(0, vaccineList.size());
+        assertEquals(0, vaccineList.size());
     }
 
     @Test
     public void testGetAlertList() {
         List<Alert> alerts = vaccineCardAdapter.getAlertList();
-        junit.framework.Assert.assertEquals(0, alerts.size());
+        assertEquals(0, alerts.size());
     }
 
 }
