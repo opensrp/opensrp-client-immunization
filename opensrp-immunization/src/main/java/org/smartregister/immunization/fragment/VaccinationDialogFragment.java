@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -130,16 +131,16 @@ public class VaccinationDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tags.get(0).getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tags.get(0).getPatientNumber());
 
-        final LinearLayout vaccinationNameLayout = (LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout);
+        final LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
 
         if (tags.size() == 1) {
 
-            String vName = "";
+            String vName;
             VaccineWrapper vaccineWrapper = tags.get(0);
             VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
             if (vaccine != null) {
@@ -153,7 +154,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 final List<RadioButton> radios = new ArrayList<>();
                 for (int i = 0; i < names.length; i++) {
                     View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
-                    TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                    TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                     String name = names[i].trim();
                     vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), name));
@@ -161,7 +162,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                     View select = vaccinationName.findViewById(R.id.select);
                     select.setVisibility(View.GONE);
 
-                    RadioButton radio = (RadioButton) vaccinationName.findViewById(R.id.radio);
+                    RadioButton radio = vaccinationName.findViewById(R.id.radio);
                     radio.setVisibility(View.VISIBLE);
                     if (i != 0) {
                         radio.setChecked(false);
@@ -178,7 +179,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                     chilView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            RadioButton childRadio = (RadioButton) view.findViewById(R.id.radio);
+                            RadioButton childRadio = view.findViewById(R.id.radio);
                             addRadioClickListener(radios, childRadio);
                         }
                     });
@@ -187,7 +188,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             } else {
 
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
-                TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                 vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vName));
 
@@ -200,13 +201,18 @@ public class VaccinationDialogFragment extends DialogFragment {
             for (VaccineWrapper vaccineWrapper : tags) {
 
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
-                TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                 VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
                 if (vaccineWrapper.getVaccine() != null) {
                     vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccine.display()));
                 } else {
                     vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
+                }
+
+                vaccinationName.setTag(vaccineWrapper.getName());
+                if (vaccineWrapper.getNotGivenCondition() != null) {
+                    vaccinationName.setTag(R.id.not_give_condition_id, vaccineWrapper.getNotGivenCondition());
                 }
 
                 vaccinationNameLayout.addView(vaccinationName);
@@ -217,21 +223,64 @@ public class VaccinationDialogFragment extends DialogFragment {
                 chilView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
+                        CheckBox childSelect = view.findViewById(R.id.select);
                         childSelect.toggle();
+                        // toggle other in not given condition
+                        if (view.getTag(R.id.not_give_condition_id) !=null){
+                            View chilView2 =  vaccinationNameLayout.findViewWithTag(view.getTag(R.id.not_give_condition_id));
+                            if (chilView2 != null) {
+                                CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                                childSelect2.setChecked(!childSelect.isChecked());
+                            }
+                        }
                     }
                 });
             }
 
-            Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
+            // handle for when actual checkbox is clicked
+            for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                final View chilView = vaccinationNameLayout.getChildAt(i);
+                CheckBox childSelect = chilView.findViewById(R.id.select);
+
+                childSelect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (chilView.getTag(R.id.not_give_condition_id) != null) {
+                            View chilView2 = vaccinationNameLayout.findViewWithTag(chilView.getTag(R.id.not_give_condition_id));
+                            if (chilView2 != null) {
+                                CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                                childSelect2.setChecked(!((CompoundButton) v).isChecked());
+                            }
+                        }
+                    }
+                });
+            }
+
+            //uncheck mutually exclusive vaccines on starting up
+            for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                final View chilView = vaccinationNameLayout.getChildAt(i);
+                CheckBox childSelect = chilView.findViewById(R.id.select);
+
+                if (chilView.getTag(R.id.not_give_condition_id) != null) {
+                    View chilView2 = vaccinationNameLayout.findViewWithTag(chilView.getTag(R.id.not_give_condition_id));
+                    if (chilView2 != null) {
+                        CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                        childSelect2.setChecked(!childSelect.isChecked());
+                    }
+                }
+            }
+
+
+
+            Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
             vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
 
-            Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
+            Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
             vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("Vaccination", "Vaccinations"));
         }
 
         if (tags.get(0).getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tags.get(0).getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tags.get(0).getId());
@@ -242,15 +291,15 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         }
 
-        final DatePicker earlierDatePicker = (DatePicker) dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(R.id.earlier_date_picker);
 
         String color = tags.get(0).getColor();
-        Button status = (Button) dialogView.findViewById(R.id.status);
+        Button status = dialogView.findViewById(R.id.status);
         if (status != null) {
             status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         }
 
-        final Button set = (Button) dialogView.findViewById(R.id.set);
+        final Button set = dialogView.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -301,7 +350,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -336,7 +385,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
+        final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -350,7 +399,7 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
 
-        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -632,9 +681,9 @@ public class VaccinationDialogFragment extends DialogFragment {
         List<String> names = new ArrayList<>();
         for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
             View chilView = vaccinationNameLayout.getChildAt(i);
-            CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
+            CheckBox selectChild = chilView.findViewById(R.id.select);
             if (selectChild.isChecked()) {
-                TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
+                TextView childVaccineView = chilView.findViewById(R.id.vaccine);
                 String checkedName = childVaccineView.getText().toString();
                 names.add(checkedName);
             }
@@ -646,9 +695,9 @@ public class VaccinationDialogFragment extends DialogFragment {
     private String findSelectRadio(LinearLayout vaccinationNameLayout) {
         for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
             View chilView = vaccinationNameLayout.getChildAt(i);
-            RadioButton radioChild = (RadioButton) chilView.findViewById(R.id.radio);
+            RadioButton radioChild = chilView.findViewById(R.id.radio);
             if (radioChild.getVisibility() == View.VISIBLE && radioChild.isChecked()) {
-                TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
+                TextView childVaccineView = chilView.findViewById(R.id.vaccine);
                 return childVaccineView.getText().toString();
             }
         }

@@ -91,7 +91,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
 
-                VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineName,
+                VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineData,
                         vaccineGroup.getChildDetails(),
                         vaccineGroup.getVaccineData().days_after_birth_due, position);
                 Utils.startAsyncTask(vaccineRowTask, null);
@@ -274,13 +274,16 @@ public class VaccineCardAdapter extends BaseAdapter {
         private int days_after_birth_due;
         private int position;
 
-        VaccineRowTask(VaccineCard vaccineCard, String vaccineName,
+        private org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData;
+
+        VaccineRowTask(VaccineCard vaccineCard, org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData,
                        CommonPersonObjectClient childDetails, Integer days_after_birth_due, int position) {
             this.vaccineCard = vaccineCard;
-            this.vaccineName = vaccineName;
+            this.vaccineName = vaccineData.name;
             this.childDetails = childDetails;
             this.days_after_birth_due = days_after_birth_due;
             this.position = position;
+            this.vaccineData = vaccineData;
         }
 
         @Override
@@ -302,6 +305,9 @@ public class VaccineCardAdapter extends BaseAdapter {
             vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
             vaccineWrapper.setName(vaccineName);
             vaccineWrapper.setDefaultName(vaccineName);
+            if (vaccineData.schedule !=null &&  vaccineData.schedule.conditions != null) {
+                vaccineWrapper.setNotGivenCondition(vaccineData.schedule.conditions.get(0).vaccine);
+            }
 
             String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
             if (StringUtils.isNotBlank(dobString)) {

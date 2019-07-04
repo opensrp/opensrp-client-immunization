@@ -38,7 +38,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     private org.smartregister.Context context_;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, VaccinationDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
@@ -81,5 +81,4 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>()));
         junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), true));
     }
-
 }

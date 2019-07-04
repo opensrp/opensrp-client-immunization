@@ -126,7 +126,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     }
 
     public List<ServiceRecord> findUnSyncedBeforeTime(int hours) {
-        List<ServiceRecord> serviceRecords = new ArrayList<ServiceRecord>();
+        List<ServiceRecord> serviceRecords = new ArrayList<>();
         Cursor cursor = null;
         try {
             Calendar calendar = Calendar.getInstance();
@@ -232,7 +232,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     }
 
     private List<ServiceRecord> readAllServiceRecords(Cursor cursor) {
-        List<ServiceRecord> serviceRecords = new ArrayList<ServiceRecord>();
+        List<ServiceRecord> serviceRecords = new ArrayList<>();
 
         try {
 

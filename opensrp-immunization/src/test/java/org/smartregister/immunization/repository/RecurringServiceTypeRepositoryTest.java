@@ -39,19 +39,19 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertInstantiatesSuccessfullyOnConstructorCall() throws Exception {
+    public void assertInstantiatesSuccessfullyOnConstructorCall() {
         RecurringServiceTypeRepository vaccineNameRepository = new RecurringServiceTypeRepository(repository);
         org.junit.Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
-    public void verifyCreateTableCallsExecuteSQLMethod() throws Exception {
+    public void verifyCreateTableCallsExecuteSQLMethod() {
         recurringServiceTypeRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(4)).execSQL(org.mockito.ArgumentMatchers.anyString());
     }
 
     @Test
-    public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() throws Exception {
+    public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() {
         Mockito.when(recurringServiceTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         ServiceType serviceType = PowerMockito.mock(ServiceType.class);
         Mockito.when(serviceType.getId()).thenReturn(null);
@@ -60,7 +60,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAndVerifySearchByNamecallsDatabaseQueryMethod1Times() throws Exception {
+    public void assertAndVerifySearchByNamecallsDatabaseQueryMethod1Times() {
         String[] columns = new String[]{RecurringServiceTypeRepository.ID_COLUMN, RecurringServiceTypeRepository.NAME, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY_ID, RecurringServiceTypeRepository.DATE_ENTITY, RecurringServiceTypeRepository.DATE_ENTITY_ID, RecurringServiceTypeRepository.UNITS, RecurringServiceTypeRepository.SERVICE_LOGIC, RecurringServiceTypeRepository.PREREQUISITE, RecurringServiceTypeRepository.PRE_OFFSET, RecurringServiceTypeRepository.EXPIRY_OFFSET, RecurringServiceTypeRepository.MILESTONE_OFFSET, RecurringServiceTypeRepository.UPDATED_AT_COLUMN};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", "", "", "", "", "", "", "", "", "", "", 1l});
@@ -72,7 +72,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAndVerifySearchByTypecallsDatabaseQueryMethod1Times() throws Exception {
+    public void assertAndVerifySearchByTypecallsDatabaseQueryMethod1Times() {
         String[] columns = new String[]{RecurringServiceTypeRepository.ID_COLUMN, RecurringServiceTypeRepository.NAME, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY_ID, RecurringServiceTypeRepository.DATE_ENTITY, RecurringServiceTypeRepository.DATE_ENTITY_ID, RecurringServiceTypeRepository.UNITS, RecurringServiceTypeRepository.SERVICE_LOGIC, RecurringServiceTypeRepository.PREREQUISITE, RecurringServiceTypeRepository.PRE_OFFSET, RecurringServiceTypeRepository.EXPIRY_OFFSET, RecurringServiceTypeRepository.MILESTONE_OFFSET, RecurringServiceTypeRepository.UPDATED_AT_COLUMN};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", "", "", "", "", "", "", "", "", "", "", 1l});
@@ -84,7 +84,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyFindcallsDatabaseQueryMethod1Times() throws Exception {
+    public void verifyFindcallsDatabaseQueryMethod1Times() {
         String[] columns = new String[]{RecurringServiceTypeRepository.ID_COLUMN, RecurringServiceTypeRepository.NAME, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY_ID, RecurringServiceTypeRepository.DATE_ENTITY, RecurringServiceTypeRepository.DATE_ENTITY_ID, RecurringServiceTypeRepository.UNITS, RecurringServiceTypeRepository.SERVICE_LOGIC, RecurringServiceTypeRepository.PREREQUISITE, RecurringServiceTypeRepository.PRE_OFFSET, RecurringServiceTypeRepository.EXPIRY_OFFSET, RecurringServiceTypeRepository.MILESTONE_OFFSET, RecurringServiceTypeRepository.UPDATED_AT_COLUMN};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", "", "", "", "", "", "", "", "", "", "", 1l});
@@ -96,7 +96,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAndVerifyAddCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() throws Exception {
+    public void assertAndVerifyAddCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() {
         recurringServiceTypeRepository.add(null, sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.any(ContentValues.class));
         Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
@@ -111,7 +111,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyFetchAllTypecallsDatabaseQueryMethod1Times() throws Exception {
+    public void verifyFetchAllTypecallsDatabaseQueryMethod1Times() {
 
         String[] columns = new String[]{RecurringServiceTypeRepository.ID_COLUMN, RecurringServiceTypeRepository.NAME, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY_ID, RecurringServiceTypeRepository.DATE_ENTITY, RecurringServiceTypeRepository.DATE_ENTITY_ID, RecurringServiceTypeRepository.UNITS, RecurringServiceTypeRepository.SERVICE_LOGIC, RecurringServiceTypeRepository.PREREQUISITE, RecurringServiceTypeRepository.PRE_OFFSET, RecurringServiceTypeRepository.EXPIRY_OFFSET, RecurringServiceTypeRepository.MILESTONE_OFFSET, RecurringServiceTypeRepository.UPDATED_AT_COLUMN};
         MatrixCursor cursor = new MatrixCursor(columns);
@@ -125,7 +125,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyFetchTypescallsDatabaseQueryMethod1Times() throws Exception {
+    public void verifyFetchTypescallsDatabaseQueryMethod1Times() {
         String[] columns = new String[]{RecurringServiceTypeRepository.ID_COLUMN, RecurringServiceTypeRepository.NAME, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY_ID, RecurringServiceTypeRepository.DATE_ENTITY, RecurringServiceTypeRepository.DATE_ENTITY_ID, RecurringServiceTypeRepository.UNITS, RecurringServiceTypeRepository.SERVICE_LOGIC, RecurringServiceTypeRepository.PREREQUISITE, RecurringServiceTypeRepository.PRE_OFFSET, RecurringServiceTypeRepository.EXPIRY_OFFSET, RecurringServiceTypeRepository.MILESTONE_OFFSET, RecurringServiceTypeRepository.UPDATED_AT_COLUMN};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", "", "", "", "", "", "", "", "", "", "", 1l});
@@ -137,7 +137,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyDeletecallsDatabaseDeleteMethod1Times() throws Exception {
+    public void verifyDeletecallsDatabaseDeleteMethod1Times() {
         RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = Mockito.spy(recurringServiceTypeRepository);
         ServiceType serviceType = new ServiceType();
         Mockito.doReturn(serviceType).when(recurringServiceTypeRepositoryspy).find(0l, null);
@@ -147,14 +147,14 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAddHyphenMethodWithBlankParamReturnsBlankString() throws Exception {
+    public void assertAddHyphenMethodWithBlankParamReturnsBlankString() {
         String testString = recurringServiceTypeRepository.addHyphen("");
         org.junit.Assert.assertNotNull(testString);
         org.junit.Assert.assertTrue(testString.isEmpty());
     }
 
     @Test
-    public void assertRemoveHyphenMethodWithBlankParamReturnsBlankString() throws Exception {
+    public void assertRemoveHyphenMethodWithBlankParamReturnsBlankString() {
         String testString = recurringServiceTypeRepository.removeHyphen("");
         org.junit.Assert.assertNotNull(testString);
         org.junit.Assert.assertTrue(testString.isEmpty());

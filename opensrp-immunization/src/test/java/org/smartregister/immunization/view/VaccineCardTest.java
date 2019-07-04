@@ -45,7 +45,7 @@ public class VaccineCardTest extends BaseUnitTest {
     private final String magicExpired = "expired";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, VaccineCardTestActivity.class);
         controller = Robolectric.buildActivity(VaccineCardTestActivity.class, intent);
@@ -56,12 +56,12 @@ public class VaccineCardTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetUndoBNotNull() throws Exception {
+    public void assertGetUndoBNotNull() {
         Assert.assertNotNull(view.getUndoB());
     }
 
     @Test
-    public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
+    public void assertgetStateCallsUpdateStateReturnsWrapperState() {
         Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
@@ -136,7 +136,7 @@ public class VaccineCardTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorsNotNull() throws Exception {
+    public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
         Assert.assertNotNull(activity.getInstance1());
         Assert.assertNotNull(activity.getInstance2());

@@ -154,7 +154,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(sql, null);
 
-        List<String> types = new ArrayList<String>();
+        List<String> types = new ArrayList<>();
 
         try {
 
@@ -181,7 +181,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
     }
 
     private List<ServiceType> readAllServiceTypes(Cursor cursor) {
-        List<ServiceType> serviceTypes = new ArrayList<ServiceType>();
+        List<ServiceType> serviceTypes = new ArrayList<>();
 
         try {
 

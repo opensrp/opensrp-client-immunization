@@ -104,7 +104,7 @@ public class VaccineTypeRepository extends BaseRepository {
 //    }
 
     private List<VaccineType> readAllVaccines(Cursor cursor) {
-        List<VaccineType> vaccines = new ArrayList<VaccineType>();
+        List<VaccineType> vaccines = new ArrayList<>();
 
         try {
 

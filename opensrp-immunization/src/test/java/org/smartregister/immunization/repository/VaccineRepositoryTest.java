@@ -62,7 +62,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAddHyphenTest() throws Exception {
+    public void assertAddHyphenTest() {
         String testString = vaccineRepository.addHyphen("");
         org.junit.Assert.assertNotNull(testString);
         org.junit.Assert.assertTrue(testString.isEmpty());
@@ -72,7 +72,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertRemoveHyphenTest() throws Exception {
+    public void assertRemoveHyphenTest() {
         String testString = vaccineRepository.removeHyphen("");
         org.junit.Assert.assertNotNull(testString);
         org.junit.Assert.assertTrue(testString.isEmpty());
@@ -82,7 +82,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAlertServiceTest() throws Exception {
+    public void assertAlertServiceTest() {
         org.junit.Assert.assertNotNull(vaccineRepository.alertService());
         VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, null);
         Repository repository = Mockito.mock(Repository.class);
@@ -104,7 +104,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorTest() throws Exception {
+    public void assertConstructorTest() {
         VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, alertService);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
@@ -120,13 +120,13 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyCreateTableTest() throws Exception {
+    public void verifyCreateTableTest() {
         vaccineRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(3)).execSQL(org.mockito.ArgumentMatchers.anyString());
     }
 
     @Test
-    public void verifyaddTestShouldCallInsertAndUpdate1Time() throws Exception {
+    public void verifyaddTestShouldCallInsertAndUpdate1Time() {
         //null database, throws exception
         Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(null);
         Vaccine vaccine1 = new Vaccine();
@@ -158,7 +158,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyUpdateTestCallsDatabaseUpdate1Time() throws Exception {
+    public void verifyUpdateTestCallsDatabaseUpdate1Time() {
         Vaccine vaccine = new Vaccine();
         vaccine.setId(0l);
         //exception test database null
@@ -172,7 +172,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyFindbyEntityIdTestCallsDatabaseQuery1Time() throws Exception {
+    public void verifyFindbyEntityIdTestCallsDatabaseQuery1Time() {
         String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
@@ -183,7 +183,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.verify(sqliteDatabase, Mockito.times(1)).query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class));
     }
     @Test
-    public void verifyFindTwentyFourTestCallsDatabaseQuery1Time() throws Exception {
+    public void verifyFindTwentyFourTestCallsDatabaseQuery1Time() {
         String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
@@ -195,7 +195,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyFindTestCallsDatabaseQuery1Time() throws Exception {
+    public void verifyFindTestCallsDatabaseQuery1Time() {
         vaccineRepository.find(0l);
         String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
@@ -210,7 +210,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void findbyUniqueTest() throws Exception {
+    public void findbyUniqueTest() {
         String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
@@ -227,7 +227,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void deleteVaccineTest() throws Exception {
+    public void deleteVaccineTest() {
         VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
         Vaccine vaccine = new Vaccine();
         vaccine.setBaseEntityId("baseEntityID");
@@ -241,7 +241,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void findWithNullHia2StatusTest() throws Exception {
+    public void findWithNullHia2StatusTest() {
 
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         List<Vaccine> list = vaccineRepository.findWithNullHia2Status();
@@ -249,7 +249,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void closeTest() throws Exception {
+    public void closeTest() {
         //null parameter
         Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.close(null);

@@ -46,7 +46,7 @@ public class ServiceCardTest extends BaseUnitTest {
     private final String magicDefault = "DEFAULT";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceCardTestActivity.class, intent);
@@ -58,12 +58,12 @@ public class ServiceCardTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetUndoBNotNull() throws Exception {
+    public void assertGetUndoBNotNull() {
         Assert.assertNotNull(view.getUndoB());
     }
 
     @Test
-    public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
+    public void assertgetStateCallsUpdateStateReturnsWrapperState() {
         Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
         wrapper.setSynced(true);

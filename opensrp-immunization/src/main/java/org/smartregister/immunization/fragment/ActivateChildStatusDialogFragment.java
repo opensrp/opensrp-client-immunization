@@ -55,8 +55,8 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
         ((TextView) inflatedView.findViewById(R.id.tv_dialog_activate_child_title))
                 .setText(dialogTitle);
 
-        Button negativeButton = (Button) inflatedView.findViewById(android.R.id.button2);
-        Button positiveButton = (Button) inflatedView.findViewById(android.R.id.button1);
+        Button negativeButton = inflatedView.findViewById(android.R.id.button2);
+        Button positiveButton = inflatedView.findViewById(android.R.id.button1);
 
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override

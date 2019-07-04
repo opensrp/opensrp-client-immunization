@@ -63,7 +63,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     private final int magicNumber = 231231;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         CoreLibrary.init(context_);
         view = new ImmunizationRowGroup(RuntimeEnvironment.application, false);
@@ -92,15 +92,15 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetViewReturnsVaccineGroup() throws Exception {
+    public void assertGetViewReturnsVaccineGroup() {
         ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view, true, vaccinelist, alertlist);
 
         junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
 
     }
 
-    public void setDataForTest(String dateTimeString) throws Exception {
-        wrappers = new ArrayList<VaccineWrapper>();
+    public void setDataForTest(String dateTimeString) {
+        wrappers = new ArrayList<>();
         wrapper = new VaccineWrapper();
         wrapper.setDbKey(0l);
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
@@ -133,7 +133,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
-        vaccinelist = new ArrayList<Vaccine>();
+        vaccinelist = new ArrayList<>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
@@ -141,7 +141,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        alertlist = new ArrayList<Alert>();
+        alertlist = new ArrayList<>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist);
     }

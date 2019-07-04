@@ -83,7 +83,7 @@ public class VaccineNameRepository extends BaseRepository {
 //    }
 
     private List<VaccineName> readAllVaccines(Cursor cursor) {
-        List<VaccineName> vaccines = new ArrayList<VaccineName>();
+        List<VaccineName> vaccines = new ArrayList<>();
 
         try {
 
