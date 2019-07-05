@@ -151,6 +151,8 @@ This section will provide a brief description how to build and install the appli
 
 ## Multi Language Support
 
+### Vaccines
+
 The library supports translated vaccines e.g. in Arabic `OPV 0` is called `الشلل فموي ۰`
 In order to use this in your implementation,
 
@@ -158,4 +160,25 @@ In order to use this in your implementation,
 2. The key of the resource identifier should be the english key(vaccine name) used in the vaccine configuration for that vaccine converted to lowercase
 3. For the vaccines with spaces, replace with underscore.
 
-Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in the `strings.xml` resource file
+Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in the _strings.xml_ resource file
+
+ ```
+           English <string name="opv_1">OPV</string>
+           French <string name="opv_1">VPO</string>
+ ```
+
+### Vaccine Groups
+
+Vaccine groups are specified differently in the vaccine config files. Here the key in the _strings.xml_ file should the the id of the vaccine group.
+The reason for this is that the groups usually begin with a digit. Keys which start with digits/numbers CANNOT be used to define a key in a _strings.xml_ file
+
+**Steps:**
+
+1. Add key in _strings.xml_ using the lowercase underscore version of the Group ID. If none is defined, it will fallback to the vaccine name during render time.
+
+Example: `6 Weeks` group name has an id `Six_Wks` thus the key in _strings.xml_ should be `six_wks`.
+
+```
+        English <string name="six_wks">6 weeks</string>
+        French <string name="six_wks">6 semaines</string>
+```

@@ -153,7 +153,7 @@ public class VaccineRepository extends BaseRepository {
     }
 
     public List<Vaccine> findUnSyncedBeforeTime(int hours) {
-        List<Vaccine> vaccines = new ArrayList<Vaccine>();
+        List<Vaccine> vaccines = new ArrayList<>();
         Cursor cursor = null;
         try {
             Calendar calendar = Calendar.getInstance();
@@ -240,7 +240,7 @@ public class VaccineRepository extends BaseRepository {
     }
 
     public List<Vaccine> findWithNullHia2Status() {
-        List<Vaccine> vaccines = new ArrayList<Vaccine>();
+        List<Vaccine> vaccines = new ArrayList<>();
         Cursor cursor = null;
         try {
 
@@ -281,7 +281,7 @@ public class VaccineRepository extends BaseRepository {
 
 
     private List<Vaccine> readAllVaccines(Cursor cursor) {
-        List<Vaccine> vaccines = new ArrayList<Vaccine>();
+        List<Vaccine> vaccines = new ArrayList<>();
 
         try {
 

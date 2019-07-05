@@ -73,12 +73,12 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.undo_vaccination_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tag.getPatientNumber());
 
-        TextView vaccineView = (TextView) dialogView.findViewById(R.id.vaccine);
+        TextView vaccineView = dialogView.findViewById(R.id.vaccine);
         VaccineRepo.Vaccine vaccine = tag.getVaccine();
         if (vaccine != null) {
             vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getVaccine().display()));
@@ -90,7 +90,7 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
 
 
         if (tag.getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tag.getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tag.getId());
@@ -101,7 +101,7 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
             }
         }
 
-        Button vaccinateToday = (Button) dialogView.findViewById(R.id.yes_undo);
+        Button vaccinateToday = dialogView.findViewById(R.id.yes_undo);
         vaccinateToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,7 +112,7 @@ public class UndoVaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        Button cancel = (Button) dialogView.findViewById(R.id.no_go_back);
+        Button cancel = dialogView.findViewById(R.id.no_go_back);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.vijay.jsonwizard.customviews.CheckBox;
 import com.vijay.jsonwizard.customviews.RadioButton;
+import com.vijay.jsonwizard.utils.DatePickerUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -36,7 +38,6 @@ import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
-import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -194,7 +195,7 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         if (tags.size() == 1) {
 
-            String vName = "";
+            String vName;
             VaccineWrapper vaccineWrapper = tags.get(0);
             VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
             if (vaccine != null) {
@@ -264,6 +265,11 @@ public class VaccinationDialogFragment extends DialogFragment {
                     vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
                 }
 
+                vaccinationName.setTag(vaccineWrapper.getName());
+                if (vaccineWrapper.getNotGivenCondition() != null) {
+                    vaccinationName.setTag(R.id.not_give_condition_id, vaccineWrapper.getNotGivenCondition());
+                }
+
                 vaccinationNameLayout.addView(vaccinationName);
             }
 
@@ -274,8 +280,50 @@ public class VaccinationDialogFragment extends DialogFragment {
                     public void onClick(View view) {
                         CheckBox childSelect = view.findViewById(R.id.select);
                         childSelect.toggle();
+                        // toggle other in not given condition
+                        if (view.getTag(R.id.not_give_condition_id) != null) {
+                            View chilView2 = vaccinationNameLayout.findViewWithTag(view.getTag(R.id.not_give_condition_id));
+                            if (chilView2 != null) {
+                                CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                                childSelect2.setChecked(!childSelect.isChecked());
+                            }
+                        }
                     }
                 });
+            }
+
+            // handle for when actual checkbox is clicked
+            for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                final View chilView = vaccinationNameLayout.getChildAt(i);
+                CheckBox childSelect = chilView.findViewById(R.id.select);
+
+                childSelect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (chilView.getTag(R.id.not_give_condition_id) != null) {
+                            View chilView2 = vaccinationNameLayout
+                                    .findViewWithTag(chilView.getTag(R.id.not_give_condition_id));
+                            if (chilView2 != null) {
+                                CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                                childSelect2.setChecked(!((CompoundButton) v).isChecked());
+                            }
+                        }
+                    }
+                });
+            }
+
+            //uncheck mutually exclusive vaccines on starting up
+            for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                View chilView = vaccinationNameLayout.getChildAt(i);
+                CheckBox childSelect = chilView.findViewById(R.id.select);
+
+                if (chilView.getTag(R.id.not_give_condition_id) != null) {
+                    View chilView2 = vaccinationNameLayout.findViewWithTag(chilView.getTag(R.id.not_give_condition_id));
+                    if (chilView2 != null) {
+                        CheckBox childSelect2 = chilView2.findViewById(R.id.select);
+                        childSelect2.setChecked(!childSelect.isChecked());
+                    }
+                }
             }
 
             Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
@@ -450,6 +498,10 @@ public class VaccinationDialogFragment extends DialogFragment {
 
     public Integer getDefaultErrorImageResourceID() {
         return defaultErrorImageResourceID;
+    }
+
+    public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {
+        this.defaultErrorImageResourceID = defaultErrorImageResourceID;
     }
 
     private String findSelectRadio(LinearLayout vaccinationNameLayout) {
@@ -675,7 +727,6 @@ public class VaccinationDialogFragment extends DialogFragment {
                 || expiryDate.getTime() > Calendar.getInstance().getTimeInMillis()) {
             expiryDate = Calendar.getInstance().getTime();
         }
-
         if (maxDate == null) {
             maxDate = Calendar.getInstance();
             maxDate.setTime(expiryDate);
@@ -688,10 +739,6 @@ public class VaccinationDialogFragment extends DialogFragment {
 
     private String stripSpaces(String name) {
         return name != null && !name.isEmpty() ? name.replaceAll(" ", "") : name;
-    }
-
-    public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {
-        this.defaultErrorImageResourceID = defaultErrorImageResourceID;
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {

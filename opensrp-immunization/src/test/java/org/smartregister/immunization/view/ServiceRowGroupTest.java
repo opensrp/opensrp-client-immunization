@@ -62,7 +62,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
     private String type = "SERVICETYPE";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowGroupTestActivity.class, intent);
@@ -233,15 +233,15 @@ public class ServiceRowGroupTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertIsModalOpenReturnsBoolean() throws Exception {
+    public void assertIsModalOpenReturnsBoolean() {
         view.setModalOpen(true);
         Assert.assertEquals(view.isModalOpen(), true);
         view.setModalOpen(false);
         Assert.assertEquals(view.isModalOpen(), false);
     }
 
-    public void setDataForTest(String dateTimeString) throws Exception {
-        ArrayList<ServiceWrapper> wrappers = new ArrayList<ServiceWrapper>();
+    public void setDataForTest(String dateTimeString) {
+        ArrayList<ServiceWrapper> wrappers = new ArrayList<>();
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
 
@@ -255,15 +255,15 @@ public class ServiceRowGroupTest extends BaseUnitTest {
 
         wrappers.add(wrapper);
 
-        HashMap<String, String> detail = new HashMap<String, String>();
+        HashMap<String, String> detail = new HashMap<>();
         detail.put("dob", dateTimeString);
         CommonPersonObjectClient childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
 
-        ArrayList<Alert> alertlist = new ArrayList<Alert>();
+        ArrayList<Alert> alertlist = new ArrayList<>();
         alertlist.add(alert);
-        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<String, List<ServiceType>>();
+        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
@@ -279,10 +279,10 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         serviceType.setExpiryOffset(ServiceTypeTest.EXPIRYOFFSET);
         serviceType.setMilestoneOffset(ServiceTypeTest.MILESTONEOFFSET);
         serviceType.setUpdatedAt(0l);
-        ArrayList<ServiceType> serviceTypes = new ArrayList<ServiceType>();
+        ArrayList<ServiceType> serviceTypes = new ArrayList<>();
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
-        ArrayList<ServiceRecord> servcServiceRecords = new ArrayList<ServiceRecord>();
+        ArrayList<ServiceRecord> servcServiceRecords = new ArrayList<>();
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);

@@ -70,18 +70,18 @@ public class UndoServiceDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.undo_vaccination_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tag.getPatientNumber());
 
-        TextView textView = (TextView) dialogView.findViewById(R.id.vaccine);
+        TextView textView = dialogView.findViewById(R.id.vaccine);
         String name = VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
         textView.setText(name);
 
 
         if (tag.getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tag.getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tag.getId());
@@ -89,10 +89,10 @@ public class UndoServiceDialogFragment extends DialogFragment {
             }
         }
 
-        TextView undoText = (TextView) dialogView.findViewById(R.id.undo_text);
+        TextView undoText = dialogView.findViewById(R.id.undo_text);
         undoText.setText(getString(R.string.undo_service));
 
-        Button serviceToday = (Button) dialogView.findViewById(R.id.yes_undo);
+        Button serviceToday = dialogView.findViewById(R.id.yes_undo);
         serviceToday.setText(getString(R.string.yes_undo_service));
 
         serviceToday.setOnClickListener(new Button.OnClickListener() {
@@ -104,7 +104,7 @@ public class UndoServiceDialogFragment extends DialogFragment {
             }
         });
 
-        Button cancel = (Button) dialogView.findViewById(R.id.no_go_back);
+        Button cancel = dialogView.findViewById(R.id.no_go_back);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {

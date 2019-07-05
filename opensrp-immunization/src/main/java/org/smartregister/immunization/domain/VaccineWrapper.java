@@ -23,6 +23,7 @@ public class VaccineWrapper implements Serializable {
     private DateTime vaccineDate;
     private Alert alert;
     private String previousVaccineId;
+    private String notGivenCondition;
     private boolean compact;
 
     private String color;
@@ -101,6 +102,14 @@ public class VaccineWrapper implements Serializable {
 
     public void setPreviousVaccine(String previousVaccineId) {
         this.previousVaccineId = previousVaccineId;
+    }
+
+    public String getNotGivenCondition() {
+        return notGivenCondition;
+    }
+
+    public void setNotGivenCondition(String notGivenCondition) {
+        this.notGivenCondition = notGivenCondition;
     }
 
     public boolean isCompact() {

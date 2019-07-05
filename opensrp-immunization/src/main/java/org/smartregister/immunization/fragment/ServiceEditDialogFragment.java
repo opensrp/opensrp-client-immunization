@@ -98,16 +98,16 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_edit_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tag.getPatientNumber());
-        TextView service_date = (TextView) dialogView.findViewById(R.id.service_date);
+        TextView service_date = dialogView.findViewById(R.id.service_date);
         service_date.setText("Service date: " + tag.getUpdatedVaccineDateAsString() + "");
         final LinearLayout vaccinationNameLayout = (LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout);
 
         View vaccinationName = inflater.inflate(R.layout.vaccination_name_edit_dialog, null);
-        TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+        TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
 
         String name =VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
@@ -116,25 +116,25 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
 
         if (tag.getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tag.getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tag.getId());
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()), ImageUtils.profileImageResourceByGender(tag.getGender())));
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader.getStaticImageListener(mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()), ImageUtils.profileImageResourceByGender(tag.getGender())));
             }
         }
 
-        final DatePicker earlierDatePicker = (DatePicker) dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(R.id.earlier_date_picker);
 
         String color = tag.getColor();
-        Button status = (Button) dialogView.findViewById(R.id.status);
+        Button status = dialogView.findViewById(R.id.status);
         if (status != null)
 
         {
             status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         }
 
-        final Button set = (Button) dialogView.findViewById(R.id.set);
+        final Button set = dialogView.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {
                                    @Override
                                    public void onClick(View view) {
@@ -161,7 +161,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
         );
 
-        final Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setText(vaccinateToday.getText().toString().replace("vaccination", "service"));
 
 
@@ -180,7 +180,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
         );
 
-        final Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
+        final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("vaccination", "service"));
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
                                                 @Override
@@ -196,7 +196,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
         updateDateRanges(earlierDatePicker, set);
 
-        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,7 +209,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
             chilView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
+                    CheckBox childSelect = view.findViewById(R.id.select);
                     if (childSelect != null) {
                         childSelect.toggle();
                     }

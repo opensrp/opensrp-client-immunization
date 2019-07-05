@@ -174,11 +174,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private void updateStatusViews() {
         switch (this.groupState) {
             case IN_PAST:
-                nameTV.setText(VaccinatorUtils.getTranslatedGroupName(vaccineData.name));
+                nameTV.setText(VaccinatorUtils.getTranslatedGroupName(context, vaccineData));
                 break;
             case CURRENT:
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        VaccinatorUtils.getTranslatedGroupName(vaccineData.name), context.getString(R.string.today)));
+                        VaccinatorUtils.getTranslatedGroupName(context, vaccineData), context.getString(R.string.today)));
                 break;
             case IN_FUTURE:
                 String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
@@ -186,9 +186,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                 DateTime dateTime = new DateTime(dobString);
                 dobCalender.setTime(dateTime.toDate());
                 dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
-                nameTV.setText(String.format(context.getString(R.string.due_),
-                        VaccinatorUtils.getTranslatedGroupName(vaccineData.name),
-                        READABLE_DATE_FORMAT.format(dobCalender.getTime())));
+                nameTV.setText(String.format(context.getString(R.string.due_), VaccinatorUtils.getTranslatedGroupName(context, vaccineData), READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                 break;
             default:
                 break;
