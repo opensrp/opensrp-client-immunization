@@ -15,19 +15,6 @@ import static org.smartregister.util.Utils.getValue;
  */
 public class ImageUtils {
 
-    public static int profileImageResourceByGender(String gender) {
-        if (StringUtils.isNotBlank(gender)) {
-            if (gender.equalsIgnoreCase("male")) {
-                return R.drawable.child_boy_infant;
-            } else if (gender.equalsIgnoreCase("female")) {
-                return R.drawable.child_girl_infant;
-            } else if (gender.toLowerCase().contains("trans")) {
-                return R.drawable.child_transgender_inflant;
-            }
-        }
-        return R.drawable.child_boy_infant;
-    }
-
     public static int profileImageResourceByGender(Gender gender) {
         if (gender != null) {
             if (gender.equals(Gender.MALE)) {
@@ -41,7 +28,8 @@ public class ImageUtils {
 
     public static Photo profilePhotoByClient(CommonPersonObjectClient client) {
         Photo photo = new Photo();
-        ProfileImage profileImage = ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(client.entityId());
+        ProfileImage profileImage = ImmunizationLibrary.getInstance().context().imageRepository()
+                .findByEntityId(client.entityId());
         if (profileImage != null) {
             photo.setFilePath(profileImage.getFilepath());
         } else {
@@ -49,6 +37,19 @@ public class ImageUtils {
             photo.setResourceId(profileImageResourceByGender(gender));
         }
         return photo;
+    }
+
+    public static int profileImageResourceByGender(String gender) {
+        if (StringUtils.isNotBlank(gender)) {
+            if (gender.equalsIgnoreCase("male")) {
+                return R.drawable.child_boy_infant;
+            } else if (gender.equalsIgnoreCase("female")) {
+                return R.drawable.child_girl_infant;
+            } else if (gender.toLowerCase().contains("trans")) {
+                return R.drawable.child_transgender_inflant;
+            }
+        }
+        return R.drawable.child_boy_infant;
     }
 
 }

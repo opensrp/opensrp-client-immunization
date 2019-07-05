@@ -31,14 +31,25 @@ import java.util.regex.Pattern;
 
 public class VaccineSchedule {
 
+    private static HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules;
     private final ArrayList<VaccineTrigger> dueTriggers;
     private final ArrayList<VaccineTrigger> expiryTriggers;
     private final VaccineRepo.Vaccine vaccine;
     private final ArrayList<VaccineCondition> conditions;
 
-    private static HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules;
+    public VaccineSchedule(ArrayList<VaccineTrigger> dueTriggers,
+                           ArrayList<VaccineTrigger> expiryTriggers,
+                           VaccineRepo.Vaccine vaccine,
+                           ArrayList<VaccineCondition> conditions) {
+        this.dueTriggers = dueTriggers;
+        this.expiryTriggers = expiryTriggers;
+        this.vaccine = vaccine;
+        this.conditions = conditions;
+    }
 
-    public static void init(List<VaccineGroup> vaccines, List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines, String vaccineCategory) {
+    public static void init(List<VaccineGroup> vaccines,
+                            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines,
+                            String vaccineCategory) {
         if (vaccineSchedules == null) {
             vaccineSchedules = new HashMap<>();
         }
@@ -57,7 +68,8 @@ public class VaccineSchedule {
         }
     }
 
-    private static void initVaccine(String vaccineCategory, org.smartregister.immunization.domain.jsonmapping.Vaccine curVaccine) {
+    private static void initVaccine(String vaccineCategory,
+                                    org.smartregister.immunization.domain.jsonmapping.Vaccine curVaccine) {
         if (TextUtils.isEmpty(curVaccine.vaccine_separator)) {
             String vaccineName = curVaccine.name;
             VaccineSchedule vaccineSchedule;
@@ -79,6 +91,44 @@ public class VaccineSchedule {
                 }
             }
         }
+    }
+
+    private static VaccineSchedule getVaccineSchedule(String vaccineName, String vaccineCategory, Schedule schedule) {
+        ArrayList<VaccineTrigger> dueTriggers = new ArrayList<>();
+        for (Due due : schedule.due) {
+            VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, due);
+            if (curTrigger != null) {
+                dueTriggers.add(curTrigger);
+            }
+        }
+
+        ArrayList<VaccineTrigger> expiryTriggers = new ArrayList<>();
+        if (schedule.expiry != null) {
+            for (Expiry expiry : schedule.expiry) {
+                VaccineTrigger curTrigger = VaccineTrigger.init(expiry);
+                if (curTrigger != null) {
+                    expiryTriggers.add(curTrigger);
+                }
+            }
+        }
+
+        VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(vaccineName, vaccineCategory);
+        if (vaccine != null) {
+            ArrayList<VaccineCondition> conditions = new ArrayList<>();
+            if (schedule.conditions != null) {
+                for (Condition condition : schedule.conditions) {
+                    VaccineCondition curCondition = VaccineCondition.init(vaccineCategory,
+                            condition);
+                    if (curCondition != null) {
+                        conditions.add(curCondition);
+                    }
+                }
+            }
+
+            return new VaccineSchedule(dueTriggers, expiryTriggers, vaccine, conditions);
+        }
+
+        return null;
     }
 
     /**
@@ -192,69 +242,13 @@ public class VaccineSchedule {
         }
     }
 
-    public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
-        if (vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory).containsKey(vaccineName.toUpperCase())) {
-            return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
-        }
-
-        return null;
-    }
-
-    private static VaccineSchedule getVaccineSchedule(String vaccineName, String vaccineCategory, Schedule schedule) {
-        ArrayList<VaccineTrigger> dueTriggers = new ArrayList<>();
-        for (Due due : schedule.due) {
-            VaccineTrigger curTrigger = VaccineTrigger.init(vaccineCategory, due);
-            if (curTrigger != null) {
-                dueTriggers.add(curTrigger);
-            }
-        }
-
-        ArrayList<VaccineTrigger> expiryTriggers = new ArrayList<>();
-        if (schedule.expiry != null) {
-            for (Expiry expiry : schedule.expiry) {
-                VaccineTrigger curTrigger = VaccineTrigger.init(expiry);
-                if (curTrigger != null) {
-                    expiryTriggers.add(curTrigger);
-                }
-            }
-        }
-
-        VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(vaccineName, vaccineCategory);
-        if (vaccine != null) {
-            ArrayList<VaccineCondition> conditions = new ArrayList<>();
-            if (schedule.conditions != null) {
-                for (Condition condition : schedule.conditions) {
-                    VaccineCondition curCondition = VaccineCondition.init(vaccineCategory,
-                            condition);
-                    if (curCondition != null) {
-                        conditions.add(curCondition);
-                    }
-                }
-            }
-
-            return new VaccineSchedule(dueTriggers, expiryTriggers, vaccine, conditions);
-        }
-
-        return null;
-    }
-
-    public VaccineSchedule(ArrayList<VaccineTrigger> dueTriggers,
-                           ArrayList<VaccineTrigger> expiryTriggers,
-                           VaccineRepo.Vaccine vaccine,
-                           ArrayList<VaccineCondition> conditions) {
-        this.dueTriggers = dueTriggers;
-        this.expiryTriggers = expiryTriggers;
-        this.vaccine = vaccine;
-        this.conditions = conditions;
-    }
-
     /**
-     * Returns the offline alert for a vaccine, if one exists. Currently, the only alert status
-     * returned is {@code AlertStatus.normal}
+     * Returns the offline alert for a vaccine, if one exists. Currently, the only alert status returned is {@code
+     * AlertStatus.normal}
      *
      * @return An {@link Alert} object if one exists, or {@code NULL} if non exists
      */
-    public Alert getOfflineAlert(final String baseEntityId, final Date dateOfBirth,
+    public Alert getOfflineAlert(String baseEntityId, Date dateOfBirth,
                                  List<Vaccine> issuedVaccines) {
         Alert defaultAlert = null;
 
@@ -285,41 +279,6 @@ public class VaccineSchedule {
         }
 
         return defaultAlert;
-    }
-
-    /**
-     * Calculates the alert status based on the reference date provided. Currently, the only alert
-     * status returned is {@code AlertStatus.normal}
-     *
-     * @param referenceDate The reference date to use to
-     * @param overDueDate   The overdue date to use
-     * @return {@link AlertStatus} if able to calculate or {@code NULL} if unable
-     */
-    private AlertStatus calculateAlertStatus(Date referenceDate, Date overDueDate) {
-        if (referenceDate != null) {
-            Calendar refCalendarDate = Calendar.getInstance();
-            refCalendarDate.setTime(referenceDate);
-            standardiseCalendarDate(refCalendarDate);
-
-            Calendar overDueCalendarDate = Calendar.getInstance();
-            if (overDueDate != null) {
-                overDueCalendarDate.setTime(overDueDate);
-                standardiseCalendarDate(overDueCalendarDate);
-            }
-
-            Calendar today = Calendar.getInstance();
-            standardiseCalendarDate(today);
-
-
-            if (overDueDate != null
-                    && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { //OverDue
-                return AlertStatus.urgent;
-            } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { // Due
-                return AlertStatus.normal;
-            }
-        }
-
-        return null;
     }
 
     public Date getDueDate(List<Vaccine> issuedVaccines, Date dob) {
@@ -378,6 +337,42 @@ public class VaccineSchedule {
         return null;
     }
 
+    /**
+     * Calculates the alert status based on the reference date provided. Currently, the only alert status returned is {@code
+     * AlertStatus.normal}
+     *
+     * @param referenceDate
+     *         The reference date to use to
+     * @param overDueDate
+     *         The overdue date to use
+     * @return {@link AlertStatus} if able to calculate or {@code NULL} if unable
+     */
+    private AlertStatus calculateAlertStatus(Date referenceDate, Date overDueDate) {
+        if (referenceDate != null) {
+            Calendar refCalendarDate = Calendar.getInstance();
+            refCalendarDate.setTime(referenceDate);
+            standardiseCalendarDate(refCalendarDate);
+
+            Calendar overDueCalendarDate = Calendar.getInstance();
+            if (overDueDate != null) {
+                overDueCalendarDate.setTime(overDueDate);
+                standardiseCalendarDate(overDueCalendarDate);
+            }
+
+            Calendar today = Calendar.getInstance();
+            standardiseCalendarDate(today);
+
+
+            if (overDueDate != null
+                    && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { //OverDue
+                return AlertStatus.urgent;
+            } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { // Due
+                return AlertStatus.normal;
+            }
+        }
+
+        return null;
+    }
 
     public static void standardiseCalendarDate(Calendar calendarDate) {
         calendarDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -387,22 +382,17 @@ public class VaccineSchedule {
     }
 
     /**
-     * This method adds an offset to the provided calendar.
-     * Offsets can look like:
-     * "+5y,3m,2d" : Plus 5 years, 3 months, and 2 days
-     * "-2d" : Minus 2 days
+     * This method adds an offset to the provided calendar. Offsets can look like: "+5y,3m,2d" : Plus 5 years, 3 months, and
+     * 2 days "-2d" : Minus 2 days
      * <p>
-     * Accepted time units for the offset are:
-     * d : Days
-     * m : Months
-     * y : Years
+     * Accepted time units for the offset are: d : Days m : Months y : Years
      * <p>
-     * Accepted operators for the offset are:
-     * - : Minus
-     * + : Plus
+     * Accepted operators for the offset are: - : Minus + : Plus
      *
-     * @param calendar The calendar to add the offset
-     * @param offset   The offset in the format above to add to the calendar
+     * @param calendar
+     *         The calendar to add the offset
+     * @param offset
+     *         The offset in the format above to add to the calendar
      * @return
      */
     public static Calendar addOffsetToCalendar(Calendar calendar, String offset) {
@@ -443,5 +433,14 @@ public class VaccineSchedule {
         }
 
         return calendar;
+    }
+
+    public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
+        if (vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
+                .containsKey(vaccineName.toUpperCase())) {
+            return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
+        }
+
+        return null;
     }
 }

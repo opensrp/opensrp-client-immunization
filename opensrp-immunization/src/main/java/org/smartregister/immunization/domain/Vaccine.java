@@ -36,7 +36,7 @@ public class Vaccine {
                            outOfCatchment) {
         this.id = id;
         this.baseEntityId = baseEntityId;
-        this.programClientId = null;
+        programClientId = null;
         this.name = name;
         this.calculation = calculation;
         this.date = date;
@@ -192,12 +192,12 @@ public class Vaccine {
         this.outOfCatchment = outOfCatchment;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getTeam() {

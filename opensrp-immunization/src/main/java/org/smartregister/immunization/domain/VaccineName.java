@@ -13,7 +13,8 @@ public class VaccineName {
     private String Client_type;
     private String Dose_no;
 
-    public VaccineName(long id, String name, String vaccine_type_id, String due_days, String reference_vaccine_id, String client_type, String dose_no) {
+    public VaccineName(long id, String name, String vaccine_type_id, String due_days, String reference_vaccine_id,
+                       String client_type, String dose_no) {
         this.id = id;
         this.name = name;
         this.vaccine_type_id = vaccine_type_id;

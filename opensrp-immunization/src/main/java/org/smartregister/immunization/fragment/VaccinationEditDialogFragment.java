@@ -43,7 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@SuppressLint("ValidFragment")
+@SuppressLint ("ValidFragment")
 public class VaccinationEditDialogFragment extends DialogFragment {
     private final Context context;
     private final ArrayList<VaccineWrapper> tags;
@@ -65,7 +65,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         this.issuedVaccines = issuedVaccines;
         this.tags = new ArrayList<>(tags);
         this.viewGroup = viewGroup;
-        this.disableConstraints = false;
+        disableConstraints = false;
     }
 
     private VaccinationEditDialogFragment(
@@ -108,7 +108,54 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public void onStart() {
+        super.onStart();
+
+        // without a handler, the window sizes itself correctly
+        // but the keyboard does not show up
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
+                Point size = new Point();
+
+                Display display = window.getWindowManager().getDefaultDisplay();
+                display.getSize(size);
+
+                int width = size.x;
+
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
+
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setGravity(Gravity.CENTER);
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (VaccinationActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement VaccinationActionListener");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (tags == null || tags.isEmpty()) {
@@ -131,12 +178,12 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             VaccineWrapper vaccineWrapper = tags.get(0);
             VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
             if (vaccine != null) {
-                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccine.display()));
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccine.display()));
             } else {
-                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccineWrapper.getName()));
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
             }
             ImageView select = vaccinationName.findViewById(R.id.imageView);
-//            select.setVisibility(View.GONE);
+            //            select.setVisibility(View.GONE);
 
             vaccinationNameLayout.addView(vaccinationName);
         } else {
@@ -147,9 +194,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
 
                 VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
                 if (vaccineWrapper.getVaccine() != null) {
-                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccine.display()));
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccine.display()));
                 } else {
-                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(),vaccineWrapper.getName()));
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
                 }
 
                 vaccinationNameLayout.addView(vaccinationName);
@@ -167,9 +214,12 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             if (tags.get(0).getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tags.get(0).getId());
-                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
-                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener(mImageView, defaultImageResId, errorImageResId));
+                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils
+                        .profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
+                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils
+                        .profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(),
+                        OpenSRPImageLoader.getStaticImageListener(mImageView, defaultImageResId, errorImageResId));
             }
         }
 
@@ -195,8 +245,8 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-//                calendar.set(year, month, day);
-//                calendar.setTimeZone(calendar.getTimeZone());
+                //                calendar.set(year, month, day);
+                //                calendar.setTimeZone(calendar.getTimeZone());
                 DateTime dateTime = new DateTime(calendar.getTime());
 
                 if (tags.size() == 1) {
@@ -240,40 +290,40 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
 
-//                dismiss();
-//
-//                Calendar calendar = Calendar.getInstance();
-//                DateTime dateTime = new DateTime(calendar.getTime());
-//                if (tags.size() == 1) {
-//                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
-//                } else
-//                    for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
-//                        View chilView = vaccinationNameLayout.getChildAt(i);
-//                        CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
-//                        if (selectChild.isChecked()) {
-//                            TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
-//                            String checkedName = childVaccineView.getText().toString();
-//                            VaccineWrapper tag = searchWrapperByName(checkedName);
-//                            if (tag != null) {
-//                                tag.setUpdatedVaccineDate(dateTime, true);
-//                            }
-//                        }
-//                    }
-//
-//                listener.onVaccinateToday(tags, viewGroup);
+                //                dismiss();
+                //
+                //                Calendar calendar = Calendar.getInstance();
+                //                DateTime dateTime = new DateTime(calendar.getTime());
+                //                if (tags.size() == 1) {
+                //                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
+                //                } else
+                //                    for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                //                        View chilView = vaccinationNameLayout.getChildAt(i);
+                //                        CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
+                //                        if (selectChild.isChecked()) {
+                //                            TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
+                //                            String checkedName = childVaccineView.getText().toString();
+                //                            VaccineWrapper tag = searchWrapperByName(checkedName);
+                //                            if (tag != null) {
+                //                                tag.setUpdatedVaccineDate(dateTime, true);
+                //                            }
+                //                        }
+                //                    }
+                //
+                //                listener.onVaccinateToday(tags, viewGroup);
 
             }
         });
 
-        final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
+        Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
                 if (tags.size() == 1) {
-//                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
+                    //                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
                     listener.onUndoVaccination(tags.get(0), viewGroup);
                 } else
                     for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
@@ -286,7 +336,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                             listener.onUndoVaccination(tag, viewGroup);
                         }
                     }
-//                listener.onUndoVaccination(tags,viewGroup);
+                //                listener.onUndoVaccination(tags,viewGroup);
             }
         });
 
@@ -316,6 +366,18 @@ public class VaccinationEditDialogFragment extends DialogFragment {
 
 
         return dialogView;
+    }
+
+    public Integer getDefaultImageResourceID() {
+        return defaultImageResourceID;
+    }
+
+    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
+        this.defaultImageResourceID = defaultImageResourceID;
+    }
+
+    public Integer getDefaultErrorImageResourceID() {
+        return defaultErrorImageResourceID;
     }
 
     private boolean validateVaccinationDate(VaccineWrapper vaccine, Date date) {
@@ -364,10 +426,30 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         return result;
     }
 
+    private VaccineWrapper searchWrapperByName(String name) {
+        if (tags == null || tags.isEmpty()) {
+            return null;
+        }
+
+        for (VaccineWrapper tag : tags) {
+            if (tag.getVaccine() != null) {
+                if (tag.getVaccine().display().equals(name)) {
+                    return tag;
+                }
+            } else {
+                if (tag.getName().equals(name)) {
+                    return tag;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param datePicker Date picker for selecting a previous date for a vaccine
+     * @param datePicker
+     *         Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(DatePicker datePicker, Button set) {
         Calendar today = Calendar.getInstance();
@@ -407,6 +489,38 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
     }
 
+    private Date getMinVaccineDate(String vaccineName) {
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
+                vaccineName);
+        if (curVaccineSchedule == null) {
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
+        Date minDate = null;
+
+        if (curVaccineSchedule != null) {
+            minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
+        }
+
+        return minDate;
+    }
+
+    private Date getMaxVaccineDate(String vaccineName) {
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
+                vaccineName);
+        if (curVaccineSchedule == null) {
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
+        Date maxDate = null;
+
+        if (curVaccineSchedule != null) {
+            maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
+        }
+
+        return maxDate;
+    }
+
     private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
         Date dueDate = getMinVaccineDate(vaccineName);
         Calendar minDate = minDate_;
@@ -441,116 +555,6 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
 
         return maxDate;
-    }
-
-    private Date getMinVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
-        if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
-        }
-        Date minDate = null;
-
-        if (curVaccineSchedule != null) {
-            minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
-        }
-
-        return minDate;
-    }
-
-    private Date getMaxVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
-        if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
-        }
-        Date maxDate = null;
-
-        if (curVaccineSchedule != null) {
-            maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
-        }
-
-        return maxDate;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            listener = (VaccinationActionListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement VaccinationActionListener");
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // without a handler, the window sizes itself correctly
-        // but the keyboard does not show up
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                Window window = null;
-                if (getDialog() != null) {
-                    window = getDialog().getWindow();
-                }
-
-                if (window == null) {
-                    return;
-                }
-
-                Point size = new Point();
-
-                Display display = window.getWindowManager().getDefaultDisplay();
-                display.getSize(size);
-
-                int width = size.x;
-
-                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
-
-                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-            }
-        });
-    }
-
-    private VaccineWrapper searchWrapperByName(String name) {
-        if (tags == null || tags.isEmpty()) {
-            return null;
-        }
-
-        for (VaccineWrapper tag : tags) {
-            if (tag.getVaccine() != null) {
-                if (tag.getVaccine().display().equals(name)) {
-                    return tag;
-                }
-            } else {
-                if (tag.getName().equals(name)) {
-                    return tag;
-                }
-            }
-        }
-        return null;
-    }
-
-    public Integer getDefaultImageResourceID() {
-        return defaultImageResourceID;
-    }
-
-    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
-        this.defaultImageResourceID = defaultImageResourceID;
-    }
-
-    public Integer getDefaultErrorImageResourceID() {
-        return defaultErrorImageResourceID;
     }
 
     public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {

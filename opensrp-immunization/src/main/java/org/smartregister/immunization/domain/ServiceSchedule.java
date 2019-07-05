@@ -32,20 +32,21 @@ public class ServiceSchedule {
     private final ServiceTrigger expiryTrigger;
 
 
-    public static ServiceSchedule getServiceSchedule(JSONObject schedule)
-            throws JSONException {
-        ServiceTrigger dueTrigger = ServiceTrigger.init(schedule.getJSONObject("due"));
-        ServiceTrigger expiryTrigger = ServiceTrigger.init(schedule.optJSONObject("expiry"));
-        return new ServiceSchedule(dueTrigger, expiryTrigger);
-    }
-
     public ServiceSchedule(ServiceTrigger dueTrigger, ServiceTrigger expiryTrigger) {
         this.dueTrigger = dueTrigger;
         this.expiryTrigger = expiryTrigger;
     }
 
+    public static ServiceSchedule getServiceSchedule(JSONObject schedule)
+    throws JSONException {
+        ServiceTrigger dueTrigger = ServiceTrigger.init(schedule.getJSONObject("due"));
+        ServiceTrigger expiryTrigger = ServiceTrigger.init(schedule.optJSONObject("expiry"));
+        return new ServiceSchedule(dueTrigger, expiryTrigger);
+    }
+
     public static void updateOfflineAlerts(String baseEntityId, DateTime dob) {
-        RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
+        RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance()
+                .recurringServiceTypeRepository();
         List<String> types = recurringServiceTypeRepository.fetchTypes();
         for (String type : types) {
             updateOfflineAlerts(type, baseEntityId, dob);
@@ -58,8 +59,10 @@ public class ServiceSchedule {
                 return;
             }
 
-            RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
-            RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+            RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance()
+                    .recurringServiceTypeRepository();
+            RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance()
+                    .recurringServiceRecordRepository();
             AlertService alertService = ImmunizationLibrary.getInstance().context().alertService();
 
             List<ServiceType> serviceTypes = recurringServiceTypeRepository.findByType(type);
@@ -93,7 +96,8 @@ public class ServiceSchedule {
                     // Check if service is already given
                     if (!exists) {
                         for (ServiceRecord serviceRecord : issuedServices) {
-                            if (curAlert.scheduleName().equalsIgnoreCase(serviceRecord.getName()) || curAlert.visitCode().equalsIgnoreCase(serviceRecord.getName())) {
+                            if (curAlert.scheduleName().equalsIgnoreCase(serviceRecord.getName()) || curAlert.visitCode()
+                                    .equalsIgnoreCase(serviceRecord.getName())) {
                                 exists = true;
                                 break;
                             }
@@ -115,7 +119,8 @@ public class ServiceSchedule {
     }
 
 
-    public static Alert getOfflineAlert(final ServiceType serviceType, final List<ServiceRecord> issuedServices, final String baseEntityId, final DateTime dateOfBirth) {
+    public static Alert getOfflineAlert(ServiceType serviceType, List<ServiceRecord> issuedServices,
+                                        String baseEntityId, DateTime dateOfBirth) {
 
         try {
             DateTime dueDateTime = VaccinatorUtils.getServiceDueDate(serviceType, dateOfBirth, issuedServices);
@@ -128,7 +133,8 @@ public class ServiceSchedule {
                 Date startDate = dueDateTime == null ? dateOfBirth.toDate() : dueDateTime.toDate();
                 Date expiryDate = expiryDateTime == null ? null : expiryDateTime.toDate();
                 return new Alert(baseEntityId, serviceType.getName(), serviceType.getName().toLowerCase().replace(" ", ""),
-                        alertStatus, startDate == null ? null : DateUtil.yyyyMMdd.format(startDate), expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate), true);
+                        alertStatus, startDate == null ? null : DateUtil.yyyyMMdd.format(startDate),
+                        expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate), true);
             }
             return null;
         } catch (Exception e) {
@@ -166,14 +172,6 @@ public class ServiceSchedule {
             return dateTime.withTime(0, 0, 0, 0);
         }
         return null;
-    }
-
-    public ServiceTrigger getDueTrigger() {
-        return dueTrigger;
-    }
-
-    public ServiceTrigger getExpiryTrigger() {
-        return expiryTrigger;
     }
 
     public static DateTime addOffsetToDateTime(DateTime dateTime, List<String> offsets) {
@@ -227,6 +225,14 @@ public class ServiceSchedule {
             Log.e(ServiceSchedule.class.getName(), e.toString(), e);
             return dateTime;
         }
+    }
+
+    public ServiceTrigger getDueTrigger() {
+        return dueTrigger;
+    }
+
+    public ServiceTrigger getExpiryTrigger() {
+        return expiryTrigger;
     }
 }
 

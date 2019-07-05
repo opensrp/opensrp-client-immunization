@@ -19,7 +19,8 @@ import java.util.Date;
  */
 public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
 
-    public static void createVaccineEvent(Context context, Vaccine vaccine, String eventType, String entityType, JSONArray fields) {
+    public static void createVaccineEvent(Context context, Vaccine vaccine, String eventType, String entityType,
+                                          JSONArray fields) {
         try {
             EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
 
@@ -31,7 +32,8 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                     .withLocationId(vaccine.getLocationId())
                     .withProviderId(vaccine.getAnmId())
                     .withEntityType(entityType)
-                    .withFormSubmissionId(vaccine.getFormSubmissionId() == null ? generateRandomUUIDString() : vaccine.getFormSubmissionId())
+                    .withFormSubmissionId(vaccine.getFormSubmissionId() == null ? generateRandomUUIDString() : vaccine
+                            .getFormSubmissionId())
                     .withDateCreated(new Date());
 
             event.setTeam(vaccine.getTeam());
@@ -69,7 +71,8 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
         }
     }
 
-    public static void createServiceEvent(Context context, ServiceRecord serviceRecord, String eventType, String entityType, JSONArray fields) {
+    public static void createServiceEvent(Context context, ServiceRecord serviceRecord, String eventType, String entityType,
+                                          JSONArray fields) {
         try {
             EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
 
@@ -81,7 +84,9 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                     .withLocationId(serviceRecord.getLocationId())
                     .withProviderId(serviceRecord.getAnmId())
                     .withEntityType(entityType)
-                    .withFormSubmissionId(serviceRecord.getFormSubmissionId() == null ? generateRandomUUIDString() : serviceRecord.getFormSubmissionId())
+                    .withFormSubmissionId(
+                            serviceRecord.getFormSubmissionId() == null ? generateRandomUUIDString() : serviceRecord
+                                    .getFormSubmissionId())
                     .withDateCreated(new Date());
 
             event.setTeam(serviceRecord.getTeam());

@@ -45,6 +45,19 @@ public class VaccineCard extends LinearLayout {
         init(context);
     }
 
+    private void init(Context context) {
+        this.context = context;
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.view_vaccination_card, this, true);
+        statusIV = findViewById(R.id.status_iv);
+        nameTV = findViewById(R.id.name_tv);
+        undoB = findViewById(R.id.undo_b);
+
+        //Init date formatters here to allow for dynamic language switching
+        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
+        SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
+    }
+
     public VaccineCard(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
@@ -55,23 +68,14 @@ public class VaccineCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
     public VaccineCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
-    private void init(Context context) {
-        this.context = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_vaccination_card, this, true);
-        statusIV = (ImageView) findViewById(R.id.status_iv);
-        nameTV = (TextView) findViewById(R.id.name_tv);
-        undoB = (Button) findViewById(R.id.undo_b);
-
-        //Init date formatters here to allow for dynamic language switching
-        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-        SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
+    public VaccineWrapper getVaccineWrapper() {
+        return vaccineWrapper;
     }
 
     public void setVaccineWrapper(VaccineWrapper vaccineWrapper) {
@@ -79,12 +83,8 @@ public class VaccineCard extends LinearLayout {
         updateState();
     }
 
-    public VaccineWrapper getVaccineWrapper() {
-        return this.vaccineWrapper;
-    }
-
     public void updateState() {
-        this.state = State.NOT_DUE;
+        state = State.NOT_DUE;
         if (vaccineWrapper != null) {
             Date dateDone = getDateDone();
             boolean isSynced = isSynced();
@@ -92,9 +92,9 @@ public class VaccineCard extends LinearLayout {
 
             if (dateDone != null) {// Vaccination was done
                 if (isSynced) {
-                    this.state = State.DONE_CAN_NOT_BE_UNDONE;
+                    state = State.DONE_CAN_NOT_BE_UNDONE;
                 } else {
-                    this.state = State.DONE_CAN_BE_UNDONE;
+                    state = State.DONE_CAN_BE_UNDONE;
                 }
             } else {// Vaccination has not been done
                 if (status != null) {
@@ -137,31 +137,34 @@ public class VaccineCard extends LinearLayout {
         }
     }
 
-    public void setChildActive(boolean childActive) {
-        isChildActive = childActive;
-    }
-
-    public void updateChildsActiveStatus() {
-        if (isChildActive) {
-            setBackgroundAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
-        } else {
-            setBackgroundAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+    private Date getDateDone() {
+        if (vaccineWrapper != null) {
+            DateTime dateDone = vaccineWrapper.getUpdatedVaccineDate();
+            if (dateDone != null) return dateDone.toDate();
         }
+
+        return null;
     }
 
-    private void setBackgroundAlpha(int alpha) {
-        getBackground().setAlpha(alpha);
-    }
-
-    public State getState() {
-        if (this.state == null) {
-            updateState();
+    private boolean isSynced() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.isSynced();
         }
-        return this.state;
+        return false;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    private String getStatus() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getStatus();
+        }
+        return null;
+    }
+
+    private Alert getAlert() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getAlert();
+        }
+        return null;
     }
 
     private void updateStateUi() {
@@ -235,6 +238,14 @@ public class VaccineCard extends LinearLayout {
         }
     }
 
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            setBackgroundAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            setBackgroundAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
+    }
+
     private String getVaccineName() {
         if (vaccineWrapper != null) {
             String name = vaccineWrapper.getName();
@@ -258,34 +269,23 @@ public class VaccineCard extends LinearLayout {
         return null;
     }
 
-    private Date getDateDone() {
-        if (vaccineWrapper != null) {
-            DateTime dateDone = vaccineWrapper.getUpdatedVaccineDate();
-            if (dateDone != null) return dateDone.toDate();
-        }
-
-        return null;
+    private void setBackgroundAlpha(int alpha) {
+        getBackground().setAlpha(alpha);
     }
 
-    private boolean isSynced() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.isSynced();
-        }
-        return false;
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
     }
 
-    private Alert getAlert() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getAlert();
+    public State getState() {
+        if (state == null) {
+            updateState();
         }
-        return null;
+        return state;
     }
 
-    private String getStatus() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getStatus();
-        }
-        return null;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Button getUndoB() {

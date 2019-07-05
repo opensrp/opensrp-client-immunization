@@ -87,13 +87,12 @@ import static org.smartregister.util.Utils.getValue;
  * Class containing some static utility methods.
  */
 public class VaccinatorUtils {
-    private static final String TAG = "VaccinatorUtils";
-
     public static final String vaccines_file = "vaccines.json";
     public static final String mother_vaccines_file = "mother_vaccines.json";
     public static final String special_vaccines_file = "special_vaccines.json";
     public static final String recurring_service_types_file = "recurring_service_types.json";
     public static final String vaccines_folder = "vaccines";
+    private static final String TAG = "VaccinatorUtils";
 
     public static HashMap<String, String> providerDetails() {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
@@ -139,11 +138,14 @@ public class VaccinatorUtils {
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type) {
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'";
-        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted, new String[]{});
+        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted, new String[] {});
     }
 
     public static int getWasted(String startDate, String endDate, String type, String... variables) {
-        List<CommonPersonObject> cl = ImmunizationLibrary.getInstance().context().commonrepository("stock").customQueryForCompleteRow("SELECT * FROM stock WHERE `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'", null, "stock");
+        List<CommonPersonObject> cl = ImmunizationLibrary.getInstance().context().commonrepository("stock")
+                .customQueryForCompleteRow(
+                        "SELECT * FROM stock WHERE `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'",
+                        null, "stock");
         int total = 0;
         for (CommonPersonObject c : cl) {
             for (String v : variables) {
@@ -152,18 +154,6 @@ public class VaccinatorUtils {
             }
         }
         return total;
-    }
-
-    public static ArrayList<HashMap<String, String>> getUsed(String startDate, String endDate, String table, String... vaccines) {
-        String q = "SELECT * FROM (";
-        for (String v : vaccines) {
-            q += " (select count(*) " + v + " from " + table + " where " + v + " between '" + startDate + "' and '" + endDate + "') " + v + " , ";
-        }
-        q = q.trim().substring(0, q.trim().lastIndexOf(","));
-        q += " ) e ";
-
-        Log.i("DD", q);
-        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[]{});
     }
 
     public static int getTotalUsed(String startDate, String endDate, String table, String... vaccines) {
@@ -177,6 +167,19 @@ public class VaccinatorUtils {
         Log.i("", "TOTAL USED: " + totalUsed);
 
         return totalUsed;
+    }
+
+    public static ArrayList<HashMap<String, String>> getUsed(String startDate, String endDate, String table,
+                                                             String... vaccines) {
+        String q = "SELECT * FROM (";
+        for (String v : vaccines) {
+            q += " (select count(*) " + v + " from " + table + " where " + v + " between '" + startDate + "' and '" + endDate + "') " + v + " , ";
+        }
+        q = q.trim().substring(0, q.trim().lastIndexOf(","));
+        q += " ) e ";
+
+        Log.i("DD", q);
+        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[] {});
     }
 
     public static void addStatusTag(Context context, TableLayout table, String tag, boolean hrLine) {
@@ -197,15 +200,16 @@ public class VaccinatorUtils {
         tr.setGravity(Gravity.CENTER_VERTICAL);
         tr.setTag(vaccineWrapper.getId());
 
-        RelativeLayout relativeLayout = (RelativeLayout) tr.findViewById(R.id.vacc_status_layout);
+        RelativeLayout relativeLayout = tr.findViewById(R.id.vacc_status_layout);
         if (vaccineWrapper.isCompact()) {
-            relativeLayout.setPadding(dpToPx(context, 0f), dpToPx(context, 7.5f), dpToPx(context, 0f), dpToPx(context, 7.5f));
+            relativeLayout
+                    .setPadding(dpToPx(context, 0f), dpToPx(context, 7.5f), dpToPx(context, 0f), dpToPx(context, 7.5f));
         } else {
             relativeLayout.setPadding(dpToPx(context, 0f), dpToPx(context, 10f), dpToPx(context, 0f), dpToPx(context, 10f));
         }
 
 
-        TextView label = (TextView) tr.findViewById(vaccine);
+        TextView label = tr.findViewById(vaccine);
         label.setText(vaccineWrapper.getVaccine().display());
 
         String vaccineDate = "";
@@ -234,13 +238,13 @@ public class VaccinatorUtils {
         l.setVerticalGravity(Gravity.CENTER_VERTICAL);
         l.setGravity(Gravity.CENTER_VERTICAL);
 
-        Button s = (Button) tr.findViewById(R.id.status);
+        Button s = tr.findViewById(R.id.status);
         s.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
 
-        TextView v = (TextView) tr.findViewById(R.id.date);
+        TextView v = tr.findViewById(R.id.date);
         v.setText(vaccineDate);
 
-        Button u = (Button) tr.findViewById(R.id.undo);
+        Button u = tr.findViewById(R.id.undo);
         FrameLayout.LayoutParams ulp = (FrameLayout.LayoutParams) u.getLayoutParams();
         if (vaccineWrapper.isCompact()) {
             ulp.width = dpToPx(context, 70f);
@@ -256,17 +260,21 @@ public class VaccinatorUtils {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                Fragment prev = ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag(UndoVaccinationDialogFragment.DIALOG_TAG);
+                Fragment prev = ((FragmentActivity) context).getSupportFragmentManager()
+                        .findFragmentByTag(UndoVaccinationDialogFragment.DIALOG_TAG);
                 if (prev != null) {
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
-                UndoVaccinationDialogFragment undoVaccinationDialogFragment = UndoVaccinationDialogFragment.newInstance(vaccineWrapper);
+                UndoVaccinationDialogFragment undoVaccinationDialogFragment = UndoVaccinationDialogFragment
+                        .newInstance(vaccineWrapper);
                 undoVaccinationDialogFragment.show(ft, UndoVaccinationDialogFragment.DIALOG_TAG);
             }
         });
 
-        if (table.getChildCount() > 0 && StringUtils.isNotBlank(vaccineWrapper.getId()) && StringUtils.isNotBlank(vaccineWrapper.getPreviousVaccineId()) && !vaccineWrapper.getId().equals(vaccineWrapper.getId())) {
+        if (table.getChildCount() > 0 && StringUtils.isNotBlank(vaccineWrapper.getId()) && StringUtils
+                .isNotBlank(vaccineWrapper.getPreviousVaccineId()) && !vaccineWrapper.getId()
+                .equals(vaccineWrapper.getId())) {
             View view = new View(context);
             view.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, dpToPx(context, 10f)));
 
@@ -276,7 +284,35 @@ public class VaccinatorUtils {
         table.addView(tr);
     }
 
-    private static void addVaccinationDialogHook(final Context context, TableRow tr, final VaccineWrapper vaccineWrapper, String color, String formattedDate) {
+    public static int dpToPx(Context context, float dpValue) {
+        Resources r = context.getResources();
+        float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
+        return new Float(val).intValue();
+    }
+
+    public static String getColorValue(Context cxt, AlertStatus alertStatus) {
+        if (alertStatus.equals(AlertStatus.upcoming)) {
+            return "#" + Integer
+                    .toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_upcoming))
+                    .substring(2);
+        }
+        if (alertStatus.equals(AlertStatus.normal)) {
+            return "#" + Integer
+                    .toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_normal))
+                    .substring(2);
+        }
+        if (alertStatus.equals(AlertStatus.urgent)) {
+            return "#" + Integer
+                    .toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_urgent))
+                    .substring(2);
+        } else {
+            return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_na))
+                    .substring(2);
+        }
+    }
+
+    private static void addVaccinationDialogHook(final Context context, TableRow tr, final VaccineWrapper vaccineWrapper,
+                                                 String color, String formattedDate) {
 
         if (VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper)) {
             vaccineWrapper.setColor(color);
@@ -287,21 +323,22 @@ public class VaccinatorUtils {
                 public void onClick(View view) {
                     FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                     Fragment prev =
-                            ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                            ((FragmentActivity) context).getSupportFragmentManager()
+                                    .findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
                     if (prev != null) {
                         ft.remove(prev);
                     }
                     ft.addToBackStack(null);
                     ArrayList<VaccineWrapper> list = new ArrayList<VaccineWrapper>();
                     list.add(vaccineWrapper);
-                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(null, null, list);
+                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment
+                            .newInstance(null, null, list);
                     vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
 
                 }
             });
         }
     }
-
 
     private static DateTime getReceivedDate(Map<String, String> received, Vaccine v) {
         if (received.get(v.name()) != null) {
@@ -312,7 +349,8 @@ public class VaccinatorUtils {
         return null;
     }
 
-    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts) {
+    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate,
+                                                                 Map<String, Date> received, List<Alert> alerts) {
         return generateScheduleList(category, milestoneDate, received, alerts, false);
     }
 
@@ -326,7 +364,9 @@ public class VaccinatorUtils {
      * @param showExpired
      * @return
      */
-    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts, boolean showExpired) {
+    public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate,
+                                                                 Map<String, Date> received, List<Alert> alerts,
+                                                                 boolean showExpired) {
         List<Map<String, Object>> schedule = new ArrayList<>();
         boolean m1Given = false;
         boolean m2Given = false;
@@ -346,7 +386,8 @@ public class VaccinatorUtils {
                     } else if (VaccineRepo.Vaccine.opv0.equals(v) || VaccineRepo.Vaccine.opv4.equals(v)) {
                         oGiven = true;
                     }
-                } else if (showExpired && milestoneDate != null && v.expiryDays() > 0 && milestoneDate.plusDays(v.expiryDays()).isBefore(DateTime.now())) {
+                } else if (showExpired && milestoneDate != null && v.expiryDays() > 0 && milestoneDate
+                        .plusDays(v.expiryDays()).isBefore(DateTime.now())) {
                     m = createVaccineMap("expired", null, milestoneDate.plusDays(v.expiryDays()), v);
                 } else if (alerts.size() > 0) {
                     for (Alert a : alerts) {
@@ -389,14 +430,26 @@ public class VaccinatorUtils {
         return schedule;
     }
 
-    private static List<Map<String, Object>> retrieveNotDoneSchedule(List<Map<String, Object>> schedule, boolean m1Given, boolean m2Given, boolean oGiven) {
+    private static Map<String, Object> createVaccineMap(String status, Alert a, DateTime
+            date, Vaccine v) {
+        Map<String, Object> m = new HashMap<>();
+        m.put("status", status);
+        m.put("alert", a);
+        m.put("date", date);
+        m.put("vaccine", v);
+
+        return m;
+    }
+
+    private static List<Map<String, Object>> retrieveNotDoneSchedule(List<Map<String, Object>> schedule, boolean m1Given,
+                                                                     boolean m2Given, boolean oGiven) {
         if (schedule == null || schedule.isEmpty() || (!m1Given && !m2Given && !oGiven)) {
             return new ArrayList<>();
         }
 
-        final String STATUS = "status";
-        final String VACCINE = "vaccine";
-        final String DONE = "done";
+        String STATUS = "status";
+        String VACCINE = "vaccine";
+        String DONE = "done";
         List<Map<String, Object>> toRemove = new ArrayList<>();
 
         for (Map<String, Object> m : schedule) {
@@ -422,11 +475,12 @@ public class VaccinatorUtils {
         return toRemove;
     }
 
-    public static List<Map<String, Object>> generateScheduleList(List<ServiceType> serviceTypes, DateTime milestoneDate, Map<String, Date> received, List<Alert> alerts) {
+    public static List<Map<String, Object>> generateScheduleList(List<ServiceType> serviceTypes, DateTime milestoneDate,
+                                                                 Map<String, Date> received, List<Alert> alerts) {
         List<Map<String, Object>> schedule = new ArrayList();
         try {
             for (ServiceType s : serviceTypes) {
-                final String VIT_A_IFC_2 = "Vit A IFC 2";
+                String VIT_A_IFC_2 = "Vit A IFC 2";
                 if (VIT_A_IFC_2.equals(s.getName())) {
                     int months = Months.monthsBetween(milestoneDate, DateTime.now()).getMonths();
                     if (months >= 6) {
@@ -463,8 +517,15 @@ public class VaccinatorUtils {
         return schedule;
     }
 
-    public static DateTime getServiceDueDate(ServiceType serviceType, DateTime milestoneDate, List<ServiceRecord> serviceRecordList) {
-        return getServiceDueDate(serviceType, milestoneDate, receivedServices(serviceRecordList));
+    private static Map<String, Object> createServiceMap(String status, Alert a, DateTime
+            date, ServiceType s) {
+        Map<String, Object> m = new HashMap<>();
+        m.put("status", status);
+        m.put("alert", a);
+        m.put("date", date);
+        m.put("service", s);
+
+        return m;
     }
 
     public static DateTime getServiceDueDate(ServiceType serviceType, DateTime milestoneDate, Map<String, Date> received) {
@@ -524,33 +585,65 @@ public class VaccinatorUtils {
         return null;
     }
 
+    /**
+     * Converts string [a,b,c] to string array
+     *
+     * @param s_
+     * @return
+     */
+    private static String[] convertToArray(String s_) {
+        try {
+            String s = s_;
+            if (StringUtils.isBlank(s)) {
+                return null;
+            }
+
+            if (s.contains("[")) {
+                s = s.replace("[", "");
+            }
+
+            if (s.contains("]")) {
+                s = s.replace("]", "");
+            }
+
+            if (StringUtils.isBlank(s)) {
+                return null;
+            } else if (s.contains(",")) {
+                return StringUtils.stripAll(s.split(","));
+            } else if (StringUtils.isNotBlank(s)) {
+                return new String[] {s};
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, e.toString(), e);
+        }
+        return null;
+    }
+
+    public static DateTime getServiceDueDate(ServiceType serviceType, DateTime milestoneDate,
+                                             List<ServiceRecord> serviceRecordList) {
+        return getServiceDueDate(serviceType, milestoneDate, receivedServices(serviceRecordList));
+    }
+
+    public static Map<String, Date> receivedServices(
+            List<org.smartregister.immunization.domain.ServiceRecord> serviceRecordList) {
+        Map<String, Date> map = new LinkedHashMap<>();
+        if (serviceRecordList != null) {
+            for (org.smartregister.immunization.domain.ServiceRecord serviceRecord : serviceRecordList) {
+                if (serviceRecord.getDate() != null) {
+                    map.put(serviceRecord.getName(), serviceRecord.getDate());
+                }
+            }
+        }
+        return map;
+
+    }
+
     public static DateTime getServiceExpiryDate(ServiceType serviceType, DateTime milestoneDate) {
         if (serviceType == null || milestoneDate == null) {
             return null;
         }
         return ServiceSchedule.addOffsetToDateTime(milestoneDate, serviceType.getExpiryOffset());
-    }
-
-    private static Map<String, Object> createVaccineMap(String status, Alert a, DateTime
-            date, Vaccine v) {
-        Map<String, Object> m = new HashMap<>();
-        m.put("status", status);
-        m.put("alert", a);
-        m.put("date", date);
-        m.put("vaccine", v);
-
-        return m;
-    }
-
-    private static Map<String, Object> createServiceMap(String status, Alert a, DateTime
-            date, ServiceType s) {
-        Map<String, Object> m = new HashMap<>();
-        m.put("status", status);
-        m.put("alert", a);
-        m.put("date", date);
-        m.put("service", s);
-
-        return m;
     }
 
     public static Map<String, Object> nextVaccineDue
@@ -559,7 +652,8 @@ public class VaccinatorUtils {
         try {
             for (Map<String, Object> m : schedule) {
                 if (m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")) {
-                    if (m.get("vaccine") != null && (((Vaccine) m.get("vaccine")).equals(Vaccine.bcg2) || ((Vaccine) m.get("vaccine")).equals(Vaccine.ipv))) {
+                    if (m.get("vaccine") != null && (m.get("vaccine").equals(Vaccine.bcg2) || m
+                            .get("vaccine").equals(Vaccine.ipv))) {
                         // bcg2 is a special alert and should not be considered as the next vaccine
                         continue;
                     }
@@ -586,22 +680,28 @@ public class VaccinatorUtils {
         try {
             for (Map<String, Object> m : schedule) {
                 if (m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")) {
-                    if (m.get("vaccine") != null && (((Vaccine) m.get("vaccine")).equals(Vaccine.bcg2) || ((Vaccine) m.get("vaccine")).equals(Vaccine.ipv))) {
+                    if (m.get("vaccine") != null && (m.get("vaccine").equals(Vaccine.bcg2) || m
+                            .get("vaccine").equals(Vaccine.ipv))) {
                         // bcg2 is a special alert and should not be considered as the next vaccine
                         continue;
                     }
 
-                    if (v == null && m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
+                    if (v == null && m.get("vaccine") != null && vaccineList.contains(m.get("vaccine"))) {
                         v = m;
-                    } else if ((v.get("alert") == null && m.get("alert") != null) && (m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine")))) {
+                    } else if ((v.get("alert") == null && m.get("alert") != null) && (m.get("vaccine") != null && vaccineList
+                            .contains(m.get("vaccine")))) {
                         v = m;
-                    } else if (v.get("alert") != null && m.get("alert") != null && m.get("vaccine") != null && vaccineList.contains((Vaccine) m.get("vaccine"))) {
+                    } else if (v.get("alert") != null && m.get("alert") != null && m.get("vaccine") != null && vaccineList
+                            .contains(m.get("vaccine"))) {
                         Alert vAlert = (Alert) v.get("alert");
                         Alert mAlert = (Alert) m.get("alert");
-                        if ((!vAlert.status().equals(AlertStatus.urgent) && (vAlert.status().equals(AlertStatus.upcoming)) && (mAlert.status().equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent)))) {
+                        if ((!vAlert.status().equals(AlertStatus.urgent) && (vAlert.status()
+                                .equals(AlertStatus.upcoming)) && (mAlert.status().equals(AlertStatus.normal) || mAlert
+                                .status().equals(AlertStatus.urgent)))) {
                             v = m;
 
-                        } else if (vAlert.status().equals(AlertStatus.normal) && mAlert.status().equals(AlertStatus.urgent)) {
+                        } else if (vAlert.status().equals(AlertStatus.normal) && mAlert.status()
+                                .equals(AlertStatus.urgent)) {
                             v = m;
 
                         }
@@ -644,19 +744,23 @@ public class VaccinatorUtils {
             for (Map<String, Object> m : schedule) {
                 if (m != null && m.get("status") != null && m.get("status").toString().equalsIgnoreCase("due")) {
 
-                    if (v == null && m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
+                    if (v == null && m.get("service") != null && serviceTypeList.contains(m.get("service"))) {
                         v = m;
 
-                    } else if (v.get("alert") == null && m.get("alert") != null && m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
+                    } else if (v.get("alert") == null && m.get("alert") != null && m
+                            .get("service") != null && serviceTypeList.contains(m.get("service"))) {
                         v = m;
 
-                    } else if (v.get("alert") != null && m.get("alert") != null && m.get("service") != null && serviceTypeList.contains((ServiceType) m.get("service"))) {
+                    } else if (v.get("alert") != null && m.get("alert") != null && m
+                            .get("service") != null && serviceTypeList.contains(m.get("service"))) {
                         Alert vAlert = (Alert) v.get("alert");
                         Alert mAlert = (Alert) m.get("alert");
                         if (!vAlert.status().equals(AlertStatus.urgent)) {
-                            if (vAlert.status().equals(AlertStatus.upcoming) && (mAlert.status().equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent))) {
+                            if (vAlert.status().equals(AlertStatus.upcoming) && (mAlert.status()
+                                    .equals(AlertStatus.normal) || mAlert.status().equals(AlertStatus.urgent))) {
                                 v = m;
-                            } else if (vAlert.status().equals(AlertStatus.normal) && mAlert.status().equals(AlertStatus.urgent)) {
+                            } else if (vAlert.status().equals(AlertStatus.normal) && mAlert.status()
+                                    .equals(AlertStatus.urgent)) {
                                 v = m;
                             }
                         }
@@ -671,7 +775,8 @@ public class VaccinatorUtils {
 
     public static Map<String, Object> nextServiceDue
             (List<Map<String, Object>> schedule, ServiceRecord lastServiceRecord) {
-        if (lastServiceRecord == null || StringUtils.isBlank(lastServiceRecord.getType()) || StringUtils.isBlank(lastServiceRecord.getName())) {
+        if (lastServiceRecord == null || StringUtils.isBlank(lastServiceRecord.getType()) || StringUtils
+                .isBlank(lastServiceRecord.getName())) {
             return null;
         }
 
@@ -682,7 +787,8 @@ public class VaccinatorUtils {
         for (Map<String, Object> m : schedule) {
             if (m != null && m.get("service") != null) {
                 ServiceType mServiceType = (ServiceType) m.get("service");
-                if (mServiceType.getName().equalsIgnoreCase(lastServiceRecord.getName()) && mServiceType.getType().equalsIgnoreCase(lastServiceRecord.getType())) {
+                if (mServiceType.getName().equalsIgnoreCase(lastServiceRecord.getName()) && mServiceType.getType()
+                        .equalsIgnoreCase(lastServiceRecord.getType())) {
                     v = m;
                 }
             }
@@ -690,40 +796,11 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static int dpToPx(Context context, float dpValue) {
-        Resources r = context.getResources();
-        float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
-        return new Float(val).intValue();
-    }
-
-    /**
-     * Returns a list of VaccineGroup containing a list of supported vaccines
-     *
-     * @param context Current valid context to be used
-     * @return list of VaccineGroup with the supported vaccines
-     */
-    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context) {
-        return getSupportedVaccines(context, null);
-    }
-
-    /**
-     * Returns a list of VaccineGroup containing a list of supported vaccines
-     *
-     * @param context Current valid context to be used
-     * @param prefix  Country prefix
-     * @return list of VaccineGroup with the supported vaccines
-     */
-    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
-        Class<List<VaccineGroup>> clazz = (Class) List.class;
-        Type listType = new TypeToken<List<VaccineGroup>>() {
-        }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file, prefix), clazz, listType);
-    }
-
     /**
      * Returns a list of VaccineGroup containing a list of supported woman vaccines
      *
-     * @param context Current valid context to be used
+     * @param context
+     *         Current valid context to be used
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context) {
@@ -733,7 +810,8 @@ public class VaccinatorUtils {
     /**
      * Returns a list of VaccineGroup containing a list of supported woman vaccines
      *
-     * @param context Current valid context to be used
+     * @param context
+     *         Current valid context to be used
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
@@ -743,16 +821,27 @@ public class VaccinatorUtils {
         return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(mother_vaccines_file, prefix), clazz, listType);
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
+    public static String getFileName(String fileName, String prefix) {
+        if (prefix != null) {
+            return prefix + "_" + fileName;
+        } else {
+            return fileName;
+        }
+    }
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(
+            @Nullable Context context) {
         return getSpecialVaccines(context, null);
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context, String prefix) {
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(
+            @Nullable Context context, String prefix) {
 
         return getJsonVaccineGroup(getFileName(special_vaccines_file, prefix));
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(@NonNull String filename) {
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(
+            @NonNull String filename) {
 
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
@@ -763,7 +852,8 @@ public class VaccinatorUtils {
     /**
      * Returns a JSON String containing a list of supported services
      *
-     * @param context Current valid context to be used
+     * @param context
+     *         Current valid context to be used
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context) {
@@ -773,16 +863,18 @@ public class VaccinatorUtils {
     /**
      * Returns a JSON String containing a list of supported services
      *
-     * @param context Current valid context to be used
+     * @param context
+     *         Current valid context to be used
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context, String prefix) {
-        String supportedServicesString = org.smartregister.util.Utils.readAssetContents(context, getFileName(recurring_service_types_file, prefix));
+        String supportedServicesString = org.smartregister.util.Utils
+                .readAssetContents(context, getFileName(recurring_service_types_file, prefix));
         return supportedServicesString;
     }
 
     public static int getVaccineCalculation(Context context, String vaccineName)
-            throws JSONException {
+    throws JSONException {
         List<VaccineGroup> supportedVaccines = getSupportedVaccines(context);
         for (VaccineGroup vaccineGroup : supportedVaccines) {
             for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
@@ -791,6 +883,33 @@ public class VaccinatorUtils {
             }
         }
         return -1;
+    }
+
+    /**
+     * Returns a list of VaccineGroup containing a list of supported vaccines
+     *
+     * @param context
+     *         Current valid context to be used
+     * @return list of VaccineGroup with the supported vaccines
+     */
+    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context) {
+        return getSupportedVaccines(context, null);
+    }
+
+    /**
+     * Returns a list of VaccineGroup containing a list of supported vaccines
+     *
+     * @param context
+     *         Current valid context to be used
+     * @param prefix
+     *         Country prefix
+     * @return list of VaccineGroup with the supported vaccines
+     */
+    public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file, prefix), clazz, listType);
     }
 
     public static Map<String, Date> receivedVaccines(List<org.smartregister.immunization.domain.Vaccine> vaccines) {
@@ -806,26 +925,13 @@ public class VaccinatorUtils {
 
     }
 
-    public static Map<String, Date> receivedServices(List<org.smartregister.immunization.domain.ServiceRecord> serviceRecordList) {
-        Map<String, Date> map = new LinkedHashMap<>();
-        if (serviceRecordList != null) {
-            for (org.smartregister.immunization.domain.ServiceRecord serviceRecord : serviceRecordList) {
-                if (serviceRecord.getDate() != null) {
-                    map.put(serviceRecord.getName(), serviceRecord.getDate());
-                }
-            }
-        }
-        return map;
-
-    }
-
     /**
      * This method retrieves the human readable name corresponding to the vaccine name from {@code Vaccine.getName()}
      *
      * @param vaccineDbName
      * @return
      */
-    public static String getVaccineDisplayName(Context context, final String vaccineDbName) {
+    public static String getVaccineDisplayName(Context context, String vaccineDbName) {
         List<VaccineGroup> availableVaccines = getSupportedVaccines(context);
 
         for (VaccineGroup vaccineGroup : availableVaccines) {
@@ -839,65 +945,10 @@ public class VaccinatorUtils {
     }
 
     /**
-     * Converts string [a,b,c] to string array
-     *
-     * @param s_
-     * @return
-     */
-    private static String[] convertToArray(String s_) {
-        try {
-            String s = s_;
-            if (StringUtils.isBlank(s)) {
-                return null;
-            }
-
-            if (s.contains("[")) {
-                s = s.replace("[", "");
-            }
-
-            if (s.contains("]")) {
-                s = s.replace("]", "");
-            }
-
-            if (StringUtils.isBlank(s)) {
-                return null;
-            } else if (s.contains(",")) {
-                return StringUtils.stripAll(s.split(","));
-            } else if (StringUtils.isNotBlank(s)) {
-                return new String[]{s};
-            }
-
-        } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
-        }
-        return null;
-    }
-
-    public static String getColorValue(Context cxt, AlertStatus alertStatus) {
-        if (alertStatus.equals(AlertStatus.upcoming)) {
-            return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_upcoming)).substring(2);
-        }
-        if (alertStatus.equals(AlertStatus.normal)) {
-            return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_normal)).substring(2);
-        }
-        if (alertStatus.equals(AlertStatus.urgent)) {
-            return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_urgent)).substring(2);
-        } else {
-            return "#" + Integer.toHexString(cxt.getResources().getColor(org.smartregister.immunization.R.color.alert_na)).substring(2);
-        }
-    }
-
-    public static String getFileName(String fileName, String prefix) {
-        if (prefix != null) {
-            return prefix + "_" + fileName;
-        } else {
-            return fileName;
-        }
-    }
-
-    /**
-     * @param context Context
-     * @param name_   vaccine name to translate
+     * @param context
+     *         Context
+     * @param name_
+     *         vaccine name to translate
      * @return translated value
      */
     public static String getTranslatedVaccineName(Context context, String name_) {
@@ -917,13 +968,17 @@ public class VaccinatorUtils {
     }
 
     /**
-     * @param context     Context
-     * @param vaccineName vaccine name which is converted to a string key/identifier in strings xml of string to translate
+     * @param context
+     *         Context
+     * @param vaccineName
+     *         vaccine name which is converted to a string key/identifier in strings xml of string to translate
      * @return translated value
      */
     public static String translate(Context context, String vaccineName) {
         String resourceIdentifierKey = vaccineName;
-        int identifier = context.getResources().getIdentifier(resourceIdentifierKey.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), "string", context.getPackageName());
+        int identifier = context.getResources()
+                .getIdentifier(resourceIdentifierKey.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), "string",
+                        context.getPackageName());
         if (identifier > 0) {
             resourceIdentifierKey = context.getResources().getString(identifier);
 
@@ -932,7 +987,8 @@ public class VaccinatorUtils {
     }
 
     /**
-     * @param vaccineGroup Vaccine Group object with name to translate
+     * @param vaccineGroup
+     *         Vaccine Group object with name to translate
      * @return translated group name
      */
     public static String getTranslatedGroupName(Context context, VaccineGroup vaccineGroup) {

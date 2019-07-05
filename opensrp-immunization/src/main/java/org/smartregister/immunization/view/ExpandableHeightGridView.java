@@ -22,10 +22,6 @@ public class ExpandableHeightGridView extends GridView {
         super(context, attrs, defStyle);
     }
 
-    public boolean isExpanded() {
-        return expanded;
-    }
-
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (isExpanded()) {
@@ -40,6 +36,10 @@ public class ExpandableHeightGridView extends GridView {
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
+    }
+
+    public boolean isExpanded() {
+        return expanded;
     }
 
     public void setExpanded(boolean expanded) {
