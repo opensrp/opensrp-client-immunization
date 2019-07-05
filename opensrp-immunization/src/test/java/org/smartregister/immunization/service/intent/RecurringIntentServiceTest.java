@@ -22,7 +22,7 @@ import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class})
+@PrepareForTest ({ImmunizationLibrary.class})
 public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Rule
@@ -58,10 +58,13 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository()).thenReturn(recurringServiceTypeRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
-        PowerMockito.doReturn(1).when((IntentService) recurringIntentService).onStartCommand(intent, IntentService.START_FLAG_REDELIVERY, 1);
-//        recurringIntentService.onStartCommand(intent,IntentService.START_FLAG_REDELIVERY,1);
+        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository())
+                .thenReturn(recurringServiceTypeRepository);
+        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository())
+                .thenReturn(recurringServiceRecordRepository);
+        PowerMockito.doReturn(1).when((IntentService) recurringIntentService)
+                .onStartCommand(intent, IntentService.START_FLAG_REDELIVERY, 1);
+        //        recurringIntentService.onStartCommand(intent,IntentService.START_FLAG_REDELIVERY,1);
     }
 
 }

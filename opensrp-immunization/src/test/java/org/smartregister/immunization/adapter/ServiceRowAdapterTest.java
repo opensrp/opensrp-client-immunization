@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,61 +33,34 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceRowCardShadow.class})
+@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceRowCardShadow.class})
 public class ServiceRowAdapterTest extends BaseUnitTest {
 
-    @Mock
-    private Context context;
-
-
-    private ServiceRowAdapter serviceRowAdapter;
-
-
-    private ServiceRowGroup view;
-
-    @Mock
-    private CommonPersonObjectClient commonPersonObjectClient;
-
+    private final int magicNumber = 231231;
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
     @Mock
     protected View convertView;
-
     @Mock
     protected ViewGroup parentView;
+    @Mock
+    private Context context;
+    private ServiceRowAdapter serviceRowAdapter;
+    private ServiceRowGroup view;
+    @Mock
+    private CommonPersonObjectClient commonPersonObjectClient;
     private ServiceWrapper wrapper;
-    private final int magicNumber = 231231;
     private String type = "SERVICETYPE";
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
     private List<ServiceType> serviceTypeList = new ArrayList<>();
-    private List<ServiceRecord> serviceRecordList= new ArrayList<>();
+    private List<ServiceRecord> serviceRecordList = new ArrayList<>();
     private List<Alert> alertList = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {
         view = new ServiceRowGroup(RuntimeEnvironment.application, true);
         setDataForTest(magicDate);
-        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application, view, true, serviceTypeList, serviceRecordList, alertList);
+        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application, view, true, serviceTypeList,
+                serviceRecordList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
-        org.junit.Assert.assertNotNull(new ServiceRowAdapter(context, view, true, serviceTypeList, serviceRecordList, alertList));
-    }
-
-    @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() {
-
-        junit.framework.Assert.assertEquals(1, serviceRowAdapter.getCount());
-
-        //should return null
-        Assert.assertNull(serviceRowAdapter.getItem(0));
-
-        Assert.assertEquals(serviceRowAdapter.getItemId(0), magicNumber);
-    }
-
-    @Test
-    public void assertGetViewReturnsServiceRowView() {
-        Assert.assertEquals(serviceRowAdapter.getView(0, null, null) != null, true);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -138,11 +110,36 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
         ArrayList<ServiceRecord> servcServiceRecords = new ArrayList<>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);
         view.setData(childdetails, serviceTypes, servcServiceRecords, alertlist);
+    }
+
+    @Test
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
+        org.junit.Assert
+                .assertNotNull(new ServiceRowAdapter(context, view, true, serviceTypeList, serviceRecordList, alertList));
+    }
+
+    @Test
+    public void assertGetCountReturnsTheCorrectNumberOfItems() {
+
+        junit.framework.Assert.assertEquals(1, serviceRowAdapter.getCount());
+
+        //should return null
+        Assert.assertNull(serviceRowAdapter.getItem(0));
+
+        Assert.assertEquals(serviceRowAdapter.getItemId(0), magicNumber);
+    }
+
+    @Test
+    public void assertGetViewReturnsServiceRowView() {
+        Assert.assertEquals(serviceRowAdapter.getView(0, null, null) != null, true);
     }
 
 }

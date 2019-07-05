@@ -42,22 +42,18 @@ import java.util.Map;
 
 public class ServiceGroupTest extends BaseUnitTest {
 
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
+    private final String type = "SERVICETYPE";
     private ServiceGroup view;
-
     @Mock
     private Context context;
-
     private ActivityController<ServiceGroupTestActivity> controller;
-
     @InjectMocks
     private ServiceGroupTestActivity activity;
-
     @Mock
     private org.smartregister.Context context_;
     private ArrayList<ServiceWrapper> wrappers;
     private ServiceWrapper wrapper;
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
-    private final String type = "SERVICETYPE";
 
     @Before
     public void setUp() {
@@ -104,7 +100,8 @@ public class ServiceGroupTest extends BaseUnitTest {
         setDataForTest(magicDate);
         view.updateViews();
 
-        ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceGroup.OnServiceClickedListener.class);
+        ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito
+                .mock(ServiceGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
@@ -117,19 +114,27 @@ public class ServiceGroupTest extends BaseUnitTest {
 
         serviceCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceClickedListener, Mockito.never())
+                .onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceClickedListener, Mockito.never())
+                .onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceClickedListener, Mockito.never())
+                .onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceClickedListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceClickedListener, Mockito.never())
+                .onClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
@@ -140,52 +145,43 @@ public class ServiceGroupTest extends BaseUnitTest {
         Mockito.verify(onServiceClickedListener, Mockito.times(2)).onClick(view, wrapper);
 
         // UNDO
-        ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceGroup.OnServiceUndoClickListener.class);
+        ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito
+                .mock(ServiceGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
 
         serviceCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
-        Mockito.verify(onServiceUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class), org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
+        Mockito.verify(onServiceUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(ServiceGroup.class),
+                        org.mockito.ArgumentMatchers.any(ServiceWrapper.class));
 
         serviceCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(serviceCard, 0, adapter.getItemId(0));
         Mockito.verify(onServiceUndoClickListener, Mockito.times(1)).onUndoClick(view, wrapper);
-    }
-
-    @Test
-    public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
-        setDataForTest(magicDate);
-        view.updateWrapperStatus(wrappers);
-        wrapper = new ServiceWrapper();
-        wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
-
-        view.updateWrapper(wrapper);
-
-        Assert.assertNotNull(view.getServiceRecordList());
-    }
-
-    @Test
-    public void assertIsModalOpenReturnsBoolean() throws Exception {
-        view.setModalOpen(true);
-        Assert.assertEquals(view.isModalOpen(), true);
-        view.setModalOpen(false);
-        Assert.assertEquals(view.isModalOpen(), false);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -232,11 +228,34 @@ public class ServiceGroupTest extends BaseUnitTest {
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
         List<ServiceRecord> servcServiceRecords = new ArrayList<>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);
         view.setData(childdetails, serviceTypeMap, servcServiceRecords, alertlist);
+    }
+
+    @Test
+    public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() throws Exception {
+        setDataForTest(magicDate);
+        view.updateWrapperStatus(wrappers);
+        wrapper = new ServiceWrapper();
+        wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
+
+        view.updateWrapper(wrapper);
+
+        Assert.assertNotNull(view.getServiceRecordList());
+    }
+
+    @Test
+    public void assertIsModalOpenReturnsBoolean() throws Exception {
+        view.setModalOpen(true);
+        Assert.assertEquals(view.isModalOpen(), true);
+        view.setModalOpen(false);
+        Assert.assertEquals(view.isModalOpen(), false);
     }
 
     @Test

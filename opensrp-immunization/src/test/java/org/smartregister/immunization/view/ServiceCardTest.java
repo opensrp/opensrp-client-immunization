@@ -28,22 +28,17 @@ import org.smartregister.immunization.view.mock.ServiceCardTestActivity;
 
 public class ServiceCardTest extends BaseUnitTest {
 
-    private ServiceCard view;
-
-    @Mock
-    private Context context;
-
-    private ActivityController<ServiceCardTestActivity> controller;
-
-    @InjectMocks
-    private ServiceCardTestActivity activity;
-
-    @Mock
-    private org.smartregister.Context context_;
-
     private final String magicDue = "due";
     private final String magicExpired = "expired";
     private final String magicDefault = "DEFAULT";
+    private ServiceCard view;
+    @Mock
+    private Context context;
+    private ActivityController<ServiceCardTestActivity> controller;
+    @InjectMocks
+    private ServiceCardTestActivity activity;
+    @Mock
+    private org.smartregister.Context context_;
 
     @Before
     public void setUp() {

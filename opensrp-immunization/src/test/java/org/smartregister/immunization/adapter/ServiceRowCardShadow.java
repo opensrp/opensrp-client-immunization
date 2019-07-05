@@ -10,7 +10,7 @@ import org.smartregister.immunization.view.ServiceRowCard;
  * Created by kaderchowdhury on 13/12/17.
  */
 
-@Implements(ServiceRowCard.class)
+@Implements (ServiceRowCard.class)
 public class ServiceRowCardShadow extends ShadowViewGroup {
 
     @Implementation

@@ -14,10 +14,10 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
  * Created by onaio on 29/08/2017.
  */
 
-@RunWith(PowerMockRunner.class)
-@PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@RunWith (PowerMockRunner.class)
+@PowerMockRunnerDelegate (RobolectricTestRunner.class)
+@Config (constants = BuildConfig.class, shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
+@PowerMockIgnore ({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
 
 }

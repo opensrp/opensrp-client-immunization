@@ -9,7 +9,7 @@ import org.smartregister.immunization.view.VaccineCard;
 /**
  * Created by kaderchowdhury on 13/12/17.
  */
-@Implements(VaccineCard.class)
+@Implements (VaccineCard.class)
 public class VaccineCardShadow extends ShadowViewGroup {
 
     @Implementation

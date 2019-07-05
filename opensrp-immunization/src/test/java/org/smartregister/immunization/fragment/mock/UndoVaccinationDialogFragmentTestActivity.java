@@ -1,9 +1,9 @@
 package org.smartregister.immunization.fragment.mock;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -28,7 +28,7 @@ import java.util.List;
  * Created by real on 05/11/17.
  */
 
-public class UndoVaccinationDialogFragmentTestActivity extends Activity implements VaccinationActionListener {
+public class UndoVaccinationDialogFragmentTestActivity extends FragmentActivity implements VaccinationActionListener {
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -47,11 +47,12 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         List<Vaccine> issuedVaccines = new ArrayList<Vaccine>();
 
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         issuedVaccines.add(vaccine);
 
         VaccineWrapper tag = new VaccineWrapper();
-//        tag.setId(VaccineWrapperTest.ID);
+        //        tag.setId(VaccineWrapperTest.ID);
         tag.setId(null);
         tag.setDbKey(0l);
         tag.setStatus(VaccineWrapperTest.STATUS);
@@ -76,17 +77,36 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
         ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
 
-//        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), issuedVaccines, taglist);
         UndoVaccinationDialogFragment fragment = UndoVaccinationDialogFragment.newInstance(tag);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -107,25 +127,5 @@ public class UndoVaccinationDialogFragmentTestActivity extends Activity implemen
     @Override
     protected void onRestart() {
         super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

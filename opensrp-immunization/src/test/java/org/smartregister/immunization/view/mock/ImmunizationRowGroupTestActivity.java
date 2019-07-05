@@ -24,22 +24,6 @@ public class ImmunizationRowGroupTestActivity extends Activity {
         setContentView(linearLayout);
     }
 
-    public ImmunizationRowGroup getInstance() {
-        return (view == null) ? new ImmunizationRowGroup(this, true) : view;
-    }
-
-    public ImmunizationRowGroup getInstance2() {
-        return new ImmunizationRowGroup(this, ViewAttributes.attrs);
-    }
-
-    public ImmunizationRowGroup getInstance3() {
-        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0);
-    }
-
-    public ImmunizationRowGroup getInstance1() {
-        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0, 0);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -68,6 +52,22 @@ public class ImmunizationRowGroupTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ImmunizationRowGroup getInstance() {
+        return (view == null) ? new ImmunizationRowGroup(this, true) : view;
+    }
+
+    public ImmunizationRowGroup getInstance2() {
+        return new ImmunizationRowGroup(this, ViewAttributes.attrs);
+    }
+
+    public ImmunizationRowGroup getInstance3() {
+        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0);
+    }
+
+    public ImmunizationRowGroup getInstance1() {
+        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
 }

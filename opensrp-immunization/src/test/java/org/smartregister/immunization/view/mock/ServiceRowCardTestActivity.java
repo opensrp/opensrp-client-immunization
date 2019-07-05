@@ -24,22 +24,6 @@ public class ServiceRowCardTestActivity extends Activity {
         setContentView(linearLayout);
     }
 
-    public ServiceRowCard getInstance() {
-        return (view == null) ? new ServiceRowCard(this) : view;
-    }
-
-    public ServiceRowCard getInstance2() {
-        return new ServiceRowCard(this, ViewAttributes.attrs);
-    }
-
-    public ServiceRowCard getInstance3() {
-        return new ServiceRowCard(this, ViewAttributes.attrs, 0);
-    }
-
-    public ServiceRowCard getInstance1() {
-        return new ServiceRowCard(this, ViewAttributes.attrs, 0, 0);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -68,6 +52,22 @@ public class ServiceRowCardTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ServiceRowCard getInstance() {
+        return (view == null) ? new ServiceRowCard(this) : view;
+    }
+
+    public ServiceRowCard getInstance2() {
+        return new ServiceRowCard(this, ViewAttributes.attrs);
+    }
+
+    public ServiceRowCard getInstance3() {
+        return new ServiceRowCard(this, ViewAttributes.attrs, 0);
+    }
+
+    public ServiceRowCard getInstance1() {
+        return new ServiceRowCard(this, ViewAttributes.attrs, 0, 0);
     }
 
 }

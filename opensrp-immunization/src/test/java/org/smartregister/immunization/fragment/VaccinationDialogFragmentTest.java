@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
@@ -26,7 +28,7 @@ import java.util.Date;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@Config (shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class VaccinationDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationDialogFragmentTestActivity> controller;
@@ -39,13 +41,11 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
-        activity = controller.start().resume().get();
         CoreLibrary.init(context_);
-        controller.setup();
+        org.mockito.MockitoAnnotations.initMocks(this);
 
+        activity = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class).create().start().get();
+        activity.setContentView(R.layout.service_dialog_view);
     }
 
     @After
@@ -54,16 +54,6 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         activity = null;
         controller = null;
 
-    }
-
-    @Test
-    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
-        destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
-        activity = controller.get();
-        controller.setup();
-        junit.framework.Assert.assertNotNull(activity);
     }
 
     private void destroyController() {
@@ -77,8 +67,20 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     }
 
     @Test
+    public void assertOnCreateViewTestSetsUpTheActivity() {
+        destroyController();
+        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationDialogFragmentTestActivity.class);
+        controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
+        activity = controller.get();
+        controller.setup();
+        Assert.assertNotNull(activity);
+    }
+
+    @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>()));
-        junit.framework.Assert.assertNotNull(VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), true));
+        Assert.assertNotNull(
+                VaccinationDialogFragment.newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>()));
+        Assert.assertNotNull(VaccinationDialogFragment
+                .newInstance(new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), true));
     }
 }

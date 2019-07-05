@@ -10,7 +10,7 @@ import org.smartregister.immunization.util.ImageUtils;
 /**
  * Created by kaderchowdhury on 13/12/17.
  */
-@Implements(ImageUtils.class)
+@Implements (ImageUtils.class)
 public class ImageUtilsShadow extends Shadow {
 
     @Implementation

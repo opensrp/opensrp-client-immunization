@@ -1,10 +1,10 @@
 package org.smartregister.immunization.fragment.mock;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by real on 02/11/17.
  */
-public class FragmentUtilActivityUsingServiceActionListener extends Activity implements ServiceActionListener {
+public class FragmentUtilActivityUsingServiceActionListener extends AppCompatActivity implements ServiceActionListener {
 
     private LinearLayout linearLayout;
     private ServiceEditDialogFragment fragment;
@@ -53,18 +53,18 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
     }
 
     @Override
-    public void onGiveToday(ServiceWrapper tag, View view) {
-
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
-    public void onGiveEarlier(ServiceWrapper tag, View view) {
-
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
-    public void onUndoService(ServiceWrapper tag, View view) {
-
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void startFragment() {
@@ -72,7 +72,10 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
         Alert alert = Mockito.mock(Alert.class);
 
         List<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
 
         issuedServices.add(serviceRecord);
         ServiceWrapper tag = new ServiceWrapper();
@@ -100,15 +103,25 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
         tag.setGender(ServiceWrapperTest.GENDER);
         tag.setSynced(true);
         fragment = ServiceEditDialogFragment.newInstance(datetime, issuedServices, tag, linearLayout, true);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(fragment, null);
         fragmentTransaction.commit();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onGiveToday(ServiceWrapper tag, View view) {
+
+    }
+
+    @Override
+    public void onGiveEarlier(ServiceWrapper tag, View view) {
+
+    }
+
+    @Override
+    public void onUndoService(ServiceWrapper tag, View view) {
+
     }
 
     @Override
@@ -117,23 +130,13 @@ public class FragmentUtilActivityUsingServiceActionListener extends Activity imp
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
     }
 
 }

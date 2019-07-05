@@ -35,19 +35,18 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
-@Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest ({ImmunizationLibrary.class})
+@Config (shadows = {FontTextViewShadow.class})
+@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowCardTest extends BaseUnitTest {
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-    private ImmunizationRowCard view;
 
     private final String magicDue = "due";
     private final String magicMR = "mr";
     private final String magicMeasles = "measles";
     private final String magicExpired = "expired";
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    private ImmunizationRowCard view;
 
     @Before
     public void setUp() throws Exception {
@@ -55,8 +54,10 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         view = new ImmunizationRowCard(RuntimeEnvironment.application);
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date());
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0,
+                new Date(),
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date());
         Event event = new Event();
         event.setEventId("1");
         event.setDateCreated(new DateTime());
@@ -64,12 +65,15 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
-        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 0, 0);
+        ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
+                Mockito.mock(CommonFtsObject.class), 0, 0);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
         PowerMockito.when(vaccineRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(vaccine);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository.convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class))).thenReturn(event);
+        PowerMockito.when(eventClientRepository
+                .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
+                .thenReturn(event);
     }
 
     @Test

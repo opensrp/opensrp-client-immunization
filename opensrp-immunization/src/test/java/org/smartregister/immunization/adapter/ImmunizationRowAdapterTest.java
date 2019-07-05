@@ -39,28 +39,25 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class})
-@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest ({ImmunizationLibrary.class})
+@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
+@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
+    private final int magicNumber = 231231;
     @Mock
     private Context context;
-
     @Mock
     private org.smartregister.Context context_;
-    
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
     private VaccineWrapper wrapper;
     private ArrayList<VaccineWrapper> wrappers;
     private ImmunizationRowGroup view;
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
-
-    private final int magicNumber = 231231;
 
     @Before
     public void setUp() {
@@ -68,35 +65,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         CoreLibrary.init(context_);
         view = new ImmunizationRowGroup(RuntimeEnvironment.application, false);
         setDataForTest(magicDate);
-    }
-
-    @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
-    }
-
-    @Test
-    public void assertGetCountTestReturnsCount() throws Exception {
-
-
-        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist);
-        junit.framework.Assert.assertNotNull(immunizationRowAdapter);
-        int len = new JSONArray(VaccineData.vaccines).getJSONObject(0).getJSONArray("vaccines").length();
-        junit.framework.Assert.assertEquals(len, immunizationRowAdapter.getCount());
-
-        //should return null
-        junit.framework.Assert.assertNull(immunizationRowAdapter.getItem(0));
-
-        junit.framework.Assert.assertEquals(immunizationRowAdapter.getItemId(0), magicNumber);
-
-    }
-
-    @Test
-    public void assertGetViewReturnsVaccineGroup() {
-        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view, true, vaccinelist, alertlist);
-
-        junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
-
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -131,19 +99,53 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
         vaccinelist = new ArrayList<>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
         alertlist = new ArrayList<>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist);
+    }
+
+    @Test
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
+        junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
+    }
+
+    @Test
+    public void assertGetCountTestReturnsCount() throws Exception {
+
+
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, view, true, vaccinelist,
+                alertlist);
+        junit.framework.Assert.assertNotNull(immunizationRowAdapter);
+        int len = new JSONArray(VaccineData.vaccines).getJSONObject(0).getJSONArray("vaccines").length();
+        junit.framework.Assert.assertEquals(len, immunizationRowAdapter.getCount());
+
+        //should return null
+        junit.framework.Assert.assertNull(immunizationRowAdapter.getItem(0));
+
+        junit.framework.Assert.assertEquals(immunizationRowAdapter.getItemId(0), magicNumber);
+
+    }
+
+    @Test
+    public void assertGetViewReturnsVaccineGroup() {
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view,
+                true, vaccinelist, alertlist);
+
+        junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
+
     }
 
 }

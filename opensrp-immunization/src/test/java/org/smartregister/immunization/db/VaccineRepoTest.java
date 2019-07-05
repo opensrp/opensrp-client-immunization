@@ -44,6 +44,10 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.penta2);
         vaccines.add(VaccineRepo.Vaccine.pcv2);
         vaccines.add(VaccineRepo.Vaccine.rota2);
+        vaccines.add(VaccineRepo.Vaccine.mv1);
+        vaccines.add(VaccineRepo.Vaccine.mv2);
+        vaccines.add(VaccineRepo.Vaccine.mv3);
+        vaccines.add(VaccineRepo.Vaccine.mv4);
         vaccines.add(VaccineRepo.Vaccine.opv3);
         vaccines.add(VaccineRepo.Vaccine.penta3);
         vaccines.add(VaccineRepo.Vaccine.pcv3);

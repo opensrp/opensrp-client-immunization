@@ -27,26 +27,21 @@ import java.util.ArrayList;
 /**
  * Created by real on 29/10/17.
  */
-@PrepareForTest({VaccinatorUtils.class, ImmunizationLibrary.class, Utils.class})
+@PrepareForTest ({VaccinatorUtils.class, ImmunizationLibrary.class, Utils.class})
 public class IMDatabaseUtilsTest extends BaseUnitTest {
-
-    @InjectMocks
-    private IMDatabaseUtils imDatabaseUtils;
-
-    @Mock
-    private Context context;
-
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private VaccineTypeRepository vaccineTypeRepository;
-
-    @Mock
-    private RecurringServiceTypeRepository recurringServiceTypeRepository;
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
+    @InjectMocks
+    private IMDatabaseUtils imDatabaseUtils;
+    @Mock
+    private Context context;
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private VaccineTypeRepository vaccineTypeRepository;
+    @Mock
+    private RecurringServiceTypeRepository recurringServiceTypeRepository;
 
     @Before
     public void setUp() {
@@ -58,7 +53,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
     public void assertPopulateRecurringServices() throws Exception {
         PowerMockito.mockStatic(VaccinatorUtils.class);
         PowerMockito.when(VaccinatorUtils.getSupportedRecurringServices(context)).thenReturn(ServiceData.recurringservice);
-        imDatabaseUtils.populateRecurringServices(context, null, recurringServiceTypeRepository);
+        IMDatabaseUtils.populateRecurringServices(context, null, recurringServiceTypeRepository);
         org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
 
@@ -70,8 +65,9 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.vaccineTypeRepository()).thenReturn(vaccineTypeRepository);
         PowerMockito.when(vaccineTypeRepository.getAllVaccineTypes(null)).thenReturn(new ArrayList<VaccineType>());
-        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(Context.class), org.mockito.ArgumentMatchers.any(String.class))).thenReturn(VaccineData.vaccine_type);
-        imDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, null);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(Context.class),
+                org.mockito.ArgumentMatchers.any(String.class))).thenReturn(VaccineData.vaccine_type);
+        IMDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, null);
         org.junit.Assert.assertNotNull(imDatabaseUtils);
     }
 

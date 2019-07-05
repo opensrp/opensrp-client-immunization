@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import junit.framework.Assert;
 
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,61 +33,27 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceCardShadow.class})
+@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceCardShadow.class})
 public class ServiceCardAdapterTest extends BaseUnitTest {
 
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
+    private final String type = "SERVICETYPE";
+    private final int magicNumber = 231231;
+    @Mock
+    protected View convertView;
+    @Mock
+    protected ViewGroup parentView;
     @Mock
     private Context context;
-
     private ServiceCardAdapter serviceCardAdapter;
-
     private ServiceGroup view;
-
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
     private ArrayList<ServiceWrapper> wrappers;
-    @Mock
-    protected View convertView;
     private ServiceWrapper wrapper;
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
-    private final String type = "SERVICETYPE";
-    @Mock
-    protected ViewGroup parentView;
-
-    private final int magicNumber = 231231;
     private List<ServiceRecord> serviceTypeList = new ArrayList<>();
     private List<Alert> serviceRecordList = new ArrayList<>();
-    private Map<String,List<ServiceType>> alertList = new HashMap<>();
-
-    @Before
-    public void setUp() {
-        view = new ServiceGroup(RuntimeEnvironment.application);
-        setDataForTest(magicDate);
-        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view, serviceTypeList, serviceRecordList, alertList);
-        org.mockito.MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
-        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
-    }
-
-    @Test
-    public void assertGetViewReturnsServiceGroup() {
-        org.junit.Assert.assertEquals(serviceCardAdapter.getView(0, null, null) != null, true);
-    }
-
-    @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
-
-        org.junit.Assert.assertNotNull(serviceCardAdapter);
-        org.junit.Assert.assertEquals(1, serviceCardAdapter.getCount());
-
-        //should return null
-        Assert.assertNull(serviceCardAdapter.getItem(0));
-
-        Assert.assertEquals(serviceCardAdapter.getItemId(0), magicNumber);
-    }
+    private Map<String, List<ServiceType>> alertList = new HashMap<>();
 
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {
         List<String> keys = new ArrayList<>();
@@ -99,6 +64,15 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
             keys.add(key);
         }
         return keys;
+    }
+
+    @Before
+    public void setUp() {
+        view = new ServiceGroup(RuntimeEnvironment.application);
+        setDataForTest(magicDate);
+        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view, serviceTypeList, serviceRecordList,
+                alertList);
+        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -149,10 +123,35 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         serviceTypes.add(serviceType);
         serviceTypeMap.put(type, serviceTypes);
         List<ServiceRecord> servcServiceRecords = new ArrayList<>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         servcServiceRecords.add(serviceRecord);
         view.setData(childdetails, serviceTypeMap, servcServiceRecords, alertlist);
+    }
+
+    @Test
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
+        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
+    }
+
+    @Test
+    public void assertGetViewReturnsServiceGroup() {
+        org.junit.Assert.assertEquals(serviceCardAdapter.getView(0, null, null) != null, true);
+    }
+
+    @Test
+    public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
+
+        org.junit.Assert.assertNotNull(serviceCardAdapter);
+        org.junit.Assert.assertEquals(1, serviceCardAdapter.getCount());
+
+        //should return null
+        Assert.assertNull(serviceCardAdapter.getItem(0));
+
+        Assert.assertEquals(serviceCardAdapter.getItemId(0), magicNumber);
     }
 }

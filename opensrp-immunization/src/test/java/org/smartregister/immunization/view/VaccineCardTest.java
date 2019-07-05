@@ -28,21 +28,17 @@ import org.smartregister.immunization.view.mock.VaccineCardTestActivity;
 
 public class VaccineCardTest extends BaseUnitTest {
 
-    private VaccineCard view;
-
-    @Mock
-    private Context context;
-
-    private ActivityController<VaccineCardTestActivity> controller;
-
-    @InjectMocks
-    private VaccineCardTestActivity activity;
-
-    @Mock
-    private org.smartregister.Context context_;
     private final String magicDue = "due";
     private final String magicMR = "mr";
     private final String magicExpired = "expired";
+    private VaccineCard view;
+    @Mock
+    private Context context;
+    private ActivityController<VaccineCardTestActivity> controller;
+    @InjectMocks
+    private VaccineCardTestActivity activity;
+    @Mock
+    private org.smartregister.Context context_;
 
     @Before
     public void setUp() {

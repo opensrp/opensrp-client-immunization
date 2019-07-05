@@ -24,22 +24,6 @@ public class ServiceRowGroupTestActivity extends Activity {
         setContentView(linearLayout);
     }
 
-    public ServiceRowGroup getInstance() {
-        return (view == null) ? new ServiceRowGroup(this) : view;
-    }
-
-    public ServiceRowGroup getInstance2() {
-        return new ServiceRowGroup(this, ViewAttributes.attrs);
-    }
-
-    public ServiceRowGroup getInstance3() {
-        return new ServiceRowGroup(this, ViewAttributes.attrs, 0);
-    }
-
-    public ServiceRowGroup getInstance1() {
-        return new ServiceRowGroup(this, ViewAttributes.attrs, 0, 0);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -68,6 +52,22 @@ public class ServiceRowGroupTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ServiceRowGroup getInstance() {
+        return (view == null) ? new ServiceRowGroup(this) : view;
+    }
+
+    public ServiceRowGroup getInstance2() {
+        return new ServiceRowGroup(this, ViewAttributes.attrs);
+    }
+
+    public ServiceRowGroup getInstance3() {
+        return new ServiceRowGroup(this, ViewAttributes.attrs, 0);
+    }
+
+    public ServiceRowGroup getInstance1() {
+        return new ServiceRowGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
 }

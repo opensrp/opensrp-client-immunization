@@ -16,6 +16,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.UndoServiceDialogFragmentTestActivity;
@@ -23,7 +24,7 @@ import org.smartregister.immunization.fragment.mock.UndoServiceDialogFragmentTes
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class})
+@Config (shadows = {FontTextViewShadow.class})
 public class UndoServiceDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<UndoServiceDialogFragmentTestActivity> controller;
@@ -35,16 +36,12 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
     private org.smartregister.Context context_;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+        CoreLibrary.init(context_);
         org.mockito.MockitoAnnotations.initMocks(this);
 
-        Intent intent = new Intent(RuntimeEnvironment.application, UndoServiceDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(UndoServiceDialogFragmentTestActivity.class, intent);
-        activity = controller.start().resume().get();
-
-        CoreLibrary.init(context_);
-        controller.setup();
-
+        activity = Robolectric.buildActivity(UndoServiceDialogFragmentTestActivity.class).create().start().get();
+        activity.setContentView(R.layout.service_dialog_view);
     }
 
     @After
@@ -53,6 +50,18 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
         activity = null;
         controller = null;
 
+    }
+
+    private void destroyController() {
+        try {
+            activity.finish();
+            controller.pause().stop().destroy(); //destroy controller if we can
+
+        } catch (Exception e) {
+            Log.e(getClass().getCanonicalName(), e.getMessage());
+        }
+
+        System.gc();
     }
 
     @Test
@@ -68,17 +77,5 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
         activity = controller.get();
         controller.setup();
         Assert.assertNotNull(activity);
-    }
-
-    private void destroyController() {
-        try {
-            activity.finish();
-            controller.pause().stop().destroy(); //destroy controller if we can
-
-        } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
-        }
-
-        System.gc();
     }
 }

@@ -48,26 +48,8 @@ import static org.mockito.ArgumentMatchers.eq;
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class, Utils.class, AssetHandler.class})
+@PrepareForTest ({ImmunizationLibrary.class, Utils.class, AssetHandler.class})
 public class VaccinatorUtilsTest extends BaseUnitTest {
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-
-    @Mock
-    private Context context;
-
-    @Mock
-    private CommonRepository commonRepository;
-
-    @Mock
-    private VaccinatorUtils vaccinatorUtils;
-
-    @Mock
-    private Resources resources;
 
     private final int magicColor = 255;
     private final String magicOPV0 = "OPV 0";
@@ -75,9 +57,20 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     private final String UNTRANSLATED = "translate";
     private final String TRANSLATED = "tafsiri";
     private final int RESOURCE_ID = 123456;
-
     private final String UNTRANSLATED_GROUP_NAME = "6 weeks";
     private final String TRANSLATED_GROUP_NAME = "6 weeks";
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private Context context;
+    @Mock
+    private CommonRepository commonRepository;
+    @Mock
+    private VaccinatorUtils vaccinatorUtils;
+    @Mock
+    private Resources resources;
 
     @Before
     public void setUp() {
@@ -89,10 +82,13 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
+        PowerMockito
+                .when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(commonRepository);
         VaccinatorUtils.getWasted("", "", "");
         VaccinatorUtils.getWasted("", "", "", "");
-        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[]{}));
+        Mockito.verify(commonRepository, Mockito.times(1))
+                .rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[] {}));
     }
 
     @Test
@@ -100,9 +96,12 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
-        VaccinatorUtils.getUsed("", "", "", new String[]{"", ""});
-        Mockito.verify(commonRepository, Mockito.times(1)).rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[]{}));
+        PowerMockito
+                .when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(commonRepository);
+        VaccinatorUtils.getUsed("", "", "", "", "");
+        Mockito.verify(commonRepository, Mockito.times(1))
+                .rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[] {}));
     }
 
     @Test
@@ -112,7 +111,9 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString())).thenReturn(commonRepository);
+        PowerMockito
+                .when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(commonRepository);
 
         android.content.Context ctx = Mockito.mock(android.content.Context.class);
         Resources resources = Mockito.mock(Resources.class);
@@ -120,19 +121,19 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(magicColor);
 
         //get file name with prefix
-        Assert.assertEquals(vaccinatorUtils.getFileName("vaccines.json", "tz"), "tz_vaccines.json");
+        Assert.assertEquals(VaccinatorUtils.getFileName("vaccines.json", "tz"), "tz_vaccines.json");
 
         //get file name without prefix
-        Assert.assertEquals(vaccinatorUtils.getFileName("vaccines.json", null), "vaccines.json");
+        Assert.assertEquals(VaccinatorUtils.getFileName("vaccines.json", null), "vaccines.json");
 
 
         //get color test for different status
-        Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
-        Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.normal));
-        Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.urgent));
-        Assert.assertNotNull(vaccinatorUtils.getColorValue(ctx, AlertStatus.expired));
+        Assert.assertNotNull(VaccinatorUtils.getColorValue(ctx, AlertStatus.upcoming));
+        Assert.assertNotNull(VaccinatorUtils.getColorValue(ctx, AlertStatus.normal));
+        Assert.assertNotNull(VaccinatorUtils.getColorValue(ctx, AlertStatus.urgent));
+        Assert.assertNotNull(VaccinatorUtils.getColorValue(ctx, AlertStatus.expired));
         //get getServiceExpiryDate null test
-        Assert.assertNull(vaccinatorUtils.getServiceExpiryDate(null, null));
+        Assert.assertNull(VaccinatorUtils.getServiceExpiryDate(null, null));
         Assert.assertNotNull(new IMConstants());
         Assert.assertNotNull(new VaccineScheduleUtils());
         Assert.assertNotNull(new JsonFormUtils());
@@ -141,8 +142,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(new VaccinateActionUtils());
         Assert.assertNotNull(new VaccinatorUtils());
         Assert.assertEquals(IMConstants.VACCINE_SYNC_TIME, BuildConfig.VACCINE_SYNC_TIME);
-//        VaccinatorUtils powerspy = PowerMockito.spy(vaccinatorUtils);
-//        PowerMockito.doReturn(new HashMap<String, Object>()).when(VaccinatorUtils.class, "createVaccineMap", mock(String.class), mock(Alert.class), mock(DateTime.class), mock(ServiceType.class));
+        //        VaccinatorUtils powerspy = PowerMockito.spy(vaccinatorUtils);
+        //        PowerMockito.doReturn(new HashMap<String, Object>()).when(VaccinatorUtils.class, "createVaccineMap", mock(String.class), mock(Alert.class), mock(DateTime.class), mock(ServiceType.class));
     }
 
     @Test
@@ -211,13 +212,17 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Type listType2 = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
 
-        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType2);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.special_vacines, listType2);
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
+        PowerMockito.when(immunizationLibrary.assetJsonToJava("special_vaccines.json", clazz2, listType2))
+                .thenReturn(specialVaccines);
         JSONAssert.assertEquals(VaccineData.special_vacines,
-                JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2), JSONCompareMode.NON_EXTENSIBLE);
+                JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2),
+                JSONCompareMode.NON_EXTENSIBLE);
         //readrecurringservices
-        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class), org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
+        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class),
+                org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
         Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context), ServiceData.recurringservice);
     }
 

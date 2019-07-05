@@ -41,34 +41,27 @@ import static org.junit.Assert.fail;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, VaccineCardShadow.class})
+@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, VaccineCardShadow.class})
 public class VaccineCardAdapterTest extends BaseUnitTest {
 
-    @Mock
-    private Context context;
-
-    private VaccineCardAdapter vaccineCardAdapter;
-
-    private VaccineGroup view;
-
-    @Mock
-    private CommonPersonObjectClient commonPersonObjectClient;
-
+    private final int magicNumber = 231231;
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
     @Mock
     protected View convertView;
-
     @Mock
     protected ViewGroup parentView;
-
-    private final int magicNumber = 231231;
+    @Mock
+    private Context context;
+    private VaccineCardAdapter vaccineCardAdapter;
+    private VaccineGroup view;
+    @Mock
+    private CommonPersonObjectClient commonPersonObjectClient;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
     private VaccineWrapper wrapper;
     private ArrayList<VaccineWrapper> wrappers;
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
-
-    private List<Vaccine> vaccineList= new ArrayList<>();
+    private List<Vaccine> vaccineList = new ArrayList<>();
     private List<Alert> alertList = new ArrayList<>();
 
     @Before
@@ -77,28 +70,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         setDataForTest(magicDate);
         vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
-        assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
-    }
-
-    @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() {
-
-        assertEquals(2, vaccineCardAdapter.getCount());
-
-        //should return null
-        assertNull(vaccineCardAdapter.getItem(0));
-
-        assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
-
-    }
-
-    @Test
-    public void assertGetViewReturnsVaccineCard() {
-        assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -121,7 +92,8 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup>>() {
         }.getType();
-        List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.vaccines, listType);
         org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData = vaccines.get(0);
 
         HashMap<String, String> detail = new HashMap<>();
@@ -133,19 +105,44 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
         vaccinelist = new ArrayList<>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
         alertlist = new ArrayList<>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");
+    }
+
+    @Test
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
+        assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
+    }
+
+    @Test
+    public void assertGetCountReturnsTheCorrectNumberOfItems() {
+
+        assertEquals(2, vaccineCardAdapter.getCount());
+
+        //should return null
+        assertNull(vaccineCardAdapter.getItem(0));
+
+        assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
+
+    }
+
+    @Test
+    public void assertGetViewReturnsVaccineCard() {
+        assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
     }
 
     @Test
@@ -178,7 +175,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void testGetVaccineList() {
-        List<Vaccine> vaccineList =  vaccineCardAdapter.getVaccineList();
+        List<Vaccine> vaccineList = vaccineCardAdapter.getVaccineList();
         assertEquals(0, vaccineList.size());
     }
 

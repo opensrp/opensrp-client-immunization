@@ -39,18 +39,16 @@ import java.util.List;
 
 public class VaccineGroupTest extends BaseUnitTest {
 
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
     private VaccineGroup view;
-
     @Mock
     private Context context;
-
     private org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
     private VaccineWrapper wrapper;
     private ArrayList<VaccineWrapper> wrappers;
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
 
     @Before
     public void setUp() {
@@ -74,6 +72,52 @@ public class VaccineGroupTest extends BaseUnitTest {
     public void assertEqualsVaccineData() {
         setDataForTest(magicDate);
         Assert.assertEquals(view.getVaccineData(), vaccineData);
+    }
+
+    public void setDataForTest(String dateTimeString) {
+        wrappers = new ArrayList<>();
+        wrapper = new VaccineWrapper();
+        wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
+        wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
+        wrappers.add(wrapper);
+        wrapper = new VaccineWrapper();
+        wrapper.setVaccine(VaccineRepo.Vaccine.opv1);
+        wrapper.setName(VaccineRepo.Vaccine.opv1.display());
+        wrappers.add(wrapper);
+        wrapper = new VaccineWrapper();
+        wrapper.setName(VaccineRepo.Vaccine.measles2.display());
+        wrapper.setVaccine(VaccineRepo.Vaccine.measles2);
+        wrappers.add(wrapper);
+
+        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.vaccines, listType);
+
+        vaccineData = vaccines.get(0);
+
+        HashMap<String, String> detail = new HashMap<String, String>();
+        detail.put("dob", dateTimeString);
+        childdetails = new CommonPersonObjectClient("1", detail, "NME");
+        childdetails.setColumnmaps(detail);
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+        Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
+        vaccinelist = new ArrayList<>();
+        vaccinelist.add(vaccine);
+        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+        vaccinelist.add(vaccine);
+        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+        vaccinelist.add(vaccine);
+        alertlist = new ArrayList<>();
+        alertlist.add(alert);
+        view.setData(vaccineData, childdetails, vaccinelist, alertlist, "mother");
+        view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");
     }
 
     @Test
@@ -120,14 +164,17 @@ public class VaccineGroupTest extends BaseUnitTest {
         view.updateViews(wrappers);
 
         // Record All
-        VaccineGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(VaccineGroup.OnRecordAllClickListener.class);
+        VaccineGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito
+                .mock(VaccineGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
-        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(ArrayList.class));
+        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
-        VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(VaccineGroup.OnVaccineClickedListener.class);
+        VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
+                .mock(VaccineGroup.OnVaccineClickedListener.class);
         view.setOnVaccineClickedListener(onVaccineClickListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
@@ -140,19 +187,23 @@ public class VaccineGroupTest extends BaseUnitTest {
 
         vaccineCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
@@ -163,28 +214,39 @@ public class VaccineGroupTest extends BaseUnitTest {
         Mockito.verify(onVaccineClickListener, Mockito.times(2)).onClick(view, wrapper);
 
         // UNDO
-        VaccineGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(VaccineGroup.OnVaccineUndoClickListener.class);
+        VaccineGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito
+                .mock(VaccineGroup.OnVaccineUndoClickListener.class);
         view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
 
         vaccineCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineUndoClickListener, Mockito.never()).onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class), org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineUndoClickListener, Mockito.never())
+                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
@@ -212,48 +274,6 @@ public class VaccineGroupTest extends BaseUnitTest {
         Assert.assertEquals(view.isModalOpen(), true);
         view.setModalOpen(false);
         Assert.assertEquals(view.isModalOpen(), false);
-    }
-
-    public void setDataForTest(String dateTimeString) {
-        wrappers = new ArrayList<>();
-        wrapper = new VaccineWrapper();
-        wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
-        wrapper.setVaccine(VaccineRepo.Vaccine.bcg2);
-        wrappers.add(wrapper);
-        wrapper = new VaccineWrapper();
-        wrapper.setVaccine(VaccineRepo.Vaccine.opv1);
-        wrapper.setName(VaccineRepo.Vaccine.opv1.display());
-        wrappers.add(wrapper);
-        wrapper = new VaccineWrapper();
-        wrapper.setName(VaccineRepo.Vaccine.measles2.display());
-        wrapper.setVaccine(VaccineRepo.Vaccine.measles2);
-        wrappers.add(wrapper);
-
-        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup>>() {
-        }.getType();
-        List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
-
-        vaccineData = vaccines.get(0);
-
-        HashMap<String, String> detail = new HashMap<String, String>();
-        detail.put("dob", dateTimeString);
-        childdetails = new CommonPersonObjectClient("1", detail, "NME");
-        childdetails.setColumnmaps(detail);
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
-        Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
-        vaccinelist = new ArrayList<>();
-        vaccinelist.add(vaccine);
-        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
-        vaccinelist.add(vaccine);
-        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
-        vaccinelist.add(vaccine);
-        alertlist = new ArrayList<>();
-        alertlist.add(alert);
-        view.setData(vaccineData, childdetails, vaccinelist, alertlist, "mother");
-        view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");
     }
 
     @Test
