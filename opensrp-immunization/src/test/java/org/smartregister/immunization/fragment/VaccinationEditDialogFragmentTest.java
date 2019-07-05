@@ -1,6 +1,5 @@
 package org.smartregister.immunization.fragment;
 
-import android.content.Intent;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
@@ -82,16 +80,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
             Log.e(getClass().getCanonicalName(), e.getMessage());
         }
         System.gc();
-    }
-
-    @Test
-    public void onCreateViewTest() {
-        destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationEditDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
-        activity = controller.get();
-        controller.setup();
-
     }
 
     @Test

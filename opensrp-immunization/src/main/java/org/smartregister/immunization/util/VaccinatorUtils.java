@@ -625,8 +625,7 @@ public class VaccinatorUtils {
         return getServiceDueDate(serviceType, milestoneDate, receivedServices(serviceRecordList));
     }
 
-    public static Map<String, Date> receivedServices(
-            List<org.smartregister.immunization.domain.ServiceRecord> serviceRecordList) {
+    public static Map<String, Date> receivedServices(List<ServiceRecord> serviceRecordList) {
         Map<String, Date> map = new LinkedHashMap<>();
         if (serviceRecordList != null) {
             for (org.smartregister.immunization.domain.ServiceRecord serviceRecord : serviceRecordList) {

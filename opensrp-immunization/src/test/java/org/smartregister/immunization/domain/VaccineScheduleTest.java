@@ -58,9 +58,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertUpdateOfflineAlertsTestReturnsAlert() throws Exception {
-
-        VaccineSchedule vaccineSchedule = new VaccineSchedule(null, null, null, null);
+    public void assertUpdateOfflineAlertsTestReturnsAlert() {
 
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
@@ -86,13 +84,12 @@ public class VaccineScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorInitializationTest() throws Exception {
+    public void assertConstructorInitializationTest() {
         Assert.assertNotNull(new VaccineSchedule(null, null, null, null));
     }
 
     @Test
-    public void assertInitAndInitVaccineWithTestData() throws Exception {
-        VaccineSchedule vaccineSchedule = new VaccineSchedule(null, null, null, null);
+    public void assertInitAndInitVaccineWithTestData() {
         //        VaccineSchedule vaccineSchedule = Mockito.spy(this.vaccineSchedule);
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();

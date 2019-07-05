@@ -1,9 +1,8 @@
 package org.smartregister.immunization.domain;
 
-import junit.framework.Assert;
-
 import org.joda.time.DateTime;
 import org.json.JSONArray;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,10 +41,6 @@ public class ServiceScheduleTest extends BaseUnitTest {
     @InjectMocks
     private ServiceSchedule serviceSchedule;
     @Mock
-    private ServiceTrigger dueTrigger;
-    @Mock
-    private ServiceTrigger expTrigger;
-    @Mock
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
 
     @Mock
@@ -57,9 +52,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() throws Exception {
-
-        ServiceSchedule serviceSchedule = new ServiceSchedule(dueTrigger, expTrigger);
+    public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() {
 
         List<String> types = new ArrayList<String>();
         types.add(magicString);
@@ -100,7 +93,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAddOffsetToCalanderReturnsDateTime() throws Exception {
+    public void assertAddOffsetToCalanderReturnsDateTime() {
         List<String> offsets = new ArrayList<String>();
         offsets.add("+10d");
         offsets.add("+10m");
@@ -114,7 +107,9 @@ public class ServiceScheduleTest extends BaseUnitTest {
     public void assertGetServiceScheduleTestWithTestJSONData() throws Exception {
         JSONArray array = new JSONArray(ServiceData.recurringservice);
         JSONArray services = array.getJSONObject(0).getJSONArray("services");
-        Assert.assertNotNull(ServiceSchedule.getServiceSchedule(services.getJSONObject(0).getJSONObject("schedule")));
+        serviceSchedule = ServiceSchedule.getServiceSchedule(services.getJSONObject(0).getJSONObject(
+                "schedule"));
+        Assert.assertNotNull(serviceSchedule);
         Assert.assertNull(ServiceSchedule.standardiseDateTime(null));
         Assert.assertNotNull(serviceSchedule.getDueTrigger());
         Assert.assertNotNull(serviceSchedule.getExpiryTrigger());

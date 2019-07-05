@@ -68,8 +68,6 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Mock
     private CommonRepository commonRepository;
     @Mock
-    private VaccinatorUtils vaccinatorUtils;
-    @Mock
     private Resources resources;
 
     @Before
