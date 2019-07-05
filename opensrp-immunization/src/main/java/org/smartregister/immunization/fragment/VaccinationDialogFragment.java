@@ -46,14 +46,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@SuppressLint("ValidFragment")
+@SuppressLint ("ValidFragment")
 public class VaccinationDialogFragment extends DialogFragment {
+    public static final String DIALOG_TAG = "VaccinationDialogFragment";
+    public static final String WRAPPER_TAG = "tag";
     private List<VaccineWrapper> tags;
     private VaccinationActionListener listener;
     private Date dateOfBirth;
     private List<Vaccine> issuedVaccines;
-    public static final String DIALOG_TAG = "VaccinationDialogFragment";
-    public static final String WRAPPER_TAG = "tag";
     private boolean disableConstraints;
     private Calendar dcToday;
     private DialogInterface.OnDismissListener onDismissListener;
@@ -74,6 +74,23 @@ public class VaccinationDialogFragment extends DialogFragment {
         vaccinationDialogFragment.setDisableConstraints(false);
 
         return vaccinationDialogFragment;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setIssuedVaccines(List<Vaccine> issuedVaccines) {
+        this.issuedVaccines = issuedVaccines;
+    }
+
+    public void setDisableConstraints(boolean disableConstraints) {
+        this.disableConstraints = disableConstraints;
+        if (disableConstraints) {
+            Calendar dcToday = Calendar.getInstance();
+            VaccineSchedule.standardiseCalendarDate(dcToday);
+            this.dcToday = dcToday;
+        }
     }
 
     public static VaccinationDialogFragment newInstance(Date dateOfBirth,
@@ -98,25 +115,63 @@ public class VaccinationDialogFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
 
-    public void setIssuedVaccines(List<Vaccine> issuedVaccines) {
-        this.issuedVaccines = issuedVaccines;
-    }
-
-    public void setDisableConstraints(boolean disableConstraints) {
-        this.disableConstraints = disableConstraints;
-        if (disableConstraints) {
-            Calendar dcToday = Calendar.getInstance();
-            VaccineSchedule.standardiseCalendarDate(dcToday);
-            this.dcToday = dcToday;
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
         }
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public void onStart() {
+        super.onStart();
+
+        // without a handler, the window sizes itself correctly
+        // but the keyboard does not show up
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
+                Point size = new Point();
+
+                Display display = window.getWindowManager().getDefaultDisplay();
+                display.getSize(size);
+
+                int width = size.x;
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
+
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setGravity(Gravity.CENTER);
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (VaccinationActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement VaccinationActionListener");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
@@ -130,12 +185,12 @@ public class VaccinationDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tags.get(0).getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tags.get(0).getPatientNumber());
 
-        final LinearLayout vaccinationNameLayout = (LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout);
+        final LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
 
         if (tags.size() == 1) {
 
@@ -153,7 +208,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 final List<RadioButton> radios = new ArrayList<>();
                 for (int i = 0; i < names.length; i++) {
                     View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
-                    TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                    TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                     String name = names[i].trim();
                     vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), name));
@@ -161,7 +216,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                     View select = vaccinationName.findViewById(R.id.select);
                     select.setVisibility(View.GONE);
 
-                    RadioButton radio = (RadioButton) vaccinationName.findViewById(R.id.radio);
+                    RadioButton radio = vaccinationName.findViewById(R.id.radio);
                     radio.setVisibility(View.VISIBLE);
                     if (i != 0) {
                         radio.setChecked(false);
@@ -178,7 +233,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                     chilView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            RadioButton childRadio = (RadioButton) view.findViewById(R.id.radio);
+                            RadioButton childRadio = view.findViewById(R.id.radio);
                             addRadioClickListener(radios, childRadio);
                         }
                     });
@@ -187,7 +242,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             } else {
 
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
-                TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                 vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vName));
 
@@ -200,7 +255,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             for (VaccineWrapper vaccineWrapper : tags) {
 
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
-                TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                 VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
                 if (vaccineWrapper.getVaccine() != null) {
@@ -217,40 +272,43 @@ public class VaccinationDialogFragment extends DialogFragment {
                 chilView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
+                        CheckBox childSelect = view.findViewById(R.id.select);
                         childSelect.toggle();
                     }
                 });
             }
 
-            Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
+            Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
             vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
 
-            Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
+            Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
             vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("Vaccination", "Vaccinations"));
         }
 
         if (tags.get(0).getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tags.get(0).getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tags.get(0).getId());
 
-                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
-                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, defaultImageResId, errorImageResId));
+                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils
+                        .profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
+                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils
+                        .profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader
+                        .getStaticImageListener(mImageView, defaultImageResId, errorImageResId));
             }
         }
 
-        final DatePicker earlierDatePicker = (DatePicker) dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(R.id.earlier_date_picker);
 
         String color = tags.get(0).getColor();
-        Button status = (Button) dialogView.findViewById(R.id.status);
+        Button status = dialogView.findViewById(R.id.status);
         if (status != null) {
             status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         }
 
-        final Button set = (Button) dialogView.findViewById(R.id.set);
+        final Button set = dialogView.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -276,7 +334,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                         tag.setUpdatedVaccineDate(dateTime, false);
                         tagsToUpdate.add(tag);
                     } else {
-                        Toast.makeText(VaccinationDialogFragment.this.getActivity(),
+                        Toast.makeText(getActivity(),
                                 String.format(getString(R.string.cannot_record_vaccine), tag.getName()),
                                 Toast.LENGTH_LONG).show();
                     }
@@ -289,7 +347,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                                 tag.setUpdatedVaccineDate(dateTime, false);
                                 tagsToUpdate.add(tag);
                             } else {
-                                Toast.makeText(VaccinationDialogFragment.this.getActivity(),
+                                Toast.makeText(getActivity(),
                                         String.format(getString(R.string.cannot_record_vaccine),
                                                 tag.getName()), Toast.LENGTH_LONG).show();
                             }
@@ -301,7 +359,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
+        Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -336,7 +394,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
+        final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -344,13 +402,13 @@ public class VaccinationDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
             }
         });
 
         updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
 
-        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -359,6 +417,51 @@ public class VaccinationDialogFragment extends DialogFragment {
         });
 
         return dialogView;
+    }
+
+    private void addRadioClickListener(final List<RadioButton> radios) {
+        for (final RadioButton radio : radios) {
+            radio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (RadioButton otherRadio : radios) {
+                        otherRadio.setChecked(false);
+                    }
+                    radio.setChecked(true);
+                }
+            });
+        }
+    }
+
+    private void addRadioClickListener(List<RadioButton> radios, RadioButton radio) {
+        for (RadioButton otherRadio : radios) {
+            otherRadio.setChecked(false);
+        }
+        radio.setChecked(true);
+    }
+
+    public Integer getDefaultImageResourceID() {
+        return defaultImageResourceID;
+    }
+
+    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
+        this.defaultImageResourceID = defaultImageResourceID;
+    }
+
+    public Integer getDefaultErrorImageResourceID() {
+        return defaultErrorImageResourceID;
+    }
+
+    private String findSelectRadio(LinearLayout vaccinationNameLayout) {
+        for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+            View chilView = vaccinationNameLayout.getChildAt(i);
+            RadioButton radioChild = chilView.findViewById(R.id.radio);
+            if (radioChild.getVisibility() == View.VISIBLE && radioChild.isChecked()) {
+                TextView childVaccineView = chilView.findViewById(R.id.vaccine);
+                return childVaccineView.getText().toString();
+            }
+        }
+        return null;
     }
 
     private boolean validateVaccinationDate(VaccineWrapper vaccine, Date date) {
@@ -407,11 +510,47 @@ public class VaccinationDialogFragment extends DialogFragment {
         return result;
     }
 
+    private List<String> findSelectedCheckBoxes(LinearLayout vaccinationNameLayout) {
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+            View chilView = vaccinationNameLayout.getChildAt(i);
+            CheckBox selectChild = chilView.findViewById(R.id.select);
+            if (selectChild.isChecked()) {
+                TextView childVaccineView = chilView.findViewById(R.id.vaccine);
+                String checkedName = childVaccineView.getText().toString();
+                names.add(checkedName);
+            }
+        }
+
+        return names;
+    }
+
+    private VaccineWrapper searchWrapperByName(String name) {
+        if (tags == null || tags.isEmpty()) {
+            return null;
+        }
+
+        for (VaccineWrapper tag : tags) {
+            if (tag.getVaccine() != null) {
+                if (cleanVaccineName(tag.getVaccine().display()).equals(cleanVaccineName(name))) {
+                    return tag;
+                }
+            } else {
+                if (cleanVaccineName(tag.getName()).equals(cleanVaccineName(name))) {
+                    return tag;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param vaccinateToday    The 'Vaccination done today' button
-     * @param earlierDatePicker Date picker for selecting a previous date for a vaccine
+     * @param vaccinateToday
+     *         The 'Vaccination done today' button
+     * @param earlierDatePicker
+     *         Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(Button vaccinateToday, Button vaccinateEarlier, Button set, DatePicker earlierDatePicker) {
         Calendar today = Calendar.getInstance();
@@ -461,7 +600,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
             }
 
             earlierDatePicker.setMinDate(minDate.getTimeInMillis());
@@ -471,9 +610,44 @@ public class VaccinationDialogFragment extends DialogFragment {
             vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
             vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
             vaccinateEarlier.setClickable(false);
-            vaccinateEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
+            vaccinateEarlier
+                    .setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
             Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private Date getMinVaccineDate(String vaccineName) {
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
+                vaccineName);
+        Date minDate = null;
+        if (curVaccineSchedule == null) {
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
+        if (curVaccineSchedule != null) {
+            minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
+        }
+
+        return minDate;
+    }
+
+    private Date getMaxVaccineDate(String vaccineName) {
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
+                vaccineName);
+        Date maxDate = null;
+        if (curVaccineSchedule == null) {
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
+        if (curVaccineSchedule != null) {
+            maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
+        }
+
+        return maxDate;
+    }
+
+    private String cleanVaccineName(String name) {
+        return name != null && !name.isEmpty() ? stripSpaces(name.replace("\n", "")) : null;
     }
 
     private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
@@ -512,175 +686,15 @@ public class VaccinationDialogFragment extends DialogFragment {
         return maxDate;
     }
 
-    private Date getMinVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
-        Date minDate = null;
-        if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
-        }
-        if (curVaccineSchedule != null) {
-            minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
-        }
-
-        return minDate;
-    }
-
-    private Date getMaxVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
-        Date maxDate = null;
-        if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
-        }
-        if (curVaccineSchedule != null) {
-            maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
-        }
-
-        return maxDate;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            listener = (VaccinationActionListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement VaccinationActionListener");
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // without a handler, the window sizes itself correctly
-        // but the keyboard does not show up
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                Window window = null;
-                if (getDialog() != null) {
-                    window = getDialog().getWindow();
-                }
-
-                if (window == null) {
-                    return;
-                }
-
-                Point size = new Point();
-
-                Display display = window.getWindowManager().getDefaultDisplay();
-                display.getSize(size);
-
-                int width = size.x;
-                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
-
-                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-            }
-        });
-    }
-
-    private VaccineWrapper searchWrapperByName(String name) {
-        if (tags == null || tags.isEmpty()) {
-            return null;
-        }
-
-        for (VaccineWrapper tag : tags) {
-            if (tag.getVaccine() != null) {
-                if (tag.getVaccine().display().equals(name)) {
-                    return tag;
-                }
-            } else {
-                if (tag.getName().equals(name)) {
-                    return tag;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void addRadioClickListener(final List<RadioButton> radios) {
-        for (final RadioButton radio : radios) {
-            radio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    for (RadioButton otherRadio : radios) {
-                        otherRadio.setChecked(false);
-                    }
-                    radio.setChecked(true);
-                }
-            });
-        }
-    }
-
-    private void addRadioClickListener(final List<RadioButton> radios, RadioButton radio) {
-        for (RadioButton otherRadio : radios) {
-            otherRadio.setChecked(false);
-        }
-        radio.setChecked(true);
-    }
-
-    private List<String> findSelectedCheckBoxes(LinearLayout vaccinationNameLayout) {
-        List<String> names = new ArrayList<>();
-        for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
-            View chilView = vaccinationNameLayout.getChildAt(i);
-            CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
-            if (selectChild.isChecked()) {
-                TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
-                String checkedName = childVaccineView.getText().toString();
-                names.add(checkedName);
-            }
-        }
-
-        return names;
-    }
-
-    private String findSelectRadio(LinearLayout vaccinationNameLayout) {
-        for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
-            View chilView = vaccinationNameLayout.getChildAt(i);
-            RadioButton radioChild = (RadioButton) chilView.findViewById(R.id.radio);
-            if (radioChild.getVisibility() == View.VISIBLE && radioChild.isChecked()) {
-                TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
-                return childVaccineView.getText().toString();
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialog);
-        }
-    }
-
-    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
-    }
-
-    public Integer getDefaultImageResourceID() {
-        return defaultImageResourceID;
-    }
-
-    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
-        this.defaultImageResourceID = defaultImageResourceID;
-    }
-
-    public Integer getDefaultErrorImageResourceID() {
-        return defaultErrorImageResourceID;
+    private String stripSpaces(String name) {
+        return name != null && !name.isEmpty() ? name.replaceAll(" ", "") : name;
     }
 
     public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {
         this.defaultErrorImageResourceID = defaultErrorImageResourceID;
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 }
