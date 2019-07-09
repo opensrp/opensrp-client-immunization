@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +32,6 @@ import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,40 +43,27 @@ import static org.mockito.ArgumentMatchers.any;
  */
 @PrepareForTest ({ImmunizationLibrary.class, VaccinatorUtils.class})
 public class VaccineIntentServiceTest extends BaseUnitTest {
-    private final int magic10 = 10;
-    private final long magicTime = 1509347804l;
-    private final String magicName = "NAME";
-    private final String magicTS = "TS";
     @Rule
     public PowerMockRule rule = new PowerMockRule();
-    @Mock
-    public SQLiteDatabase sqliteDatabase;
+
     @Mock
     private ImmunizationLibrary immunizationLibrary;
+
     @Mock
     private VaccineRepository vaccineRepository;
+
     @Mock
     private List<Vaccine> vaccineList;
+
     @Mock
     private List<VaccineGroup> availableVaccines;
+
     @Mock
     private List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialJsonMappingVaccines;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        vaccineList.add(getDomainVaccines());
-    }
-
-    private Vaccine getDomainVaccines() {
-        Vaccine vaccine = new Vaccine();
-        vaccine.setId(1L);
-        vaccine.setBaseEntityId("12sdfbhs-433nx-54632hd-454");
-        vaccine.setName("Name");
-        vaccine.setCalculation(4);
-        vaccine.setDate(new Date());
-        vaccine.setAnmId(null);
-        return vaccine;
     }
 
     @Test
