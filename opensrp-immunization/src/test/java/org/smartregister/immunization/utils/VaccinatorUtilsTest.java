@@ -32,7 +32,6 @@ import org.smartregister.immunization.util.JsonFormUtils;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
-import org.smartregister.immunization.util.VaccineScheduleUtils;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
@@ -133,7 +132,6 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         //get getServiceExpiryDate null test
         Assert.assertNull(VaccinatorUtils.getServiceExpiryDate(null, null));
         Assert.assertNotNull(new IMConstants());
-        Assert.assertNotNull(new VaccineScheduleUtils());
         Assert.assertNotNull(new JsonFormUtils());
         Assert.assertNotNull(new RecurringServiceUtils());
         Assert.assertNotNull(new IMDatabaseUtils());

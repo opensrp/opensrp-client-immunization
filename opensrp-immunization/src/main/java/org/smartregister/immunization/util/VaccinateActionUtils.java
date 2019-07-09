@@ -351,6 +351,18 @@ public class VaccinateActionUtils {
                 key = "14 weeks";
                 break;
 
+            case mv1:
+                key = "5 Months";
+                break;
+
+            case mv2:
+                key = "6 Months";
+                break;
+
+            case mv3:
+                key ="7 Months";
+                break;
+
             case measles1:
             case mr1:
             case opv4:
@@ -366,7 +378,6 @@ public class VaccinateActionUtils {
             case rubella2:
                 key = "15 months";
                 break;
-
             case measles2:
             case mr2:
                 key = "18 months";
@@ -385,6 +396,9 @@ public class VaccinateActionUtils {
                 break;
             case tt5:
                 key = " 1 Year after  TT 4 ";
+                break;
+            case mv4:
+                key ="22 Months";
                 break;
             default:
                 key = "";

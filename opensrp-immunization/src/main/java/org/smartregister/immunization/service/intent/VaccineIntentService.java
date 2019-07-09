@@ -146,9 +146,7 @@ public class VaccineIntentService extends IntentService {
     }
 
     protected String getEventType() {
-
         return EVENT_TYPE;
-
     }
 
     protected String getEventTypeOutOfCatchment() {
@@ -156,8 +154,6 @@ public class VaccineIntentService extends IntentService {
     }
 
     protected String getEntityType() {
-
         return ENTITY_TYPE;
-
     }
 }
