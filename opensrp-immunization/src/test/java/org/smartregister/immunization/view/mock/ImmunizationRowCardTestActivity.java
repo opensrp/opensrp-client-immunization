@@ -24,26 +24,6 @@ public class ImmunizationRowCardTestActivity extends Activity {
         setContentView(linearLayout);
     }
 
-    public ImmunizationRowCard getInstance() {
-        return (view == null) ? new ImmunizationRowCard(this) : view;
-    }
-
-    public ImmunizationRowCard getInstance1() {
-        return new ImmunizationRowCard(this, true);
-    }
-
-    public ImmunizationRowCard getInstance2() {
-        return new ImmunizationRowCard(this, ViewAttributes.attrs);
-    }
-
-    public ImmunizationRowCard getInstance3() {
-        return new ImmunizationRowCard(this, ViewAttributes.attrs, 0);
-    }
-
-    public ImmunizationRowCard getInstance4() {
-        return new ImmunizationRowCard(this, ViewAttributes.attrs, 0, 0);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -72,6 +52,26 @@ public class ImmunizationRowCardTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ImmunizationRowCard getInstance() {
+        return (view == null) ? new ImmunizationRowCard(this) : view;
+    }
+
+    public ImmunizationRowCard getInstance1() {
+        return new ImmunizationRowCard(this, true);
+    }
+
+    public ImmunizationRowCard getInstance2() {
+        return new ImmunizationRowCard(this, ViewAttributes.attrs);
+    }
+
+    public ImmunizationRowCard getInstance3() {
+        return new ImmunizationRowCard(this, ViewAttributes.attrs, 0);
+    }
+
+    public ImmunizationRowCard getInstance4() {
+        return new ImmunizationRowCard(this, ViewAttributes.attrs, 0, 0);
     }
 
 }

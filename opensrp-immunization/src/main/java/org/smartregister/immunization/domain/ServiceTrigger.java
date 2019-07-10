@@ -12,16 +12,30 @@ import java.util.List;
  */
 
 public class ServiceTrigger {
-    public enum Reference {
-        DOB,
-        PREREQUISITE,
-        MULTIPLE
-    }
-
     private final Reference reference;
     private final String offset;
     private final String prerequisite;
     private final Multiple multiple;
+    public ServiceTrigger(String offset) {
+        reference = Reference.DOB;
+        this.offset = offset;
+        prerequisite = null;
+        multiple = null;
+    }
+
+    public ServiceTrigger(String offset, String prerequisite) {
+        reference = Reference.PREREQUISITE;
+        this.offset = offset;
+        this.prerequisite = prerequisite;
+        multiple = null;
+    }
+
+    public ServiceTrigger(String offset, Multiple multiple) {
+        reference = Reference.MULTIPLE;
+        this.offset = offset;
+        prerequisite = null;
+        this.multiple = multiple;
+    }
 
     public static ServiceTrigger init(JSONObject data) throws JSONException {
         if (data != null) {
@@ -56,27 +70,6 @@ public class ServiceTrigger {
         return null;
     }
 
-    public ServiceTrigger(String offset) {
-        this.reference = Reference.DOB;
-        this.offset = offset;
-        this.prerequisite = null;
-        this.multiple = null;
-    }
-
-    public ServiceTrigger(String offset, String prerequisite) {
-        this.reference = Reference.PREREQUISITE;
-        this.offset = offset;
-        this.prerequisite = prerequisite;
-        this.multiple = null;
-    }
-
-    public ServiceTrigger(String offset, Multiple multiple) {
-        this.reference = Reference.MULTIPLE;
-        this.offset = offset;
-        this.prerequisite = null;
-        this.multiple = multiple;
-    }
-
     public Reference getReference() {
         return reference;
     }
@@ -93,6 +86,11 @@ public class ServiceTrigger {
         return prerequisite;
     }
 
+    public enum Reference {
+        DOB,
+        PREREQUISITE,
+        MULTIPLE
+    }
 
     public static class Multiple {
         private String condition;

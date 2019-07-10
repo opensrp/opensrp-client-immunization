@@ -9,9 +9,9 @@ import org.smartregister.immunization.domain.ServiceWrapper;
  */
 public interface ServiceActionListener {
 
-    public void onGiveToday(ServiceWrapper tag, View view);
+    void onGiveToday(ServiceWrapper tag, View view);
 
-    public void onGiveEarlier(ServiceWrapper tag, View view);
+    void onGiveEarlier(ServiceWrapper tag, View view);
 
-    public void onUndoService(ServiceWrapper tag, View view);
+    void onUndoService(ServiceWrapper tag, View view);
 }

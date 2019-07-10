@@ -1,10 +1,10 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,7 @@ import org.smartregister.immunization.R;
 /**
  * Created by Ephraim Kigamba - ekigamba@ona.io on 04/04/2018.
  */
-@SuppressLint("ValidFragment")
+@SuppressLint ("ValidFragment")
 public class ActivateChildStatusDialogFragment extends DialogFragment {
 
     private String thirdPersonPronoun = "";
@@ -44,6 +44,15 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String dialogTitle = String.format(
@@ -51,7 +60,8 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
                 currentStatus,
                 thirdPersonPronoun);
 
-        View inflatedView = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_activate_child_status, container, false);
+        View inflatedView = getActivity().getLayoutInflater()
+                .inflate(R.layout.dialog_fragment_activate_child_status, container, false);
         ((TextView) inflatedView.findViewById(R.id.tv_dialog_activate_child_title))
                 .setText(dialogTitle);
 
@@ -79,15 +89,6 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
         });
 
         return inflatedView;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialog);
-        }
     }
 
     public DialogInterface.OnDismissListener getOnDismissListener() {

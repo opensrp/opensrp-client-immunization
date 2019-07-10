@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VaccineTypeRepository extends BaseRepository {
-    private static final String TAG = VaccineNameRepository.class.getCanonicalName();
-    private static final String VACCINE_Types_SQL = "CREATE TABLE vaccine_types (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,doses INTEGER,name VARCHAR NOT NULL,openmrs_parent_entity_id VARCHAR NULL,openmrs_date_concept_id VARCHAR NULL,openmrs_dose_concept_id VARCHAR)";
     public static final String VACCINE_Types_TABLE_NAME = "vaccine_types";
     public static final String ID_COLUMN = "_id";
     public static final String DOSES = "doses";
@@ -24,10 +22,9 @@ public class VaccineTypeRepository extends BaseRepository {
     public static final String OPENMRS_PARENT_ENTITIY_ID = "openmrs_parent_entity_id";
     public static final String OPENMRS_DATE_CONCEPT_ID = "openmrs_date_concept_id";
     public static final String OPENMRS_DOSE_CONCEPT_ID = "openmrs_dose_concept_id";
-
     public static final String[] VACCINE_Types_TABLE_COLUMNS = {ID_COLUMN, DOSES, NAME, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID, OPENMRS_DOSE_CONCEPT_ID};
-
-
+    private static final String TAG = VaccineNameRepository.class.getCanonicalName();
+    private static final String VACCINE_Types_SQL = "CREATE TABLE vaccine_types (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,doses INTEGER,name VARCHAR NOT NULL,openmrs_parent_entity_id VARCHAR NULL,openmrs_date_concept_id VARCHAR NULL,openmrs_dose_concept_id VARCHAR)";
     private CommonFtsObject commonFtsObject;
     private AlertService alertService;
 
@@ -57,15 +54,20 @@ public class VaccineTypeRepository extends BaseRepository {
             //mark the vaccine as unsynced for processing as an updated event
 
             String idSelection = ID_COLUMN + " = ?";
-            database.update(VACCINE_Types_TABLE_NAME, createValuesFor(vaccineType), idSelection, new String[]{vaccineType.getId().toString()});
+            database.update(VACCINE_Types_TABLE_NAME, createValuesFor(vaccineType), idSelection,
+                    new String[] {vaccineType.getId().toString()});
         }
     }
 
-
-    public List<VaccineType> findIDByName(String Name) {
-        SQLiteDatabase database = getReadableDatabase();
-        Cursor cursor = database.query(VACCINE_Types_TABLE_NAME, VACCINE_Types_TABLE_COLUMNS, this.NAME + " = ? ", new String[]{Name}, null, null, null, null);
-        return readAllVaccines(cursor);
+    private ContentValues createValuesFor(VaccineType vaccineType) {
+        ContentValues values = new ContentValues();
+        values.put(ID_COLUMN, vaccineType.getId());
+        values.put(NAME, vaccineType.getName());
+        values.put(DOSES, vaccineType.getDoses());
+        values.put(OPENMRS_DATE_CONCEPT_ID, vaccineType.getOpenmrs_date_concept_id());
+        values.put(OPENMRS_DOSE_CONCEPT_ID, vaccineType.getOpenmrs_dose_concept_id());
+        values.put(OPENMRS_PARENT_ENTITIY_ID, vaccineType.getOpenmrs_parent_entity_id());
+        return values;
     }
 
     public List<VaccineType> getAllVaccineTypes(SQLiteDatabase database_) {
@@ -74,34 +76,10 @@ public class VaccineTypeRepository extends BaseRepository {
             database = getReadableDatabase();
         }
 
-        Cursor cursor = database.query(VACCINE_Types_TABLE_NAME, VACCINE_Types_TABLE_COLUMNS, null, null, null, null, null, null);
+        Cursor cursor = database
+                .query(VACCINE_Types_TABLE_NAME, VACCINE_Types_TABLE_COLUMNS, null, null, null, null, null, null);
         return readAllVaccines(cursor);
     }
-
-    public int getDosesPerVial(String name) {
-        int dosespervaccine = 1;
-        ArrayList<VaccineType> vaccineTypes = (ArrayList<VaccineType>) findIDByName(name);
-        for (int i = 0; i < vaccineTypes.size(); i++) {
-            dosespervaccine = vaccineTypes.get(0).getDoses();
-        }
-        return dosespervaccine;
-    }
-
-
-//    public void deleteVaccine(Long caseId) {
-//        Vaccine vaccine = find(caseId);
-//        if(vaccine != null) {
-//            getWritableDatabase().delete(VACCINE_TABLE_NAME, ID_COLUMN + "= ?", new String[]{caseId.toString()});
-//
-//            updateFtsSearch(vaccine.getBaseEntityId(), vaccine.getName());
-//        }
-//    }
-
-//    public void close(Long caseId) {
-//        ContentValues values = new ContentValues();
-//        values.put(SYNC_STATUS, TYPE_Synced);
-//        getWritableDatabase().update(VACCINE_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId.toString()});
-//    }
 
     private List<VaccineType> readAllVaccines(Cursor cursor) {
         List<VaccineType> vaccines = new ArrayList<>();
@@ -133,14 +111,35 @@ public class VaccineTypeRepository extends BaseRepository {
     }
 
 
-    private ContentValues createValuesFor(VaccineType vaccineType) {
-        ContentValues values = new ContentValues();
-        values.put(ID_COLUMN, vaccineType.getId());
-        values.put(NAME, vaccineType.getName());
-        values.put(DOSES, vaccineType.getDoses());
-        values.put(OPENMRS_DATE_CONCEPT_ID, vaccineType.getOpenmrs_date_concept_id());
-        values.put(OPENMRS_DOSE_CONCEPT_ID, vaccineType.getOpenmrs_dose_concept_id());
-        values.put(OPENMRS_PARENT_ENTITIY_ID, vaccineType.getOpenmrs_parent_entity_id());
-        return values;
+    //    public void deleteVaccine(Long caseId) {
+    //        Vaccine vaccine = find(caseId);
+    //        if(vaccine != null) {
+    //            getWritableDatabase().delete(VACCINE_TABLE_NAME, ID_COLUMN + "= ?", new String[]{caseId.toString()});
+    //
+    //            updateFtsSearch(vaccine.getBaseEntityId(), vaccine.getName());
+    //        }
+    //    }
+
+    //    public void close(Long caseId) {
+    //        ContentValues values = new ContentValues();
+    //        values.put(SYNC_STATUS, TYPE_Synced);
+    //        getWritableDatabase().update(VACCINE_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId.toString()});
+    //    }
+
+    public int getDosesPerVial(String name) {
+        int dosespervaccine = 1;
+        ArrayList<VaccineType> vaccineTypes = (ArrayList<VaccineType>) findIDByName(name);
+        for (int i = 0; i < vaccineTypes.size(); i++) {
+            dosespervaccine = vaccineTypes.get(0).getDoses();
+        }
+        return dosespervaccine;
+    }
+
+    public List<VaccineType> findIDByName(String Name) {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database
+                .query(VACCINE_Types_TABLE_NAME, VACCINE_Types_TABLE_COLUMNS, NAME + " = ? ", new String[] {Name}, null,
+                        null, null, null);
+        return readAllVaccines(cursor);
     }
 }

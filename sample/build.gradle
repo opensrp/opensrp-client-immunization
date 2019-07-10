@@ -69,16 +69,23 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
 
-    implementation('org.smartregister:opensrp-client-core:1.6.37-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.43-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.6.7-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.6.21-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
@@ -91,4 +98,13 @@ dependencies {
     implementation project(':opensrp-immunization')
 
     testImplementation 'junit:junit:4.12'
+    testImplementation('org.robolectric:robolectric:3.8') {
+        exclude group: 'com.google.guava', module: 'guava'
+        exclude group: 'org.apache.maven', module: 'maven-model'
+        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
+    }
+    testImplementation('org.robolectric:shadows-multidex:3.8') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    testImplementation 'org.robolectric:shadows-support-v4:3.4-rc2'
 }

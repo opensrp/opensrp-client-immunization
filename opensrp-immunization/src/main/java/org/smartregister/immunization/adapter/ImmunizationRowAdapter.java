@@ -40,10 +40,9 @@ import static org.smartregister.util.Utils.getValue;
 public class ImmunizationRowAdapter extends BaseAdapter {
     private static final String TAG = "ImmunizationRowAdapter";
     private final Context context;
-    private HashMap<String, ImmunizationRowCard> vaccineCards;
     private final ImmunizationRowGroup vaccineGroup;
     public boolean editmode;
-
+    private HashMap<String, ImmunizationRowCard> vaccineCards;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
 
@@ -124,14 +123,6 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         return dueVaccines;
     }
 
-    public List<Vaccine> getVaccineList() {
-        return vaccineList;
-    }
-
-    public List<Alert> getAlertList() {
-        return alertList;
-    }
-
     public void updateWrapper(VaccineWrapper tag) {
         List<Vaccine> vaccineList = getVaccineList();
 
@@ -140,7 +131,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                 if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
 
                     //Add exception for bcg 2
-                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
+                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
+                            .equalsIgnoreCase(vaccine.getName())) {
                         continue;
                     }
 
@@ -151,7 +143,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
                     }
                     tag.setDbKey(vaccine.getId());
-                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus()
+                            .equals(VaccineRepository.TYPE_Synced));
                     if (tag.getName().contains("/")) {
                         String[] array = tag.getName().split("/");
                         if ((array[0]).toLowerCase().contains(vaccine.getName())) {
@@ -163,6 +156,24 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                     tag.setCreatedAt(vaccine.getCreatedAt());
                 }
             }
+        }
+    }
+
+    public List<Vaccine> getVaccineList() {
+        return vaccineList;
+    }
+
+    public void setVaccineList(List<Vaccine> vaccineList) {
+        this.vaccineList = vaccineList;
+    }
+
+    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags, CommonPersonObjectClient childDetails) {
+        if (tags == null) {
+            return;
+        }
+
+        for (VaccineWrapper tag : tags) {
+            updateWrapperStatus(tag, childDetails);
         }
     }
 
@@ -180,7 +191,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
 
                 //Add exception for bcg 2
-                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
+                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
+                        .equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
 
@@ -191,18 +203,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         }
     }
 
-    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags, CommonPersonObjectClient childDetails) {
-        if (tags == null) {
-            return;
-        }
-
-        for (VaccineWrapper tag : tags) {
-            updateWrapperStatus(tag, childDetails);
-        }
-    }
-
-    public void setVaccineList(List<Vaccine> vaccineList) {
-        this.vaccineList = vaccineList;
+    public List<Alert> getAlertList() {
+        return alertList;
     }
 
     public void setAlertList(List<Alert> alertList) {
@@ -219,18 +221,12 @@ public class ImmunizationRowAdapter extends BaseAdapter {
 
         private CommonPersonObjectClient childDetails;
 
-        ImmunizationRowTask(ImmunizationRowCard vaccineCard, String vaccineName, int days_after_birth_due, CommonPersonObjectClient childDetails) {
+        ImmunizationRowTask(ImmunizationRowCard vaccineCard, String vaccineName, int days_after_birth_due,
+                            CommonPersonObjectClient childDetails) {
             this.vaccineCard = vaccineCard;
             this.vaccineName = vaccineName;
             this.days_after_birth_due = days_after_birth_due;
             this.childDetails = childDetails;
-        }
-
-        @Override
-        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
-            vaccineCard.setVaccineWrapper(vaccineWrapper);
-            vaccineGroup.toggleRecordAllTV();
-            notifyDataSetChanged();
         }
 
         @Override
@@ -256,11 +252,20 @@ public class ImmunizationRowAdapter extends BaseAdapter {
 
             String zeirId = getValue(childDetails.getColumnmaps(), "zeir_id", false);
             vaccineWrapper.setPatientNumber(zeirId);
-            vaccineWrapper.setPatientName(getValue(childDetails.getColumnmaps(), "first_name", true) + " " + getValue(childDetails.getColumnmaps(), "last_name", true));
+            vaccineWrapper.setPatientName(
+                    getValue(childDetails.getColumnmaps(), "first_name", true) + " " + getValue(childDetails.getColumnmaps(),
+                            "last_name", true));
 
             updateWrapper(vaccineWrapper);
             updateWrapperStatus(vaccineWrapper, childDetails);
             return vaccineWrapper;
+        }
+
+        @Override
+        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
+            vaccineCard.setVaccineWrapper(vaccineWrapper);
+            vaccineGroup.toggleRecordAllTV();
+            notifyDataSetChanged();
         }
     }
 }

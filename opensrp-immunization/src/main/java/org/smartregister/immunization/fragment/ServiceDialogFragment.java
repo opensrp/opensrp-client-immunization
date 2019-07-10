@@ -1,13 +1,13 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.utils.DatePickerUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.immunization.R;
@@ -33,7 +35,6 @@ import org.smartregister.immunization.service.intent.RecurringIntentService;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
-import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -41,12 +42,12 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
-@SuppressLint("ValidFragment")
+@SuppressLint ("ValidFragment")
 public class ServiceDialogFragment extends DialogFragment {
-    private ServiceWrapper tag;
-    private ServiceActionListener listener;
     public static final String DIALOG_TAG = "ServiceDialogFragment";
     public static final String WRAPPER_TAG = "tag";
+    private ServiceWrapper tag;
+    private ServiceActionListener listener;
     private List<ServiceRecord> issuedServices;
     private DateTime dateOfBirth;
     private boolean disableConstraints;
@@ -68,6 +69,17 @@ public class ServiceDialogFragment extends DialogFragment {
         return serviceDialogFragment;
     }
 
+    public void setIssuedServices(List<ServiceRecord> issuedServices) {
+        this.issuedServices = issuedServices;
+    }
+
+    public void setDisableConstraints(boolean disableConstraints) {
+        this.disableConstraints = disableConstraints;
+        if (disableConstraints) {
+            dcToday = ServiceSchedule.standardiseDateTime(DateTime.now());
+        }
+    }
+
     public static ServiceDialogFragment newInstance(
             DateTime dateOfBirth,
             List<ServiceRecord> issuedServices,
@@ -86,6 +98,162 @@ public class ServiceDialogFragment extends DialogFragment {
         return serviceDialogFragment;
     }
 
+    public void setDateOfBirth(DateTime dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    /**
+     * This method updates the allowed date ranges in the views
+     *
+     * @param givenToday
+     *         The 'Given done today' button
+     * @param givenEarlier
+     *         The 'Given earlier' button
+     * @param set
+     *         The 'Set' Button
+     * @param earlierDatePicker
+     *         Date picker for selecting a previous date for a vaccine
+     */
+    private void updateDateRanges(Button givenToday, Button givenEarlier, Button set, DatePicker earlierDatePicker) {
+        if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {
+            return;
+        }
+
+        DateTime today = ServiceSchedule.standardiseDateTime(DateTime.now());
+        DateTime minDate = null;
+        DateTime maxDate = null;
+
+        if (disableConstraints) {
+            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
+            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
+        } else {
+            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
+            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        }
+
+        if (maxDate.getMillis() >= minDate.getMillis()) {
+            givenToday.setTextColor(getActivity().getResources().getColor(R.color.white));
+            givenToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg));
+            givenEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg));
+            if (today.getMillis() >= minDate.getMillis()
+                    && today.getMillis() <= maxDate.getMillis()) {
+                givenToday.setClickable(true);
+                givenToday.setVisibility(View.VISIBLE);
+
+                givenEarlier.setVisibility(View.VISIBLE);
+                earlierDatePicker.setVisibility(View.GONE);
+                set.setVisibility(View.GONE);
+            } else {
+                givenToday.setClickable(false);
+                givenToday.setVisibility(View.GONE);
+
+                givenEarlier.setVisibility(View.GONE);
+                earlierDatePicker.setVisibility(View.VISIBLE);
+                set.setVisibility(View.VISIBLE);
+
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+            }
+
+            earlierDatePicker.setMinDate(minDate.getMillis());
+            earlierDatePicker.setMaxDate(maxDate.getMillis());
+        } else {
+            givenToday.setClickable(false);
+            givenToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
+            givenToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
+            givenEarlier.setClickable(false);
+            givenEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
+            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * This method updates the allowed date ranges in the views
+     *
+     * @param datePicker
+     *         Date picker for selecting a previous date for a vaccine
+     */
+    private void updateDateRanges(DatePicker datePicker, Button set) {
+        if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {
+            return;
+        }
+
+        DateTime minDate = null;
+        DateTime maxDate = null;
+
+        if (disableConstraints) {
+            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
+            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
+        } else {
+            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
+            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
+        }
+
+        if (maxDate.getMillis() >= minDate.getMillis()) {
+            set.setVisibility(View.VISIBLE);
+            datePicker.setMinDate(minDate.getMillis());
+            datePicker.setMaxDate(maxDate.getMillis());
+        } else {
+            set.setVisibility(View.INVISIBLE);
+            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private DateTime updateMinVaccineDate(DateTime minDate_) {
+        DateTime dueDate = getMinVaccineDate();
+        DateTime minDate = minDate_;
+        if (dueDate == null
+                || dueDate.getMillis() < tag.getDob().getMillis()) {
+            dueDate = tag.getDob();
+        }
+
+        if (minDate == null) {
+            minDate = dueDate;
+        } else if (dueDate.getMillis() > minDate.getMillis()) {
+            minDate = dueDate;
+        }
+
+        return minDate;
+    }
+
+    private DateTime updateMaxVaccineDate(DateTime maxDate_) {
+        DateTime expiryDate = getMaxVaccineDate();
+        DateTime maxDate = maxDate_;
+        if (expiryDate == null
+                || expiryDate.getMillis() > DateTime.now().getMillis()) {
+            expiryDate = DateTime.now();
+        }
+
+        if (maxDate == null) {
+            maxDate = expiryDate;
+        } else if (expiryDate.getMillis() < maxDate.getMillis()) {
+            maxDate = expiryDate;
+        }
+
+        return maxDate;
+    }
+
+    private DateTime getMinVaccineDate() {
+        return VaccinatorUtils.getServiceDueDate(tag.getServiceType(), tag.getDob(), issuedServices);
+    }
+
+    private DateTime getMaxVaccineDate() {
+        return VaccinatorUtils.getServiceExpiryDate(tag.getServiceType(), tag.getDob());
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (ServiceActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement ServiceActionListener");
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +261,50 @@ public class ServiceDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // without a handler, the window sizes itself correctly
+        // but the keyboard does not show up
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
+                Point size = new Point();
+
+                Display display = window.getWindowManager().getDefaultDisplay();
+                display.getSize(size);
+
+                int width = size.x;
+
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
+
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setGravity(Gravity.CENTER);
+
+            }
+        });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
@@ -113,7 +324,7 @@ public class ServiceDialogFragment extends DialogFragment {
         numberView.setText(tag.getPatientNumber());
 
         // service name
-        final LinearLayout nameLayout = dialogView.findViewById(R.id.service_name_layout);
+        LinearLayout nameLayout = dialogView.findViewById(R.id.service_name_layout);
 
         View serviceName = inflater.inflate(R.layout.service_name, null);
 
@@ -139,7 +350,9 @@ public class ServiceDialogFragment extends DialogFragment {
             if (tag.getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tag.getId());
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader.getStaticImageListener(mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()), ImageUtils.profileImageResourceByGender(tag.getGender())));
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader
+                        .getStaticImageListener(mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()),
+                                ImageUtils.profileImageResourceByGender(tag.getGender())));
             }
         }
 
@@ -202,7 +415,7 @@ public class ServiceDialogFragment extends DialogFragment {
 
             // step 2
             final DatePicker itnDatePicker = step2.findViewById(R.id.itn_date_picker);
-            DatePickerUtils.themeDatePicker(itnDatePicker, new char[]{'d', 'm', 'y'});
+            DatePickerUtils.themeDatePicker(itnDatePicker, new char[] {'d', 'm', 'y'});
 
             Button recordItn = step2.findViewById(R.id.record_itn);
             recordItn.setOnClickListener(new View.OnClickListener() {
@@ -303,7 +516,8 @@ public class ServiceDialogFragment extends DialogFragment {
             });
 
             Button givenToday = defaultActions.findViewById(R.id.given_today);
-            givenToday.setText(String.format(getString(R.string.given_today), VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
+            givenToday.setText(String.format(getString(R.string.given_today),
+                    VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
             givenToday.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -318,7 +532,8 @@ public class ServiceDialogFragment extends DialogFragment {
             });
 
             final Button givenEarlier = defaultActions.findViewById(R.id.given_earlier);
-            givenEarlier.setText(String.format(getString(R.string.given_earlier), VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
+            givenEarlier.setText(String.format(getString(R.string.given_earlier),
+                    VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
             givenEarlier.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -326,7 +541,7 @@ public class ServiceDialogFragment extends DialogFragment {
                     earlierDatePicker.setVisibility(View.VISIBLE);
                     set.setVisibility(View.VISIBLE);
 
-                    DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
+                    DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
                 }
             });
 
@@ -341,211 +556,6 @@ public class ServiceDialogFragment extends DialogFragment {
             });
         }
         return dialogView;
-    }
-
-    /**
-     * This method updates the allowed date ranges in the views
-     *
-     * @param givenToday        The 'Given done today' button
-     * @param givenEarlier      The 'Given earlier' button
-     * @param set               The 'Set' Button
-     * @param earlierDatePicker Date picker for selecting a previous date for a vaccine
-     */
-    private void updateDateRanges(Button givenToday, Button givenEarlier, Button set, DatePicker earlierDatePicker) {
-        if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {
-            return;
-        }
-
-        DateTime today = ServiceSchedule.standardiseDateTime(DateTime.now());
-        DateTime minDate = null;
-        DateTime maxDate = null;
-
-        if (disableConstraints) {
-            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
-            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
-        } else {
-            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
-            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
-        }
-
-        if (maxDate.getMillis() >= minDate.getMillis()) {
-            givenToday.setTextColor(getActivity().getResources().getColor(R.color.white));
-            givenToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg));
-            givenEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg));
-            if (today.getMillis() >= minDate.getMillis()
-                    && today.getMillis() <= maxDate.getMillis()) {
-                givenToday.setClickable(true);
-                givenToday.setVisibility(View.VISIBLE);
-
-                givenEarlier.setVisibility(View.VISIBLE);
-                earlierDatePicker.setVisibility(View.GONE);
-                set.setVisibility(View.GONE);
-            } else {
-                givenToday.setClickable(false);
-                givenToday.setVisibility(View.GONE);
-
-                givenEarlier.setVisibility(View.GONE);
-                earlierDatePicker.setVisibility(View.VISIBLE);
-                set.setVisibility(View.VISIBLE);
-
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
-            }
-
-            earlierDatePicker.setMinDate(minDate.getMillis());
-            earlierDatePicker.setMaxDate(maxDate.getMillis());
-        } else {
-            givenToday.setClickable(false);
-            givenToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
-            givenToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
-            givenEarlier.setClickable(false);
-            givenEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
-            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
-     * This method updates the allowed date ranges in the views
-     *
-     * @param datePicker Date picker for selecting a previous date for a vaccine
-     */
-    private void updateDateRanges(DatePicker datePicker, Button set) {
-        if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {
-            return;
-        }
-
-        DateTime minDate = null;
-        DateTime maxDate = null;
-
-        if (disableConstraints) {
-            minDate = ServiceSchedule.standardiseDateTime(dateOfBirth);
-            maxDate = ServiceSchedule.standardiseDateTime(dcToday);
-        } else {
-            minDate = ServiceSchedule.standardiseDateTime(updateMinVaccineDate(minDate));
-            maxDate = ServiceSchedule.standardiseDateTime(updateMaxVaccineDate(maxDate));
-        }
-
-        if (maxDate.getMillis() >= minDate.getMillis()) {
-            set.setVisibility(View.VISIBLE);
-            datePicker.setMinDate(minDate.getMillis());
-            datePicker.setMaxDate(maxDate.getMillis());
-        } else {
-            set.setVisibility(View.INVISIBLE);
-            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private DateTime updateMinVaccineDate(DateTime minDate_) {
-        DateTime dueDate = getMinVaccineDate();
-        DateTime minDate = minDate_;
-        if (dueDate == null
-                || dueDate.getMillis() < tag.getDob().getMillis()) {
-            dueDate = tag.getDob();
-        }
-
-        if (minDate == null) {
-            minDate = dueDate;
-        } else if (dueDate.getMillis() > minDate.getMillis()) {
-            minDate = dueDate;
-        }
-
-        return minDate;
-    }
-
-    private DateTime updateMaxVaccineDate(DateTime maxDate_) {
-        DateTime expiryDate = getMaxVaccineDate();
-        DateTime maxDate = maxDate_;
-        if (expiryDate == null
-                || expiryDate.getMillis() > DateTime.now().getMillis()) {
-            expiryDate = DateTime.now();
-        }
-
-        if (maxDate == null) {
-            maxDate = expiryDate;
-        } else if (expiryDate.getMillis() < maxDate.getMillis()) {
-            maxDate = expiryDate;
-        }
-
-        return maxDate;
-    }
-
-    private DateTime getMinVaccineDate() {
-        return VaccinatorUtils.getServiceDueDate(tag.getServiceType(), tag.getDob(), issuedServices);
-    }
-
-    private DateTime getMaxVaccineDate() {
-        return VaccinatorUtils.getServiceExpiryDate(tag.getServiceType(), tag.getDob());
-    }
-
-    public void setIssuedServices(List<ServiceRecord> issuedServices) {
-        this.issuedServices = issuedServices;
-    }
-
-    public void setDateOfBirth(DateTime dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setDisableConstraints(boolean disableConstraints) {
-        this.disableConstraints = disableConstraints;
-        if (disableConstraints) {
-            this.dcToday = ServiceSchedule.standardiseDateTime(DateTime.now());
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            listener = (ServiceActionListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement ServiceActionListener");
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // without a handler, the window sizes itself correctly
-        // but the keyboard does not show up
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                Window window = null;
-                if (getDialog() != null) {
-                    window = getDialog().getWindow();
-                }
-
-                if (window == null) {
-                    return;
-                }
-
-                Point size = new Point();
-
-                Display display = window.getWindowManager().getDefaultDisplay();
-                display.getSize(size);
-
-                int width = size.x;
-
-                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
-
-                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-
-            }
-        });
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialog);
-        }
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {

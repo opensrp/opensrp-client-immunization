@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
  * Created by raihan on 13/03/2017.
  */
 public class ImmunizationRowGroup extends LinearLayout implements View.OnClickListener {
+    public boolean editmode;
     private Context context;
     private TextView nameTV;
     private TextView recordAllTV;
@@ -45,7 +46,6 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
     private GroupState groupState;
-    public boolean editmode;
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
@@ -55,31 +55,6 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     public ImmunizationRowGroup(Context context, boolean editmode) {
         super(context);
         this.editmode = editmode;
-        init(context);
-    }
-
-    public ImmunizationRowGroup(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-
-    public ImmunizationRowGroup(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    public CommonPersonObjectClient getChildDetails() {
-        return this.childDetails;
-    }
-
-    public VaccineGroup getVaccineData() {
-        return this.vaccineData;
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ImmunizationRowGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
@@ -99,17 +74,33 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         recordAllTV.setVisibility(GONE);
     }
 
-    public void setData(VaccineGroup vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts) {
-        this.vaccineData = vaccineData;
-        this.childDetails = childDetails;
-        this.vaccineList = vaccines;
-        this.alertList = alerts;
-        updateViews();
+    public ImmunizationRowGroup(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
     }
 
+    public ImmunizationRowGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context);
+    }
 
-    public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
-        this.onVaccineUndoClickListener = onVaccineUndoClickListener;
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    public ImmunizationRowGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context);
+    }
+
+    public VaccineGroup getVaccineData() {
+        return vaccineData;
+    }
+
+    public void setData(VaccineGroup vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines,
+                        List<Alert> alerts) {
+        this.vaccineData = vaccineData;
+        this.childDetails = childDetails;
+        vaccineList = vaccines;
+        alertList = alerts;
+        updateViews();
     }
 
     /**
@@ -120,15 +111,15 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     }
 
     /**
-     * This method will update vaccine group views, and the vaccine cards corresponding to the list
-     * of {@link VaccineWrapper}s specified
+     * This method will update vaccine group views, and the vaccine cards corresponding to the list of {@link
+     * VaccineWrapper}s specified
      *
-     * @param vaccinesToUpdate List of vaccines who's views we want updated, or NULL if we want to
-     *                         update all vaccine views
+     * @param vaccinesToUpdate
+     *         List of vaccines who's views we want updated, or NULL if we want to update all vaccine views
      */
     public void updateViews(ArrayList<VaccineWrapper> vaccinesToUpdate) {
-        this.groupState = GroupState.IN_PAST;
-        if (this.vaccineData != null) {
+        groupState = GroupState.IN_PAST;
+        if (vaccineData != null) {
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             DateTime dateTime = !dobString.isEmpty() ? new DateTime(dobString) : new DateTime();
             Date dob = dateTime.toDate();
@@ -141,11 +132,11 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
             long timeDiff = today.getTimeInMillis() - dob.getTime();
 
             if (timeDiff < today.getTimeInMillis()) {
-                this.groupState = GroupState.IN_PAST;
+                groupState = GroupState.IN_PAST;
             } else if (timeDiff > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                this.groupState = GroupState.IN_FUTURE;
+                groupState = GroupState.IN_FUTURE;
             } else {
-                this.groupState = GroupState.CURRENT;
+                groupState = GroupState.CURRENT;
             }
             updateStatusViews();
             updateVaccineCards(vaccinesToUpdate);
@@ -154,7 +145,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     }
 
     private void updateStatusViews() {
-        switch (this.groupState) {
+        switch (groupState) {
             case IN_PAST:
                 nameTV.setText(vaccineData.name);
                 break;
@@ -197,12 +188,14 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
                             case DUE:
                             case OVERDUE:
                                 if (onVaccineClickedListener != null) {
-                                    onVaccineClickedListener.onClick(ImmunizationRowGroup.this, immunizationRowCard.getVaccineWrapper());
+                                    onVaccineClickedListener
+                                            .onClick(ImmunizationRowGroup.this, immunizationRowCard.getVaccineWrapper());
                                 }
                                 break;
                             case DONE_CAN_NOT_BE_UNDONE:
                             case DONE_CAN_BE_UNDONE:
-                                if (immunizationRowCard.isEditmode() && !immunizationRowCard.isStatusForMoreThanThreeMonths()) {
+                                if (immunizationRowCard.isEditmode() && !immunizationRowCard
+                                        .isStatusForMoreThanThreeMonths()) {
                                     onUndoClick(immunizationRowCard);
                                 }
                                 break;
@@ -223,14 +216,11 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         }
     }
 
-    public boolean isModalOpen() {
-        return modalOpen;
+    public void onUndoClick(ImmunizationRowCard vaccineCard) {
+        if (onVaccineUndoClickListener != null) {
+            onVaccineUndoClickListener.onUndoClick(this, vaccineCard.getVaccineWrapper());
+        }
     }
-
-    public void setModalOpen(boolean modalOpen) {
-        this.modalOpen = modalOpen;
-    }
-
 
     public void toggleRecordAllTV() {
         if (vaccineCardAdapter.getDueVaccines().size() > 0) {
@@ -238,6 +228,18 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         } else {
             recordAllTV.setVisibility(GONE);
         }
+    }
+
+    public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
+        this.onVaccineUndoClickListener = onVaccineUndoClickListener;
+    }
+
+    public boolean isModalOpen() {
+        return modalOpen;
+    }
+
+    public void setModalOpen(boolean modalOpen) {
+        this.modalOpen = modalOpen;
     }
 
     @Override
@@ -249,30 +251,12 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         v.setEnabled(true);
     }
 
-    public void onUndoClick(ImmunizationRowCard vaccineCard) {
-        if (this.onVaccineUndoClickListener != null) {
-            this.onVaccineUndoClickListener.onUndoClick(this, vaccineCard.getVaccineWrapper());
-        }
-    }
-
     public void setOnRecordAllClickListener(OnRecordAllClickListener onRecordAllClickListener) {
         this.onRecordAllClickListener = onRecordAllClickListener;
     }
 
     public void setOnVaccineClickedListener(OnVaccineClickedListener onVaccineClickedListener) {
         this.onVaccineClickedListener = onVaccineClickedListener;
-    }
-
-    public static interface OnRecordAllClickListener {
-        void onClick(ImmunizationRowGroup vaccineGroup, ArrayList<VaccineWrapper> dueVaccines);
-    }
-
-    public static interface OnVaccineClickedListener {
-        void onClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine);
-    }
-
-    public static interface OnVaccineUndoClickListener {
-        void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine);
     }
 
     public ArrayList<VaccineWrapper> getDueVaccines() {
@@ -304,6 +288,10 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
         }
     }
 
+    public CommonPersonObjectClient getChildDetails() {
+        return childDetails;
+    }
+
     public void updateWrapper(VaccineWrapper wrapper) {
         if (vaccineCardAdapter != null) {
             vaccineCardAdapter.updateWrapper(wrapper);
@@ -316,5 +304,17 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
 
     public ImmunizationRowAdapter getVaccineCardAdapter() {
         return vaccineCardAdapter;
+    }
+
+    public interface OnRecordAllClickListener {
+        void onClick(ImmunizationRowGroup vaccineGroup, ArrayList<VaccineWrapper> dueVaccines);
+    }
+
+    public interface OnVaccineClickedListener {
+        void onClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine);
+    }
+
+    public interface OnVaccineUndoClickListener {
+        void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine);
     }
 }

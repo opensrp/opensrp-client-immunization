@@ -44,6 +44,15 @@ public class ServiceCard extends LinearLayout {
         init(context);
     }
 
+    private void init(Context context) {
+        this.context = context;
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.view_vaccination_card, this, true);
+        statusIV = findViewById(R.id.status_iv);
+        nameTV = findViewById(R.id.name_tv);
+        undoB = findViewById(R.id.undo_b);
+    }
+
     public ServiceCard(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
@@ -54,19 +63,14 @@ public class ServiceCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
     public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
-    private void init(Context context) {
-        this.context = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_vaccination_card, this, true);
-        statusIV = (ImageView) findViewById(R.id.status_iv);
-        nameTV = (TextView) findViewById(R.id.name_tv);
-        undoB = (Button) findViewById(R.id.undo_b);
+    public ServiceWrapper getServiceWrapper() {
+        return serviceWrapper;
     }
 
     public void setServiceWrapper(ServiceWrapper serviceWrapper) {
@@ -74,12 +78,8 @@ public class ServiceCard extends LinearLayout {
         updateState();
     }
 
-    public ServiceWrapper getServiceWrapper() {
-        return this.serviceWrapper;
-    }
-
     public void updateState() {
-        this.state = State.NOT_DUE;
+        state = State.NOT_DUE;
         if (serviceWrapper != null) {
             Date dateDone = getDateDone();
             boolean isSynced = isSynced();
@@ -87,9 +87,9 @@ public class ServiceCard extends LinearLayout {
 
             if (dateDone != null) {// Vaccination was done
                 if (isSynced) {
-                    this.state = State.DONE_CAN_NOT_BE_UNDONE;
+                    state = State.DONE_CAN_NOT_BE_UNDONE;
                 } else {
-                    this.state = State.DONE_CAN_BE_UNDONE;
+                    state = State.DONE_CAN_BE_UNDONE;
                 }
             } else {// Vaccination has not been done
                 if (status != null) {
@@ -132,27 +132,34 @@ public class ServiceCard extends LinearLayout {
         }
     }
 
-    public void updateChildsActiveStatus() {
-        if (isChildActive) {
-            getBackground().setAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
-        } else {
-            getBackground().setAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+    private Date getDateDone() {
+        if (serviceWrapper != null) {
+            DateTime dateDone = serviceWrapper.getUpdatedVaccineDate();
+            if (dateDone != null) return dateDone.toDate();
         }
+
+        return null;
     }
 
-    public void setChildActive(boolean childActive) {
-        isChildActive = childActive;
-    }
-
-    public State getState() {
-        if (this.state == null) {
-            updateState();
+    private boolean isSynced() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.isSynced();
         }
-        return this.state;
+        return false;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    private String getStatus() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getStatus();
+        }
+        return null;
+    }
+
+    private Alert getAlert() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getAlert();
+        }
+        return null;
     }
 
     private void updateStateUi() {
@@ -224,6 +231,14 @@ public class ServiceCard extends LinearLayout {
         }
     }
 
+    public void updateChildsActiveStatus() {
+        if (isChildActive) {
+            getBackground().setAlpha(IMConstants.ACTIVE_WIDGET_ALPHA);
+        } else {
+            getBackground().setAlpha(IMConstants.INACTIVE_WIDGET_ALPHA);
+        }
+    }
+
     private String getServiceName() {
         String name = serviceWrapper.getName();
 
@@ -244,34 +259,19 @@ public class ServiceCard extends LinearLayout {
         return null;
     }
 
-    private Date getDateDone() {
-        if (serviceWrapper != null) {
-            DateTime dateDone = serviceWrapper.getUpdatedVaccineDate();
-            if (dateDone != null) return dateDone.toDate();
-        }
-
-        return null;
+    public void setChildActive(boolean childActive) {
+        isChildActive = childActive;
     }
 
-    private boolean isSynced() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.isSynced();
+    public State getState() {
+        if (state == null) {
+            updateState();
         }
-        return false;
+        return state;
     }
 
-    private Alert getAlert() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getAlert();
-        }
-        return null;
-    }
-
-    private String getStatus() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getStatus();
-        }
-        return null;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Button getUndoB() {

@@ -11,9 +11,9 @@ import java.util.List;
  */
 
 public abstract class VaccineCondition {
-    protected final VaccineRepo.Vaccine vaccine;
-    private static final String TYPE_GIVEN = "given";
     public static final String TYPE_NOT_GIVEN = "not_given";
+    private static final String TYPE_GIVEN = "given";
+    protected final VaccineRepo.Vaccine vaccine;
 
     public VaccineCondition(VaccineRepo.Vaccine vaccine) {
         this.vaccine = vaccine;
@@ -69,16 +69,10 @@ public abstract class VaccineCondition {
         private final Comparison comparison;
         private final String value;
 
-        public enum Comparison {
-            EXACTLY("exactly"),
-            AT_LEAST("at_least"),
-            AT_MOST("at_most");
-
-            private final String name;
-
-            Comparison(String name) {
-                this.name = name;
-            }
+        public GivenCondition(VaccineRepo.Vaccine vaccine, String value, Comparison comparison) {
+            super(vaccine);
+            this.value = value;
+            this.comparison = comparison;
         }
 
         public static Comparison getComparison(String name) {
@@ -88,12 +82,6 @@ public abstract class VaccineCondition {
                 }
             }
             return null;
-        }
-
-        public GivenCondition(VaccineRepo.Vaccine vaccine, String value, Comparison comparison) {
-            super(vaccine);
-            this.value = value;
-            this.comparison = comparison;
         }
 
         @Override
@@ -134,6 +122,18 @@ public abstract class VaccineCondition {
             }
 
             return result;
+        }
+
+        public enum Comparison {
+            EXACTLY("exactly"),
+            AT_LEAST("at_least"),
+            AT_MOST("at_most");
+
+            private final String name;
+
+            Comparison(String name) {
+                this.name = name;
+            }
         }
     }
 }

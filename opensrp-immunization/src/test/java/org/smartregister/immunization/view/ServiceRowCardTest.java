@@ -46,31 +46,25 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
-@Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest ({ImmunizationLibrary.class})
+@Config (shadows = {FontTextViewShadow.class})
+@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
-    private ServiceRowCard view;
-
-    @Mock
-    private Context context;
-
-    private ActivityController<ServiceRowCardTestActivity> controller;
     private final String magicOne = "1";
-
-    @InjectMocks
-    private ServiceRowCardTestActivity activity;
-
-    @Mock
-    private org.smartregister.Context context_;
-
     private final String magicDue = "due";
     private final String magicDefault = "DEFAULT";
     private final String magicExpired = "expired";
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    private ServiceRowCard view;
+    @Mock
+    private Context context;
+    private ActivityController<ServiceRowCardTestActivity> controller;
+    @InjectMocks
+    private ServiceRowCardTestActivity activity;
+    @Mock
+    private org.smartregister.Context context_;
 
     @Before
     public void setUp() {
@@ -80,7 +74,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
 
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         serviceRecord.setEventId(magicOne);
@@ -92,16 +89,22 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
-        RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito.mock(RecurringServiceRecordRepository.class);
-        immunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 0, 0);
+        RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito
+                .mock(RecurringServiceRecordRepository.class);
+        ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
+                Mockito.mock(CommonFtsObject.class), 0, 0);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
-        PowerMockito.when(recurringServiceRecordRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(serviceRecord);
+        PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository())
+                .thenReturn(recurringServiceRecordRepository);
+        PowerMockito.when(recurringServiceRecordRepository.find(org.mockito.ArgumentMatchers.anyLong()))
+                .thenReturn(serviceRecord);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository.convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class))).thenReturn(event);
-//        controller.setup();
+        PowerMockito.when(eventClientRepository
+                .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
+                .thenReturn(event);
+        //        controller.setup();
         view = new ServiceRowCard(RuntimeEnvironment.application);
-//        view = activity.getInstance();
+        //        view = activity.getInstance();
     }
 
     @Test

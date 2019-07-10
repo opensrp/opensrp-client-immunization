@@ -130,12 +130,12 @@ public class ServiceWrapper implements Serializable {
         return updatedVaccineDate != null ? updatedVaccineDate.toString("yyyy-MM-dd") : "";
     }
 
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
-
     public Photo getPhoto() {
         return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
     }
 
     public String getGender() {
@@ -162,20 +162,20 @@ public class ServiceWrapper implements Serializable {
         this.synced = synced;
     }
 
-    public void setDob(DateTime dob) {
-        this.dob = dob;
-    }
-
     public DateTime getDob() {
         return dob;
     }
 
-    public void setServiceType(ServiceType serviceType) {
-        this.serviceType = serviceType;
+    public void setDob(DateTime dob) {
+        this.dob = dob;
     }
 
     public ServiceType getServiceType() {
         return serviceType;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType = serviceType;
     }
 
     public String getName() {
@@ -215,11 +215,11 @@ public class ServiceWrapper implements Serializable {
         this.value = value;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

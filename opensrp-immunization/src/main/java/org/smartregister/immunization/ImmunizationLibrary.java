@@ -21,9 +21,9 @@ import java.util.Map;
  */
 public class ImmunizationLibrary {
 
+    private static ImmunizationLibrary instance;
     private final Repository repository;
     private final Context context;
-
     private EventClientRepository eventClientRepository;
     private VaccineRepository vaccineRepository;
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
@@ -31,28 +31,12 @@ public class ImmunizationLibrary {
     private VaccineTypeRepository vaccineTypeRepository;
     private VaccineNameRepository vaccineNameRepository;
     private CommonFtsObject commonFtsObject;
-
     private int applicationVersion;
     private int databaseVersion;
-
-    private static ImmunizationLibrary instance;
-
     private Map<String, Object> jsonMap = new HashMap<>();
 
-    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
-        if (instance == null) {
-            instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
-        }
-    }
-
-    public static ImmunizationLibrary getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException(" Instance does not exist!!! Call " + ImmunizationLibrary.class.getName() + ".init method in the onCreate method of your Application class ");
-        }
-        return instance;
-    }
-
-    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
+    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject,
+                                int applicationVersion, int databaseVersion) {
         this.repository = repository;
         this.context = context;
         this.commonFtsObject = commonFtsObject;
@@ -60,14 +44,16 @@ public class ImmunizationLibrary {
         this.databaseVersion = databaseVersion;
     }
 
+    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion,
+                            int databaseVersion) {
+        if (instance == null) {
+            instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
+        }
+    }
+
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
         return AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
     }
-
-    public Repository getRepository() {
-        return repository;
-    }
-
 
     public EventClientRepository eventClientRepository() {
         if (eventClientRepository == null) {
@@ -77,11 +63,19 @@ public class ImmunizationLibrary {
         return eventClientRepository;
     }
 
+    public Repository getRepository() {
+        return repository;
+    }
+
     public VaccineRepository vaccineRepository() {
         if (vaccineRepository == null) {
             vaccineRepository = new VaccineRepository(getRepository(), commonFtsObject(), context.alertService());
         }
         return vaccineRepository;
+    }
+
+    private CommonFtsObject commonFtsObject() {
+        return commonFtsObject;
     }
 
     public RecurringServiceTypeRepository recurringServiceTypeRepository() {
@@ -105,19 +99,15 @@ public class ImmunizationLibrary {
         return vaccineTypeRepository;
     }
 
+    public Context context() {
+        return context;
+    }
+
     public VaccineNameRepository vaccineNameRepository() {
         if (vaccineNameRepository == null) {
             vaccineNameRepository = new VaccineNameRepository(getRepository(), commonFtsObject(), context().alertService());
         }
         return vaccineNameRepository;
-    }
-
-    public Context context() {
-        return context;
-    }
-
-    private CommonFtsObject commonFtsObject() {
-        return commonFtsObject;
     }
 
     public int getApplicationVersion() {
@@ -130,5 +120,13 @@ public class ImmunizationLibrary {
 
     public Locale getLocale() {
         return ImmunizationLibrary.getInstance().context().applicationContext().getResources().getConfiguration().locale;
+    }
+
+    public static ImmunizationLibrary getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException(" Instance does not exist!!! Call " + ImmunizationLibrary.class
+                    .getName() + ".init method in the onCreate method of your Application class ");
+        }
+        return instance;
     }
 }

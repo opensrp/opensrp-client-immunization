@@ -24,21 +24,20 @@ import java.util.List;
  * Created by keyman on 3/01/2017.
  */
 public class RecurringIntentService extends IntentService {
-    private static final String TAG = RecurringIntentService.class.getCanonicalName();
     public static final String ITN_PROVIDED = "ITN_Provided";
     public static final String CHILD_HAS_NET = "Child_Has_Net";
-    private static final String EXCLUSIVE_BREASTFEEDING = "Exclusive breastfeeding";
     public static final String EVENT_TYPE = "Recurring Service";
     public static final String ENTITY_TYPE = "recurring_service";
-    private RecurringServiceTypeRepository recurringServiceTypeRepository;
-    private RecurringServiceRecordRepository recurringServiceRecordRepository;
-
+    private static final String TAG = RecurringIntentService.class.getCanonicalName();
+    private static final String EXCLUSIVE_BREASTFEEDING = "Exclusive breastfeeding";
     protected final String YES = "yes";
     protected final String NO = "no";
     protected final String VALUES = "values";
     protected final String OPENMRS_CHOICES_IDS = "openmrs_choice_ids";
     protected final String OPENMRS_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     protected final String OPENMRS_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    private RecurringServiceTypeRepository recurringServiceTypeRepository;
+    private RecurringServiceRecordRepository recurringServiceRecordRepository;
 
 
     public RecurringIntentService() {
@@ -46,21 +45,29 @@ public class RecurringIntentService extends IntentService {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
+        recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
 
-        final String SELECT_DATA_TYPE = "coded";
+        String SELECT_DATA_TYPE = "coded";
 
-        final String CALC_ID = "1639AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-        final String CALCULATION_DATA_TYPE = "numeric";
+        String CALC_ID = "1639AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        String CALCULATION_DATA_TYPE = "numeric";
 
-        final String CONCEPT = "concept";
-        final String ENCOUNTER = "encounter";
+        String CONCEPT = "concept";
+        String ENCOUNTER = "encounter";
 
-        final String ENCOUNTER_DATE = "encounter_date";
-        final String DATE_DATA_TYPE = "date";
+        String ENCOUNTER_DATE = "encounter_date";
+        String DATE_DATA_TYPE = "date";
 
         try {
-            List<ServiceRecord> serviceRecordList = recurringServiceRecordRepository.findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME);
+            List<ServiceRecord> serviceRecordList = recurringServiceRecordRepository
+                    .findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME);
             if (!serviceRecordList.isEmpty()) {
                 for (ServiceRecord serviceRecord : serviceRecordList) {
 
@@ -96,11 +103,14 @@ public class RecurringIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.OPENMRS_ENTITY_ID, serviceType.getServiceNameEntityId());
                     jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, SELECT_DATA_TYPE);
                     jsonObject.put(JsonFormUtils.VALUE, YES);
-                    if (serviceType.getType().equalsIgnoreCase("ITN") && StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(CHILD_HAS_NET)) {
+                    if (serviceType.getType().equalsIgnoreCase("ITN") && StringUtils
+                            .isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue()
+                            .equalsIgnoreCase(CHILD_HAS_NET)) {
                         jsonObject.put(JsonFormUtils.VALUE, NO);
                         itnHasNet = true;
                     }
-                    if (serviceType.getType().equalsIgnoreCase(EXCLUSIVE_BREASTFEEDING) && StringUtils.isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(NO)) {
+                    if (serviceType.getType().equalsIgnoreCase(EXCLUSIVE_BREASTFEEDING) && StringUtils
+                            .isNotBlank(serviceRecord.getValue()) && serviceRecord.getValue().equalsIgnoreCase(NO)) {
                         jsonObject.put(JsonFormUtils.VALUE, NO);
                     }
                     addYesNoChoices(jsonObject);
@@ -114,7 +124,8 @@ public class RecurringIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.VALUE, calculation);
                     jsonArray.put(jsonObject);
 
-                    if (!(serviceType.getDateEntity().equalsIgnoreCase(ENCOUNTER) && serviceType.getDateEntityId().equalsIgnoreCase(ENCOUNTER_DATE))) {
+                    if (!(serviceType.getDateEntity().equalsIgnoreCase(ENCOUNTER) && serviceType.getDateEntityId()
+                            .equalsIgnoreCase(ENCOUNTER_DATE))) {
                         jsonObject = new JSONObject();
                         jsonObject.put(JsonFormUtils.KEY, serviceRecordName + "_date");
                         jsonObject.put(JsonFormUtils.OPENMRS_ENTITY, CONCEPT);
@@ -135,20 +146,14 @@ public class RecurringIntentService extends IntentService {
                         jsonArray.put(jsonObject);
                     }
 
-                    JsonFormUtils.createServiceEvent(getApplicationContext(), serviceRecord, EVENT_TYPE, ENTITY_TYPE, jsonArray);
+                    JsonFormUtils
+                            .createServiceEvent(getApplicationContext(), serviceRecord, EVENT_TYPE, ENTITY_TYPE, jsonArray);
                     recurringServiceRecordRepository.close(serviceRecord.getId());
                 }
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
-        recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
-        return super.onStartCommand(intent, flags, startId);
     }
 
     private void addYesNoChoices(JSONObject jsonObject) {

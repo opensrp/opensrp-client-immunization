@@ -23,7 +23,7 @@ import java.util.Collections;
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
+@PrepareForTest ({ImmunizationLibrary.class})
 public class ImageUtilsTest extends BaseUnitTest {
 
     @Rule
@@ -63,17 +63,20 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertProfileImageResourceByGenderWithTransgenderParameterReturnsTransgenderResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender("transgender"), R.drawable.child_transgender_inflant);
+        org.junit.Assert
+                .assertEquals(ImageUtils.profileImageResourceByGender("transgender"), R.drawable.child_transgender_inflant);
     }
 
     @Test
     public void assertProfileImageResourceByGenderObjectWithMaleGenderParameterReturnsMaleResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.MALE), R.drawable.child_boy_infant);
+        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.MALE),
+                R.drawable.child_boy_infant);
     }
 
     @Test
     public void assertProfileImageResourceByGenderWithFemaleObjectReturnsFemaleResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.FEMALE), R.drawable.child_girl_infant);
+        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.FEMALE),
+                R.drawable.child_girl_infant);
     }
 
     @Test
@@ -93,7 +96,8 @@ public class ImageUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()
+                .findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
         org.junit.Assert.assertNotNull(photo);
         org.junit.Assert.assertEquals(photo.getResourceId(), R.drawable.child_boy_infant);
@@ -109,8 +113,10 @@ public class ImageUtilsTest extends BaseUnitTest {
         String imagePath = "/dummy/test/path/image.png";
         String dummyCaseId = "4400";
         profileImage.setFilepath(imagePath);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(dummyCaseId)).thenReturn(profileImage);
-        commonPersonObjectClient = new CommonPersonObjectClient(dummyCaseId, Collections.<String, String>emptyMap(), "Test Name");
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(dummyCaseId))
+                .thenReturn(profileImage);
+        commonPersonObjectClient = new CommonPersonObjectClient(dummyCaseId, Collections.<String, String>emptyMap(),
+                "Test Name");
         commonPersonObjectClient.setCaseId(dummyCaseId);
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
         org.junit.Assert.assertNotNull(photo);

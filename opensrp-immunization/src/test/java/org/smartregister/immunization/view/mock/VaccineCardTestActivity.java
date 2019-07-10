@@ -40,6 +40,36 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         setContentView(linearLayout);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     public VaccineCard getInstance() {
         return (view == null) ? new VaccineCard(this) : view;
     }
@@ -84,36 +114,6 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
         taglist.add(tag);
         return taglist;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
 }

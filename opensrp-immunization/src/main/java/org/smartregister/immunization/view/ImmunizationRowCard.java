@@ -43,6 +43,17 @@ public class ImmunizationRowCard extends LinearLayout {
         init(context);
     }
 
+    private void init(Context context) {
+        this.context = context;
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
+        statusIV = findViewById(R.id.status_iv);
+        StatusTV = findViewById(R.id.status_text_tv);
+        nameTV = findViewById(R.id.name_tv);
+        undoB = findViewById(R.id.undo_b);
+        DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    }
+
     public ImmunizationRowCard(Context context) {
         super(context);
         init(context);
@@ -58,21 +69,14 @@ public class ImmunizationRowCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
     public ImmunizationRowCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
-    private void init(Context context) {
-        this.context = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
-        statusIV = findViewById(R.id.status_iv);
-        StatusTV = findViewById(R.id.status_text_tv);
-        nameTV = findViewById(R.id.name_tv);
-        undoB = findViewById(R.id.undo_b);
-        DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    public VaccineWrapper getVaccineWrapper() {
+        return vaccineWrapper;
     }
 
     public void setVaccineWrapper(VaccineWrapper vaccineWrapper) {
@@ -80,12 +84,8 @@ public class ImmunizationRowCard extends LinearLayout {
         updateState();
     }
 
-    public VaccineWrapper getVaccineWrapper() {
-        return this.vaccineWrapper;
-    }
-
     public void updateState() {
-        this.state = State.NOT_DUE;
+        state = State.NOT_DUE;
         if (vaccineWrapper != null) {
             Date dateDone = getDateDone();
             boolean isSynced = isSynced();
@@ -93,9 +93,9 @@ public class ImmunizationRowCard extends LinearLayout {
 
             if (dateDone != null) {// Vaccination was done
                 if (isSynced) {
-                    this.state = State.DONE_CAN_NOT_BE_UNDONE;
+                    state = State.DONE_CAN_NOT_BE_UNDONE;
                 } else {
-                    this.state = State.DONE_CAN_BE_UNDONE;
+                    state = State.DONE_CAN_BE_UNDONE;
                 }
             } else {// Vaccination has not been done
                 if (status != null) {
@@ -120,15 +120,34 @@ public class ImmunizationRowCard extends LinearLayout {
 
     }
 
-    public State getState() {
-        if (this.state == null) {
-            updateState();
+    private Date getDateDone() {
+        if (vaccineWrapper != null) {
+            DateTime dateDone = vaccineWrapper.getUpdatedVaccineDate();
+            if (dateDone != null) return dateDone.toDate();
         }
-        return this.state;
+
+        return null;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    private boolean isSynced() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.isSynced();
+        }
+        return false;
+    }
+
+    private String getStatus() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getStatus();
+        }
+        return null;
+    }
+
+    private Alert getAlert() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getAlert();
+        }
+        return null;
     }
 
     private void updateStateUi() {
@@ -200,6 +219,20 @@ public class ImmunizationRowCard extends LinearLayout {
         }
     }
 
+    private Long getDbKey() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getDbKey();
+        }
+        return null;
+    }
+
+    private Date getCreatedAt() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getCreatedAt();
+        }
+        return null;
+    }
+
     private String getVaccineName() {
         if (vaccineWrapper != null) {
             String name = vaccineWrapper.getName();
@@ -223,48 +256,15 @@ public class ImmunizationRowCard extends LinearLayout {
         return null;
     }
 
-    private Date getDateDone() {
-        if (vaccineWrapper != null) {
-            DateTime dateDone = vaccineWrapper.getUpdatedVaccineDate();
-            if (dateDone != null) return dateDone.toDate();
+    public State getState() {
+        if (state == null) {
+            updateState();
         }
-
-        return null;
+        return state;
     }
 
-    private boolean isSynced() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.isSynced();
-        }
-        return false;
-    }
-
-    private Alert getAlert() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getAlert();
-        }
-        return null;
-    }
-
-    private String getStatus() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getStatus();
-        }
-        return null;
-    }
-
-    private Date getCreatedAt() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getCreatedAt();
-        }
-        return null;
-    }
-
-    private Long getDbKey() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getDbKey();
-        }
-        return null;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Button getUndoB() {

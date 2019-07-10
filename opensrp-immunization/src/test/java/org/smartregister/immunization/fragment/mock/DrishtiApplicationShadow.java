@@ -13,10 +13,10 @@ import org.smartregister.view.activity.DrishtiApplication;
 /**
  * Created by kaderchowdhury on 12/12/17.
  */
-@Implements(DrishtiApplication.class)
+@Implements (DrishtiApplication.class)
 public class DrishtiApplicationShadow extends Shadow {
-    Repository repository;
     private static OpenSRPImageLoader openSRPImageLoader;
+    Repository repository;
 
     public DrishtiApplicationShadow() {
         super();
@@ -26,7 +26,7 @@ public class DrishtiApplicationShadow extends Shadow {
     @Implementation
     public static OpenSRPImageLoader getCachedImageLoaderInstance() {
         openSRPImageLoader = Mockito.mock(OpenSRPImageLoader.class);
-//        Mockito.doNothing().when(openSRPImageLoader).getImageByClientId(Mockito.anyString(),Mockito.any(OpenSRPImageListener.class));
+        //        Mockito.doNothing().when(openSRPImageLoader).getImageByClientId(Mockito.anyString(),Mockito.any(OpenSRPImageListener.class));
 
 
         return openSRPImageLoader;

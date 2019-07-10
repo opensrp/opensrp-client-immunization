@@ -14,6 +14,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.UndoVaccinationDialogFragmentTestActivity;
 
@@ -32,13 +33,12 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
     private org.smartregister.Context context_;
 
     @Before
-    public void setUp() throws Exception {
-        org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, UndoVaccinationDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class, intent);
-        activity = controller.start().resume().get();
+    public void setUp() {
         CoreLibrary.init(context_);
-        controller.setup();
+        org.mockito.MockitoAnnotations.initMocks(this);
+
+        activity = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class).create().start().get();
+        activity.setContentView(R.layout.service_dialog_view);
     }
 
     @After
@@ -47,16 +47,6 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
         activity = null;
         controller = null;
 
-    }
-
-    @Test
-    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
-        destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, UndoVaccinationDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class, intent);
-        activity = controller.get();
-        controller.setup();
-        Assert.assertNotNull(activity);
     }
 
     private void destroyController() {
@@ -70,8 +60,18 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
     }
 
     @Test
+    public void assertOnCreateViewTestSetsUpTheActivity() {
+        destroyController();
+        Intent intent = new Intent(RuntimeEnvironment.application, UndoVaccinationDialogFragmentTestActivity.class);
+        controller = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class, intent);
+        activity = controller.get();
+        controller.setup();
+        Assert.assertNotNull(activity);
+    }
+
+    @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        junit.framework.Assert.assertNotNull(UndoVaccinationDialogFragment.newInstance(new VaccineWrapper()));
+        Assert.assertNotNull(UndoVaccinationDialogFragment.newInstance(new VaccineWrapper()));
     }
 
 

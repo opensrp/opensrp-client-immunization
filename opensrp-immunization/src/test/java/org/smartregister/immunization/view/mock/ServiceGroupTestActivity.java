@@ -24,22 +24,6 @@ public class ServiceGroupTestActivity extends Activity {
         setContentView(linearLayout);
     }
 
-    public ServiceGroup getInstance() {
-        return (view == null) ? new ServiceGroup(this) : view;
-    }
-
-    public ServiceGroup getInstance2() {
-        return new ServiceGroup(this, ViewAttributes.attrs);
-    }
-
-    public ServiceGroup getInstance3() {
-        return new ServiceGroup(this, ViewAttributes.attrs, 0);
-    }
-
-    public ServiceGroup getInstance1() {
-        return new ServiceGroup(this, ViewAttributes.attrs, 0, 0);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -68,6 +52,22 @@ public class ServiceGroupTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ServiceGroup getInstance() {
+        return (view == null) ? new ServiceGroup(this) : view;
+    }
+
+    public ServiceGroup getInstance2() {
+        return new ServiceGroup(this, ViewAttributes.attrs);
+    }
+
+    public ServiceGroup getInstance3() {
+        return new ServiceGroup(this, ViewAttributes.attrs, 0);
+    }
+
+    public ServiceGroup getInstance1() {
+        return new ServiceGroup(this, ViewAttributes.attrs, 0, 0);
     }
 
 }

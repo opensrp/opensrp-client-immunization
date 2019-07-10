@@ -3,6 +3,37 @@ package org.smartregister.immunization.db;
 import java.util.ArrayList;
 
 public class VaccineRepo {
+    public static ArrayList<Vaccine> getVaccines(String category) {
+        ArrayList<Vaccine> vl = new ArrayList<>();
+        for (Vaccine v : Vaccine.values()) {
+            if (v.category().equalsIgnoreCase(category.trim())) {
+                vl.add(v);
+            }
+        }
+        return vl;
+    }
+
+    public static Vaccine getVaccine(String name, String category) {
+        for (Vaccine curVaccine : Vaccine.values()) {
+            if (curVaccine.display.equalsIgnoreCase(name)
+                    && curVaccine.category.equalsIgnoreCase(category)) {
+                return curVaccine;
+            }
+        }
+
+        return null;
+    }
+
+    public static ArrayList<Vaccine> nextVaccines(String vaccine) {
+        ArrayList<Vaccine> vl = new ArrayList<>();
+        for (Vaccine v : Vaccine.values()) {
+            if (v.prerequisite != null && v.prerequisite().name().equalsIgnoreCase(vaccine.trim())) {
+                vl.add(v);
+            }
+        }
+        return vl;
+    }
+
     public enum Vaccine {
         bcg("BCG", null, 366, 0, 0, "child"),
         HepB("HepB", null, 366, 0, 0, "child"),
@@ -17,6 +48,12 @@ public class VaccineRepo {
         penta2("PENTA 2", penta1, 1799, 70, 28, "child"),
         pcv2("PCV 2", pcv1, 1799, 70, 28, "child"),
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
+
+
+        mv1("MV 1", null, 304, 152, 0, "child"),
+        mv2("MV 2", null, 608, 183, 0, "child"),
+        mv3("MV 3", null, 639, 213, 0, "child"),
+        mv4("MV 4", null, 1095, 669, 0, "child"),
 
         opv3("OPV 3", opv2, 1830, 98, 28, "child"),
         penta3("PENTA 3", penta2, 1830, 98, 28, "child"),
@@ -47,7 +84,8 @@ public class VaccineRepo {
         tt2("TT 2", tt1, 366, 0, 28, "woman"),
         tt3("TT 3", tt2, 366, 0, 26 * 7, "woman"),
         tt4("TT 4", tt3, 366, 0, 52 * 7, "woman"),
-        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),;
+        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),
+        ;
 
         private String display;
         private Vaccine prerequisite;
@@ -55,6 +93,16 @@ public class VaccineRepo {
         private int milestoneGapDays;
         private int prerequisiteGapDays;
         private String category;
+
+        Vaccine(String display, Vaccine prerequisite, int expiryDays,
+                int milestoneGapDays, int prerequisiteGapDays, String category) {
+            this.display = display;
+            this.prerequisite = prerequisite;
+            this.expiryDays = expiryDays;
+            this.milestoneGapDays = milestoneGapDays;
+            this.prerequisiteGapDays = prerequisiteGapDays;
+            this.category = category;
+        }
 
         public String display() {
             return display;
@@ -80,46 +128,5 @@ public class VaccineRepo {
             return category;
         }
 
-        Vaccine(String display, Vaccine prerequisite, int expiryDays,
-                int milestoneGapDays, int prerequisiteGapDays, String category) {
-            this.display = display;
-            this.prerequisite = prerequisite;
-            this.expiryDays = expiryDays;
-            this.milestoneGapDays = milestoneGapDays;
-            this.prerequisiteGapDays = prerequisiteGapDays;
-            this.category = category;
-        }
-
-    }
-
-    public static ArrayList<Vaccine> getVaccines(String category) {
-        ArrayList<Vaccine> vl = new ArrayList<>();
-        for (Vaccine v : Vaccine.values()) {
-            if (v.category().equalsIgnoreCase(category.trim())) {
-                vl.add(v);
-            }
-        }
-        return vl;
-    }
-
-    public static Vaccine getVaccine(String name, String category) {
-        for (Vaccine curVaccine : Vaccine.values()) {
-            if (curVaccine.display.equalsIgnoreCase(name)
-                    && curVaccine.category.equalsIgnoreCase(category)) {
-                return curVaccine;
-            }
-        }
-
-        return null;
-    }
-
-    public static ArrayList<Vaccine> nextVaccines(String vaccine) {
-        ArrayList<Vaccine> vl = new ArrayList<>();
-        for (Vaccine v : Vaccine.values()) {
-            if (v.prerequisite != null && v.prerequisite().name().equalsIgnoreCase(vaccine.trim())) {
-                vl.add(v);
-            }
-        }
-        return vl;
     }
 }

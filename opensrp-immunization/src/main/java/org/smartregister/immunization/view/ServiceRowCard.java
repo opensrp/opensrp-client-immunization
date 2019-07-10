@@ -43,6 +43,16 @@ public class ServiceRowCard extends LinearLayout {
         init(context);
     }
 
+    private void init(Context context) {
+        this.context = context;
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
+        statusIV = findViewById(R.id.status_iv);
+        StatusTV = findViewById(R.id.status_text_tv);
+        nameTV = findViewById(R.id.name_tv);
+        undoB = findViewById(R.id.undo_b);
+    }
+
     public ServiceRowCard(Context context) {
         super(context);
         init(context);
@@ -58,20 +68,14 @@ public class ServiceRowCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
     public ServiceRowCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
-    private void init(Context context) {
-        this.context = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
-        statusIV = findViewById(R.id.status_iv);
-        StatusTV = findViewById(R.id.status_text_tv);
-        nameTV = findViewById(R.id.name_tv);
-        undoB = findViewById(R.id.undo_b);
+    public ServiceWrapper getServiceWrapper() {
+        return serviceWrapper;
     }
 
     public void setServiceWrapper(ServiceWrapper serviceWrapper) {
@@ -79,12 +83,8 @@ public class ServiceRowCard extends LinearLayout {
         updateState();
     }
 
-    public ServiceWrapper getServiceWrapper() {
-        return serviceWrapper;
-    }
-
     public void updateState() {
-        this.state = State.NOT_DUE;
+        state = State.NOT_DUE;
         if (serviceWrapper != null) {
             Date dateDone = getDateDone();
             boolean isSynced = isSynced();
@@ -92,9 +92,9 @@ public class ServiceRowCard extends LinearLayout {
 
             if (dateDone != null) {// Vaccination was done
                 if (isSynced) {
-                    this.state = State.DONE_CAN_NOT_BE_UNDONE;
+                    state = State.DONE_CAN_NOT_BE_UNDONE;
                 } else {
-                    this.state = State.DONE_CAN_BE_UNDONE;
+                    state = State.DONE_CAN_BE_UNDONE;
                 }
             } else {// Vaccination has not been done
                 if (status != null) {
@@ -116,35 +116,54 @@ public class ServiceRowCard extends LinearLayout {
                     }
                 }
 
-//                Calendar today = Calendar.getInstance();
-//                today.set(Calendar.HOUR_OF_DAY, 0);
-//                today.set(Calendar.MINUTE, 0);
-//                today.set(Calendar.SECOND, 0);
-//                today.set(Calendar.MILLISECOND, 0);
-//                if (getDateDue().getTime() > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-//                    // Vaccination due more than one day from today
-//                    this.state = State.NOT_DUE;
-//                } else if (getDateDue().getTime() < (today.getTimeInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-//                    // Vaccination overdue
-//                    this.state = State.OVERDUE;
-//                } else {
-//                    this.state = State.DUE;
-//                }
+                //                Calendar today = Calendar.getInstance();
+                //                today.set(Calendar.HOUR_OF_DAY, 0);
+                //                today.set(Calendar.MINUTE, 0);
+                //                today.set(Calendar.SECOND, 0);
+                //                today.set(Calendar.MILLISECOND, 0);
+                //                if (getDateDue().getTime() > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
+                //                    // Vaccination due more than one day from today
+                //                    this.state = State.NOT_DUE;
+                //                } else if (getDateDue().getTime() < (today.getTimeInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
+                //                    // Vaccination overdue
+                //                    this.state = State.OVERDUE;
+                //                } else {
+                //                    this.state = State.DUE;
+                //                }
             }
             updateStateUi();
         }
 
     }
 
-    public State getState() {
-        if (this.state == null) {
-            updateState();
+    private Date getDateDone() {
+        if (serviceWrapper != null) {
+            DateTime dateDone = serviceWrapper.getUpdatedVaccineDate();
+            if (dateDone != null) return dateDone.toDate();
         }
-        return this.state;
+
+        return null;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    private boolean isSynced() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.isSynced();
+        }
+        return false;
+    }
+
+    private String getStatus() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getStatus();
+        }
+        return null;
+    }
+
+    private Alert getAlert() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getAlert();
+        }
+        return null;
     }
 
     private void updateStateUi() {
@@ -216,6 +235,20 @@ public class ServiceRowCard extends LinearLayout {
         }
     }
 
+    private Long getDbKey() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getDbKey();
+        }
+        return null;
+    }
+
+    private Date getCreatedAt() {
+        if (serviceWrapper != null) {
+            return serviceWrapper.getCreatedAt();
+        }
+        return null;
+    }
+
     private String getVaccineName() {
         String name = serviceWrapper.getName();
 
@@ -236,48 +269,15 @@ public class ServiceRowCard extends LinearLayout {
         return null;
     }
 
-    private Date getDateDone() {
-        if (serviceWrapper != null) {
-            DateTime dateDone = serviceWrapper.getUpdatedVaccineDate();
-            if (dateDone != null) return dateDone.toDate();
+    public State getState() {
+        if (state == null) {
+            updateState();
         }
-
-        return null;
+        return state;
     }
 
-    private boolean isSynced() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.isSynced();
-        }
-        return false;
-    }
-
-    private Alert getAlert() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getAlert();
-        }
-        return null;
-    }
-
-    private String getStatus() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getStatus();
-        }
-        return null;
-    }
-
-    private Date getCreatedAt() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getCreatedAt();
-        }
-        return null;
-    }
-
-    private Long getDbKey() {
-        if (serviceWrapper != null) {
-            return serviceWrapper.getDbKey();
-        }
-        return null;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Button getUndoB() {

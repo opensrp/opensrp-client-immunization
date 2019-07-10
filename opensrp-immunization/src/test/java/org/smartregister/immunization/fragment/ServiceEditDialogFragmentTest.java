@@ -6,6 +6,7 @@ import android.view.View;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
@@ -27,7 +29,7 @@ import java.util.Collections;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@Config (shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<FragmentUtilActivityUsingServiceActionListener> controller;
@@ -40,15 +42,13 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+        CoreLibrary.init(context_);
         org.mockito.MockitoAnnotations.initMocks(this);
 
-        Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
-        controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
-        activity = controller.start().resume().get();
+        activity = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class).create().start().get();
+        activity.setContentView(R.layout.service_dialog_view);
 
-        CoreLibrary.init(context_);
-        controller.setup();
 
     }
 
@@ -58,23 +58,6 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         activity = null;
         controller = null;
 
-    }
-
-    @Test
-    public void assertThatCallToNewInstanceCreatesAFragment() {
-        View view = Mockito.mock(View.class);
-        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
-        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(new DateTime(), Collections.EMPTY_LIST, new ServiceWrapper(), view, true));
-    }
-
-    @Test
-    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
-        destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
-        controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
-        activity = controller.get();
-        controller.setup();
-        junit.framework.Assert.assertNotNull(activity);
     }
 
     private void destroyController() {
@@ -87,5 +70,23 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         }
 
         System.gc();
+    }
+
+    @Test
+    public void assertThatCallToNewInstanceCreatesAFragment() {
+        View view = Mockito.mock(View.class);
+        Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
+        Assert.assertNotNull(ServiceEditDialogFragment
+                .newInstance(new DateTime(), Collections.EMPTY_LIST, new ServiceWrapper(), view, true));
+    }
+
+    @Test
+    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
+        destroyController();
+        Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
+        controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
+        activity = controller.get();
+        controller.setup();
+        junit.framework.Assert.assertNotNull(activity);
     }
 }

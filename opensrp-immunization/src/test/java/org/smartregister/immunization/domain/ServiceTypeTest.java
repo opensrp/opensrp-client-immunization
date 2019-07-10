@@ -24,7 +24,9 @@ public class ServiceTypeTest extends BaseUnitTest {
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         junit.framework.Assert.assertNotNull(new ServiceType());
-        junit.framework.Assert.assertNotNull(new ServiceType(0l, TYPE, NAME, SERVICENAMEENTITY, SERVICENAMEENTITYID, DATEENTITY, DATEENTITYID, UNITS, SERVICELOGIC, PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l));
+        junit.framework.Assert.assertNotNull(
+                new ServiceType(0l, TYPE, NAME, SERVICENAMEENTITY, SERVICENAMEENTITYID, DATEENTITY, DATEENTITYID, UNITS,
+                        SERVICELOGIC, PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l));
     }
 
     @Test

@@ -42,10 +42,9 @@ import static org.smartregister.util.Utils.getValue;
 public class VaccineCardAdapter extends BaseAdapter {
     private static final String TAG = "VaccineCardAdapter";
     private final Context context;
-    private HashMap<String, VaccineCard> vaccineCards;
     private final VaccineGroup vaccineGroup;
     private final String type;
-
+    private HashMap<String, VaccineCard> vaccineCards;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
 
@@ -126,7 +125,7 @@ public class VaccineCardAdapter extends BaseAdapter {
 
     public void updateChildsActiveStatus() {
         if (vaccineCards != null) {
-            for(VaccineCard curCard: vaccineCards.values()) {
+            for (VaccineCard curCard : vaccineCards.values()) {
                 curCard.setChildActive(isChildActive);
                 curCard.updateChildsActiveStatus();
             }
@@ -156,6 +155,16 @@ public class VaccineCardAdapter extends BaseAdapter {
         return allWrappers;
     }
 
+    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags, String type, CommonPersonObjectClient childDetails) {
+        if (tags == null) {
+            return;
+        }
+
+        for (VaccineWrapper tag : tags) {
+            updateWrapperStatus(tag, type, childDetails);
+        }
+    }
+
     public void updateWrapperStatus(VaccineWrapper tag, String type, CommonPersonObjectClient childDetails) {
         List<Vaccine> vaccineList = getVaccineList();
 
@@ -172,7 +181,8 @@ public class VaccineCardAdapter extends BaseAdapter {
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
 
                 //Add exception for bcg 2
-                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
+                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
+                        .equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
 
@@ -188,14 +198,12 @@ public class VaccineCardAdapter extends BaseAdapter {
         }
     }
 
-    public void updateWrapperStatus(ArrayList<VaccineWrapper> tags, String type, CommonPersonObjectClient childDetails) {
-        if (tags == null) {
-            return;
-        }
+    public List<Vaccine> getVaccineList() {
+        return vaccineList;
+    }
 
-        for (VaccineWrapper tag : tags) {
-            updateWrapperStatus(tag, type, childDetails);
-        }
+    public List<Alert> getAlertList() {
+        return alertList;
     }
 
     public void updateWrapper(VaccineWrapper tag) {
@@ -206,7 +214,8 @@ public class VaccineCardAdapter extends BaseAdapter {
                 if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
 
                     //Add exception for bcg 2
-                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
+                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
+                            .equalsIgnoreCase(vaccine.getName())) {
                         continue;
                     }
 
@@ -217,7 +226,8 @@ public class VaccineCardAdapter extends BaseAdapter {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
                     }
                     tag.setDbKey(vaccine.getId());
-                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus()
+                            .equals(VaccineRepository.TYPE_Synced));
                     if (tag.getName().contains("/")) {
                         String[] array = tag.getName().split("/");
 
@@ -232,14 +242,6 @@ public class VaccineCardAdapter extends BaseAdapter {
             }
         }
 
-    }
-
-    public List<Vaccine> getVaccineList() {
-        return vaccineList;
-    }
-
-    public List<Alert> getAlertList() {
-        return alertList;
     }
 
     private void notifyAsyncTaskCompleted() {
@@ -279,23 +281,11 @@ public class VaccineCardAdapter extends BaseAdapter {
         VaccineRowTask(VaccineCard vaccineCard, org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData,
                        CommonPersonObjectClient childDetails, Integer days_after_birth_due, int position) {
             this.vaccineCard = vaccineCard;
-            this.vaccineName = vaccineData.name;
+            vaccineName = vaccineData.name;
             this.childDetails = childDetails;
             this.days_after_birth_due = days_after_birth_due;
             this.position = position;
             this.vaccineData = vaccineData;
-        }
-
-        @Override
-        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
-            vaccineCard.setVaccineWrapper(vaccineWrapper);
-
-            //If last position, toggle RecordAll
-            if (position == (getCount() - 1)) {
-                vaccineGroup.toggleRecordAllTV();
-            }
-            notifyDataSetChanged();
-            notifyAsyncTaskCompleted();
         }
 
         @Override
@@ -305,7 +295,7 @@ public class VaccineCardAdapter extends BaseAdapter {
             vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
             vaccineWrapper.setName(vaccineName);
             vaccineWrapper.setDefaultName(vaccineName);
-            if (vaccineData.schedule !=null &&  vaccineData.schedule.conditions != null) {
+            if (vaccineData.schedule != null && vaccineData.schedule.conditions != null) {
                 vaccineWrapper.setNotGivenCondition(vaccineData.schedule.conditions.get(0).vaccine);
             }
 
@@ -333,6 +323,18 @@ public class VaccineCardAdapter extends BaseAdapter {
             updateWrapperStatus(vaccineWrapper, type, childDetails);
 
             return vaccineWrapper;
+        }
+
+        @Override
+        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
+            vaccineCard.setVaccineWrapper(vaccineWrapper);
+
+            //If last position, toggle RecordAll
+            if (position == (getCount() - 1)) {
+                vaccineGroup.toggleRecordAllTV();
+            }
+            notifyDataSetChanged();
+            notifyAsyncTaskCompleted();
         }
     }
 

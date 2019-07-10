@@ -8,6 +8,8 @@ import java.util.HashMap;
  */
 public class ServiceRecord {
     private static final String ZEIR_ID = "ZEIR_ID";
+    protected String type;
+    protected String name;
     private Long id;
     private String baseEntityId;
     private String programClientId;
@@ -21,9 +23,6 @@ public class ServiceRecord {
     private String formSubmissionId;
     private Long updatedAt;
     private Date createdAt;
-
-    protected String type;
-    protected String name;
     private String team;
     private String teamId;
     private String childLocationId;
@@ -183,12 +182,12 @@ public class ServiceRecord {
         return identifiers;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getTeam() {

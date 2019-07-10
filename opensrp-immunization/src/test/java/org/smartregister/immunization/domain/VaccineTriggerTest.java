@@ -24,29 +24,30 @@ public class VaccineTriggerTest extends BaseUnitTest {
 
     @Test
     public void assertInitReturnsNonNullTriggers() throws JSONException {
-        Due data1 =JsonFormUtils.gson.fromJson(stringdata1, Due.class);
-        Due data2 =JsonFormUtils.gson.fromJson(stringdata2, Due.class);
+        Due data1 = JsonFormUtils.gson.fromJson(stringdata1, Due.class);
+        Due data2 = JsonFormUtils.gson.fromJson(stringdata2, Due.class);
         junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data1));
         junit.framework.Assert.assertNotNull(VaccineTrigger.init(CHILD, data2));
     }
 
     @Test
     public void assertGetMethodsReturnsCorrectValues() throws JSONException {
-        Due data1 =JsonFormUtils.gson.fromJson(stringdata1, Due.class);
+        Due data1 = JsonFormUtils.gson.fromJson(stringdata1, Due.class);
 
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         VaccineSchedule.standardiseCalendarDate(calendar);
         VaccineTrigger.init(CHILD, data1);
-        junit.framework.Assert.assertEquals(calendar.getTime(), VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
+        junit.framework.Assert.assertEquals(calendar.getTime(),
+                VaccineTrigger.init(CHILD, data1).getFireDate(Collections.EMPTY_LIST, date));
     }
 
     @Test
     public void assertGetWindowTestReturnsCurrentWindow() throws JSONException {
-        Due data1 =JsonFormUtils.gson.fromJson(stringdata1, Due.class);
+        Due data1 = JsonFormUtils.gson.fromJson(stringdata1, Due.class);
         VaccineTrigger vaccineTrigger = Mockito.mock(VaccineTrigger.class);
-        vaccineTrigger.init(CHILD, data1);
+        VaccineTrigger.init(CHILD, data1);
         String notNull = vaccineTrigger.getWindow();
         Mockito.verify(vaccineTrigger, Mockito.times(1)).getWindow();
         junit.framework.Assert.assertNull(notNull);

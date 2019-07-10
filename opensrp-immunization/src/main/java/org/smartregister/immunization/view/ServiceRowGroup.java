@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class ServiceRowGroup extends LinearLayout implements View.OnClickListener {
+    public boolean editmode;
     private Context context;
     private TextView nameTV;
     private ExpandableHeightGridView servicesGV;
@@ -45,7 +46,6 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     private List<ServiceRecord> serviceRecordList;
     private List<Alert> alertList;
     private GroupState groupState;
-    public boolean editmode;
     private OnServiceClickedListener onServiceClickedListener;
     private OnServiceUndoClickListener onServiceUndoClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
@@ -54,52 +54,6 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     public ServiceRowGroup(Context context, boolean editmode) {
         super(context);
         this.editmode = editmode;
-        init(context);
-    }
-
-    public ServiceRowGroup(Context context) {
-        super(context);
-        init(context);
-    }
-
-    public ServiceRowGroup(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-
-    public ServiceRowGroup(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    public CommonPersonObjectClient getChildDetails() {
-        return this.childDetails;
-    }
-
-
-    public List<ServiceType> getServiceTypes() {
-        return serviceTypeList;
-    }
-
-    public List<ServiceRecord> getServiceRecordList() {
-        return this.serviceRecordList;
-    }
-
-    public List<Alert> getAlertList() {
-        return alertList;
-    }
-
-    public void setServiceRecordList(List<ServiceRecord> serviceRecordList) {
-        this.serviceRecordList = serviceRecordList;
-    }
-
-    public void setAlertList(List<Alert> alertList) {
-        this.alertList = alertList;
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ServiceRowGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
@@ -119,16 +73,55 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
         recordAllTV.setVisibility(GONE);
     }
 
-    public void setData(CommonPersonObjectClient childDetails, List<ServiceType> serviceTypeList, List<ServiceRecord> serviceRecordList, List<Alert> alerts) {
+    public ServiceRowGroup(Context context) {
+        super(context);
+        init(context);
+    }
+
+    public ServiceRowGroup(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public ServiceRowGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+
+    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    public ServiceRowGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context);
+    }
+
+    public List<ServiceType> getServiceTypes() {
+        return serviceTypeList;
+    }
+
+    public List<ServiceRecord> getServiceRecordList() {
+        return serviceRecordList;
+    }
+
+    public void setServiceRecordList(List<ServiceRecord> serviceRecordList) {
+        this.serviceRecordList = serviceRecordList;
+    }
+
+    public List<Alert> getAlertList() {
+        return alertList;
+    }
+
+    public void setAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
+
+    public void setData(CommonPersonObjectClient childDetails, List<ServiceType> serviceTypeList,
+                        List<ServiceRecord> serviceRecordList, List<Alert> alerts) {
         this.childDetails = childDetails;
         this.serviceTypeList = serviceTypeList;
         this.serviceRecordList = serviceRecordList;
-        this.alertList = alerts;
+        alertList = alerts;
         updateViews();
-    }
-
-    public void setOnServiceUndoClickListener(OnServiceUndoClickListener onServiceUndoClickListener) {
-        this.onServiceUndoClickListener = onServiceUndoClickListener;
     }
 
     /**
@@ -139,15 +132,15 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     }
 
     /**
-     * This method will update service group views, and the service cards corresponding to the list
-     * of {@link ServiceWrapper}s specified
+     * This method will update service group views, and the service cards corresponding to the list of {@link
+     * ServiceWrapper}s specified
      *
-     * @param servicesToUpdate List of services who's views we want updated, or NULL if we want to
-     *                         update all service views
+     * @param servicesToUpdate
+     *         List of services who's views we want updated, or NULL if we want to update all service views
      */
     public void updateViews(ArrayList<ServiceWrapper> servicesToUpdate) {
-        this.groupState = GroupState.IN_PAST;
-        if (this.serviceTypeList != null) {
+        groupState = GroupState.IN_PAST;
+        if (serviceTypeList != null) {
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             DateTime dateTime = new DateTime(dobString);
             Date dob = dateTime.toDate();
@@ -160,11 +153,11 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
             long timeDiff = today.getTimeInMillis() - dob.getTime();
 
             if (timeDiff < today.getTimeInMillis()) {
-                this.groupState = GroupState.IN_PAST;
+                groupState = GroupState.IN_PAST;
             } else if (timeDiff > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                this.groupState = GroupState.IN_FUTURE;
+                groupState = GroupState.IN_FUTURE;
             } else {
-                this.groupState = GroupState.CURRENT;
+                groupState = GroupState.CURRENT;
             }
             updateStatusViews();
             updateServiceRowCards(servicesToUpdate);
@@ -174,7 +167,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     private void updateStatusViews() {
 
         String recurringServices = getResources().getString(R.string.recurring_services);
-        switch (this.groupState) {
+        switch (groupState) {
             case IN_PAST:
                 nameTV.setText(recurringServices);
                 break;
@@ -202,7 +195,8 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     private void updateServiceRowCards(ArrayList<ServiceWrapper> servicesToUpdate) {
         if (serviceRowAdapter == null) {
-            serviceRowAdapter = new ServiceRowAdapter(context, this, editmode, serviceTypeList, serviceRecordList, alertList);
+            serviceRowAdapter = new ServiceRowAdapter(context, this, editmode, serviceTypeList, serviceRecordList,
+                    alertList);
             servicesGV.setAdapter(serviceRowAdapter);
 
             servicesGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -220,7 +214,8 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
                             case DUE:
                             case OVERDUE:
                                 if (onServiceClickedListener != null) {
-                                    onServiceClickedListener.onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
+                                    onServiceClickedListener
+                                            .onClick(ServiceRowGroup.this, serviceRowCard.getServiceWrapper());
                                 }
                                 break;
                             case DONE_CAN_NOT_BE_UNDONE:
@@ -246,28 +241,23 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     }
 
+    public void onUndoClick(ServiceRowCard serviceRowCard) {
+        if (onServiceUndoClickListener != null) {
+            onServiceUndoClickListener.onUndoClick(this, serviceRowCard.getServiceWrapper());
+        }
+    }
+
+    public void setOnServiceUndoClickListener(OnServiceUndoClickListener onServiceUndoClickListener) {
+        this.onServiceUndoClickListener = onServiceUndoClickListener;
+    }
+
     @Override
     public void onClick(View v) {
         // TODO implement in case of Record ALL
     }
 
-    public void onUndoClick(ServiceRowCard serviceRowCard) {
-        if (this.onServiceUndoClickListener != null) {
-            this.onServiceUndoClickListener.onUndoClick(this, serviceRowCard.getServiceWrapper());
-        }
-    }
-
     public void setOnServiceClickedListener(OnServiceClickedListener onServiceClickedListener) {
         this.onServiceClickedListener = onServiceClickedListener;
-    }
-
-    public static interface OnServiceClickedListener {
-        void onClick(ServiceRowGroup serviceRowGroup, ServiceWrapper serviceWrapper);
-    }
-
-    public static interface OnServiceUndoClickListener {
-        void onUndoClick(ServiceRowGroup serviceRowGroup, ServiceWrapper serviceWrapper);
-
     }
 
     public boolean isModalOpen() {
@@ -284,6 +274,10 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
         }
     }
 
+    public CommonPersonObjectClient getChildDetails() {
+        return childDetails;
+    }
+
     public void updateWrapper(ServiceWrapper wrapper) {
         if (serviceRowAdapter != null) {
             serviceRowAdapter.updateWrapper(wrapper);
@@ -296,5 +290,14 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
 
     public ServiceRowAdapter getServiceRowAdapter() {
         return serviceRowAdapter;
+    }
+
+    public interface OnServiceClickedListener {
+        void onClick(ServiceRowGroup serviceRowGroup, ServiceWrapper serviceWrapper);
+    }
+
+    public interface OnServiceUndoClickListener {
+        void onUndoClick(ServiceRowGroup serviceRowGroup, ServiceWrapper serviceWrapper);
+
     }
 }

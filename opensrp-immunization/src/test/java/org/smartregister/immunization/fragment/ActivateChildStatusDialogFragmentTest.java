@@ -10,8 +10,9 @@ import static org.junit.Assert.assertNotNull;
 public class ActivateChildStatusDialogFragmentTest {
 
     @Test
-    public void newInstanceShouldCreateNonNullInstance() throws Exception {
-        ActivateChildStatusDialogFragment activateChildStatusDialogFragment = ActivateChildStatusDialogFragment.newInstance("her", "inactive", 0);
+    public void newInstanceShouldCreateNonNullInstance() {
+        ActivateChildStatusDialogFragment activateChildStatusDialogFragment = ActivateChildStatusDialogFragment
+                .newInstance("her", "inactive", 0);
 
         assertNotNull(activateChildStatusDialogFragment);
     }

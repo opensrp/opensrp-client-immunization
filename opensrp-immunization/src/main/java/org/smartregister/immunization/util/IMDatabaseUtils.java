@@ -27,7 +27,8 @@ import java.util.List;
  */
 public class IMDatabaseUtils {
 
-    public static void populateRecurringServices(Context context, SQLiteDatabase database, RecurringServiceTypeRepository recurringServiceTypeRepository) {
+    public static void populateRecurringServices(Context context, SQLiteDatabase database,
+                                                 RecurringServiceTypeRepository recurringServiceTypeRepository) {
         try {
             String supportedRecurringServices = VaccinatorUtils.getSupportedRecurringServices(context);
             if (StringUtils.isNotBlank(supportedRecurringServices)) {
@@ -86,7 +87,8 @@ public class IMDatabaseUtils {
                                             prerequisite = dueTrigger.getReference().name().toLowerCase();
                                             break;
                                         case PREREQUISITE:
-                                            prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + dueTrigger.getPrerequisite();
+                                            prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + dueTrigger
+                                                    .getPrerequisite();
                                             break;
                                         case MULTIPLE:
                                             ServiceTrigger.Multiple multiple = dueTrigger.getMultiple();
@@ -94,7 +96,8 @@ public class IMDatabaseUtils {
                                             List<String> prerequisites = multiple.getPrerequisites();
                                             String[] preArray = prerequisites.toArray(new String[prerequisites.size()]);
 
-                                            prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + condition + "|" + Arrays.toString(preArray);
+                                            prerequisite = dueTrigger.getReference().name()
+                                                    .toLowerCase() + "|" + condition + "|" + Arrays.toString(preArray);
                                             break;
                                         default:
                                             break;
@@ -152,7 +155,10 @@ public class IMDatabaseUtils {
                 JSONArray vaccinetypeArray = new JSONArray(vaccinetype);
                 for (int i = 0; i < vaccinetypeArray.length(); i++) {
                     JSONObject vaccinrtypeObject = vaccinetypeArray.getJSONObject(i);
-                    VaccineType vtObject = new VaccineType(null, vaccinrtypeObject.getInt("doses"), vaccinrtypeObject.getString("name"), vaccinrtypeObject.getString("openmrs_parent_entity_id"), vaccinrtypeObject.getString("openmrs_date_concept_id"), vaccinrtypeObject.getString("openmrs_dose_concept_id"));
+                    VaccineType vtObject = new VaccineType(null, vaccinrtypeObject.getInt("doses"),
+                            vaccinrtypeObject.getString("name"), vaccinrtypeObject.getString("openmrs_parent_entity_id"),
+                            vaccinrtypeObject.getString("openmrs_date_concept_id"),
+                            vaccinrtypeObject.getString("openmrs_dose_concept_id"));
                     vaccineTypeRepository.add(vtObject, db);
                 }
             } catch (JSONException e) {

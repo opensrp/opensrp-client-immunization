@@ -13,28 +13,35 @@ import java.util.List;
  */
 
 public class VaccineTrigger {
-    private enum Reference {
-        DOB,
-        PREREQUISITE,
-        LMP
-    }
-
     private final Reference reference;
     private final String offset;
     private final String window;
     private final VaccineRepo.Vaccine prerequisite;
+    public VaccineTrigger(String offset, String window, Reference reference) {
+        this.reference = reference;
+        this.offset = offset;
+        prerequisite = null;
+        this.window = window;
+    }
+
+    public VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite) {
+        reference = Reference.PREREQUISITE;
+        this.offset = offset;
+        this.prerequisite = prerequisite;
+        this.window = window;
+    }
 
     public static VaccineTrigger init(String vaccineCategory, Due data) {
         if (data != null) {
             if (data.reference.equalsIgnoreCase(Reference.DOB.name())) {
-                return new VaccineTrigger(data.offset, data.window != null ? data.window : null, Reference.DOB);
+                return new VaccineTrigger(data.offset, data.window, Reference.DOB);
             } else if (data.reference.equalsIgnoreCase(Reference.LMP.name())) {
-                return new VaccineTrigger(data.offset, data.window != null ? data.window : null, Reference.LMP);
+                return new VaccineTrigger(data.offset, data.window, Reference.LMP);
             } else if (data.reference.equalsIgnoreCase(Reference.PREREQUISITE.name())) {
                 VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite,
                         vaccineCategory);
                 if (prerequisite != null) {
-                    return new VaccineTrigger(data.offset, data.window != null ? data.window : null, prerequisite);
+                    return new VaccineTrigger(data.offset, data.window, prerequisite);
                 }
             }
         }
@@ -53,27 +60,12 @@ public class VaccineTrigger {
         return null;
     }
 
-    public VaccineTrigger(String offset, String window, Reference reference) {
-        this.reference = reference;
-        this.offset = offset;
-        this.prerequisite = null;
-        this.window = window;
-    }
-
-    public VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite) {
-        this.reference = Reference.PREREQUISITE;
-        this.offset = offset;
-        this.prerequisite = prerequisite;
-        this.window = window;
-    }
-
     /**
      * Get the date the trigger will fire
      *
-     * @return {@link Date} if able to get trigger date, or {@code null} if prerequisite hasn't been
-     * administered yet
+     * @return {@link Date} if able to get trigger date, or {@code null} if prerequisite hasn't been administered yet
      */
-    public Date getFireDate(final List<Vaccine> issuedVaccines, final Date dob) {
+    public Date getFireDate(List<Vaccine> issuedVaccines, Date dob) {
         if (reference.equals(Reference.DOB)) {
             if (dob != null) {
                 Calendar dobCalendar = Calendar.getInstance();
@@ -118,5 +110,11 @@ public class VaccineTrigger {
 
     public String getWindow() {
         return window;
+    }
+
+    private enum Reference {
+        DOB,
+        PREREQUISITE,
+        LMP
     }
 }

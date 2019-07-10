@@ -9,7 +9,7 @@ import org.smartregister.immunization.view.ImmunizationRowCard;
 /**
  * Created by kaderchowdhury on 13/12/17.
  */
-@Implements(ImmunizationRowCard.class)
+@Implements (ImmunizationRowCard.class)
 public class ImmunizationRowCardShadow extends ShadowViewGroup {
 
     @Implementation

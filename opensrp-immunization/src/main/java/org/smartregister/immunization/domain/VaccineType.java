@@ -14,7 +14,8 @@ public class VaccineType implements Serializable {
     private String openmrs_date_concept_id;
     private String openmrs_dose_concept_id;
 
-    public VaccineType(Long id, int doses, String name, String openmrs_parent_entity_id, String openmrs_date_concept_id, String openmrs_dose_concept_id) {
+    public VaccineType(Long id, int doses, String name, String openmrs_parent_entity_id, String openmrs_date_concept_id,
+                       String openmrs_dose_concept_id) {
         this.id = id;
         this.doses = doses;
         this.name = name;

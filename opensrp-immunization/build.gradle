@@ -77,39 +77,43 @@ android {
 
     testOptions {
         unitTests {
+            returnDefaultValues = true
             includeAndroidResources = true
         }
     }
 }
+
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
 dependencies {
-    implementation('org.smartregister:opensrp-client-core:1.6.37-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.43-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.6.7-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.6.21-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
 
     testImplementation 'junit:junit:4.12'
-    testImplementation('org.robolectric:robolectric:3.8') {
 
+    testImplementation('org.robolectric:robolectric:3.8') {
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'org.apache.maven', module: 'maven-model'
-        exclude group: 'com.android.support'
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
+
     testImplementation('org.robolectric:shadows-multidex:3.8') {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.+') {
 
+    testImplementation 'org.robolectric:shadows-support-v4:3.4-rc2'
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.+') {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'junit', module: 'junit'
     }
@@ -119,14 +123,9 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testImplementation("org.powermock:powermock-classloading-xstream:$powerMockVersion")
-
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
-
     testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
-
-    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.5'
-
-
+    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {

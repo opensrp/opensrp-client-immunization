@@ -51,7 +51,7 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyCreateTableCallsExecuteSQLMethod() {
-        vaccineNameRepository.createTable(sqliteDatabase);
+        VaccineNameRepository.createTable(sqliteDatabase);
         Mockito.verify(sqliteDatabase, Mockito.times(1)).execSQL(org.mockito.ArgumentMatchers.anyString());
     }
 
@@ -61,7 +61,9 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
         VaccineName vaccineName = PowerMockito.mock(VaccineName.class);
         Mockito.when(vaccineName.getId()).thenReturn(null);
         vaccineNameRepository.add(vaccineName);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1))
+                .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class),
+                        org.mockito.ArgumentMatchers.any(ContentValues.class));
     }
 
     @Test
@@ -69,14 +71,20 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
         Mockito.when(vaccineNameRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
         vaccineNameRepository.add(vaccineName);
-        Mockito.verify(sqliteDatabase, Mockito.times(1)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(1))
+                .update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class),
+                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
     @Test
     public void verifyAddCallsDatabaseDatabaseMethod0TimesInCaseOfNullVaccine() {
         vaccineNameRepository.add(null);
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.any(ContentValues.class));
-        Mockito.verify(sqliteDatabase, Mockito.times(0)).update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0))
+                .insert(org.mockito.ArgumentMatchers.anyString(), (String) org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.any(ContentValues.class));
+        Mockito.verify(sqliteDatabase, Mockito.times(0))
+                .update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class),
+                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class));
     }
 
 }

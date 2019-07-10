@@ -21,11 +21,14 @@ import java.util.List;
 public class RecurringServiceUtils {
 
 
-    public static void updateServiceGroupViews(View view, final ArrayList<ServiceWrapper> wrappers, List<ServiceRecord> serviceRecordList, List<Alert> alertList) {
+    public static void updateServiceGroupViews(View view, ArrayList<ServiceWrapper> wrappers,
+                                               List<ServiceRecord> serviceRecordList, List<Alert> alertList) {
         updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, false);
     }
 
-    public static void updateServiceGroupViews(View view, final ArrayList<ServiceWrapper> wrappers, final List<ServiceRecord> serviceRecordList, final List<Alert> alertList, final boolean undo) {
+    public static void updateServiceGroupViews(View view, final ArrayList<ServiceWrapper> wrappers,
+                                               final List<ServiceRecord> serviceRecordList, final List<Alert> alertList,
+                                               final boolean undo) {
         if (view == null || wrappers == null || wrappers.isEmpty()) {
             return;
         }
@@ -103,7 +106,8 @@ public class RecurringServiceUtils {
             return;
         }
 
-        RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+        RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance()
+                .recurringServiceRecordRepository();
 
         ServiceRecord serviceRecord = new ServiceRecord();
         if (tag.getDbKey() != null) {
