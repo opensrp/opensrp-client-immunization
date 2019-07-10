@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -20,6 +21,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 import org.smartregister.immunization.domain.jsonmapping.Due;
 import org.smartregister.immunization.domain.jsonmapping.Expiry;
@@ -32,6 +34,7 @@ import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +44,7 @@ import static org.mockito.ArgumentMatchers.any;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest ({ImmunizationLibrary.class, VaccinatorUtils.class})
+@PrepareForTest({ImmunizationLibrary.class, VaccinatorUtils.class})
 public class VaccineIntentServiceTest extends BaseUnitTest {
     @Rule
     public PowerMockRule rule = new PowerMockRule();
@@ -52,8 +55,8 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
     @Mock
     private VaccineRepository vaccineRepository;
 
-    @Mock
-    private List<Vaccine> vaccineList;
+    @Spy
+    private List<Vaccine> vaccineList = new ArrayList<>();
 
     @Mock
     private List<VaccineGroup> availableVaccines;
@@ -93,8 +96,12 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
         Assert.assertNotNull(availableVaccines);
         Assert.assertNotNull(specialJsonMappingVaccines);
 
+        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Mockito.when(vaccineRepository.findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME))
                 .thenReturn(vaccineList);
+        vaccineList.add(vaccine);
         Assert.assertNotNull(vaccineList);
 
         Whitebox.setInternalState(vaccineIntentService, "vaccineRepository",
