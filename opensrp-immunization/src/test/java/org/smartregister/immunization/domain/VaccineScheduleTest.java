@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -34,7 +33,6 @@ import java.util.List;
 @PrepareForTest ({ImmunizationLibrary.class})
 public class VaccineScheduleTest extends BaseUnitTest {
 
-    private final String magic10d = "+10d";
     private final String magicChild = "child";
     private final String magicOPV0 = "OPV 0";
     @Rule
@@ -108,7 +106,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         //vaccine cnodition test
         Condition object = new Condition();
         object.type = "";
-        VaccineCondition vaccineCondition = Mockito.mock(VaccineCondition.class);
         Assert.assertNull(VaccineCondition.init("", object));
 
         VaccineCondition.NotGivenCondition notgiven = new VaccineCondition.NotGivenCondition(VaccineRepo.Vaccine.opv0);
@@ -116,6 +113,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
         list.add(newVaccine);
         Assert.assertNotNull(notgiven.passes(list));
 
+        String magic10d = "+10d";
         VaccineCondition.GivenCondition given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
                 VaccineCondition.GivenCondition.Comparison.AT_LEAST);
         Assert.assertNull(VaccineCondition.GivenCondition.getComparison(""));

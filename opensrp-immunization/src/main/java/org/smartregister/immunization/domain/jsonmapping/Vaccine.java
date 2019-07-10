@@ -38,19 +38,19 @@ public class Vaccine {
         this.type = type;
     }
 
-    public OpenMRSDate getOpenmrs_date() {
+    public OpenMRSDate getOpenmrsDate() {
         return openmrs_date;
     }
 
-    public void setOpenmrs_date(OpenMRSDate openmrs_date) {
+    public void setOpenmrsDate(OpenMRSDate openmrs_date) {
         this.openmrs_date = openmrs_date;
     }
 
-    public OpenMRSCalculation getOpenmrs_calculate() {
+    public OpenMRSCalculation getOpenmrsCalculate() {
         return openmrs_calculate;
     }
 
-    public void setOpenmrs_calculate(OpenMRSCalculation openmrs_calculate) {
+    public void setOpenmrsCalculate(OpenMRSCalculation openmrs_calculate) {
         this.openmrs_calculate = openmrs_calculate;
     }
 
@@ -70,11 +70,11 @@ public class Vaccine {
         this.schedules = schedules;
     }
 
-    public String getVaccine_separator() {
+    public String getVaccineSeparator() {
         return vaccine_separator;
     }
 
-    public void setVaccine_separator(String vaccine_separator) {
+    public void setVaccineSeparator(String vaccine_separator) {
         this.vaccine_separator = vaccine_separator;
     }
 }

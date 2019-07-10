@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -26,20 +25,21 @@ import java.util.List;
 /**
  * Created by real on 24/10/17.
  */
-@PrepareForTest ({ImmunizationLibrary.class})
+@PrepareForTest({ImmunizationLibrary.class})
 public class ServiceScheduleTest extends BaseUnitTest {
 
-    private final String magicString = "TT";
     @Rule
     public PowerMockRule rule = new PowerMockRule();
+
     @Mock
     private ImmunizationLibrary immunizationLibrary;
+
     @Mock
     private Context context;
+
     @Mock
     private AlertService alertService;
-    @InjectMocks
-    private ServiceSchedule serviceSchedule;
+
     @Mock
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
 
@@ -55,6 +55,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
     public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() {
 
         List<String> types = new ArrayList<String>();
+        String magicString = "TT";
         types.add(magicString);
 
         ServiceType serviceType = new ServiceType(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME,
@@ -107,7 +108,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
     public void assertGetServiceScheduleTestWithTestJSONData() throws Exception {
         JSONArray array = new JSONArray(ServiceData.recurringservice);
         JSONArray services = array.getJSONObject(0).getJSONArray("services");
-        serviceSchedule = ServiceSchedule.getServiceSchedule(services.getJSONObject(0).getJSONObject(
+        ServiceSchedule serviceSchedule = ServiceSchedule.getServiceSchedule(services.getJSONObject(0).getJSONObject(
                 "schedule"));
         Assert.assertNotNull(serviceSchedule);
         Assert.assertNull(ServiceSchedule.standardiseDateTime(null));

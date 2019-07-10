@@ -244,11 +244,11 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
         org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = new org.smartregister.immunization.domain.jsonmapping.Vaccine();
         jsonMappingVaccine.setName("name");
         jsonMappingVaccine.setType("vaccine_type");
-        jsonMappingVaccine.setOpenmrs_date(openMRSDate);
-        jsonMappingVaccine.setOpenmrs_calculate(openMRSCalculation);
+        jsonMappingVaccine.setOpenmrsDate(openMRSDate);
+        jsonMappingVaccine.setOpenmrsCalculate(openMRSCalculation);
         jsonMappingVaccine.setSchedule(schedule);
         jsonMappingVaccine.setSchedules(stringScheduleMap);
-        jsonMappingVaccine.setVaccine_separator("/");
+        jsonMappingVaccine.setVaccineSeparator("/");
         return jsonMappingVaccine;
     }
 
