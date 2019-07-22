@@ -7,6 +7,7 @@ public class ServiceType {
     private Long id;
     private String type;
     private String name;
+    private String serviceGroup;
     private String serviceNameEntity;
     private String serviceNameEntityId;
     private String dateEntity;
@@ -22,13 +23,14 @@ public class ServiceType {
     public ServiceType() {
     }
 
-    public ServiceType(Long id, String type, String name, String serviceNameEntity, String
+    public ServiceType(Long id, String type, String name, String serviceGroup, String serviceNameEntity, String
             serviceNameEntityId, String dateEntity, String dateEntityId, String units, String
                                serviceLogic, String prerequisite, String preOffset, String expiryOffset, String
                                milestoneOffset, Long updatedAt) {
         this.id = id;
         this.type = type;
         this.name = name;
+        this.serviceGroup = serviceGroup;
         this.serviceNameEntity = serviceNameEntity;
         this.serviceNameEntityId = serviceNameEntityId;
         this.dateEntity = dateEntity;
@@ -64,6 +66,14 @@ public class ServiceType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getServiceGroup() {
+        return serviceGroup;
+    }
+
+    public void setServiceGroup(String serviceGroup) {
+        this.serviceGroup = serviceGroup;
     }
 
     public String getServiceNameEntity() {

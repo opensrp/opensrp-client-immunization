@@ -13,6 +13,7 @@ public class ServiceTypeTest extends BaseUnitTest {
     public static final String EXPIRYOFFSET = "ExpiryOffset";
     public static final String MILESTONEOFFSET = "MilestoneOffset";
     public static final String NAME = "name";
+    public static final String SERVICE_GROUP = "service_group";
     public static final String SERVICENAMEENTITY = "serviceNameEntity";
     public static final String SERVICENAMEENTITYID = "serviceNameEntityId";
     public static final String DATEENTITY = "dateEntity";
@@ -25,7 +26,7 @@ public class ServiceTypeTest extends BaseUnitTest {
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         junit.framework.Assert.assertNotNull(new ServiceType());
         junit.framework.Assert.assertNotNull(
-                new ServiceType(0l, TYPE, NAME, SERVICENAMEENTITY, SERVICENAMEENTITYID, DATEENTITY, DATEENTITYID, UNITS,
+                new ServiceType(0l, TYPE, NAME, SERVICE_GROUP, SERVICENAMEENTITY, SERVICENAMEENTITYID, DATEENTITY, DATEENTITYID, UNITS,
                         SERVICELOGIC, PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l));
     }
 

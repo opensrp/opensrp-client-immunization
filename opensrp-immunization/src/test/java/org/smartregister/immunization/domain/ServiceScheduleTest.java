@@ -58,7 +58,7 @@ public class ServiceScheduleTest extends BaseUnitTest {
         String magicString = "TT";
         types.add(magicString);
 
-        ServiceType serviceType = new ServiceType(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME,
+        ServiceType serviceType = new ServiceType(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME, ServiceTypeTest.SERVICE_GROUP,
                 ServiceTypeTest.SERVICENAMEENTITY, ServiceTypeTest.SERVICENAMEENTITYID, ServiceTypeTest.DATEENTITY,
                 ServiceTypeTest.DATEENTITYID, ServiceTypeTest.UNITS, ServiceTypeTest.SERVICELOGIC,
                 ServiceTypeTest.PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l);
