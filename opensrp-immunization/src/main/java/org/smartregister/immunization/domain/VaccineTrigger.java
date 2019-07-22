@@ -1,8 +1,10 @@
 package org.smartregister.immunization.domain;
 
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Due;
 import org.smartregister.immunization.domain.jsonmapping.Expiry;
+import org.smartregister.immunization.util.IMConstants;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +19,7 @@ public class VaccineTrigger {
     private final String offset;
     private final String window;
     private final VaccineRepo.Vaccine prerequisite;
+
     public VaccineTrigger(String offset, String window, Reference reference) {
         this.reference = reference;
         this.offset = offset;
@@ -38,9 +41,18 @@ public class VaccineTrigger {
             } else if (data.reference.equalsIgnoreCase(Reference.LMP.name())) {
                 return new VaccineTrigger(data.offset, data.window, Reference.LMP);
             } else if (data.reference.equalsIgnoreCase(Reference.PREREQUISITE.name())) {
-                VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite,
-                        vaccineCategory);
+                VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite, vaccineCategory);
                 if (prerequisite != null) {
+                    //Vaccine Relaxation Logic
+                    String relaxationsDays = ImmunizationLibrary.getInstance().getProperties().getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS);
+                    if (relaxationsDays != null && data.offset.charAt(data.offset.length() - 1) == 'd') {
+
+                        String prefix = data.offset.substring(0, 1);
+                        String suffix = data.offset.substring(data.offset.length() - 1);
+                        String midffix = data.offset.substring(1, data.offset.length() - 1);
+                        data.offset = prefix + (Integer.valueOf(midffix) - Integer.valueOf(relaxationsDays)) + suffix;
+                    }
+
                     return new VaccineTrigger(data.offset, data.window, prerequisite);
                 }
             }

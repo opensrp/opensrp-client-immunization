@@ -74,8 +74,7 @@ public class VaccineSchedule {
             String vaccineName = curVaccine.name;
             VaccineSchedule vaccineSchedule;
             if (curVaccine.schedule != null) {
-                vaccineSchedule = getVaccineSchedule(vaccineName,
-                        vaccineCategory, curVaccine.schedule);
+                vaccineSchedule = getVaccineSchedule(vaccineName, vaccineCategory, curVaccine.schedule);
                 vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
             }
         } else {
@@ -83,9 +82,7 @@ public class VaccineSchedule {
                     .split(curVaccine.vaccine_separator);
             for (int nameIndex = 0; nameIndex < splitNames.length; nameIndex++) {
                 String vaccineName = splitNames[nameIndex];
-                VaccineSchedule vaccineSchedule = getVaccineSchedule(vaccineName,
-                        vaccineCategory,
-                        curVaccine.schedules.get(vaccineName));
+                VaccineSchedule vaccineSchedule = getVaccineSchedule(vaccineName, vaccineCategory, curVaccine.schedules.get(vaccineName));
                 if (vaccineSchedule != null) {
                     vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
                 }
@@ -341,10 +338,8 @@ public class VaccineSchedule {
      * Calculates the alert status based on the reference date provided. Currently, the only alert status returned is {@code
      * AlertStatus.normal}
      *
-     * @param referenceDate
-     *         The reference date to use to
-     * @param overDueDate
-     *         The overdue date to use
+     * @param referenceDate The reference date to use to
+     * @param overDueDate   The overdue date to use
      * @return {@link AlertStatus} if able to calculate or {@code NULL} if unable
      */
     private AlertStatus calculateAlertStatus(Date referenceDate, Date overDueDate) {
@@ -389,10 +384,8 @@ public class VaccineSchedule {
      * <p>
      * Accepted operators for the offset are: - : Minus + : Plus
      *
-     * @param calendar
-     *         The calendar to add the offset
-     * @param offset
-     *         The offset in the format above to add to the calendar
+     * @param calendar The calendar to add the offset
+     * @param offset   The offset in the format above to add to the calendar
      * @return
      */
     public static Calendar addOffsetToCalendar(Calendar calendar, String offset) {
