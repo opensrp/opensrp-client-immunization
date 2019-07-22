@@ -1,5 +1,8 @@
 package org.smartregister.immunization;
 
+import android.content.res.AssetManager;
+import android.util.Log;
+
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -10,11 +13,14 @@ import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.Utils;
 
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by keyman on 31/07/17.
@@ -34,6 +40,7 @@ public class ImmunizationLibrary {
     private int applicationVersion;
     private int databaseVersion;
     private Map<String, Object> jsonMap = new HashMap<>();
+    public Properties properties;
 
     private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject,
                                 int applicationVersion, int databaseVersion) {
@@ -42,6 +49,15 @@ public class ImmunizationLibrary {
         this.commonFtsObject = commonFtsObject;
         this.applicationVersion = applicationVersion;
         this.databaseVersion = databaseVersion;
+
+        properties = new Properties();
+        try {
+            AssetManager assetManager = context.applicationContext().getAssets();
+            InputStream inputStream = assetManager.open("app.properties");
+            properties.load(inputStream);
+        } catch (Exception e) {
+            Log.e(Utils.class.getCanonicalName(), e.getMessage(), e);
+        }
     }
 
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion,
@@ -128,5 +144,9 @@ public class ImmunizationLibrary {
                     .getName() + ".init method in the onCreate method of your Application class ");
         }
         return instance;
+    }
+
+    public Map<String, Object> getVaccinesConfigJsonMap() {
+        return jsonMap;
     }
 }

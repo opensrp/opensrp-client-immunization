@@ -426,7 +426,8 @@ public class VaccineSchedule {
                             field = Calendar.YEAR;
                         }
 
-                        calendar.add(field, curValue);
+                        int relaxation_days = Integer.valueOf(ImmunizationLibrary.getInstance().properties.getProperty("VACCINE_RELAXATION_DAYS"));
+                        calendar.add(field, curValue-relaxation_days);
                     }
                 }
             }
