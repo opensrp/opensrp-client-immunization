@@ -154,22 +154,24 @@ public class RecurringServiceTypeRepository extends BaseRepository {
 
 
                     serviceTypes.add(
-                            new ServiceType(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+
+                            new ServiceType.Builder(
+                                    cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                                     type,
-                                    name,
-                                    cursor.getString(cursor.getColumnIndex(SERVICE_GROUP)),
-                                    cursor.getString(cursor.getColumnIndex(SERVICE_NAME_ENTITY)),
-                                    cursor.getString(cursor.getColumnIndex(SERVICE_NAME_ENTITY_ID)),
-                                    cursor.getString(cursor.getColumnIndex(DATE_ENTITY)),
-                                    cursor.getString(cursor.getColumnIndex(DATE_ENTITY_ID)),
-                                    cursor.getString(cursor.getColumnIndex(UNITS)),
-                                    cursor.getString(cursor.getColumnIndex(SERVICE_LOGIC)),
-                                    cursor.getString(cursor.getColumnIndex(PREREQUISITE)),
-                                    cursor.getString(cursor.getColumnIndex(PRE_OFFSET)),
-                                    cursor.getString(cursor.getColumnIndex(EXPIRY_OFFSET)),
-                                    cursor.getString(cursor.getColumnIndex(MILESTONE_OFFSET)),
-                                    cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN))
-                            ));
+                                    name
+                            ).withServiceGroup(cursor.getString(cursor.getColumnIndex(SERVICE_GROUP)))
+                                    .withServiceNameEntity(cursor.getString(cursor.getColumnIndex(SERVICE_NAME_ENTITY)))
+                                    .withServiceNameEntityId(cursor.getString(cursor.getColumnIndex(SERVICE_NAME_ENTITY_ID)))
+                                    .withDateEntity(cursor.getString(cursor.getColumnIndex(DATE_ENTITY)))
+                                    .withDateEntityId(cursor.getString(cursor.getColumnIndex(DATE_ENTITY_ID)))
+                                    .withUnits(cursor.getString(cursor.getColumnIndex(UNITS)))
+                                    .withServiceLogic(cursor.getString(cursor.getColumnIndex(SERVICE_LOGIC)))
+                                    .withPrerequisite(cursor.getString(cursor.getColumnIndex(PREREQUISITE)))
+                                    .withPreOffset(cursor.getString(cursor.getColumnIndex(PRE_OFFSET)))
+                                    .withExpiryOffset(cursor.getString(cursor.getColumnIndex(EXPIRY_OFFSET)))
+                                    .withMilestoneOffset(cursor.getString(cursor.getColumnIndex(MILESTONE_OFFSET)))
+                                    .withUpdatedAt(cursor.getLong(cursor.getColumnIndex(UPDATED_AT_COLUMN))).build()
+                    );
 
                     cursor.moveToNext();
                 }
@@ -243,39 +245,30 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         return readAllServiceTypes(cursor);
     }
 
+    /***
+     * Extract the list of service types that belong to a specific group
+     * @param group
+     * @return
+     */
     public List<String> fetchTypes(String group) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor cursor = database.query(TABLE_NAME, new String[]{TYPE}, SERVICE_GROUP + " = ? " , new String[]{group}, TYPE, null, UPDATED_AT_COLUMN);
-
-        List<String> types = new ArrayList<>();
-        try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    String type = cursor.getString(cursor.getColumnIndex(TYPE));
-                    if (type != null) {
-                        type = removeHyphen(type);
-                    }
-                    types.add(type);
-                    cursor.moveToNext();
-                }
-            }
-        } catch (Exception e) {
-            Timber.e(e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return types;
+        Cursor cursor = database.query(TABLE_NAME, new String[]{TYPE}, SERVICE_GROUP + " = ? ", new String[]{group}, TYPE, null, UPDATED_AT_COLUMN);
+        return extractCursorTypes(cursor);
     }
 
+    /**
+     * Extracts all service types
+     * @return
+     */
     public List<String> fetchTypes() {
         String sql = " SELECT " + TYPE + " FROM " + TABLE_NAME + " GROUP BY " + TYPE + " ORDER BY " + UPDATED_AT_COLUMN;
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(sql, null);
+        return extractCursorTypes(cursor);
+    }
 
+    private List<String> extractCursorTypes(Cursor cursor) {
         List<String> types = new ArrayList<>();
-
         try {
 
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
