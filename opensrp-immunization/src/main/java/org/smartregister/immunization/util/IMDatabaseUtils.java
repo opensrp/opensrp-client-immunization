@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by keyman on 17/05/2017.
  */
@@ -42,6 +44,7 @@ public class IMDatabaseUtils {
                     String type = JsonFormUtils.getString(jsonObject, "type");
                     String serviceLogic = JsonFormUtils.getString(jsonObject, "service_logic");
                     String units = JsonFormUtils.getString(jsonObject, "units");
+                    String service_group = JsonFormUtils.getString(jsonObject, "service_group");
                     String serviceNameEntity = null;
                     String serviceNameEntityId = null;
 
@@ -122,6 +125,7 @@ public class IMDatabaseUtils {
                             serviceType.setId(id);
                             serviceType.setType(type);
                             serviceType.setName(name);
+                            serviceType.setServiceGroup(service_group);
                             serviceType.setServiceNameEntity(serviceNameEntity);
                             serviceType.setServiceNameEntityId(serviceNameEntityId);
                             serviceType.setDateEntity(dateEntity);
@@ -143,7 +147,7 @@ public class IMDatabaseUtils {
                 }
             }
         } catch (JSONException e) {
-            Log.e(IMDatabaseUtils.class.getName(), e.getMessage(), e);
+            Timber.e(e);
         }
     }
 
