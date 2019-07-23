@@ -86,7 +86,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
                         new String[]{serviceType.getId().toString()});
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 
@@ -177,7 +177,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -258,6 +258,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
 
     /**
      * Extracts all service types
+     *
      * @return
      */
     public List<String> fetchTypes() {
