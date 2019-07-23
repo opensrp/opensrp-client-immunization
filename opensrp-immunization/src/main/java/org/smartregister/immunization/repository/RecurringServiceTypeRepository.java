@@ -268,7 +268,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         return extractCursorTypes(cursor);
     }
 
-    private List<String> extractCursorTypes(Cursor cursor) {
+    public List<String> extractCursorTypes(Cursor cursor) {
         List<String> types = new ArrayList<>();
         try {
 

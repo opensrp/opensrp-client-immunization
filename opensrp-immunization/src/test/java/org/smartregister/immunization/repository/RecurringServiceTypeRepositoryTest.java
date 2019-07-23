@@ -1,7 +1,6 @@
 package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import junit.framework.Assert;
 
@@ -224,7 +223,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
 
         recurringServiceTypeRepositoryspy.fetchTypes();
         recurringServiceTypeRepositoryspy.fetchTypes("group");
-        PowerMockito.verifyPrivate(recurringServiceTypeRepositoryspy, times(2)).invoke("extractCursorTypes", Mockito.any(Cursor.class));
+        Mockito.verify(recurringServiceTypeRepositoryspy, times(2)).extractCursorTypes(null);
     }
 
 }
