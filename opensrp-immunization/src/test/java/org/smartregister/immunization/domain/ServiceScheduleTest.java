@@ -58,10 +58,21 @@ public class ServiceScheduleTest extends BaseUnitTest {
         String magicString = "TT";
         types.add(magicString);
 
-        ServiceType serviceType = new ServiceType(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME,
-                ServiceTypeTest.SERVICENAMEENTITY, ServiceTypeTest.SERVICENAMEENTITYID, ServiceTypeTest.DATEENTITY,
-                ServiceTypeTest.DATEENTITYID, ServiceTypeTest.UNITS, ServiceTypeTest.SERVICELOGIC,
-                ServiceTypeTest.PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l);
+        ServiceType serviceType = new ServiceType.Builder(0l, ServiceTypeTest.TYPE, ServiceTypeTest.NAME)
+                .withServiceGroup(ServiceTypeTest.SERVICE_GROUP)
+                .withServiceNameEntity(ServiceTypeTest.SERVICENAMEENTITY)
+                .withServiceNameEntityId(ServiceTypeTest.SERVICENAMEENTITYID)
+                .withDateEntity(ServiceTypeTest.DATEENTITY)
+                .withDateEntityId(ServiceTypeTest.DATEENTITYID)
+                .withUnits(ServiceTypeTest.UNITS)
+                .withServiceLogic(ServiceTypeTest.SERVICELOGIC)
+                .withPrerequisite(ServiceTypeTest.PREREQUISITE)
+                .withPreOffset("preOffset")
+                .withExpiryOffset("expiryOffset")
+                .withMilestoneOffset("milestoneOffset")
+                .withUpdatedAt(0L).build();
+
+
         List<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
         serviceTypeList.add(serviceType);
 
