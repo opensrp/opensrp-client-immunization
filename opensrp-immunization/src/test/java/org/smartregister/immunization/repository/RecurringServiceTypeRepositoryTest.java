@@ -1,6 +1,7 @@
 package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import junit.framework.Assert;
 
@@ -221,9 +222,19 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
         RecurringServiceTypeRepository recurringServiceTypeRepositoryspy = Mockito.spy(recurringServiceTypeRepository);
         Mockito.when(recurringServiceTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
 
+        String[] columns = new String[]{RecurringServiceTypeRepository.ID_COLUMN, RecurringServiceTypeRepository.NAME, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY, RecurringServiceTypeRepository.SERVICE_NAME_ENTITY_ID, RecurringServiceTypeRepository.DATE_ENTITY, RecurringServiceTypeRepository.DATE_ENTITY_ID, RecurringServiceTypeRepository.UNITS, RecurringServiceTypeRepository.SERVICE_LOGIC, RecurringServiceTypeRepository.PREREQUISITE, RecurringServiceTypeRepository.PRE_OFFSET, RecurringServiceTypeRepository.EXPIRY_OFFSET, RecurringServiceTypeRepository.MILESTONE_OFFSET, RecurringServiceTypeRepository.UPDATED_AT_COLUMN};
+        MatrixCursor cursor = new MatrixCursor(columns);
+        cursor.addRow(new Object[]{1l, "", "", "", "", "", "", "", "", "", "", "", "", 1l});
+
+        Mockito.when(sqliteDatabase
+                .rawQuery(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String[].class)))
+                .thenReturn(cursor);
+
         recurringServiceTypeRepositoryspy.fetchTypes();
+        Mockito.verify(recurringServiceTypeRepositoryspy, times(1)).extractCursorTypes(cursor);
+
         recurringServiceTypeRepositoryspy.fetchTypes("group");
-        Mockito.verify(recurringServiceTypeRepositoryspy, times(2)).extractCursorTypes(null);
+        Mockito.verify(recurringServiceTypeRepositoryspy, times(1)).extractCursorTypes(null);
     }
 
 }

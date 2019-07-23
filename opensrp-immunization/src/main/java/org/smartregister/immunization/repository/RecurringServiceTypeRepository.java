@@ -271,7 +271,6 @@ public class RecurringServiceTypeRepository extends BaseRepository {
     public List<String> extractCursorTypes(Cursor cursor) {
         List<String> types = new ArrayList<>();
         try {
-
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     String type = cursor.getString(cursor.getColumnIndex(TYPE));
@@ -281,7 +280,6 @@ public class RecurringServiceTypeRepository extends BaseRepository {
                     types.add(type);
 
                     cursor.moveToNext();
-
                 }
             }
         } catch (Exception e) {
