@@ -1,5 +1,7 @@
 package org.smartregister.immunization.domain;
 
+import android.util.Log;
+
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Due;
@@ -43,14 +45,18 @@ public class VaccineTrigger {
             } else if (data.reference.equalsIgnoreCase(Reference.PREREQUISITE.name())) {
                 VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite, vaccineCategory);
                 if (prerequisite != null) {
-                    //Vaccine Relaxation Logic
-                    String relaxationsDays = ImmunizationLibrary.getInstance().getProperties().getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS);
-                    if (relaxationsDays != null && data.offset.charAt(data.offset.length() - 1) == 'd') {
+                    try {
+                        //Vaccine Relaxation Logic
+                        String relaxationsDays = ImmunizationLibrary.getInstance().getProperties().getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS);
+                        if (relaxationsDays != null && data.offset.charAt(data.offset.length() - 1) == 'd') {
 
-                        String prefix = data.offset.substring(0, 1);
-                        String suffix = data.offset.substring(data.offset.length() - 1);
-                        String midffix = data.offset.substring(1, data.offset.length() - 1);
-                        data.offset = prefix + (Integer.valueOf(midffix) - Integer.valueOf(relaxationsDays)) + suffix;
+                            String prefix = data.offset.substring(0, 1);
+                            String suffix = data.offset.substring(data.offset.length() - 1);
+                            String offset = data.offset.substring(1, data.offset.length() - 1);
+                            data.offset = prefix + (Integer.valueOf(offset) - Integer.valueOf(relaxationsDays)) + suffix;
+                        }
+                    } catch (Exception e) {
+                        Log.e(VaccineTrigger.class.getCanonicalName(), e.getMessage());
                     }
 
                     return new VaccineTrigger(data.offset, data.window, prerequisite);
