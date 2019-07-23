@@ -1,7 +1,6 @@
 package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import junit.framework.Assert;
 
