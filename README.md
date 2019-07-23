@@ -182,3 +182,10 @@ Example: `6 Weeks` group name has an id `Six_Wks` thus the key in _strings.xml_ 
         English <string name="six_wks">6 weeks</string>
         French <string name="six_wks">6 semaines</string>
 ```
+## Vaccine Relaxation
+You can relax your vaccine schedules and specifies how many days prior to the actual due date of the vaccine one can allow its administration
+This can be done via the setting below in your implementation's _app.properties_ file
+
+```
+vaccine.relaxation.days=2
+```
