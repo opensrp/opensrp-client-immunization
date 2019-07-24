@@ -12,4 +12,8 @@ public class IMConstants {
     public static final int INACTIVE_WIDGET_ALPHA = 120;
     public static final int ACTIVE_WIDGET_ALPHA = 255;
 
+    public class APP_PROPERTIES {
+        public static final String VACCINE_RELAXATION_DAYS = "vaccine.relaxation.days";
+    }
+
 }

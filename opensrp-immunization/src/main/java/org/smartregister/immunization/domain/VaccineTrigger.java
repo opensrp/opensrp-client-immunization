@@ -3,6 +3,7 @@ package org.smartregister.immunization.domain;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Due;
 import org.smartregister.immunization.domain.jsonmapping.Expiry;
+import org.smartregister.immunization.util.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +18,7 @@ public class VaccineTrigger {
     private final String offset;
     private final String window;
     private final VaccineRepo.Vaccine prerequisite;
+
     public VaccineTrigger(String offset, String window, Reference reference) {
         this.reference = reference;
         this.offset = offset;
@@ -38,9 +40,11 @@ public class VaccineTrigger {
             } else if (data.reference.equalsIgnoreCase(Reference.LMP.name())) {
                 return new VaccineTrigger(data.offset, data.window, Reference.LMP);
             } else if (data.reference.equalsIgnoreCase(Reference.PREREQUISITE.name())) {
-                VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite,
-                        vaccineCategory);
+                VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite, vaccineCategory);
                 if (prerequisite != null) {
+
+                    //Vaccine Relaxation Logic
+                    data.offset = Utils.updateRelaxationDays(data.offset);
                     return new VaccineTrigger(data.offset, data.window, prerequisite);
                 }
             }

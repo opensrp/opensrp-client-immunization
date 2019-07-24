@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by keyman on 31/07/17.
@@ -128,5 +129,13 @@ public class ImmunizationLibrary {
                     .getName() + ".init method in the onCreate method of your Application class ");
         }
         return instance;
+    }
+
+    public Map<String, Object> getVaccinesConfigJsonMap() {
+        return jsonMap;
+    }
+
+    public Properties getProperties() {
+        return ImmunizationLibrary.getInstance().context().getAppProperties();
     }
 }
