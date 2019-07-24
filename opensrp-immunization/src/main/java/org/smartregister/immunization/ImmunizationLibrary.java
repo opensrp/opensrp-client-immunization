@@ -1,8 +1,5 @@
 package org.smartregister.immunization;
 
-import android.content.res.AssetManager;
-import android.util.Log;
-
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -14,7 +11,6 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AssetHandler;
 
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,7 +35,6 @@ public class ImmunizationLibrary {
     private int applicationVersion;
     private int databaseVersion;
     private Map<String, Object> jsonMap = new HashMap<>();
-    private static Properties properties;
 
     private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject,
                                 int applicationVersion, int databaseVersion) {
@@ -54,7 +49,6 @@ public class ImmunizationLibrary {
                             int databaseVersion) {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
-            initProperties(context);
         }
     }
 
@@ -141,18 +135,7 @@ public class ImmunizationLibrary {
         return jsonMap;
     }
 
-    private static void initProperties(Context context) {
-        properties = new Properties();
-        try {
-            AssetManager assetManager = context.applicationContext().getAssets();
-            InputStream inputStream = assetManager.open("app.properties");
-            properties.load(inputStream);
-        } catch (Exception e) {
-            Log.e(ImmunizationLibrary.class.getCanonicalName(), e.getMessage(), e);
-        }
-    }
-
     public Properties getProperties() {
-        return properties;
+        return ImmunizationLibrary.getInstance().context().getAppProperties();
     }
 }
