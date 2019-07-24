@@ -2,7 +2,6 @@ package org.smartregister.immunization.util;
 
 import android.app.Activity;
 import android.content.res.Configuration;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +49,7 @@ public class Utils {
 
                 char lastCharacter = offset.trim().charAt(offset.length() - 1);
                 if (foundDay) {
-                    newOffset = StringUtils.join(tokens,",");
+                    newOffset = StringUtils.join(tokens, ",");
                 } else if (lastCharacter == 'm' || lastCharacter == 'y') {
                     newOffset = offset + ",-" + relaxationsDays + "d";
                 }
