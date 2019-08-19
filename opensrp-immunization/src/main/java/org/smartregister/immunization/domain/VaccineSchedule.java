@@ -144,7 +144,7 @@ public class VaccineSchedule {
 
             List<Alert> newAlerts = new ArrayList<>();
             List<Alert> oldAlerts = new ArrayList<>();
-            if (vaccineSchedules.containsKey(vaccineCategory)) {
+            if (vaccineSchedules != null && vaccineSchedules.containsKey(vaccineCategory)) {
                 List<String> alertNames = new ArrayList<>();
                 for (String curVaccineName : vaccineSchedules.get(vaccineCategory).keySet()) {
                     alertNames.add(curVaccineName.toLowerCase().replace(" ", ""));
@@ -429,7 +429,7 @@ public class VaccineSchedule {
     }
 
     public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
-        if (vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
+        if (vaccineSchedules != null && vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
                 .containsKey(vaccineName.toUpperCase())) {
             return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
         }
