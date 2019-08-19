@@ -429,7 +429,7 @@ public class VaccineSchedule {
     }
 
     public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
-        if (vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
+        if (vaccineSchedules != null && vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
                 .containsKey(vaccineName.toUpperCase())) {
             return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
         }
