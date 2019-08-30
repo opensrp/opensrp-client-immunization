@@ -177,9 +177,10 @@ public class ServiceCardAdapter extends BaseAdapter {
 
         List<ServiceRecord> serviceRecordList = new ArrayList<>();
         for (ServiceRecord serviceRecord : getServiceRecordList()) {
-            if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+            //if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+            //if (serviceRecord.getName().equalsIgnoreCase(tag.getDefaultName())) {
                 serviceRecordList.add(serviceRecord);
-            }
+            //}
         }
 
         List<Alert> alertList = getAlertList();

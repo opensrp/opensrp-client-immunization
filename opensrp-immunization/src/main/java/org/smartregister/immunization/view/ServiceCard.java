@@ -172,7 +172,7 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getServiceName());
-                setVisibility(GONE);
+                setVisibility(VISIBLE);
                 break;
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_blue);
