@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                         }
                     //}
                 }
+                foundServiceTypeMap.put(type, serviceTypeMap.get(type)); // put everything that is a service
 
                 if (foundServiceTypeMap.containsKey(type)) {
                     continue;
@@ -924,6 +925,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         @Override
         protected void onPostExecute(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
             RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight());
+            recreate();
         }
 
         @Override
@@ -1007,6 +1009,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             tag.setDbKey(null);
 
             RecurringServiceUtils.updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, true);
+
         }
     }
 

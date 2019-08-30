@@ -86,7 +86,7 @@ public class ServiceCardAdapter extends BaseAdapter {
                 serviceGroup.post(new Runnable() {
                     @Override
                     public void run() {
-                        serviceGroup.setVisibility(View.GONE);
+                        serviceGroup.setVisibility(View.VISIBLE);
                     }
                 });
             }

@@ -13,7 +13,7 @@ public class SampleUtil {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     public static final String ENTITY_ID = "1";
-    public static final String DOB_STRING = "2019-01-01T00:00:00.000Z";
+    public static final String DOB_STRING = "2018-06-01T00:00:00.000Z";
     public static final String GENDER = (new Random()).nextBoolean() ? "male" : "female";
 
     public static CommonPersonObjectClient dummyDetatils() {

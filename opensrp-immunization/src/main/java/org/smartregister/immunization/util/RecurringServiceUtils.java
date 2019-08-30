@@ -38,23 +38,24 @@ public class RecurringServiceUtils {
             serviceGroup.setModalOpen(false);
 
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                if (undo) {
+                //if (undo) {
                     serviceGroup.setServiceRecordList(serviceRecordList);
                     serviceGroup.setAlertList(alertList);
                     serviceGroup.updateAllWrapperStatus();
-                }
+                //}
                 serviceGroup.updateViews();
+
 
             } else {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (undo) {
+                        //if (undo) {
                             serviceGroup.setServiceRecordList(serviceRecordList);
                             serviceGroup.setAlertList(alertList);
                             serviceGroup.updateAllWrapperStatus();
-                        }
+                        //}
                         serviceGroup.updateViews();
                     }
                 });
