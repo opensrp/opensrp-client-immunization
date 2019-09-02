@@ -2,6 +2,7 @@ package org.smartregister.immunization;
 
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
@@ -35,6 +36,8 @@ public class ImmunizationLibrary {
     private int applicationVersion;
     private int databaseVersion;
     private Map<String, Object> jsonMap = new HashMap<>();
+
+    private VaccineRepo.Vaccine[] vaccines = VaccineRepo.Vaccine.values();
 
     private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject,
                                 int applicationVersion, int databaseVersion) {
@@ -137,5 +140,13 @@ public class ImmunizationLibrary {
 
     public Properties getProperties() {
         return ImmunizationLibrary.getInstance().context().getAppProperties();
+    }
+
+    public void setVaccines(VaccineRepo.Vaccine[] vaccines) {
+        this.vaccines = vaccines;
+    }
+
+    public VaccineRepo.Vaccine[] getVaccines() {
+        return vaccines;
     }
 }

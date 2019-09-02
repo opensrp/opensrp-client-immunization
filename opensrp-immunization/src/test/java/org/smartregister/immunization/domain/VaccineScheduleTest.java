@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -53,6 +54,8 @@ public class VaccineScheduleTest extends BaseUnitTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
     }
 
     @Test
@@ -66,9 +69,14 @@ public class VaccineScheduleTest extends BaseUnitTest {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
+        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, magicChild);
 
+        Assert.assertNotNull(VaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), magicChild));
+    }
+
+    private void mockImmunizationLibrary() {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
@@ -76,9 +84,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()
                 .findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
-
-        Assert.assertNotNull(VaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), magicChild));
-
     }
 
     @Test
@@ -98,6 +103,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
 
+        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, magicChild);
         VaccineSchedule.init(vaccines, specialVaccines, "");
