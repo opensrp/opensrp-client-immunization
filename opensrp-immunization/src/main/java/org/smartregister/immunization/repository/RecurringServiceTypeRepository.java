@@ -6,6 +6,7 @@ import android.database.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
@@ -227,6 +228,7 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         return readAllServiceTypes(cursor);
     }
 
+    @Nullable
     public ServiceType getByName(String name_) {
         if (StringUtils.isBlank(name_)) {
             return null;
