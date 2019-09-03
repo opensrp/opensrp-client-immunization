@@ -40,7 +40,9 @@ public class RecurringServiceUtils {
             if (Looper.myLooper() == Looper.getMainLooper()) {
                 //if (undo) {
                     serviceGroup.setServiceRecordList(serviceRecordList);
+                    serviceGroup.getServiceCardAdapter().updateServiceRecordList(serviceRecordList);
                     serviceGroup.setAlertList(alertList);
+                    serviceGroup.getServiceCardAdapter().updateAlertList(alertList);
                     serviceGroup.updateAllWrapperStatus();
                 //}
                 serviceGroup.updateViews();
@@ -60,6 +62,7 @@ public class RecurringServiceUtils {
                     }
                 });
             }
+
         } else if (view instanceof ServiceRowGroup) {
             final ServiceRowGroup serviceRowGroup = (ServiceRowGroup) view;
             serviceRowGroup.setModalOpen(false);

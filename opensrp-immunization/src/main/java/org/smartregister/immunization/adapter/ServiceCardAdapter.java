@@ -167,7 +167,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
 
         for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag, childDetails);
+            updateWrapperStatus(tag.getDefaultName(), tag, childDetails);
         }
     }
 
@@ -255,7 +255,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
 
         for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag, childDetails);
+            updateWrapperStatus(tag.getDefaultName(), tag, childDetails);
         }
     }
 
@@ -345,4 +345,11 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
     }
 
+    public void updateServiceRecordList(List<ServiceRecord> serviceRecordList) {
+        this.serviceRecordList = serviceRecordList;
+    }
+
+    public void updateAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
 }

@@ -925,7 +925,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         @Override
         protected void onPostExecute(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
             RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight());
-            recreate();
         }
 
         @Override
