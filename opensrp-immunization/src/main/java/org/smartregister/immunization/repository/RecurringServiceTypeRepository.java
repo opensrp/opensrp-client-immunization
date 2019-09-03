@@ -2,11 +2,11 @@ package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
@@ -226,6 +226,34 @@ public class RecurringServiceTypeRepository extends BaseRepository {
                 .query(TABLE_NAME, TABLE_COLUMNS, NAME + " LIKE ? " + COLLATE_NOCASE + " ORDER BY " + UPDATED_AT_COLUMN,
                         new String[]{"%" + name + "%"}, null, null, null, null);
         return readAllServiceTypes(cursor);
+    }
+
+    @Nullable
+    public ServiceType getByName(String name_) {
+        if (StringUtils.isBlank(name_)) {
+            return null;
+        }
+        String name = addHyphen(name_);
+
+        SQLiteDatabase database = getReadableDatabase();
+        ServiceType serviceType = null;
+        Cursor cursor = null;
+        try {
+            cursor = database
+                    .query(TABLE_NAME, TABLE_COLUMNS, NAME + " = ?", new String[]{name}, null, null, null,
+                            null);
+            List<ServiceType> serviceTypes = readAllServiceTypes(cursor);
+            if (!serviceTypes.isEmpty()) {
+                serviceType = serviceTypes.get(0);
+            }
+        } catch (Exception e) {
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return serviceType;
     }
 
     public ServiceType find(Long caseId) {
