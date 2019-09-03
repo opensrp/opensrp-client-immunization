@@ -237,9 +237,6 @@ public class RecurringServiceTypeRepository extends BaseRepository {
         ServiceType serviceType = null;
         Cursor cursor = null;
         try {
-            if (database == null) {
-                database = getReadableDatabase();
-            }
             cursor = database
                     .query(TABLE_NAME, TABLE_COLUMNS, NAME + " = ?", new String[]{name}, null, null, null,
                             null);
