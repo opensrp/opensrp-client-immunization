@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
@@ -77,13 +76,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     }
 
     private void mockImmunizationLibrary() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()
-                .findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService);
     }
 
     @Test

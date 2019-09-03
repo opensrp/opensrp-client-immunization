@@ -7,16 +7,24 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
+import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
@@ -35,6 +43,7 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @Config (shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@PrepareForTest({ImmunizationLibrary.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationEditDialogFragmentTestActivity> controller;
@@ -45,10 +54,24 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private Context context;
+
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+
     @Before
     public void setUp() {
         CoreLibrary.init(context_);
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
 
         activity = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);
