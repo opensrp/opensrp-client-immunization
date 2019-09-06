@@ -1,18 +1,26 @@
 package org.smartregister.immunization;
 
+import android.support.annotation.NonNull;
+
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
+import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.jsonmapping.Vaccine;
+import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -35,6 +43,10 @@ public class ImmunizationLibrary {
     private int applicationVersion;
     private int databaseVersion;
     private Map<String, Object> jsonMap = new HashMap<>();
+
+    private VaccineRepo.Vaccine[] vaccines = VaccineRepo.Vaccine.values();
+
+    private HashMap<String, String> vaccineGrouping = new HashMap<>();
 
     private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject,
                                 int applicationVersion, int databaseVersion) {
@@ -137,5 +149,35 @@ public class ImmunizationLibrary {
 
     public Properties getProperties() {
         return ImmunizationLibrary.getInstance().context().getAppProperties();
+    }
+
+    public void setVaccines(VaccineRepo.Vaccine[] vaccines) {
+        this.vaccines = vaccines;
+    }
+
+    public VaccineRepo.Vaccine[] getVaccines() {
+        return vaccines;
+    }
+
+    @NonNull
+    public HashMap<String, String> getVaccineGroupings(@NonNull android.content.Context context) {
+        if (vaccineGrouping.isEmpty()) {
+            List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getSupportedVaccines(context);
+
+            if (vaccinesJsonMapping != null && vaccinesJsonMapping.size() > 0) {
+                for (VaccineGroup vaccineGroup: vaccinesJsonMapping) {
+                    String groupName = vaccineGroup.name;
+
+                    for (Vaccine vaccine: vaccineGroup.vaccines) {
+                        String shortVaccineName = vaccine.getName()
+                                .trim()
+                                .replace(" ", "");
+                        vaccineGrouping.put(shortVaccineName, groupName);
+                    }
+                }
+            }
+        }
+
+        return vaccineGrouping;
     }
 }
