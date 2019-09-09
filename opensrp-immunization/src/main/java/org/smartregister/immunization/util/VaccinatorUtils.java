@@ -371,6 +371,7 @@ public class VaccinatorUtils {
         boolean m1Given = false;
         boolean m2Given = false;
         boolean oGiven = false;
+        boolean ipvGiven = false;
         try {
             ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
             for (Vaccine v : vl) {
@@ -385,6 +386,8 @@ public class VaccinatorUtils {
                         m2Given = true;
                     } else if (VaccineRepo.Vaccine.opv0.equals(v) || VaccineRepo.Vaccine.opv4.equals(v)) {
                         oGiven = true;
+                    } else if (VaccineRepo.Vaccine.opv3.equals(v) || VaccineRepo.Vaccine.ipv.equals(v)) {
+                        ipvGiven = true;
                     }
                 } else if (showExpired && milestoneDate != null && v.expiryDays() > 0 && milestoneDate
                         .plusDays(v.expiryDays()).isBefore(DateTime.now())) {
@@ -419,7 +422,7 @@ public class VaccinatorUtils {
             }
 
             // Check for vaccines where either can be given - mealses/mr opv0/opv4
-            List<Map<String, Object>> toRemove = retrieveNotDoneSchedule(schedule, m1Given, m2Given, oGiven);
+            List<Map<String, Object>> toRemove = retrieveNotDoneSchedule(schedule, m1Given, m2Given, oGiven, ipvGiven);
             if (toRemove != null && !toRemove.isEmpty()) {
                 schedule.removeAll(toRemove);
             }
@@ -442,8 +445,8 @@ public class VaccinatorUtils {
     }
 
     private static List<Map<String, Object>> retrieveNotDoneSchedule(List<Map<String, Object>> schedule, boolean m1Given,
-                                                                     boolean m2Given, boolean oGiven) {
-        if (schedule == null || schedule.isEmpty() || (!m1Given && !m2Given && !oGiven)) {
+                                                                     boolean m2Given, boolean oGiven, boolean ipvGiven) {
+        if (schedule == null || schedule.isEmpty() || (!m1Given && !m2Given && !oGiven && !ipvGiven)) {
             return new ArrayList<>();
         }
 
@@ -468,6 +471,8 @@ public class VaccinatorUtils {
             } else if (m2Given && (VaccineRepo.Vaccine.measles2.equals(v) || VaccineRepo.Vaccine.mr2.equals(v))) {
                 toRemove.add(m);
             } else if (oGiven && (VaccineRepo.Vaccine.opv0.equals(v) || VaccineRepo.Vaccine.opv4.equals(v))) {
+                toRemove.add(m);
+            } else if (ipvGiven && (VaccineRepo.Vaccine.opv3.equals(v) || VaccineRepo.Vaccine.ipv.equals(v))) {
                 toRemove.add(m);
             }
         }

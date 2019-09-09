@@ -259,20 +259,32 @@ public class VaccineSchedule {
         Date dueDate = getDueDate(issuedVaccines, dateOfBirth);
         Date expiryDate = getExpiryDate(issuedVaccines, dateOfBirth);
         Date overDueDate = getOverDueDate(dueDate);
+
+        VaccineRepository vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
+        String vaccineName = vaccine.display().trim().toLowerCase().replace(" ","_");
+        Vaccine receivedVaccine = vaccineRepository.findByEntityIdAndName(baseEntityId, vaccineName);
+        if(receivedVaccine != null) {
+            return new Alert(baseEntityId,
+                    vaccine.display(),
+                    vaccine.name(),
+                    AlertStatus.complete,
+                    dueDate == null ? null : DateUtil.yyyyMMdd.format(dueDate),
+                    expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate),
+                    true);
+        }
+
         // Use the trigger date as a reference, since that is what is mostly used
         AlertStatus alertStatus = calculateAlertStatus(dueDate, overDueDate);
 
         if (alertStatus != null) {
 
-            Alert offlineAlert = new Alert(baseEntityId,
+            return new Alert(baseEntityId,
                     vaccine.display(),
                     vaccine.name(),
                     alertStatus,
                     dueDate == null ? null : DateUtil.yyyyMMdd.format(dueDate),
                     expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate),
                     true);
-
-            return offlineAlert;
         }
 
         return defaultAlert;
