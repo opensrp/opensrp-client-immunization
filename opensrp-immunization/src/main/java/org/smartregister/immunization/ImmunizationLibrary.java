@@ -1,6 +1,7 @@
 package org.smartregister.immunization;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
@@ -171,8 +172,22 @@ public class ImmunizationLibrary {
                     for (Vaccine vaccine: vaccineGroup.vaccines) {
                         String shortVaccineName = vaccine.getName()
                                 .trim()
-                                .replace(" ", "");
-                        vaccineGrouping.put(shortVaccineName, groupName);
+                                .replace(" ", "")
+                                .toLowerCase();
+
+                        if (!TextUtils.isEmpty(shortVaccineName)) {
+                            if (vaccine.getVaccineSeparator() != null && shortVaccineName.contains(vaccine.getVaccineSeparator().trim())) {
+                                String[] individualVaccines = shortVaccineName.split(vaccine.getVaccineSeparator().trim());
+
+                                for (String individualVaccine: individualVaccines) {
+                                    if (!TextUtils.isEmpty(individualVaccine)) {
+                                        vaccineGrouping.put(individualVaccine, groupName);
+                                    }
+                                }
+                            } else {
+                                vaccineGrouping.put(shortVaccineName, groupName);
+                            }
+                        }
                     }
                 }
             }
