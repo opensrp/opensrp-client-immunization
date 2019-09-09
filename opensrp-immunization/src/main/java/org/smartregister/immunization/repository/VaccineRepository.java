@@ -287,6 +287,15 @@ public class VaccineRepository extends BaseRepository {
         return readAllVaccines(cursor);
     }
 
+    public Vaccine findByEntityIdAndName(String entityId, String name) {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS,
+                BASE_ENTITY_ID + " = ? AND "+ NAME + "=? "+COLLATE_NOCASE + " ORDER BY " + UPDATED_AT_COLUMN, new String[] {entityId, name}, null,
+                null, null, null);
+        List<Vaccine> vaccines = readAllVaccines(cursor);
+        return vaccines.isEmpty() ? null: vaccines.get(0);
+    }
+
     public List<Vaccine> findLatestTwentyFourHoursByEntityId(String entityId) {
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS,
