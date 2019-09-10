@@ -12,6 +12,8 @@
    * [Pre-requisites](#pre-requisites)
    * [Installation Devices](#installation-devices)
    * [How to install](#how-to-install)
+* [Gotcha's when using the library](#gotchas-when-using-the-library)
+   * Vaccine schedule not changing after changing the vaccines.json file
 
 # Introduction
 
@@ -189,3 +191,12 @@ This can be done via the setting below in your implementation's _app.properties_
 ```
 vaccine.relaxation.days=2
 ```
+
+## Gotcha's when using the library
+
+1. Vaccine schedule not changing after changing the `vaccines.json` file!
+
+Some of the vaccine configurations are not dependent on change done to the `vaccines.json`, in this case you should check the current configuration [here](https://github.com/OpenSRP/opensrp-client-immunization/blob/67a15611b53c55e111a0b7bff4f32a02c27b2920/opensrp-immunization/src/main/java/org/smartregister/immunization/db/VaccineRepo.java#L37)
+and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines()` and add 
+modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[])`
+to re-set all the vaccine configs using the configurations array you retrieved.
