@@ -154,4 +154,10 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
         Assert.assertEquals(serviceCardAdapter.getItemId(0), magicNumber);
     }
+
+    @Test
+    public void testallWrappers() {
+        serviceCardAdapter.getView(0, null, null);
+        org.junit.Assert.assertEquals(1, serviceCardAdapter.allWrappers().size());
+    }
 }
