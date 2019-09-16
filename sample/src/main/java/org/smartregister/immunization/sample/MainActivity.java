@@ -238,13 +238,14 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
 
                 for (ServiceRecord serviceRecord : serviceRecordList) {
-                    if (serviceRecord.getSyncStatus().equals(RecurringServiceTypeRepository.TYPE_Unsynced)) {
+                    //if (serviceRecord.getSyncStatus().equals(RecurringServiceTypeRepository.TYPE_Synced)) {
                         if (serviceRecord.getType().equals(type)) {
                             foundServiceTypeMap.put(type, serviceTypeMap.get(type));
                             break;
                         }
-                    }
+                    //}
                 }
+                foundServiceTypeMap.put(type, serviceTypeMap.get(type)); // put everything that is a service
 
                 if (foundServiceTypeMap.containsKey(type)) {
                     continue;
@@ -266,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
 
             serviceGroups = new ArrayList<>();
-            LinearLayout serviceGroupCanvasLL = (LinearLayout) findViewById(R.id.service_group_canvas_ll);
+            LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
 
             ServiceGroup curGroup = new ServiceGroup(this);
             curGroup.setChildActive(isChildActive);
@@ -1007,6 +1008,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             tag.setDbKey(null);
 
             RecurringServiceUtils.updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, true);
+
         }
     }
 

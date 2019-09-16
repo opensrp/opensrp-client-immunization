@@ -83,6 +83,8 @@ import static org.smartregister.util.Utils.addToRow;
 import static org.smartregister.util.Utils.convertDateFormat;
 import static org.smartregister.util.Utils.getValue;
 
+import org.smartregister.immunization.domain.State;
+
 /**
  * Class containing some static utility methods.
  */
@@ -478,6 +480,7 @@ public class VaccinatorUtils {
     public static List<Map<String, Object>> generateScheduleList(List<ServiceType> serviceTypes, DateTime milestoneDate,
                                                                  Map<String, Date> received, List<Alert> alerts) {
         List<Map<String, Object>> schedule = new ArrayList();
+
         try {
             for (ServiceType s : serviceTypes) {
                 String VIT_A_IFC_2 = "Vit A IFC 2";
@@ -506,6 +509,22 @@ public class VaccinatorUtils {
                 if (m.isEmpty()) {
                     DateTime dueDateTime = getServiceDueDate(s, milestoneDate, received);
                     m = createServiceMap("due", null, dueDateTime, s);
+                }
+
+                // check prerequisite has been met
+                // prerequisite has to be in received list
+                String prerequisite = s.getPrerequisite();
+                if(!prerequisite.equalsIgnoreCase(ServiceTrigger.Reference.DOB.name())) {
+                    String[] preArray = prerequisite.split("\\|");
+                    if (preArray.length >= 2) {
+                        if (preArray[0].equalsIgnoreCase(ServiceTrigger.Reference.PREREQUISITE.name())) {
+                            String preService = preArray[1];
+                            Date prereq = received.get(preService);
+                            if (prereq == null) {
+                                m.put("status", State.NOT_DUE);
+                            }
+                        }
+                    }
                 }
 
                 schedule.add(m);
@@ -769,6 +788,7 @@ public class VaccinatorUtils {
         } catch (Exception e) {
             Log.e(TAG, e.toString(), e);
         }
+
         return v;
     }
 
