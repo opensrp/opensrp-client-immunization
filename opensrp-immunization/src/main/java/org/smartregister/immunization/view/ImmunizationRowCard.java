@@ -20,6 +20,7 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by raihan on 13/03/2017.
@@ -51,7 +52,7 @@ public class ImmunizationRowCard extends LinearLayout {
         StatusTV = findViewById(R.id.status_text_tv);
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);
-        DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+        DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 
     public ImmunizationRowCard(Context context) {
