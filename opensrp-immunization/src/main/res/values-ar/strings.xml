@@ -7,7 +7,9 @@
     <string name="recurring">الخدمات المتكررة</string>
     <string name="done_today">انجز اليوم</string>
     <string name="vaccine_done_today">أعطي اللقاح اليوم</string>
-    <string name="vaccination_done_earlier">أعطي اللقاح في وقت سابق</string>
+    <string name="vaccine_done_earlier">أعطي اللقاح في وقت سابق</string>
+    <string name="vaccines_done_today">أعطي لقاحات اليوم</string>
+    <string name="vaccines_done_earlier">أعطي لقاحات في وقت سابق</string>
     <string name="vaccine_name">اللقب</string>
     <string name="vaccine_number">العدد</string>
     <string name="vaccine">اللقاح</string>

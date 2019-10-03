@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressLint ("ValidFragment")
 public class VaccinationDialogFragment extends DialogFragment {
@@ -327,10 +328,10 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
 
             Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
-            vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
+            vaccinateToday.setText(R.string.vaccines_done_today);
 
             Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
-            vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("Vaccination", "Vaccinations"));
+            vaccinateEarlier.setText(R.string.vaccines_done_earlier);
         }
 
         if (tags.get(0).getId() != null) {

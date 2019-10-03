@@ -7,7 +7,9 @@
     <string name="recurring">SERVICES RÉCURRENTS</string>
     <string name="done_today">Fait aujourd\'hui</string>
     <string name="vaccine_done_today">Vaccin fait aujourd\'hui</string>
-    <string name="vaccination_done_earlier">Vaccin fait plus tôt</string>
+    <string name="vaccine_done_earlier">Vaccin fait plus tôt</string>
+    <string name="vaccines_done_today">Vaccins fait aujourd\'hui</string>
+    <string name="vaccines_done_earlier">Vaccins fait plus tôt</string>
     <string name="vaccine_name">prénom</string>
     <string name="vaccine_number">nombre</string>
     <string name="vaccine">vaccin</string>
