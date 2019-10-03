@@ -171,18 +171,17 @@ Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in th
 
 ### Vaccine Groups
 
-Vaccine groups are specified differently in the vaccine config files. Here the key in the _strings.xml_ file should the the id of the vaccine group.
-The reason for this is that the groups usually begin with a digit. Keys which start with digits/numbers CANNOT be used to define a key in a _strings.xml_ file
+For Vaccine groups (which usually begin with a number e.g. 6 Weeks) an underscore is automatically appended since strings which start with digits/numbers CANNOT be used to define an android resource key in a _strings.xml_ file
 
 **Steps:**
 
-1. Add key in _strings.xml_ using the lowercase underscore version of the Group ID. If none is defined, it will fallback to the vaccine name during render time.
+1. Add key in _strings.xml_ using the lowercase underscore version of the Group name. If none is defined, it will fallback to the vaccine name during render time.
 
-Example: `6 Weeks` group name has an id `Six_Wks` thus the key in _strings.xml_ should be `six_wks`.
+Example: `6 Weeks` group name has a name `6 Weeks` thus the key in _strings.xml_ should be `_6_weeks`.
 
 ```
-        English <string name="six_wks">6 weeks</string>
-        French <string name="six_wks">6 semaines</string>
+        English <string name="_6_weeks">6 weeks</string>
+        French <string name="_6_weeks">6 semaines</string>
 ```
 ## Vaccine Relaxation
 You can relax your vaccine schedules and specifies how many days prior to the actual due date of the vaccine one can allow its administration

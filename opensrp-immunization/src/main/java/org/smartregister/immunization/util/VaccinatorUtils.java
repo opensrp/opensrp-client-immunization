@@ -59,6 +59,7 @@ import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.ServiceTrigger;
 import org.smartregister.immunization.domain.ServiceType;
+import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
@@ -82,8 +83,6 @@ import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;
 import static org.smartregister.util.Utils.convertDateFormat;
 import static org.smartregister.util.Utils.getValue;
-
-import org.smartregister.immunization.domain.State;
 
 /**
  * Class containing some static utility methods.
@@ -140,7 +139,7 @@ public class VaccinatorUtils {
 
     public static ArrayList<HashMap<String, String>> getWasted(String startDate, String endDate, String type) {
         String sqlWasted = "select sum (total_wasted)as total_wasted from stock where `report` ='" + type + "' and `date` between '" + startDate + "' and '" + endDate + "'";
-        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted, new String[] {});
+        return ImmunizationLibrary.getInstance().context().commonrepository("stock").rawQuery(sqlWasted, new String[]{});
     }
 
     public static int getWasted(String startDate, String endDate, String type, String... variables) {
@@ -181,7 +180,7 @@ public class VaccinatorUtils {
         q += " ) e ";
 
         Log.i("DD", q);
-        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[] {});
+        return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[]{});
     }
 
     public static void addStatusTag(Context context, TableLayout table, String tag, boolean hrLine) {
@@ -514,7 +513,7 @@ public class VaccinatorUtils {
                 // check prerequisite has been met
                 // prerequisite has to be in received list
                 String prerequisite = s.getPrerequisite();
-                if(!prerequisite.equalsIgnoreCase(ServiceTrigger.Reference.DOB.name())) {
+                if (!prerequisite.equalsIgnoreCase(ServiceTrigger.Reference.DOB.name())) {
                     String[] preArray = prerequisite.split("\\|");
                     if (preArray.length >= 2) {
                         if (preArray[0].equalsIgnoreCase(ServiceTrigger.Reference.PREREQUISITE.name())) {
@@ -630,7 +629,7 @@ public class VaccinatorUtils {
             } else if (s.contains(",")) {
                 return StringUtils.stripAll(s.split(","));
             } else if (StringUtils.isNotBlank(s)) {
-                return new String[] {s};
+                return new String[]{s};
             }
 
         } catch (Exception e) {
@@ -818,8 +817,7 @@ public class VaccinatorUtils {
     /**
      * Returns a list of VaccineGroup containing a list of supported woman vaccines
      *
-     * @param context
-     *         Current valid context to be used
+     * @param context Current valid context to be used
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context) {
@@ -829,8 +827,7 @@ public class VaccinatorUtils {
     /**
      * Returns a list of VaccineGroup containing a list of supported woman vaccines
      *
-     * @param context
-     *         Current valid context to be used
+     * @param context Current valid context to be used
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
@@ -871,8 +868,7 @@ public class VaccinatorUtils {
     /**
      * Returns a JSON String containing a list of supported services
      *
-     * @param context
-     *         Current valid context to be used
+     * @param context Current valid context to be used
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context) {
@@ -882,8 +878,7 @@ public class VaccinatorUtils {
     /**
      * Returns a JSON String containing a list of supported services
      *
-     * @param context
-     *         Current valid context to be used
+     * @param context Current valid context to be used
      * @return JSON String with the supported vaccines or NULL if unable to obtain the list
      */
     public static String getSupportedRecurringServices(Context context, String prefix) {
@@ -893,7 +888,7 @@ public class VaccinatorUtils {
     }
 
     public static int getVaccineCalculation(Context context, String vaccineName)
-    throws JSONException {
+            throws JSONException {
         List<VaccineGroup> supportedVaccines = getSupportedVaccines(context);
         for (VaccineGroup vaccineGroup : supportedVaccines) {
             for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
@@ -907,8 +902,7 @@ public class VaccinatorUtils {
     /**
      * Returns a list of VaccineGroup containing a list of supported vaccines
      *
-     * @param context
-     *         Current valid context to be used
+     * @param context Current valid context to be used
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context) {
@@ -918,10 +912,8 @@ public class VaccinatorUtils {
     /**
      * Returns a list of VaccineGroup containing a list of supported vaccines
      *
-     * @param context
-     *         Current valid context to be used
-     * @param prefix
-     *         Country prefix
+     * @param context Current valid context to be used
+     * @param prefix  Country prefix
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
@@ -964,10 +956,8 @@ public class VaccinatorUtils {
     }
 
     /**
-     * @param context
-     *         Context
-     * @param name_
-     *         vaccine name to translate
+     * @param context Context
+     * @param name_   vaccine name to translate
      * @return translated value
      */
     public static String getTranslatedVaccineName(Context context, String name_) {
@@ -987,17 +977,14 @@ public class VaccinatorUtils {
     }
 
     /**
-     * @param context
-     *         Context
-     * @param vaccineName
-     *         vaccine name which is converted to a string key/identifier in strings xml of string to translate
+     * @param context     Context
+     * @param vaccineName vaccine name which is converted to a string key/identifier in strings xml of string to translate
      * @return translated value
      */
     public static String translate(Context context, String vaccineName) {
         String resourceIdentifierKey = vaccineName;
-        int identifier = context.getResources()
-                .getIdentifier(resourceIdentifierKey.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), "string",
-                        context.getPackageName());
+
+        int identifier = context.getResources().getIdentifier(createIdentifier(vaccineName), "string", context.getPackageName());
         if (identifier > 0) {
             resourceIdentifierKey = context.getResources().getString(identifier);
 
@@ -1006,16 +993,15 @@ public class VaccinatorUtils {
     }
 
     /**
-     * @param vaccineGroup
-     *         Vaccine Group object with name to translate
-     * @return translated group name
-     */
-    public static String getTranslatedGroupName(Context context, VaccineGroup vaccineGroup) {
+     * Creates identifier from text by doing clean up on the passed name/text
+     *
+     * @param text key to be used for reverse look up
+     * @return string.xml key to be used in string look ups
+     **/
+    public static String createIdentifier(String text) {
 
-        String translation = translate(context, vaccineGroup.id.toLowerCase(Locale.ENGLISH));
-
-        //Check if translated otherwise return original
-        return vaccineGroup.id.equals(translation) ? vaccineGroup.name : translation;
+        String prefix = text.matches("^\\d.*\\n*") ? "_" : "";
+        return prefix + text.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
     }
 }

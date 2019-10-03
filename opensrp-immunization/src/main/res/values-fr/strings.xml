@@ -12,7 +12,7 @@
     <string name="vaccines_done_earlier">Vaccins fait plus tôt</string>
     <string name="vaccine_name">prénom</string>
     <string name="vaccine_number">nombre</string>
-    <string name="vaccine">vaccin</string>
+    <string name="vaccine">Vaccin</string>
     <string name="set">ensemble</string>
     <string name="undo_record_vaccination">Annuler la vaccination?</string>
     <string name="change_service_date">Changer date de service</string>
@@ -73,11 +73,12 @@
     <string name="mr_2">RR 2</string>
     <string name="vit_a_1">Vit A 6 Mois</string>
     <string name="vit_a_2">Vit A 12 Mois</string>
-    <string name="six_wks">6 semaines</string>
-    <string name="ten_wks">10 semaines</string>
-    <string name="fourteen_weeks">14 semaines</string>
-    <string name="nine_months">9 mois</string>
-    <string name="eighteen_months">18 mois</string>
+    <string name="at_birth">Naissance</string>
+    <string name="_6_weeks">6 semaines</string>
+    <string name="_10_weeks">10 semaines</string>
+    <string name="_14_weeks">14 semaines</string>
+    <string name="_9_months">9 mois</string>
+    <string name="_18_months">18 mois</string>
 
 
 </resources>

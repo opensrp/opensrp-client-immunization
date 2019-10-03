@@ -47,7 +47,7 @@ import static org.mockito.ArgumentMatchers.eq;
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest ({ImmunizationLibrary.class, Utils.class, AssetHandler.class})
+@PrepareForTest({ImmunizationLibrary.class, Utils.class, AssetHandler.class})
 public class VaccinatorUtilsTest extends BaseUnitTest {
 
     private final int magicColor = 255;
@@ -85,7 +85,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         VaccinatorUtils.getWasted("", "", "");
         VaccinatorUtils.getWasted("", "", "", "");
         Mockito.verify(commonRepository, Mockito.times(1))
-                .rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[] {}));
+                .rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[]{}));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
                 .thenReturn(commonRepository);
         VaccinatorUtils.getUsed("", "", "", "", "");
         Mockito.verify(commonRepository, Mockito.times(1))
-                .rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[] {}));
+                .rawQuery(org.mockito.ArgumentMatchers.anyString(), eq(new String[]{}));
     }
 
     @Test
@@ -252,26 +252,6 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         translated = VaccinatorUtils.getTranslatedVaccineName(context, UNTRANSLATED + " / " + UNTRANSLATED);
         Assert.assertEquals(TRANSLATED + " / " + TRANSLATED, translated);
 
-    }
-
-    @Test
-    public void testTranlslateGroupNameInvokesCorrectApiMethods() {
-
-        android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(context.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getString(123)).thenReturn(TRANSLATED);
-        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(123);
-
-        VaccineGroup vaccineGroup = new VaccineGroup();
-        vaccineGroup.name = UNTRANSLATED_GROUP_NAME;
-        vaccineGroup.id = UNTRANSLATED_GROUP_NAME;
-
-        String translated = VaccinatorUtils.getTranslatedGroupName(context, vaccineGroup);
-
-        Assert.assertEquals(UNTRANSLATED_GROUP_NAME, translated);//Default on error
-
-        Assert.assertEquals(TRANSLATED_GROUP_NAME, translated);
     }
 
 }
