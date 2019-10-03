@@ -4,4 +4,13 @@
 
     <string name="label_immunization_records">IMMUNISATION &amp; SERVICES</string>
     <string name="updating_dialog_title">Updating…</string>
+
+    <!-- Immunization Names-->
+    <string name="bcg">BCG</string>
+    <string name="opv_0">OPV 0</string>
+    <string name="opv_1">OPV 1</string>
+    <string name="pcv_1">PCV 1</string>
+    <string name="penta_1">Penta 1</string>
+    <string name="rota_1">Rota 1</string>
+
 </resources>
