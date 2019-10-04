@@ -254,4 +254,26 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testGetTranslatedGroupName() {
+
+        android.content.Context context = Mockito.mock(android.content.Context.class);
+        PowerMockito.mockStatic(Utils.class);
+        PowerMockito.when(context.getResources()).thenReturn(resources);
+        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(RESOURCE_ID);
+
+        //Test Group names
+        String translated = VaccinatorUtils.translate(context, UNTRANSLATED_GROUP_NAME);
+
+        Assert.assertEquals(TRANSLATED_GROUP_NAME, translated);
+    }
+
+    @Test
+    public void testCreateIdentifierWorksCorrectly() {
+
+        String translated = VaccinatorUtils.createIdentifier("4 Weeks");
+
+        Assert.assertEquals("_4_weeks", translated);
+    }
+
 }
