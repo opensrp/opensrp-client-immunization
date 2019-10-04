@@ -23,6 +23,7 @@ import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -54,8 +55,8 @@ public class VaccineCard extends LinearLayout {
         undoB = findViewById(R.id.undo_b);
 
         //Init date formatters here to allow for dynamic language switching
-        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-        SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
+        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+        SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM",Locale.ENGLISH);
     }
 
     public VaccineCard(Context context, AttributeSet attrs) {

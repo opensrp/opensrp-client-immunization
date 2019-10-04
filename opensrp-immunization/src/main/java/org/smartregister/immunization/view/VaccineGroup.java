@@ -88,7 +88,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         init(context);
     }
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public VaccineGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
@@ -139,8 +139,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
      * This method will update vaccine group views, and the vaccine cards corresponding to the list of {@link
      * VaccineWrapper}s specified
      *
-     * @param vaccinesToUpdate
-     *         List of vaccines who's views we want updated, or NULL if we want to update all vaccine views
+     * @param vaccinesToUpdate List of vaccines who's views we want updated, or NULL if we want to update all vaccine views
      */
     public void updateViews(ArrayList<VaccineWrapper> vaccinesToUpdate) {
         groupState = GroupState.IN_PAST;
@@ -171,11 +170,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private void updateStatusViews() {
         switch (groupState) {
             case IN_PAST:
-                nameTV.setText(VaccinatorUtils.getTranslatedGroupName(context, vaccineData));
+                nameTV.setText(VaccinatorUtils.translate(context, vaccineData.name));
                 break;
             case CURRENT:
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        VaccinatorUtils.getTranslatedGroupName(context, vaccineData), context.getString(R.string.today)));
+                        VaccinatorUtils.translate(context, vaccineData.name), context.getString(R.string.today)));
                 break;
             case IN_FUTURE:
                 String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
@@ -184,7 +183,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                 dobCalender.setTime(dateTime.toDate());
                 dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        VaccinatorUtils.getTranslatedGroupName(context, vaccineData),
+                        VaccinatorUtils.translate(context, vaccineData.name),
                         READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                 break;
             default:

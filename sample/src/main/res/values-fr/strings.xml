@@ -1,0 +1,9 @@
+<resources>
+    <!-- Immunization Names-->
+    <string name="bcg">BCG</string>
+    <string name="opv_0">Polio Oral 0</string>
+    <string name="opv_1">Polio Oral 1</string>
+    <string name="pcv_1">Pneumo 1</string>
+    <string name="penta_1">Penta 1</string>
+    <string name="rota_1">Rota virus 1</string>
+</resources>
