@@ -366,7 +366,7 @@ public class VaccinateActionUtils {
             case measles1:
             case mr1:
             case opv4:
-            case yf:
+            case yellowfever:
             case mcv1:
             case rubella1:
             case menA:
