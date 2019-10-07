@@ -75,7 +75,7 @@ public class VaccineRepo {
         opv4("OPV 4", null, 1830, 274, 28, "child"),
         mcv1("MCV 1", null, -1, 274, 0, "child"),
         rubella1("Rubella 1", null, 1830, 274, 0, "child"),
-        yf("Yellow Fever", null, -1, 274, 0, "child"),
+        yellowfever("Yellow Fever", null, 548, 274, 0, "child"),
         menA("MenA", null, 1830, 274, 0, "child"),
         meningococcal("Meningococcal", null, 548, 274, 28, "child"),
 
