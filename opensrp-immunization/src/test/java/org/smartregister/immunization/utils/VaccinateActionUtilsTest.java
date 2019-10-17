@@ -50,7 +50,7 @@ import java.util.Set;
  * Created by real on 31/10/17.
  */
 
-@PrepareForTest ({FormUtils.class, VaccinatorUtils.class, ImmunizationLibrary.class})
+@PrepareForTest({FormUtils.class, VaccinatorUtils.class, ImmunizationLibrary.class})
 public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     public static final String WOMAN = "woman";
@@ -208,54 +208,6 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         //return null
         Assert.assertNull(VaccinateActionUtils.find(object, field));
 
-    }
-
-    @Test
-    public void assertPreviousStateKeyTestWithVariousVaccineNames() {
-        Assert.assertNull(VaccinateActionUtils.previousStateKey(null, null));
-        Vaccine vaccine = new Vaccine();
-        vaccine.setName(magicBCG);
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName(magicNULL);
-        Assert.assertNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("OPV 0");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("OPV 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("OPV 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("OPV 3");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("OPV 4");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MR 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MR 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("IPV");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MV 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MV 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MV 3");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MV 4");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("MCV 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("Rubella 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, vaccine));
-        vaccine.setName("TT 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(WOMAN, vaccine));
-        vaccine.setName("TT 3");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(WOMAN, vaccine));
-        vaccine.setName("TT 4");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(WOMAN, vaccine));
-        vaccine.setName("TT 5");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(WOMAN, vaccine));
-        vaccine.setName("TT 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(WOMAN, vaccine));
     }
 
     @Test
