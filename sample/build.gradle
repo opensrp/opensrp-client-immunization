@@ -80,12 +80,12 @@ android {
 
 dependencies {
 
-    implementation('org.smartregister:opensrp-client-core:1.7.28-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.7.35-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.6.44-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.6.51-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }

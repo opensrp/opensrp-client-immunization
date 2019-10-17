@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +39,7 @@ public class ServiceSchedule {
     }
 
     public static ServiceSchedule getServiceSchedule(JSONObject schedule)
-    throws JSONException {
+            throws JSONException {
         ServiceTrigger dueTrigger = ServiceTrigger.init(schedule.getJSONObject("due"));
         ServiceTrigger expiryTrigger = ServiceTrigger.init(schedule.optJSONObject("expiry"));
         return new ServiceSchedule(dueTrigger, expiryTrigger);
@@ -104,7 +105,7 @@ public class ServiceSchedule {
                         }
                     }
 
-                    if (!exists) {
+                    if (!exists && !AlertStatus.complete.equals(curAlert.status())) {
                         // Insert alert into table
                         newAlerts.add(curAlert);
                         alertService.create(curAlert);
@@ -126,13 +127,13 @@ public class ServiceSchedule {
             DateTime dueDateTime = VaccinatorUtils.getServiceDueDate(serviceType, dateOfBirth, issuedServices);
             DateTime expiryDateTime = VaccinatorUtils.getServiceExpiryDate(serviceType, dateOfBirth);
 
-            // Use the trigger date as a reference, since that is what is mostly used
-            AlertStatus alertStatus = calculateAlertStatus(dueDateTime);
+
+            AlertStatus alertStatus = isServiceIssued(serviceType.getName(), issuedServices) ? AlertStatus.complete : calculateAlertStatus(dueDateTime);
 
             if (alertStatus != null) {
                 Date startDate = dueDateTime == null ? dateOfBirth.toDate() : dueDateTime.toDate();
                 Date expiryDate = expiryDateTime == null ? null : expiryDateTime.toDate();
-                return new Alert(baseEntityId, serviceType.getName(), serviceType.getName().toLowerCase().replace(" ", ""),
+                return new Alert(baseEntityId, serviceType.getName(), serviceType.getName().toLowerCase(Locale.ENGLISH).replace(" ", ""),
                         alertStatus, startDate == null ? null : DateUtil.yyyyMMdd.format(startDate),
                         expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate), true);
             }
@@ -143,6 +144,23 @@ public class ServiceSchedule {
         }
     }
 
+    protected static boolean isServiceIssued(String currentVaccine, List<ServiceRecord> serviceRecords) {
+
+        for (ServiceRecord serviceRecord : serviceRecords) {
+            if (currentVaccine.equalsIgnoreCase(serviceRecord.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Use the trigger date as a reference, since that is what is mostly used
+     *
+     * @param referenceDate trigger date
+     * @return evaluated alert status
+     */
     private static AlertStatus calculateAlertStatus(DateTime referenceDate) {
         if (referenceDate != null) {
             Calendar refCalendarDate = Calendar.getInstance();
