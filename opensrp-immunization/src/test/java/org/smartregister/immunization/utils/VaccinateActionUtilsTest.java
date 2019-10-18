@@ -18,9 +18,11 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
@@ -28,6 +30,7 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
+import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
@@ -47,7 +50,7 @@ import java.util.Set;
  * Created by real on 31/10/17.
  */
 
-@PrepareForTest ({FormUtils.class, VaccinatorUtils.class})
+@PrepareForTest ({FormUtils.class, VaccinatorUtils.class, ImmunizationLibrary.class})
 public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     public static final String WOMAN = "woman";
@@ -59,6 +62,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     private final String magicID = "uselessentityID";
     private final int magic2 = 2;
     private final int magic12 = 12;
+
     @Rule
     public PowerMockRule rule = new PowerMockRule();
     @Mock
@@ -66,10 +70,22 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     @Mock
     private FormUtils formUtils;
 
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private VaccineRepository vaccineRepository;
+    @Mock
+    private Context context;
+    @Mock
+    private AlertService alertService;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         Assert.assertNotNull(vaccinateActionUtils);
+
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService);
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
     }
 
     @Test

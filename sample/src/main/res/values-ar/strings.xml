@@ -1,0 +1,9 @@
+<resources>
+    <!-- Immunization Names-->
+    <string name="bcg">ب.س.ج</string>
+    <string name="opv_0">الشلل فموي 0</string>
+    <string name="opv_1">الشلل فموي 1</string>
+    <string name="pcv_1">لقاح المكورات الرئوية 1</string>
+    <string name="penta_1">الخماسي 1</string>
+    <string name="rota_1">لقاح الفيروسات العجلية 1</string>
+</resources>

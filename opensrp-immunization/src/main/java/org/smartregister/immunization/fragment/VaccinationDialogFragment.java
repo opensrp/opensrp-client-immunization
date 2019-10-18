@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class VaccinationDialogFragment extends DialogFragment {
     public static final String DIALOG_TAG = "VaccinationDialogFragment";
     public static final String WRAPPER_TAG = "tag";
@@ -265,6 +265,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                     vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
                 }
 
+                vaccineView.setTag(R.id.vaccine, vaccineWrapper.getName());
                 vaccinationName.setTag(vaccineWrapper.getName());
                 if (vaccineWrapper.getNotGivenCondition() != null) {
                     vaccinationName.setTag(R.id.not_give_condition_id, vaccineWrapper.getNotGivenCondition());
@@ -327,10 +328,10 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
 
             Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
-            vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
+            vaccinateToday.setText(R.string.vaccines_done_today);
 
             Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
-            vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("Vaccination", "Vaccinations"));
+            vaccinateEarlier.setText(R.string.vaccines_done_earlier);
         }
 
         if (tags.get(0).getId() != null) {
@@ -450,7 +451,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
             }
         });
 
@@ -569,7 +570,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             CheckBox selectChild = chilView.findViewById(R.id.select);
             if (selectChild.isChecked()) {
                 TextView childVaccineView = chilView.findViewById(R.id.vaccine);
-                String checkedName = childVaccineView.getText().toString();
+                String checkedName = childVaccineView.getTag(R.id.vaccine).toString();
                 names.add(checkedName);
             }
         }
@@ -599,10 +600,8 @@ public class VaccinationDialogFragment extends DialogFragment {
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param vaccinateToday
-     *         The 'Vaccination done today' button
-     * @param earlierDatePicker
-     *         Date picker for selecting a previous date for a vaccine
+     * @param vaccinateToday    The 'Vaccination done today' button
+     * @param earlierDatePicker Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(Button vaccinateToday, Button vaccinateEarlier, Button set, DatePicker earlierDatePicker) {
         Calendar today = Calendar.getInstance();
@@ -652,7 +651,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
             }
 
             earlierDatePicker.setMinDate(minDate.getTimeInMillis());

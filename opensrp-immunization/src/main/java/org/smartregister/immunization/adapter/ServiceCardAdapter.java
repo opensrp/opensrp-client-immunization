@@ -86,7 +86,7 @@ public class ServiceCardAdapter extends BaseAdapter {
                 serviceGroup.post(new Runnable() {
                     @Override
                     public void run() {
-                        serviceGroup.setVisibility(View.GONE);
+                        serviceGroup.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -167,7 +167,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
 
         for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag, childDetails);
+            updateWrapperStatus(tag.getDefaultName(), tag, childDetails);
         }
     }
 
@@ -177,9 +177,10 @@ public class ServiceCardAdapter extends BaseAdapter {
 
         List<ServiceRecord> serviceRecordList = new ArrayList<>();
         for (ServiceRecord serviceRecord : getServiceRecordList()) {
-            if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+            //if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+            //if (serviceRecord.getName().equalsIgnoreCase(tag.getDefaultName())) {
                 serviceRecordList.add(serviceRecord);
-            }
+            //}
         }
 
         List<Alert> alertList = getAlertList();
@@ -254,7 +255,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
 
         for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag, childDetails);
+            updateWrapperStatus(tag.getDefaultName(), tag, childDetails);
         }
     }
 
@@ -344,4 +345,11 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
     }
 
+    public void updateServiceRecordList(List<ServiceRecord> serviceRecordList) {
+        this.serviceRecordList = serviceRecordList;
+    }
+
+    public void updateAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
 }

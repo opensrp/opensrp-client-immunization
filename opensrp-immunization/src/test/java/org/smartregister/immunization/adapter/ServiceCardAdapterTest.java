@@ -135,6 +135,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
+
         org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
     }
 
@@ -153,5 +154,12 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         Assert.assertNull(serviceCardAdapter.getItem(0));
 
         Assert.assertEquals(serviceCardAdapter.getItemId(0), magicNumber);
+    }
+
+    @Test
+    public void testallWrappers() {
+
+        serviceCardAdapter.getView(0, null, null);
+        org.junit.Assert.assertEquals(1, serviceCardAdapter.allWrappers().size());
     }
 }

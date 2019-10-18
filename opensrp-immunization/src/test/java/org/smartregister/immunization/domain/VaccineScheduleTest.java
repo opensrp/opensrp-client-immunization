@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
@@ -53,6 +53,8 @@ public class VaccineScheduleTest extends BaseUnitTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
     }
 
     @Test
@@ -66,19 +68,15 @@ public class VaccineScheduleTest extends BaseUnitTest {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
+        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, magicChild);
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()
-                .findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
-
         Assert.assertNotNull(VaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), magicChild));
+    }
 
+    private void mockImmunizationLibrary() {
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService);
     }
 
     @Test
@@ -98,6 +96,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
 
+        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, magicChild);
         VaccineSchedule.init(vaccines, specialVaccines, "");

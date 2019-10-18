@@ -1,11 +1,19 @@
 package org.smartregister.immunization.db;
 
+import org.smartregister.immunization.ImmunizationLibrary;
+
 import java.util.ArrayList;
 
 public class VaccineRepo {
+
     public static ArrayList<Vaccine> getVaccines(String category) {
+        return getVaccines(category, false);
+    }
+
+    public static ArrayList<Vaccine> getVaccines(String category, boolean useDefault) {
         ArrayList<Vaccine> vl = new ArrayList<>();
-        for (Vaccine v : Vaccine.values()) {
+        Vaccine[] vaccines = useDefault ? Vaccine.values() : ImmunizationLibrary.getInstance().getVaccines();
+        for (Vaccine v : vaccines) {
             if (v.category().equalsIgnoreCase(category.trim())) {
                 vl.add(v);
             }
@@ -14,7 +22,8 @@ public class VaccineRepo {
     }
 
     public static Vaccine getVaccine(String name, String category) {
-        for (Vaccine curVaccine : Vaccine.values()) {
+        Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines();
+        for (Vaccine curVaccine : vaccines) {
             if (curVaccine.display.equalsIgnoreCase(name)
                     && curVaccine.category.equalsIgnoreCase(category)) {
                 return curVaccine;
@@ -66,7 +75,7 @@ public class VaccineRepo {
         opv4("OPV 4", null, 1830, 274, 28, "child"),
         mcv1("MCV 1", null, -1, 274, 0, "child"),
         rubella1("Rubella 1", null, 1830, 274, 0, "child"),
-        yf("Yellow Fever", null, -1, 274, 0, "child"),
+        yellowfever("Yellow Fever", null, 548, 274, 0, "child"),
         menA("MenA", null, 1830, 274, 0, "child"),
         meningococcal("Meningococcal", null, 548, 274, 28, "child"),
 
@@ -128,5 +137,28 @@ public class VaccineRepo {
             return category;
         }
 
+        public void setDisplay(String display) {
+            this.display = display;
+        }
+
+        public void setPrerequisite(Vaccine prerequisite) {
+            this.prerequisite = prerequisite;
+        }
+
+        public void setExpiryDays(int expiryDays) {
+            this.expiryDays = expiryDays;
+        }
+
+        public void setMilestoneGapDays(int milestoneGapDays) {
+            this.milestoneGapDays = milestoneGapDays;
+        }
+
+        public void setPrerequisiteGapDays(int prerequisiteGapDays) {
+            this.prerequisiteGapDays = prerequisiteGapDays;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
     }
 }

@@ -20,13 +20,14 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by raihan on 13/03/2017.
  */
 
 public class ServiceRowCard extends LinearLayout {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     private Context context;
     private Button statusIV;
     private TextView nameTV;

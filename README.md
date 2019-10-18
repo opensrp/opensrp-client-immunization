@@ -12,6 +12,8 @@
    * [Pre-requisites](#pre-requisites)
    * [Installation Devices](#installation-devices)
    * [How to install](#how-to-install)
+* [Gotcha's when using the library](#gotchas-when-using-the-library)
+   * Vaccine schedule not changing after changing the vaccines.json file
 
 # Introduction
 
@@ -169,18 +171,17 @@ Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in th
 
 ### Vaccine Groups
 
-Vaccine groups are specified differently in the vaccine config files. Here the key in the _strings.xml_ file should the the id of the vaccine group.
-The reason for this is that the groups usually begin with a digit. Keys which start with digits/numbers CANNOT be used to define a key in a _strings.xml_ file
+For Vaccine groups (which usually begin with a number e.g. 6 Weeks) an underscore is automatically appended since strings which start with digits/numbers CANNOT be used to define an android resource key in a _strings.xml_ file
 
 **Steps:**
 
-1. Add key in _strings.xml_ using the lowercase underscore version of the Group ID. If none is defined, it will fallback to the vaccine name during render time.
+1. Add key in _strings.xml_ using the lowercase underscore version of the Group name. If none is defined, it will fallback to the vaccine name during render time.
 
-Example: `6 Weeks` group name has an id `Six_Wks` thus the key in _strings.xml_ should be `six_wks`.
+Example: `6 Weeks` group name has a name `6 Weeks` thus the key in _strings.xml_ should be `_6_weeks`.
 
 ```
-        English <string name="six_wks">6 weeks</string>
-        French <string name="six_wks">6 semaines</string>
+        English <string name="_6_weeks">6 weeks</string>
+        French <string name="_6_weeks">6 semaines</string>
 ```
 ## Vaccine Relaxation
 You can relax your vaccine schedules and specifies how many days prior to the actual due date of the vaccine one can allow its administration
@@ -189,3 +190,12 @@ This can be done via the setting below in your implementation's _app.properties_
 ```
 vaccine.relaxation.days=2
 ```
+
+## Gotcha's when using the library
+
+1. Vaccine schedule not changing after changing the `vaccines.json` file!
+
+Some of the vaccine configurations are not dependent on change done to the `vaccines.json`, in this case you should check the current configuration [here](https://github.com/OpenSRP/opensrp-client-immunization/blob/67a15611b53c55e111a0b7bff4f32a02c27b2920/opensrp-immunization/src/main/java/org/smartregister/immunization/db/VaccineRepo.java#L37)
+and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines()` and add 
+modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[])`
+to re-set all the vaccine configs using the configurations array you retrieved.

@@ -86,7 +86,7 @@
                 android:background="@drawable/vaccination_earlier_bg"
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
-                android:text="@string/vaccination_done_earlier"
+                android:text="@string/vaccine_done_earlier"
                 android:textAllCaps="false"
                 android:textColor="@color/light_blue"
                 android:textSize="17sp" />

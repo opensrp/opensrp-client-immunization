@@ -38,27 +38,31 @@ public class RecurringServiceUtils {
             serviceGroup.setModalOpen(false);
 
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                if (undo) {
+                //if (undo) {
                     serviceGroup.setServiceRecordList(serviceRecordList);
+                    serviceGroup.getServiceCardAdapter().updateServiceRecordList(serviceRecordList);
                     serviceGroup.setAlertList(alertList);
+                    serviceGroup.getServiceCardAdapter().updateAlertList(alertList);
                     serviceGroup.updateAllWrapperStatus();
-                }
+                //}
                 serviceGroup.updateViews();
+
 
             } else {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (undo) {
+                        //if (undo) {
                             serviceGroup.setServiceRecordList(serviceRecordList);
                             serviceGroup.setAlertList(alertList);
                             serviceGroup.updateAllWrapperStatus();
-                        }
+                        //}
                         serviceGroup.updateViews();
                     }
                 });
             }
+
         } else if (view instanceof ServiceRowGroup) {
             final ServiceRowGroup serviceRowGroup = (ServiceRowGroup) view;
             serviceRowGroup.setModalOpen(false);
