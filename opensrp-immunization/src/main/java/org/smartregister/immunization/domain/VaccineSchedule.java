@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -178,7 +179,7 @@ public class VaccineSchedule {
                             }
                         }
 
-                        if (!exists) {
+                        if (!exists && !AlertStatus.complete.equals(curAlert.status())) {
                             // Insert alert into table
                             newAlerts.add(curAlert);
                             alertService.create(curAlert);
@@ -259,14 +260,17 @@ public class VaccineSchedule {
         Date dueDate = getDueDate(issuedVaccines, dateOfBirth);
         Date expiryDate = getExpiryDate(issuedVaccines, dateOfBirth);
         Date overDueDate = getOverDueDate(dueDate);
+
         // Use the trigger date as a reference, since that is what is mostly used
-        AlertStatus alertStatus = calculateAlertStatus(dueDate, overDueDate);
+        // Generate only if its not in issued vaccines
+
+        AlertStatus alertStatus = isVaccineIssued(vaccine.name(), issuedVaccines) ? AlertStatus.complete : calculateAlertStatus(dueDate, overDueDate);
 
         if (alertStatus != null) {
 
             Alert offlineAlert = new Alert(baseEntityId,
                     vaccine.display(),
-                    vaccine.name(),
+                    vaccine.name().toLowerCase(Locale.ENGLISH).replace(" ", ""),
                     alertStatus,
                     dueDate == null ? null : DateUtil.yyyyMMdd.format(dueDate),
                     expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate),
@@ -276,6 +280,18 @@ public class VaccineSchedule {
         }
 
         return defaultAlert;
+    }
+
+
+    protected boolean isVaccineIssued(String currentVaccine, List<Vaccine> issuedVaccines) {
+
+        for (Vaccine vaccine : issuedVaccines) {
+            if (currentVaccine.equalsIgnoreCase(vaccine.getName().replaceAll(" ", ""))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Date getDueDate(List<Vaccine> issuedVaccines, Date dob) {
