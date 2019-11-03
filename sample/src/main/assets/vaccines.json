@@ -431,6 +431,149 @@
     ]
   },
   {
+    "name": "6 Months",
+    "id": "Six_Months",
+    "days_after_birth_due": 183,
+    "vaccines": [
+      {
+        "name": "MR - CE",
+        "type": "MR",
+        "openmrs_date": {
+          "parent_entity": "162586AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "162586AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 6
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "dob",
+              "offset": "+6m",
+              "window": "+10d"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+5y"
+            }
+          ]
+        }
+      },
+      {
+      "name": "RTS 1",
+      "type": "RTS",
+      "openmrs_date": {
+        "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "entity": "concept",
+        "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      "openmrs_calculate": {
+        "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "entity": "concept",
+        "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "calculation": 0
+      },
+      "schedule": {
+        "due": [
+          {
+            "reference": "dob",
+            "offset": "+6m",
+            "window": "+14d"
+          }
+        ],
+        "expiry": [
+          {
+            "reference": "dob",
+            "offset": "+10m"
+          }
+        ]
+      }
+      }
+    ]
+  },
+  {
+    "name": "7 Months",
+    "id": "Seven_Months",
+    "days_after_birth_due": 213,
+    "vaccines": [
+      {
+        "name": "RTS 2",
+        "type": "RTS",
+        "openmrs_date": {
+          "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 0
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "prerequisite",
+              "prerequisite": "RTS 1",
+              "offset": "+28d",
+              "window": "+14d"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+1y,9m"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "8 Months",
+    "id": "Eight_Months",
+    "days_after_birth_due": 244,
+    "vaccines": [
+      {
+        "name": "RTS 3",
+        "type": "RTS",
+        "openmrs_date": {
+          "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 0
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "prerequisite",
+              "prerequisite": "RTS 2",
+              "offset": "+28d",
+              "window": "+14d"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+1y,9m"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "name": "9 Months",
     "id": "Nine_Months",
     "days_after_birth_due": 274,
@@ -536,6 +679,36 @@
             }
           ]
         }
+      },
+      {
+        "name": "Yellow Fever",
+        "type": "Yellow Fever",
+        "openmrs_date": {
+          "parent_entity": "5864AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "5864AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 1
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "dob",
+              "offset": "+9m",
+              "window": "+10d"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+5y"
+            }
+          ]
+        }
       }
     ]
   },
@@ -604,6 +777,44 @@
               }
             ]
           }
+        }
+      }
+    ]
+  },
+  {
+    "name": "24 Months",
+    "id": "Twenty_Four_Months",
+    "days_after_birth_due": 730,
+    "vaccines": [
+      {
+        "name": "RTS 4",
+        "type": "RTS",
+        "openmrs_date": {
+          "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "783AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 0
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "prerequisite",
+              "prerequisite": "RTS 3",
+              "offset": "+28d",
+              "window": "+14d"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+3y"
+            }
+          ]
         }
       }
     ]
