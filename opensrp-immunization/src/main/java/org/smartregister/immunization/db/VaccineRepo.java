@@ -58,10 +58,10 @@ public class VaccineRepo {
         pcv2("PCV 2", pcv1, 1799, 70, 28, "child"),
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
 
-        rts1("RTS 1", null, 304, 183, 0, "child"),
-        rts2("RTS 2", null, 608, 213, 0, "child"),
-        rts3("RTS 3", null, 639, 244, 0, "child"),
-        rts4("RTS 4", null, 1095, 730, 0, "child"),
+        rts1("RTS,S 1", null, 304, 183, 0, "child"),
+        rts2("RTS,S 2", null, 608, 213, 0, "child"),
+        rts3("RTS,S 3", null, 639, 274, 0, "child"),
+        rts4("RTS,S 4", null, 1095, 730, 0, "child"),
 
         mv1("MV 1", null, 304, 152, 0, "child"),
         mv2("MV 2", null, 608, 183, 0, "child"),
