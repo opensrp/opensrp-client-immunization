@@ -1,7 +1,6 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -43,7 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class VaccinationEditDialogFragment extends DialogFragment {
     private final Context context;
     private final ArrayList<VaccineWrapper> tags;
@@ -141,7 +140,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         // Verify that the host activity implements the callback interface
         try {
@@ -290,7 +289,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
 
                 //                dismiss();
                 //
@@ -448,8 +447,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param datePicker
-     *         Date picker for selecting a previous date for a vaccine
+     * @param datePicker Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(DatePicker datePicker, Button set) {
         Calendar today = Calendar.getInstance();
