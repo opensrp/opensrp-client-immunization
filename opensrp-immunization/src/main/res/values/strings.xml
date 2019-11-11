@@ -81,5 +81,8 @@
     <string name="_9_months">9 Months</string>
     <string name="_18_months">18 Months</string>
 
+    <string name="expired">Expired</string>
+    <string name="expired_colon">Expired: %1$s</string>
+
 
 </resources>

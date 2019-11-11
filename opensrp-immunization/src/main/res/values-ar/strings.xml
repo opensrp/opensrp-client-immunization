@@ -58,5 +58,8 @@
     <string name="_9_months">9 أشهر</string>
     <string name="_18_months">18 شهرا</string>
 
+    <string name="expired">تنقضي</string>
+    <string name="expired_colon">%1$s
+        تنقضي:</string>
 
 </resources>
