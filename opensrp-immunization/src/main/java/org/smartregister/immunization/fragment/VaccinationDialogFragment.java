@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressLint("ValidFragment")
 public class VaccinationDialogFragment extends DialogFragment {
@@ -98,6 +99,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                                                         List<Vaccine> issuedVaccines,
                                                         ArrayList<VaccineWrapper> tags, boolean disableConstraints) {
 
+        Locale.setDefault(Locale.ENGLISH);
         VaccinationDialogFragment vaccinationDialogFragment = new VaccinationDialogFragment();
 
         Bundle args = new Bundle();
