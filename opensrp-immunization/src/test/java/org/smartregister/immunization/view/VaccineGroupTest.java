@@ -202,16 +202,16 @@ public class VaccineGroupTest extends BaseUnitTest {
 
         vaccineCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
+        Mockito.verify(onVaccineClickListener, Mockito.times(1)).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
                 org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.times(1)).onClick(view, wrapper);
+        Mockito.verify(onVaccineClickListener, Mockito.times(2)).onClick(view, wrapper);
 
         vaccineCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.times(2)).onClick(view, wrapper);
+        Mockito.verify(onVaccineClickListener, Mockito.times(3)).onClick(view, wrapper);
 
         // UNDO
         VaccineGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito

@@ -211,6 +211,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                         switch (state) {
                             case DUE:
                             case OVERDUE:
+                            case EXPIRED:
                                 if (onVaccineClickedListener != null) {
                                     onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
                                 }

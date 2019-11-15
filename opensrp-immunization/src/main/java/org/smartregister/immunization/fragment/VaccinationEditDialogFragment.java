@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
@@ -170,6 +171,10 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         service_date.setText("Service date: " + tags.get(0).getUpdatedVaccineDateAsString() + "");
         final LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
 
+
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
+        Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
+
         if (tags.size() == 1) {
             View vaccinationName = inflater.inflate(R.layout.vaccination_name_edit_dialog, null);
             TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
@@ -185,6 +190,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             //            select.setVisibility(View.GONE);
 
             vaccinationNameLayout.addView(vaccinationName);
+
         } else {
             for (VaccineWrapper vaccineWrapper : tags) {
 
@@ -201,11 +207,8 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 vaccinationNameLayout.addView(vaccinationName);
             }
 
-            Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
-            vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
-
-            Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
-            vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("Vaccination", "Vaccinations"));
+            vaccinateToday.setText(R.string.vaccines_done_today);
+            vaccinateEarlier.setText(R.string.vaccines_done_earlier);
         }
 
         if (tags.get(0).getId() != null) {
@@ -281,7 +284,6 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -316,7 +318,6 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         });
 
-        Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -362,7 +363,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
 
         updateDateRanges(earlierDatePicker, set);
-
+        vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
 
         return dialogView;
     }
