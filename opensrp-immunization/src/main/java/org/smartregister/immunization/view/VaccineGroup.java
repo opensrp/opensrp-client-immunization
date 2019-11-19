@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.VaccineCardAdapter;
 import org.smartregister.immunization.domain.GroupState;
@@ -211,8 +212,12 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                         switch (state) {
                             case DUE:
                             case OVERDUE:
-                            case EXPIRED:
                                 if (onVaccineClickedListener != null) {
+                                    onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
+                                }
+                                break;
+                            case EXPIRED:
+                                if (onVaccineClickedListener != null && ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
                                     onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
                                 }
                                 break;

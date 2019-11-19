@@ -6,10 +6,10 @@
     <string name="immunizations">التلقيحات</string>
     <string name="recurring">الخدمات المتكررة</string>
     <string name="done_today">انجز اليوم</string>
-    <string name="vaccine_done_today">أعطي اللقاح اليوم</string>
-    <string name="vaccine_done_earlier">أعطي اللقاح في وقت سابق</string>
-    <string name="vaccines_done_today">أعطي لقاحات اليوم</string>
-    <string name="vaccines_done_earlier">أعطي لقاحات في وقت سابق</string>
+    <string name="vaccine_done_today">اللقاح أعطي اليوم</string>
+    <string name="vaccine_done_earlier">اللقاح أعطي سابقا</string>
+    <string name="vaccines_done_today">اللقاحات أعطيت اليوم</string>
+    <string name="vaccines_done_earlier">اللقاحات أعطيت سابقا</string>
     <string name="vaccine_name">اللقب</string>
     <string name="vaccine_number">العدد</string>
     <string name="vaccine">اللقاح</string>
@@ -48,6 +48,7 @@
     <string name="given_today"> اعطي اليوم %1$s</string>
     <string name="itn_date"> تاريخ التزيد بالناموسيات المعالجة</string>
     <string name="given_earlier">%1$s اعطي في وقت سابق</string>
+
     <string name="itn_given">هل حصل الطفل على ناموسية؟ معالجة بالمبيدات الحشرية؟</string>
     <string name="record_itn">تسجيل الناموسية المعالجة بالمبيدات</string>
 

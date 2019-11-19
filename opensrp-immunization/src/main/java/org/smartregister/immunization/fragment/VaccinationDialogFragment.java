@@ -30,6 +30,7 @@ import com.vijay.jsonwizard.utils.DatePickerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.domain.AlertStatus;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
@@ -457,7 +458,9 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
 
-        vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
+        if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
+            vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
+        }
 
         Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
