@@ -26,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -431,10 +432,10 @@ public class VaccinatorUtils {
         return schedule;
     }
 
-    private static Map<String, Object> createVaccineMap(String status, Alert a, DateTime
-            date, Vaccine v) {
+    private static Map<String, Object> createVaccineMap(String status, Alert a, DateTime date, Vaccine v) {
+
         Map<String, Object> m = new HashMap<>();
-        m.put("status", status);
+        m.put("status", a != null && !TextUtils.isEmpty(a.status().name()) && a.status().name().equals("expired") ? a.status().name() : status);
         m.put("alert", a);
         m.put("date", date);
         m.put("vaccine", v);

@@ -1,7 +1,7 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -39,7 +39,7 @@ import org.smartregister.view.activity.DrishtiApplication;
 import java.util.Calendar;
 import java.util.List;
 
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class ServiceEditDialogFragment extends DialogFragment {
     public static final String DIALOG_TAG = "ServiceEditDialogFragment";
     private final ServiceWrapper tag;
@@ -124,7 +124,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         // Verify that the host activity implements the callback interface
         try {
@@ -220,7 +220,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
                                                   earlierDatePicker.setVisibility(View.VISIBLE);
                                                   set.setVisibility(View.VISIBLE);
 
-                                                  DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+                                                  DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
 
 
                                               }
@@ -272,8 +272,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param datePicker
-     *         Date picker for selecting a previous date for a vaccine
+     * @param datePicker Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(DatePicker datePicker, Button set) {
         if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {

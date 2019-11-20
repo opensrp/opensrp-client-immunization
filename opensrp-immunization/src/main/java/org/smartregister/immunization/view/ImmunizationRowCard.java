@@ -212,7 +212,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setText(getVaccineName());
-                StatusTV.setText("Expired");
+                StatusTV.setText(context.getResources().getString(R.string.expired));
                 StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
                 break;
             default:

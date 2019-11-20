@@ -6,45 +6,45 @@
     <string name="immunizations">IMMUNIZATIONS</string>
     <string name="recurring">RECURRING SERVICES</string>
     <string name="done_today">Done Today</string>
-    <string name="vaccine_done_today">Vaccine done today</string>
-    <string name="vaccine_done_earlier">Vaccine done earlier</string>
-    <string name="vaccines_done_today">Vaccines done today</string>
-    <string name="vaccines_done_earlier">Vaccines done earlier</string>
-    <string name="vaccine_name">Vaccine name</string>
-    <string name="vaccine_number">Vaccine number</string>
+    <string name="vaccine_done_today">Vaccine Done Today</string>
+    <string name="vaccine_done_earlier">Vaccine Done Earlier</string>
+    <string name="vaccines_done_today">Vaccines Done Today</string>
+    <string name="vaccines_done_earlier">Vaccines Done Earlier</string>
+    <string name="vaccine_name">Vaccine Name</string>
+    <string name="vaccine_number">Vaccine Number</string>
     <string name="vaccine">Vaccine</string>
     <string name="set">Set</string>
-    <string name="undo_record_vaccination">Undo record vaccination?</string>
-    <string name="change_service_date">Change service date</string>
+    <string name="undo_record_vaccination">Undo Record Vaccination?</string>
+    <string name="change_service_date">Change Service Date</string>
     <string name="birth">Birth</string>
-    <string name="yes_undo_vaccination">Yes undo vaccination</string>
-    <string name="no_go_back">No, go back</string>
-    <string name="service">service</string>
-    <string name="units">units</string>
-    <string name="edit">edit</string>
+    <string name="yes_undo_vaccination">Yes Undo Vaccination</string>
+    <string name="no_go_back">No, Go Back</string>
+    <string name="service">Service</string>
+    <string name="units">Units</string>
+    <string name="edit">Edit</string>
     <string name="undo">Undo</string>
 
-    <string name="record_all">Record all</string>
+    <string name="record_all">Record All</string>
     <string name="record_">Record %1$s</string>
-    <string name="record_due_">Record %1$s - due %2$s</string>
-    <string name="mr_due_">%1$s - due %2$s</string>
-    <string name="due_">%1$s: due %2$s</string>
-    <string name="today">today</string>
+    <string name="record_due_">Record %1$s - Due %2$s</string>
+    <string name="mr_due_">%1$s - Due %2$s</string>
+    <string name="due_">%1$s: Due %2$s</string>
+    <string name="today">Today</string>
 
     <!-- Recurring Services -->
     <string name="recurring_services">Recurring Services</string>
-    <string name="given_today">%1$s given today</string>
-    <string name="given_earlier">%1$s given earlier</string>
+    <string name="given_today">%1$s Given Today</string>
+    <string name="given_earlier">%1$s Given Earlier</string>
     <string name="itn_given">Has the child been\ngiven an ITN?</string>
     <string name="itn_date">Date that the ITN\nwas provided:</string>
     <string name="itn_under_net">Is the child sleeping\nunder a net?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="record_itn">Record ITN provided</string>
-    <string name="go_back">Go back</string>
+    <string name="record_itn">Record ITN Provided</string>
+    <string name="go_back">Go Back</string>
     <string name="undo_service">Undo Service?</string>
-    <string name="yes_undo_service">Yes, undo service</string>
-    <string name="cannot_record_vaccine">Cannot record %1$s</string>
+    <string name="yes_undo_service">Yes, Undo Service</string>
+    <string name="cannot_record_vaccine">Cannot Record %1$s</string>
 
     <string name="activate_child_status_dialog_title">This child\'s status is %1$s. Make %2$s active?</string>
     <string name="activate_child_status_dialog_message">Making the child active will resume the service schedules and lets you record services.</string>
@@ -74,12 +74,15 @@
     <string name="vit_a_2">Vit A 12 Months</string>
 
 
-    <string name="at_birth">at birth</string>
+    <string name="at_birth">At Birth</string>
     <string name="_6_weeks">6 Weeks</string>
     <string name="_10_weeks">10 Weeks</string>
     <string name="_14_weeks">14 Weeks</string>
     <string name="_9_months">9 Months</string>
     <string name="_18_months">18 Months</string>
+
+    <string name="expired">Expired</string>
+    <string name="expired_colon">Expired: %1$s</string>
 
 
 </resources>
