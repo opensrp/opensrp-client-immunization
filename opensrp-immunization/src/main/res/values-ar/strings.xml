@@ -13,7 +13,7 @@
     <string name="vaccine_name">اللقب</string>
     <string name="vaccine_number">العدد</string>
     <string name="vaccine">اللقاح</string>
-    <string name="set">معا</string>
+    <string name="set">تفعيل</string>
     <string name="undo_record_vaccination">إلغاء التلقيح؟</string>
     <string name="change_service_date">تغيير تاريخ الخدمة</string>
     <string name="birth">الولادة</string>
@@ -55,7 +55,7 @@
     <string name="at_birth">عند الولادة</string>
     <string name="_6_weeks">6 أسابيع</string>
     <string name="_10_weeks">10 أسابيع</string>
-    <string name="_14_weeks">14 أسابي</string>
+    <string name="_14_weeks">14 أسبوعا</string>
     <string name="_9_months">9 أشهر</string>
     <string name="_18_months">18 شهرا</string>
 

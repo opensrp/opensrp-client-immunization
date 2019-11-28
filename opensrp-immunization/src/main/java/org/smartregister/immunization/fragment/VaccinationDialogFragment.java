@@ -195,7 +195,7 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         final LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
 
-        Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
 
         if (tags.size() == 1) {
@@ -450,6 +450,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 vaccinateEarlier.setVisibility(View.GONE);
                 earlierDatePicker.setVisibility(View.VISIBLE);
+                vaccinateToday.setVisibility(View.GONE);
                 set.setVisibility(View.VISIBLE);
 
                 DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});

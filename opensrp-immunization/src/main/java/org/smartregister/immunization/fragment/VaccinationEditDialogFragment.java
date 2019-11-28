@@ -326,7 +326,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 if (tags.size() == 1) {
                     //                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
                     listener.onUndoVaccination(tags.get(0), viewGroup);
-                } else
+                } else {
                     for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
                         View chilView = vaccinationNameLayout.getChildAt(i);
                         CheckBox selectChild = chilView.findViewById(R.id.select);
@@ -337,7 +337,8 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                             listener.onUndoVaccination(tag, viewGroup);
                         }
                     }
-                //                listener.onUndoVaccination(tags,viewGroup);
+                    //                listener.onUndoVaccination(tags,viewGroup);
+                }
             }
         });
 
