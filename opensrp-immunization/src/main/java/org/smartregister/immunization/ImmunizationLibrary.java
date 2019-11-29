@@ -2,6 +2,7 @@ package org.smartregister.immunization;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
@@ -62,8 +63,11 @@ public class ImmunizationLibrary {
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
-            allowExpiredVaccineEntry = ImmunizationLibrary.getInstance().getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && ImmunizationLibrary.getInstance().getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
-
+            try {
+                allowExpiredVaccineEntry = instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
+            } catch (Exception e) {
+                Log.e(ImmunizationLibrary.class.getName(), e.getMessage(), e);
+            }
         }
     }
 

@@ -56,6 +56,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
 
     private boolean isChildActive = true;
     private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
+    private ImmunizationLibrary immunizationLibraryInstance;
 
     public VaccineGroup(Context context) {
         super(context);
@@ -217,7 +218,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                                 }
                                 break;
                             case EXPIRED:
-                                if (onVaccineClickedListener != null && ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
+                                if (onVaccineClickedListener != null && getImmunizationLibraryInstance().isAllowExpiredVaccineEntry()) {
                                     onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
                                 }
                                 break;
@@ -344,6 +345,17 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         if (vaccineCardAdapterLoadingListener != null && vaccineCardAdapter != null) {
             vaccineCardAdapter.setVaccineCardAdapterLoadingListener(vaccineCardAdapterLoadingListener);
         }
+    }
+
+    public ImmunizationLibrary getImmunizationLibraryInstance() {
+        if (immunizationLibraryInstance == null) {
+            immunizationLibraryInstance = ImmunizationLibrary.getInstance();
+        }
+        return immunizationLibraryInstance;
+    }
+
+    public void setImmunizationLibraryInstance(ImmunizationLibrary immunizationLibrary) {
+        this.immunizationLibraryInstance = immunizationLibrary;
     }
 
     public interface OnRecordAllClickListener {

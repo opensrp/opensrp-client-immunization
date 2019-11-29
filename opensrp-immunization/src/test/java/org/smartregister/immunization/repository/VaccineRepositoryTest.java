@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -72,12 +73,12 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         org.junit.Assert.assertTrue(testString.isEmpty());
         String testString2 = VaccineRepository.removeHyphen("test_string");
         org.junit.Assert.assertNotNull(testString2);
-        junit.framework.Assert.assertFalse(testString2.contains("-"));
+        Assert.assertFalse(testString2.contains("-"));
     }
 
     @Test
     public void assertAlertServiceTest() {
-        org.junit.Assert.assertNotNull(vaccineRepository.alertService());
+        Assert.assertNotNull(vaccineRepository.alertService());
         VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, null);
         Repository repository = Mockito.mock(Repository.class);
         org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
@@ -88,9 +89,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void assertFindUnSyncedBeforeTimeTest() {
-        String[] columns = new String[] {VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
+        String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
         org.junit.Assert.assertNotNull(vaccineRepository.findUnSyncedBeforeTime(magic10));
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         Mockito.when(sqliteDatabase
@@ -189,9 +190,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindbyEntityIdTestCallsDatabaseQuery1Time() {
-        String[] columns = new String[] {VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
+        String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
 
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
@@ -211,9 +212,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindTwentyFourTestCallsDatabaseQuery1Time() {
-        String[] columns = new String[] {VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
+        String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
 
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
@@ -234,9 +235,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     @Test
     public void verifyFindTestCallsDatabaseQuery1Time() {
         vaccineRepository.find(0l);
-        String[] columns = new String[] {VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
+        String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
 
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
@@ -258,9 +259,9 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Test
     public void findbyUniqueTest() {
-        String[] columns = new String[] {VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
+        String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
 
         Vaccine vaccine = new Vaccine();
         vaccine.setFormSubmissionId(FORMSUBMISSIONID);
@@ -313,14 +314,14 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         vaccineRepository.close(null);
         Mockito.verify(vaccineRepository.getWritableDatabase(), Mockito.times(0))
                 .update(org.mockito.ArgumentMatchers.anyString(), (ContentValues) org.mockito.ArgumentMatchers.any(),
-                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.eq(new String[] {"5"}));
+                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.eq(new String[]{"5"}));
 
         Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.close(5l);
         Mockito.verify(vaccineRepository.getWritableDatabase(), Mockito.times(1))
                 .update(org.mockito.ArgumentMatchers.eq(VaccineRepository.VACCINE_TABLE_NAME),
                         (ContentValues) org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.anyString(),
-                        org.mockito.ArgumentMatchers.eq(new String[] {"5"}));
+                        org.mockito.ArgumentMatchers.eq(new String[]{"5"}));
     }
 
 }
