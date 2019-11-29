@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.ServiceCardAdapter;
 import org.smartregister.immunization.domain.GroupState;
@@ -83,7 +84,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     }
 
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ServiceGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
@@ -210,6 +211,11 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
                             case DUE:
                             case OVERDUE:
                                 if (onServiceClickedListener != null) {
+                                    onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
+                                }
+                                break;
+                            case EXPIRED:
+                                if (onServiceClickedListener != null && ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
                                     onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
                                 }
                                 break;

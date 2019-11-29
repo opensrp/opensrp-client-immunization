@@ -29,6 +29,8 @@ import com.vijay.jsonwizard.utils.DatePickerUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.domain.AlertStatus;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
@@ -193,6 +195,9 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         final LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
 
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
+        final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
+
         if (tags.size() == 1) {
 
             String vName;
@@ -252,6 +257,7 @@ public class VaccinationDialogFragment extends DialogFragment {
 
                 vaccinationNameLayout.addView(vaccinationName);
             }
+
         } else {
             for (VaccineWrapper vaccineWrapper : tags) {
 
@@ -327,10 +333,7 @@ public class VaccinationDialogFragment extends DialogFragment {
                 }
             }
 
-            Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
             vaccinateToday.setText(R.string.vaccines_done_today);
-
-            Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
             vaccinateEarlier.setText(R.string.vaccines_done_earlier);
         }
 
@@ -408,7 +411,6 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -443,12 +445,12 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 vaccinateEarlier.setVisibility(View.GONE);
                 earlierDatePicker.setVisibility(View.VISIBLE);
+                vaccinateToday.setVisibility(View.GONE);
                 set.setVisibility(View.VISIBLE);
 
                 DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
@@ -456,6 +458,10 @@ public class VaccinationDialogFragment extends DialogFragment {
         });
 
         updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
+
+        if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
+            vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
+        }
 
         Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {

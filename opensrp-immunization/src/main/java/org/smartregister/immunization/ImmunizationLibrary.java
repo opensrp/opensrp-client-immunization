@@ -2,6 +2,7 @@ package org.smartregister.immunization;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
@@ -13,18 +14,18 @@ import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by keyman on 31/07/17.
@@ -44,6 +45,7 @@ public class ImmunizationLibrary {
     private int applicationVersion;
     private int databaseVersion;
     private Map<String, Object> jsonMap = new HashMap<>();
+    private static boolean allowExpiredVaccineEntry;
 
     private VaccineRepo.Vaccine[] vaccines = VaccineRepo.Vaccine.values();
 
@@ -58,10 +60,14 @@ public class ImmunizationLibrary {
         this.databaseVersion = databaseVersion;
     }
 
-    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion,
-                            int databaseVersion) {
+    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
+            try {
+                allowExpiredVaccineEntry = instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
+            } catch (Exception e) {
+                Log.e(ImmunizationLibrary.class.getName(), e.getMessage(), e);
+            }
         }
     }
 
@@ -148,7 +154,7 @@ public class ImmunizationLibrary {
         return jsonMap;
     }
 
-    public Properties getProperties() {
+    public AppProperties getProperties() {
         return ImmunizationLibrary.getInstance().context().getAppProperties();
     }
 
@@ -166,10 +172,10 @@ public class ImmunizationLibrary {
             List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getSupportedVaccines(context);
 
             if (vaccinesJsonMapping != null && vaccinesJsonMapping.size() > 0) {
-                for (VaccineGroup vaccineGroup: vaccinesJsonMapping) {
+                for (VaccineGroup vaccineGroup : vaccinesJsonMapping) {
                     String groupName = vaccineGroup.name;
 
-                    for (Vaccine vaccine: vaccineGroup.vaccines) {
+                    for (Vaccine vaccine : vaccineGroup.vaccines) {
                         String shortVaccineName = vaccine.getName()
                                 .trim()
                                 .replace(" ", "")
@@ -179,7 +185,7 @@ public class ImmunizationLibrary {
                             if (vaccine.getVaccineSeparator() != null && shortVaccineName.contains(vaccine.getVaccineSeparator().trim())) {
                                 String[] individualVaccines = shortVaccineName.split(vaccine.getVaccineSeparator().trim());
 
-                                for (String individualVaccine: individualVaccines) {
+                                for (String individualVaccine : individualVaccines) {
                                     if (!TextUtils.isEmpty(individualVaccine)) {
                                         vaccineGrouping.put(individualVaccine, groupName);
                                     }
@@ -194,5 +200,9 @@ public class ImmunizationLibrary {
         }
 
         return vaccineGrouping;
+    }
+
+    public boolean isAllowExpiredVaccineEntry() {
+        return allowExpiredVaccineEntry;
     }
 }

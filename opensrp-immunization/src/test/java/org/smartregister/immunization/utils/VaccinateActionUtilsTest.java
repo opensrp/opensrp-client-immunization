@@ -35,6 +35,7 @@ import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
@@ -78,13 +79,15 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     private Context context;
     @Mock
     private AlertService alertService;
+    @Mock
+    private AppProperties appProperties;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         Assert.assertNotNull(vaccinateActionUtils);
 
-        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService);
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
     }
 
