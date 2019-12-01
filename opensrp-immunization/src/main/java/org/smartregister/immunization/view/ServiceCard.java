@@ -63,7 +63,7 @@ public class ServiceCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ServiceCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
@@ -224,7 +224,7 @@ public class ServiceCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                nameTV.setText("Expired: " + getServiceName());
+                nameTV.setText(context.getResources().getString(R.string.expired_colon, getServiceName()));
                 break;
             default:
                 break;

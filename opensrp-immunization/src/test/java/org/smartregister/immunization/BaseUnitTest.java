@@ -14,16 +14,17 @@ import org.smartregister.Context;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by onaio on 29/08/2017.
  */
 
-@RunWith (PowerMockRunner.class)
-@PowerMockRunnerDelegate (RobolectricTestRunner.class)
-@Config (constants = BuildConfig.class, shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
-@PowerMockIgnore ({"org.mockito.*", "org.robolectric.*", "android.*", "javax.xml.*", "org.xml.sax.*"
-        , "org.w3c.dom.*",  "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "javax.xml.*", "org.xml.sax.*"
+        , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
         , "org.xmlpull.v1.*"})
 public abstract class BaseUnitTest {
     public final static String BASEENTITYID = "baseEntityId";
@@ -37,7 +38,7 @@ public abstract class BaseUnitTest {
     public static final String FORMSUBMISSIONID = "formSubmissionId";
     public static final String VALUE = "value";
 
-    public void mockImmunizationLibrary(@NonNull ImmunizationLibrary immunizationLibrary, @NonNull Context context, @NonNull VaccineRepository vaccineRepository, @NonNull AlertService alertService) {
+    public void mockImmunizationLibrary(@NonNull ImmunizationLibrary immunizationLibrary, @NonNull Context context, @NonNull VaccineRepository vaccineRepository, @NonNull AlertService alertService, @NonNull AppProperties appProperties) {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
@@ -45,5 +46,6 @@ public abstract class BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()
                 .findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
+        PowerMockito.when(ImmunizationLibrary.getInstance().getProperties()).thenReturn(appProperties);
     }
 }

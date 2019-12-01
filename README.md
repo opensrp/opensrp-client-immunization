@@ -190,6 +190,16 @@ This can be done via the setting below in your implementation's _app.properties_
 ```
 vaccine.relaxation.days=2
 ```
+## Expired vaccines edits
+By default, once a vaccine has expired you can not administer it when it is in the Expired state e.g. `Expired: HepB`. You might want alter this behaviour to cater for the 
+use case where you need to register a child who already has previous vaccines (as shown on their vaccine cards) and entering the earlier dates recorded for those vaccines.
+The app can now be used to track the rest of the upcoming vaccines.
+
+This behaviour can be altered via the setting below in your implementation's _app.properties_ file
+
+```
+vaccine.expired.entry.allow=true
+```
 
 ## Gotcha's when using the library
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.VaccineCardAdapter;
 import org.smartregister.immunization.domain.GroupState;
@@ -55,6 +56,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
 
     private boolean isChildActive = true;
     private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
+    private ImmunizationLibrary immunizationLibraryInstance;
 
     public VaccineGroup(Context context) {
         super(context);
@@ -215,6 +217,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                                     onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
                                 }
                                 break;
+                            case EXPIRED:
+                                if (onVaccineClickedListener != null && getImmunizationLibraryInstance().isAllowExpiredVaccineEntry()) {
+                                    onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
+                                }
+                                break;
                             case DONE_CAN_BE_UNDONE:
                                 onUndoClick(vaccineCard);
                                 break;
@@ -338,6 +345,17 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         if (vaccineCardAdapterLoadingListener != null && vaccineCardAdapter != null) {
             vaccineCardAdapter.setVaccineCardAdapterLoadingListener(vaccineCardAdapterLoadingListener);
         }
+    }
+
+    public ImmunizationLibrary getImmunizationLibraryInstance() {
+        if (immunizationLibraryInstance == null) {
+            immunizationLibraryInstance = ImmunizationLibrary.getInstance();
+        }
+        return immunizationLibraryInstance;
+    }
+
+    public void setImmunizationLibraryInstance(ImmunizationLibrary immunizationLibrary) {
+        this.immunizationLibraryInstance = immunizationLibrary;
     }
 
     public interface OnRecordAllClickListener {

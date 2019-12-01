@@ -264,7 +264,12 @@ public class VaccineSchedule {
         // Use the trigger date as a reference, since that is what is mostly used
         // Generate only if its not in issued vaccines
 
-        AlertStatus alertStatus = isVaccineIssued(vaccine.name(), issuedVaccines) ? AlertStatus.complete : calculateAlertStatus(dueDate, overDueDate);
+        AlertStatus alertStatus = null;
+        alertStatus = expiryDate != null && expiryDate.before(Calendar.getInstance().getTime()) ? AlertStatus.expired : null; //Check if expired first
+
+        if (alertStatus == null) {
+            alertStatus = isVaccineIssued(vaccine.name(), issuedVaccines) ? AlertStatus.complete : calculateAlertStatus(dueDate, overDueDate);
+        }
 
         if (alertStatus != null) {
 
@@ -344,7 +349,10 @@ public class VaccineSchedule {
             dueDateCalendar.setTime(dueDate);
             standardiseCalendarDate(dueDateCalendar);
 
-            return addOffsetToCalendar(dueDateCalendar, window).getTime();
+            Calendar overDueOffsetCalendar = addOffsetToCalendar(dueDateCalendar, window);
+            overDueOffsetCalendar.add(Calendar.DATE, 1); //Add date it should actually be expired
+
+            return overDueOffsetCalendar.getTime();
         }
 
         return null;
@@ -374,8 +382,7 @@ public class VaccineSchedule {
             standardiseCalendarDate(today);
 
 
-            if (overDueDate != null
-                    && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { //OverDue
+            if (overDueDate != null && overDueCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { //OverDue
                 return AlertStatus.urgent;
             } else if (refCalendarDate.getTimeInMillis() <= today.getTimeInMillis()) { // Due
                 return AlertStatus.normal;

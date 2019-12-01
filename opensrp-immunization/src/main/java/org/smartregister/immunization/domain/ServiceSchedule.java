@@ -127,8 +127,12 @@ public class ServiceSchedule {
             DateTime dueDateTime = VaccinatorUtils.getServiceDueDate(serviceType, dateOfBirth, issuedServices);
             DateTime expiryDateTime = VaccinatorUtils.getServiceExpiryDate(serviceType, dateOfBirth);
 
+            AlertStatus alertStatus = null;
+            alertStatus = expiryDateTime != null && expiryDateTime.isBeforeNow() ? AlertStatus.expired : null; //Check if expired first
 
-            AlertStatus alertStatus = isServiceIssued(serviceType.getName(), issuedServices) ? AlertStatus.complete : calculateAlertStatus(dueDateTime);
+            if (alertStatus == null) {
+                alertStatus = isServiceIssued(serviceType.getName(), issuedServices) ? AlertStatus.complete : calculateAlertStatus(dueDateTime);
+            }
 
             if (alertStatus != null) {
                 Date startDate = dueDateTime == null ? dateOfBirth.toDate() : dueDateTime.toDate();

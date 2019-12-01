@@ -6,14 +6,14 @@
     <string name="immunizations">التلقيحات</string>
     <string name="recurring">الخدمات المتكررة</string>
     <string name="done_today">انجز اليوم</string>
-    <string name="vaccine_done_today">أعطي اللقاح اليوم</string>
-    <string name="vaccine_done_earlier">أعطي اللقاح في وقت سابق</string>
-    <string name="vaccines_done_today">أعطي لقاحات اليوم</string>
-    <string name="vaccines_done_earlier">أعطي لقاحات في وقت سابق</string>
+    <string name="vaccine_done_today">اللقاح أعطي اليوم</string>
+    <string name="vaccine_done_earlier">اللقاح أعطي سابقا</string>
+    <string name="vaccines_done_today">اللقاحات أعطيت اليوم</string>
+    <string name="vaccines_done_earlier">اللقاحات أعطيت سابقا</string>
     <string name="vaccine_name">اللقب</string>
     <string name="vaccine_number">العدد</string>
     <string name="vaccine">اللقاح</string>
-    <string name="set">معا</string>
+    <string name="set">تفعيل</string>
     <string name="undo_record_vaccination">إلغاء التلقيح؟</string>
     <string name="change_service_date">تغيير تاريخ الخدمة</string>
     <string name="birth">الولادة</string>
@@ -48,15 +48,19 @@
     <string name="given_today"> اعطي اليوم %1$s</string>
     <string name="itn_date"> تاريخ التزيد بالناموسيات المعالجة</string>
     <string name="given_earlier">%1$s اعطي في وقت سابق</string>
+
     <string name="itn_given">هل حصل الطفل على ناموسية؟ معالجة بالمبيدات الحشرية؟</string>
     <string name="record_itn">تسجيل الناموسية المعالجة بالمبيدات</string>
 
     <string name="at_birth">عند الولادة</string>
     <string name="_6_weeks">6 أسابيع</string>
     <string name="_10_weeks">10 أسابيع</string>
-    <string name="_14_weeks">14 أسابي</string>
+    <string name="_14_weeks">14 أسبوعا</string>
     <string name="_9_months">9 أشهر</string>
     <string name="_18_months">18 شهرا</string>
 
+    <string name="expired">تنقضي</string>
+    <string name="expired_colon">%1$s
+        تنقضي:</string>
 
 </resources>

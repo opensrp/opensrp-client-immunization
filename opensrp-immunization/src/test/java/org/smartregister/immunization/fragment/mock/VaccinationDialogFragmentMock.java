@@ -1,6 +1,6 @@
 package org.smartregister.immunization.fragment.mock;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -83,7 +83,7 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
     }
 

@@ -166,7 +166,7 @@ public class IMDatabaseUtils {
                     vaccineTypeRepository.add(vtObject, db);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(IMDatabaseUtils.class.getName(), e.getMessage(), e);
             }
         }
     }

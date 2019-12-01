@@ -232,7 +232,7 @@ public class VaccineCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                nameTV.setText("Expired: " + getVaccineName());
+                nameTV.setText(context.getResources().getString(R.string.expired_colon,getVaccineName()));
                 break;
             default:
                 break;
