@@ -12,8 +12,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.Utils;
-
-import java.util.Properties;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by ndegwamartin on 2019-07-23.
@@ -25,7 +24,7 @@ public class UtilsTest {
     @Mock
     private ImmunizationLibrary immunizationLibrary;
     @Mock
-    private Properties properties;
+    private AppProperties properties;
 
     private static String OFFSET_days = "+2d";
     private static String OFFSET_days_negative = "-2d";

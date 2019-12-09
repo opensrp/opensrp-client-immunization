@@ -13,7 +13,7 @@
     <string name="vaccine_name">prénom</string>
     <string name="vaccine_number">nombre</string>
     <string name="vaccine">Vaccin</string>
-    <string name="set">ensemble</string>
+    <string name="set">Ensemble</string>
     <string name="undo_record_vaccination">Annuler la vaccination?</string>
     <string name="change_service_date">Changer date de service</string>
     <string name="birth">Naissance</string>
@@ -21,7 +21,7 @@
     <string name="no_go_back">Non, retourne</string>
     <string name="service">un service</string>
     <string name="units">des unités</string>
-    <string name="edit">modifier</string>
+    <string name="edit">Modifier</string>
     <string name="undo">Annuler</string>
 
     <string name="record_all">Enregistrer tous</string>
@@ -58,11 +58,11 @@
     <string name="opv_1">Polio Oral 1</string>
     <string name="pcv_1">Pneumo 1</string>
     <string name="penta_1">Penta 1</string>
-    <string name="rota_1">Rota virus 1</string>
+    <string name="rota_1">Rota Virus 1</string>
     <string name="opv_2">Polio Oral 2</string>
     <string name="pcv_2">Pneumo 2</string>
     <string name="penta_2">Penta 2</string>
-    <string name="rota_2">Rota virus 2</string>
+    <string name="rota_2">Rota Virus 2</string>
     <string name="opv_3">Polio Oral 3</string>
     <string name="ipv">Polio Injectable</string>
     <string name="pcv_3">Pneumo 3</string>
@@ -74,11 +74,14 @@
     <string name="vit_a_1">Vit A 6 Mois</string>
     <string name="vit_a_2">Vit A 12 Mois</string>
     <string name="at_birth">Naissance</string>
-    <string name="_6_weeks">6 semaines</string>
-    <string name="_10_weeks">10 semaines</string>
-    <string name="_14_weeks">14 semaines</string>
-    <string name="_9_months">9 mois</string>
-    <string name="_18_months">18 mois</string>
+    <string name="_6_weeks">6 Semaines</string>
+    <string name="_10_weeks">10 Semaines</string>
+    <string name="_14_weeks">14 Semaines</string>
+    <string name="_9_months">9 Mois</string>
+    <string name="_18_months">18 Mois</string>
+
+    <string name="expired">Expiré</string>
+    <string name="expired_colon">Expiré: %1$s</string>
 
 
 </resources>

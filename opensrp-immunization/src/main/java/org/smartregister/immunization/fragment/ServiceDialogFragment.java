@@ -515,7 +515,7 @@ public class ServiceDialogFragment extends DialogFragment {
                 }
             });
 
-            Button givenToday = defaultActions.findViewById(R.id.given_today);
+            final Button givenToday = defaultActions.findViewById(R.id.given_today);
             givenToday.setText(String.format(getString(R.string.given_today),
                     VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName())));
             givenToday.setOnClickListener(new Button.OnClickListener() {
@@ -538,6 +538,7 @@ public class ServiceDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View view) {
                     givenEarlier.setVisibility(View.GONE);
+                    givenToday.setVisibility(View.GONE);
                     earlierDatePicker.setVisibility(View.VISIBLE);
                     set.setVisibility(View.VISIBLE);
 

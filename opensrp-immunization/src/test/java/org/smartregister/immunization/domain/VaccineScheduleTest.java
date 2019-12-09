@@ -20,6 +20,7 @@ import org.smartregister.immunization.domain.jsonmapping.Condition;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.reflect.Type;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Created by real on 23/10/17.
  */
-@PrepareForTest ({ImmunizationLibrary.class})
+@PrepareForTest({ImmunizationLibrary.class})
 public class VaccineScheduleTest extends BaseUnitTest {
 
     private final String magicChild = "child";
@@ -45,6 +46,9 @@ public class VaccineScheduleTest extends BaseUnitTest {
     private Context context;
     @Mock
     private AlertService alertService;
+    @Mock
+    private AppProperties appProperties;
+
     private Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, magicOPV0, 0,
             new Date(),
             VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
@@ -76,7 +80,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     }
 
     private void mockImmunizationLibrary() {
-        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService);
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
     }
 
     @Test

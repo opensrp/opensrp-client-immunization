@@ -1,7 +1,7 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ import org.smartregister.view.activity.DrishtiApplication;
 
 import java.io.Serializable;
 
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class UndoServiceDialogFragment extends DialogFragment {
     public static final String DIALOG_TAG = "UndoServiceDialogFragment";
     public static final String WRAPPER_TAG = "tag";
@@ -98,7 +98,7 @@ public class UndoServiceDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         // Verify that the host activity implements the callback interface
         try {
