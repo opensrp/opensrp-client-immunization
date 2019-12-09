@@ -43,6 +43,18 @@ public class VaccineRepo {
         return vl;
     }
 
+    public static VaccineRepo.Vaccine getVaccineEnumFromValue(String value) {
+        for (VaccineRepo.Vaccine vaccine : VaccineRepo.Vaccine.values()) {
+            if (vaccine.name().equalsIgnoreCase(cleanVaccineLabel(value))) return vaccine;
+        }
+
+        throw new IllegalArgumentException(String.format(" No enum constant %1$s.%2$s", Vaccine.class.getCanonicalName(), value));
+    }
+
+    public static String cleanVaccineLabel(String vaccineLabel) {
+        return vaccineLabel.replaceAll(",", "").replaceAll("-", "").replaceAll(" ", "");
+    }
+
     public enum Vaccine {
         bcg("BCG", null, 366, 0, 0, "child"),
         HepB("HepB", null, 366, 0, 0, "child"),
@@ -58,10 +70,10 @@ public class VaccineRepo {
         pcv2("PCV 2", pcv1, 1799, 70, 28, "child"),
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
 
-        rts1("RTS,S 1", null, 304, 183, 0, "child"),
-        rts2("RTS,S 2", null, 608, 213, 0, "child"),
-        rts3("RTS,S 3", null, 639, 274, 0, "child"),
-        rts4("RTS,S 4", null, 1095, 730, 0, "child"),
+        rtss1("RTS,S 1", null, 304, 183, 0, "child"),
+        rtss2("RTS,S 2", null, 608, 213, 0, "child"),
+        rtss3("RTS,S 3", null, 639, 274, 0, "child"),
+        rtss4("RTS,S 4", null, 1095, 730, 0, "child"),
 
         mv1("MV 1", null, 304, 152, 0, "child"),
         mv2("MV 2", null, 608, 183, 0, "child"),
@@ -74,7 +86,7 @@ public class VaccineRepo {
         rota3("ROTA 3", rota2, 1830, 98, 28, "child"),
         ipv("IPV", null, 1830, 98, 0, "child"),
 
-        mr("MR - CE", null, -1, 183, 0, "child"),
+        mrce("MR - CE", null, -1, 183, 0, "child"),
         measles1("MEASLES 1", null, -1, 274, 0, "child"),
         mr1("MR 1", null, -1, 274, 0, "child"),
         opv4("OPV 4", null, 1830, 274, 28, "child"),

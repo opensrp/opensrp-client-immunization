@@ -38,8 +38,10 @@ import org.smartregister.util.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -156,7 +158,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        Map<String, Object> jsonMap = new HashMap<>();
+        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
@@ -196,9 +199,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
 
-        List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        Map<String, Object> jsonMap = new HashMap<>();
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicOPV0), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicNULL), -1);
@@ -211,8 +215,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType2);
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("special_vaccines.json", clazz2, listType2))
-                .thenReturn(specialVaccines);
+        Map<String, Object> jsonMap2 = new HashMap<>();
+
+        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap2, context, "special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
+
         JSONAssert.assertEquals(VaccineData.special_vacines,
                 JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2),
                 JSONCompareMode.NON_EXTENSIBLE);

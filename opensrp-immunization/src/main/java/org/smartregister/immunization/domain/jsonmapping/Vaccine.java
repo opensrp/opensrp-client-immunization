@@ -1,5 +1,7 @@
 package org.smartregister.immunization.domain.jsonmapping;
 
+import android.util.Log;
+
 import java.util.Map;
 
 /**
@@ -76,5 +78,15 @@ public class Vaccine {
 
     public void setVaccineSeparator(String vaccine_separator) {
         this.vaccine_separator = vaccine_separator;
+    }
+
+    @Override
+    public Vaccine clone() {
+        try {
+            return (Vaccine) super.clone();
+        } catch (CloneNotSupportedException e) {
+            Log.e(Vaccine.class.getCanonicalName(), e.getMessage());
+            return null;
+        }
     }
 }

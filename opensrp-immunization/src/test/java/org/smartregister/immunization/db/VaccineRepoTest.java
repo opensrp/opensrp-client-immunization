@@ -77,10 +77,10 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.penta2);
         vaccines.add(VaccineRepo.Vaccine.pcv2);
         vaccines.add(VaccineRepo.Vaccine.rota2);
-        vaccines.add(VaccineRepo.Vaccine.rts1);
-        vaccines.add(VaccineRepo.Vaccine.rts2);
-        vaccines.add(VaccineRepo.Vaccine.rts3);
-        vaccines.add(VaccineRepo.Vaccine.rts4);
+        vaccines.add(VaccineRepo.Vaccine.rtss1);
+        vaccines.add(VaccineRepo.Vaccine.rtss2);
+        vaccines.add(VaccineRepo.Vaccine.rtss3);
+        vaccines.add(VaccineRepo.Vaccine.rtss4);
         vaccines.add(VaccineRepo.Vaccine.mv1);
         vaccines.add(VaccineRepo.Vaccine.mv2);
         vaccines.add(VaccineRepo.Vaccine.mv3);
@@ -90,7 +90,7 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.pcv3);
         vaccines.add(VaccineRepo.Vaccine.rota3);
         vaccines.add(VaccineRepo.Vaccine.ipv);
-        vaccines.add(VaccineRepo.Vaccine.mr);
+        vaccines.add(VaccineRepo.Vaccine.mrce);
         vaccines.add(VaccineRepo.Vaccine.measles1);
         vaccines.add(VaccineRepo.Vaccine.mr1);
         vaccines.add(VaccineRepo.Vaccine.opv4);

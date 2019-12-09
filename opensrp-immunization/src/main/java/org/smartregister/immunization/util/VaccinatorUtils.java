@@ -78,6 +78,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
@@ -834,10 +836,8 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
-        Class<List<VaccineGroup>> clazz = (Class) List.class;
-        Type listType = new TypeToken<List<VaccineGroup>>() {
-        }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(mother_vaccines_file, prefix), clazz, listType);
+
+        return getVaccineGroupsFromVaccineConfigFile(context, getFileName(mother_vaccines_file, prefix));
     }
 
     public static String getFileName(String fileName, String prefix) {
@@ -848,25 +848,40 @@ public class VaccinatorUtils {
         }
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(
-            @Nullable Context context) {
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
         return getSpecialVaccines(context, null);
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(
-            @Nullable Context context, String prefix) {
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context, String prefix) {
 
-        return getJsonVaccineGroup(getFileName(special_vaccines_file, prefix));
+        return getVaccineFromVaccineConfigFile(context, getFileName(special_vaccines_file, prefix));
     }
+
+    public static List<VaccineGroup> getSpecialVaccineGroups(@Nullable Context context) {
+
+        return getVaccineGroupsFromVaccineConfigFile(context, special_vaccines_file);
+    }
+
 
     public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(
             @NonNull String filename) {
 
+        return getVaccineFromVaccineConfigFile(ImmunizationLibrary.getInstance().context().applicationContext(), filename);
+    }
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(Context context, @NonNull String filename) {
+        return getVaccineFromVaccineConfigFile(context, filename);
+    }
+
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getVaccineFromVaccineConfigFile(@Nullable android.content.Context context, String vaccines_file) {
+        Map<String, Object> jsonMap = new HashMap<>();
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
-        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {}.getType();
+        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
 
         if (specialVaccines == null) {
-            specialVaccines = ImmunizationLibrary.getInstance().assetJsonToJava(filename, classType, listType);
+            specialVaccines = ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, classType, listType);
         }
 
         return specialVaccines;
@@ -924,10 +939,7 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
-        Class<List<VaccineGroup>> clazz = (Class) List.class;
-        Type listType = new TypeToken<List<VaccineGroup>>() {
-        }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file, prefix), clazz, listType);
+        return getVaccineGroupsFromVaccineConfigFile(context, getFileName(vaccines_file, prefix));
     }
 
     public static Map<String, Date> receivedVaccines(List<org.smartregister.immunization.domain.Vaccine> vaccines) {
@@ -1010,5 +1022,75 @@ public class VaccinatorUtils {
         String prefix = text.matches("^\\d.*\\n*") ? "_" : "";
         return prefix + text.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
+    }
+
+    public static String cleanVaccineName(String vaccine) {
+
+        return vaccine.trim().replace(" ", "").toLowerCase(Locale.ENGLISH);
+    }
+
+    public static Vaccine getPrerequisite(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+
+        return vaccine.schedule != null && vaccine.schedule.due != null && vaccine.schedule.due.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.due.get(0).prerequisite) ? VaccineRepo.getVaccineEnumFromValue(vaccine.schedule.due.get(0).prerequisite) : null;
+
+    }
+
+    public static int getPrerequisiteGapDays(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+
+        String prerequisteGapOffset = vaccine.schedule != null && vaccine.schedule.due != null && vaccine.schedule.due.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.due.get(0).offset) ? vaccine.schedule.due.get(0).offset : null;
+
+        return getOffsetValueInDays(prerequisteGapOffset);
+    }
+
+    public static int getExpiryDays(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+
+        String expiryOffset = vaccine.schedule != null && vaccine.schedule.expiry != null && vaccine.schedule.expiry.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.expiry.get(0).offset) ? vaccine.schedule.expiry.get(0).offset : null;
+
+        return getOffsetValueInDays(expiryOffset);
+    }
+
+    private static int getOffsetValueInDays(String preRequisteGap) {
+
+        int curValue = 0;
+
+        if (!TextUtils.isEmpty(preRequisteGap)) {
+            Pattern p2 = Pattern.compile("(\\d+)([dwmy]{1})");
+            Matcher m2 = p2.matcher(preRequisteGap);
+
+            if (m2.find()) {
+
+                String fieldString = m2.group(2);
+
+                if ("m".equals(fieldString)) {
+                    curValue = (int) Math.ceil(30.44 * curValue);
+                } else if ("y".equals(fieldString)) {
+                    curValue = 366 * curValue;
+                } else {
+                    curValue = Integer.parseInt(m2.group(1));
+                }
+
+
+            }
+        }
+        return curValue;
+    }
+
+    /*
+     * Right now we only have child and woman type vaccines
+     * To do extend for automatically supporting any vaccine type , enforce naming conventional with categories for auto-loading e.g. child_vaccines.json, mother_vaccines.json, father_vaccines.json e.t.c
+     *
+     */
+    public static List<VaccineGroup> getSupportedVaccinesByCategory(Context context, String category) {
+
+        return IMConstants.VACCINE_TYPE.CHILD.equals(category) ? getSupportedVaccines(context) : getSupportedWomanVaccines(context);
+
+    }
+
+    public static List<VaccineGroup> getVaccineGroupsFromVaccineConfigFile(@Nullable android.content.Context context, String vaccines_file) {
+        Map<String, Object> jsonMap = new HashMap<>();
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        return ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, clazz, listType);
     }
 }
