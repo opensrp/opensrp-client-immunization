@@ -72,6 +72,7 @@ import org.smartregister.util.IntegerUtil;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -668,8 +669,7 @@ public class VaccinatorUtils {
         return ServiceSchedule.addOffsetToDateTime(milestoneDate, serviceType.getExpiryOffset());
     }
 
-    public static Map<String, Object> nextVaccineDue
-            (List<Map<String, Object>> schedule, Date lastVisit) {
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule, Date lastVisit) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -696,8 +696,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextVaccineDue
-            (List<Map<String, Object>> schedule, List<Vaccine> vaccineList) {
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule, List<Vaccine> vaccineList) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -736,8 +735,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextServiceDue
-            (List<Map<String, Object>> schedule, Date lastVisit) {
+    public static Map<String, Object> nextServiceDue(List<Map<String, Object>> schedule, Date lastVisit) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -759,8 +757,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextServiceDue
-            (List<Map<String, Object>> schedule, List<ServiceType> serviceTypeList) {
+    public static Map<String, Object> nextServiceDue(List<Map<String, Object>> schedule, List<ServiceType> serviceTypeList) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -796,8 +793,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextServiceDue
-            (List<Map<String, Object>> schedule, ServiceRecord lastServiceRecord) {
+    public static Map<String, Object> nextServiceDue(List<Map<String, Object>> schedule, ServiceRecord lastServiceRecord) {
         if (lastServiceRecord == null || StringUtils.isBlank(lastServiceRecord.getType()) || StringUtils
                 .isBlank(lastServiceRecord.getName())) {
             return null;
@@ -909,8 +905,7 @@ public class VaccinatorUtils {
         return supportedServicesString;
     }
 
-    public static int getVaccineCalculation(Context context, String vaccineName)
-            throws JSONException {
+    public static int getVaccineCalculation(Context context, String vaccineName) {
         List<VaccineGroup> supportedVaccines = getSupportedVaccines(context);
         for (VaccineGroup vaccineGroup : supportedVaccines) {
             for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
@@ -1029,7 +1024,7 @@ public class VaccinatorUtils {
         return vaccine.trim().replace(" ", "").toLowerCase(Locale.ENGLISH);
     }
 
-    public static Vaccine getPrerequisite(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+    public static Vaccine getPrerequisiteVaccine(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
 
         return vaccine.schedule != null && vaccine.schedule.due != null && vaccine.schedule.due.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.due.get(0).prerequisite) ? VaccineRepo.getVaccineEnumFromValue(vaccine.schedule.due.get(0).prerequisite) : null;
 
@@ -1039,40 +1034,14 @@ public class VaccinatorUtils {
 
         String prerequisteGapOffset = vaccine.schedule != null && vaccine.schedule.due != null && vaccine.schedule.due.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.due.get(0).offset) ? vaccine.schedule.due.get(0).offset : null;
 
-        return getOffsetValueInDays(prerequisteGapOffset);
+        return processOffsetValueInDays(prerequisteGapOffset);
     }
 
     public static int getExpiryDays(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
 
         String expiryOffset = vaccine.schedule != null && vaccine.schedule.expiry != null && vaccine.schedule.expiry.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.expiry.get(0).offset) ? vaccine.schedule.expiry.get(0).offset : null;
 
-        return getOffsetValueInDays(expiryOffset);
-    }
-
-    private static int getOffsetValueInDays(String preRequisteGap) {
-
-        int curValue = 0;
-
-        if (!TextUtils.isEmpty(preRequisteGap)) {
-            Pattern p2 = Pattern.compile("(\\d+)([dwmy]{1})");
-            Matcher m2 = p2.matcher(preRequisteGap);
-
-            if (m2.find()) {
-
-                String fieldString = m2.group(2);
-
-                if ("m".equals(fieldString)) {
-                    curValue = (int) Math.ceil(30.44 * curValue);
-                } else if ("y".equals(fieldString)) {
-                    curValue = 366 * curValue;
-                } else {
-                    curValue = Integer.parseInt(m2.group(1));
-                }
-
-
-            }
-        }
-        return curValue;
+        return processOffsetValueInDays(expiryOffset);
     }
 
     /*
@@ -1092,5 +1061,116 @@ public class VaccinatorUtils {
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
         return ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, clazz, listType);
+    }
+
+    public static void processConfigCalendarOffset(Calendar calendar, String offset) {
+
+        Matcher m1 = getPrefixSymbolMatcher(offset);
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+            String valueString = m1.group(2);
+
+            int operator = 1;
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+
+            String[] values = valueString.split(",");
+            for (int i = 0; i < values.length; i++) {
+                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+
+                if (m2.find()) {
+                    int curValue = operator * Integer.parseInt(m2.group(1));
+                    String fieldString = m2.group(2);
+                    int field = Calendar.DATE;
+                    if ("d".equals(fieldString)) {
+                        field = Calendar.DATE;
+                    } else if ("m".equals(fieldString)) {
+                        field = Calendar.MONTH;
+                    } else if ("y".equals(fieldString)) {
+                        field = Calendar.YEAR;
+                    }
+
+                    calendar.add(field, curValue);
+                }
+            }
+        }
+
+    }
+
+    public static DateTime processConfigDateTimeOffset(DateTime afterOffset, String offset) {
+        Matcher m1 = getPrefixSymbolMatcher(offset);
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+            String valueString = m1.group(2);
+
+            int operator = 1;
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+
+            String[] values = valueString.split(",");
+            for (int i = 0; i < values.length; i++) {
+                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+
+                if (m2.find()) {
+                    int curValue = operator * Integer.parseInt(m2.group(1));
+                    String fieldString = m2.group(2);
+                    if ("d".endsWith(fieldString)) {
+                        afterOffset = afterOffset.plusDays(curValue);
+                    } else if ("m".equals(fieldString)) {
+                        afterOffset = afterOffset.plusMonths(curValue);
+                    } else if ("y".equals(fieldString)) {
+                        afterOffset = afterOffset.plusYears(curValue);
+                    }
+                }
+            }
+        }
+        return afterOffset;
+
+    }
+
+    public static int processOffsetValueInDays(String offset) {
+        Matcher m1 = getPrefixSymbolMatcher(offset);
+        int days = 0;
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+            String valueString = m1.group(2);
+
+            int operator = 1;
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+
+            String[] values = valueString.split(",");
+            for (int i = 0; i < values.length; i++) {
+                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+
+                if (m2.find()) {
+                    int curValue = operator * Integer.parseInt(m2.group(1));
+                    String fieldString = m2.group(2);
+                    if ("d".endsWith(fieldString)) {
+                        days += curValue;
+                    } else if ("m".equals(fieldString)) {
+                        days += (int) Math.round(30.44 * curValue);
+                    } else if ("y".equals(fieldString)) {
+                        days += 366 * curValue;
+                    }
+                }
+            }
+        }
+        return days;
+
+    }
+
+    private static Matcher getSuffixSymbolMatcher(String value) {
+        Pattern p2 = Pattern.compile("(\\d+)([dwmy]{1})");
+        return p2.matcher(value);
+    }
+
+    private static Matcher getPrefixSymbolMatcher(String offset) {
+        String offsetAfterReplace = offset.replace(" ", "").toLowerCase(Locale.ENGLISH);
+        Pattern p1 = Pattern.compile("([-+]{1})(.*)");
+        return p1.matcher(offsetAfterReplace);
     }
 }

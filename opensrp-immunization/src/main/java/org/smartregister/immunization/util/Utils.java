@@ -144,7 +144,7 @@ public class Utils {
             repoVaccine.setCategory(category);
             repoVaccine.setExpiryDays(VaccinatorUtils.getExpiryDays(vaccine));
             repoVaccine.setMilestoneGapDays(vaccineGroup.days_after_birth_due);
-            repoVaccine.setPrerequisite(VaccinatorUtils.getPrerequisite(vaccine));
+            repoVaccine.setPrerequisite(VaccinatorUtils.getPrerequisiteVaccine(vaccine));
             repoVaccine.setPrerequisiteGapDays(VaccinatorUtils.getPrerequisiteGapDays(vaccine));
 
             ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccineRepo.add(repoVaccine);

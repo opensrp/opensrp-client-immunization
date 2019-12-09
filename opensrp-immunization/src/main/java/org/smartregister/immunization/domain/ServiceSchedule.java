@@ -20,8 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Keyman on 26/05/2017.
@@ -210,36 +208,7 @@ public class ServiceSchedule {
         try {
             DateTime afterOffset = dateTime;
             if (dateTime != null && offset != null) {
-                String offsetAfterReplace = offset.replace(" ", "").toLowerCase();
-                Pattern p1 = Pattern.compile("([-+]{1})(.*)");
-                Matcher m1 = p1.matcher(offsetAfterReplace);
-                if (m1.find()) {
-                    String comparitorString = m1.group(1);
-                    String valueString = m1.group(2);
-
-                    int comparitor = 1;
-                    if ("-".equals(comparitorString)) {
-                        comparitor = -1;
-                    }
-
-                    String[] values = valueString.split(",");
-                    for (int i = 0; i < values.length; i++) {
-                        Pattern p2 = Pattern.compile("(\\d+)([dwmy]{1})");
-                        Matcher m2 = p2.matcher(values[i]);
-
-                        if (m2.find()) {
-                            int curValue = comparitor * Integer.parseInt(m2.group(1));
-                            String fieldString = m2.group(2);
-                            if ("d".endsWith(fieldString)) {
-                                afterOffset = afterOffset.plusDays(curValue);
-                            } else if ("m".equals(fieldString)) {
-                                afterOffset = afterOffset.plusMonths(curValue);
-                            } else if ("y".equals(fieldString)) {
-                                afterOffset = afterOffset.plusYears(curValue);
-                            }
-                        }
-                    }
-                }
+                afterOffset = VaccinatorUtils.processConfigDateTimeOffset(afterOffset, offset);
             }
 
             return afterOffset;
@@ -248,6 +217,8 @@ public class ServiceSchedule {
             return dateTime;
         }
     }
+
+
 
     public ServiceTrigger getDueTrigger() {
         return dueTrigger;

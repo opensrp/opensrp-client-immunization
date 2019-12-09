@@ -71,9 +71,9 @@ public class VaccineRepo {
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
 
         rtss1("RTS,S 1", null, 304, 183, 0, "child"),
-        rtss2("RTS,S 2", null, 608, 213, 0, "child"),
-        rtss3("RTS,S 3", null, 639, 274, 0, "child"),
-        rtss4("RTS,S 4", null, 1095, 730, 0, "child"),
+        rtss2("RTS,S 2", rtss1, 608, 213, 0, "child"),
+        rtss3("RTS,S 3", rtss2, 639, 274, 0, "child"),
+        rtss4("RTS,S 4", rtss3, 1095, 730, 0, "child"),
 
         mv1("MV 1", null, 304, 152, 0, "child"),
         mv2("MV 2", null, 608, 183, 0, "child"),

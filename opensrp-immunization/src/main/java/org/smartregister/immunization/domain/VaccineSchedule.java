@@ -15,6 +15,7 @@ import org.smartregister.immunization.domain.jsonmapping.Expiry;
 import org.smartregister.immunization.domain.jsonmapping.Schedule;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.service.AlertService;
 
 import java.util.ArrayList;
@@ -413,39 +414,7 @@ public class VaccineSchedule {
      */
     public static Calendar addOffsetToCalendar(Calendar calendar, String offset) {
         if (calendar != null && offset != null) {
-            String offsetAfterReplace = offset.replace(" ", "").toLowerCase();
-            Pattern p1 = Pattern.compile("([-+]{1})(.*)");
-            Matcher m1 = p1.matcher(offsetAfterReplace);
-            if (m1.find()) {
-                String operatorString = m1.group(1);
-                String valueString = m1.group(2);
-
-                int operator = 1;
-                if ("-".equals(operatorString)) {
-                    operator = -1;
-                }
-
-                String[] values = valueString.split(",");
-                for (int i = 0; i < values.length; i++) {
-                    Pattern p2 = Pattern.compile("(\\d+)([dwmy]{1})");
-                    Matcher m2 = p2.matcher(values[i]);
-
-                    if (m2.find()) {
-                        int curValue = operator * Integer.parseInt(m2.group(1));
-                        String fieldString = m2.group(2);
-                        int field = Calendar.DATE;
-                        if ("d".equals(fieldString)) {
-                            field = Calendar.DATE;
-                        } else if ("m".equals(fieldString)) {
-                            field = Calendar.MONTH;
-                        } else if ("y".equals(fieldString)) {
-                            field = Calendar.YEAR;
-                        }
-
-                        calendar.add(field, curValue);
-                    }
-                }
-            }
+            VaccinatorUtils.processConfigCalendarOffset(calendar, offset);
         }
 
         return calendar;
