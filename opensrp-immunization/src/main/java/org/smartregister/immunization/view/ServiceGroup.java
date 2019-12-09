@@ -51,6 +51,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     private OnServiceUndoClickListener onServiceUndoClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
+    private ImmunizationLibrary immunizationLibraryInstance;
 
     private boolean isChildActive = true;
 
@@ -215,7 +216,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
                                 }
                                 break;
                             case EXPIRED:
-                                if (onServiceClickedListener != null && ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
+                                if (onServiceClickedListener != null && getImmunizationLibraryInstance().isAllowExpiredVaccineEntry()) {
                                     onServiceClickedListener.onClick(ServiceGroup.this, serviceCard.getServiceWrapper());
                                 }
                                 break;
@@ -307,6 +308,17 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
 
     public interface OnServiceClickedListener {
         void onClick(ServiceGroup serviceGroup, ServiceWrapper serviceWrapper);
+    }
+
+    public ImmunizationLibrary getImmunizationLibraryInstance() {
+        if (immunizationLibraryInstance == null) {
+            immunizationLibraryInstance = ImmunizationLibrary.getInstance();
+        }
+        return immunizationLibraryInstance;
+    }
+
+    public void setImmunizationLibraryInstance(ImmunizationLibrary immunizationLibrary) {
+        this.immunizationLibraryInstance = immunizationLibrary;
     }
 
     public interface OnServiceUndoClickListener {
