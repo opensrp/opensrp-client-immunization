@@ -1,21 +1,16 @@
 package org.smartregister.immunization;
 
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Log;
-
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.db.VaccineRepo;
-import org.smartregister.immunization.domain.jsonmapping.Vaccine;
-import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.util.IMConstants;
-import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.immunization.util.Utils;
+import org.smartregister.immunization.util.VaccineCache;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AppProperties;
@@ -23,7 +18,6 @@ import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -46,13 +40,9 @@ public class ImmunizationLibrary {
     private int databaseVersion;
     private Map<String, Object> jsonMap = new HashMap<>();
     private static boolean allowExpiredVaccineEntry;
+    private static Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
 
-    private VaccineRepo.Vaccine[] vaccines = VaccineRepo.Vaccine.values();
-
-    private HashMap<String, String> vaccineGrouping = new HashMap<>();
-
-    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject,
-                                int applicationVersion, int databaseVersion) {
+    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         this.repository = repository;
         this.context = context;
         this.commonFtsObject = commonFtsObject;
@@ -63,16 +53,20 @@ public class ImmunizationLibrary {
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
-            try {
-                allowExpiredVaccineEntry = instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
-            } catch (Exception e) {
-                Log.e(ImmunizationLibrary.class.getName(), e.getMessage(), e);
-            }
+
+            allowExpiredVaccineEntry = instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
+
+            Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.CHILD);
+            Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.WOMAN);
         }
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
         return AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
+    }
+
+    public static <T> T assetJsonToJava(Map<String, Object> jsonMap, android.content.Context context, String fileName, Class<T> clazz, Type type) {
+        return AssetHandler.assetJsonToJava(jsonMap, context, fileName, clazz, type);
     }
 
     public EventClientRepository eventClientRepository() {
@@ -159,50 +153,18 @@ public class ImmunizationLibrary {
     }
 
     public void setVaccines(VaccineRepo.Vaccine[] vaccines) {
-        this.vaccines = vaccines;
+        this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines = vaccines;
     }
 
     public VaccineRepo.Vaccine[] getVaccines() {
-        return vaccines;
-    }
-
-    @NonNull
-    public HashMap<String, String> getVaccineGroupings(@NonNull android.content.Context context) {
-        if (vaccineGrouping.isEmpty()) {
-            List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getSupportedVaccines(context);
-
-            if (vaccinesJsonMapping != null && vaccinesJsonMapping.size() > 0) {
-                for (VaccineGroup vaccineGroup : vaccinesJsonMapping) {
-                    String groupName = vaccineGroup.name;
-
-                    for (Vaccine vaccine : vaccineGroup.vaccines) {
-                        String shortVaccineName = vaccine.getName()
-                                .trim()
-                                .replace(" ", "")
-                                .toLowerCase();
-
-                        if (!TextUtils.isEmpty(shortVaccineName)) {
-                            if (vaccine.getVaccineSeparator() != null && shortVaccineName.contains(vaccine.getVaccineSeparator().trim())) {
-                                String[] individualVaccines = shortVaccineName.split(vaccine.getVaccineSeparator().trim());
-
-                                for (String individualVaccine : individualVaccines) {
-                                    if (!TextUtils.isEmpty(individualVaccine)) {
-                                        vaccineGrouping.put(individualVaccine, groupName);
-                                    }
-                                }
-                            } else {
-                                vaccineGrouping.put(shortVaccineName, groupName);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return vaccineGrouping;
+        return this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines;
     }
 
     public boolean isAllowExpiredVaccineEntry() {
         return allowExpiredVaccineEntry;
+    }
+
+    public static Map<String, VaccineCache> getVaccineCacheMap() {
+        return vaccineCacheMap;
     }
 }

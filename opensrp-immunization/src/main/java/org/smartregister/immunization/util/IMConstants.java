@@ -17,4 +17,9 @@ public class IMConstants {
         public static final String VACCINE_EXPIRED_ENTRY_ALLOW = "vaccine.expired.entry.allow";
     }
 
+    public class VACCINE_TYPE {
+        public static final String CHILD = "child";
+        public static final String WOMAN = "woman";
+    }
+
 }

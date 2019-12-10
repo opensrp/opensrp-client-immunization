@@ -72,12 +72,15 @@ import org.smartregister.util.IntegerUtil;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
@@ -666,8 +669,7 @@ public class VaccinatorUtils {
         return ServiceSchedule.addOffsetToDateTime(milestoneDate, serviceType.getExpiryOffset());
     }
 
-    public static Map<String, Object> nextVaccineDue
-            (List<Map<String, Object>> schedule, Date lastVisit) {
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule, Date lastVisit) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -694,8 +696,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextVaccineDue
-            (List<Map<String, Object>> schedule, List<Vaccine> vaccineList) {
+    public static Map<String, Object> nextVaccineDue(List<Map<String, Object>> schedule, List<Vaccine> vaccineList) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -734,8 +735,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextServiceDue
-            (List<Map<String, Object>> schedule, Date lastVisit) {
+    public static Map<String, Object> nextServiceDue(List<Map<String, Object>> schedule, Date lastVisit) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -757,8 +757,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextServiceDue
-            (List<Map<String, Object>> schedule, List<ServiceType> serviceTypeList) {
+    public static Map<String, Object> nextServiceDue(List<Map<String, Object>> schedule, List<ServiceType> serviceTypeList) {
         Map<String, Object> v = null;
         try {
             for (Map<String, Object> m : schedule) {
@@ -794,8 +793,7 @@ public class VaccinatorUtils {
         return v;
     }
 
-    public static Map<String, Object> nextServiceDue
-            (List<Map<String, Object>> schedule, ServiceRecord lastServiceRecord) {
+    public static Map<String, Object> nextServiceDue(List<Map<String, Object>> schedule, ServiceRecord lastServiceRecord) {
         if (lastServiceRecord == null || StringUtils.isBlank(lastServiceRecord.getType()) || StringUtils
                 .isBlank(lastServiceRecord.getName())) {
             return null;
@@ -834,10 +832,8 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
-        Class<List<VaccineGroup>> clazz = (Class) List.class;
-        Type listType = new TypeToken<List<VaccineGroup>>() {
-        }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(mother_vaccines_file, prefix), clazz, listType);
+
+        return getVaccineGroupsFromVaccineConfigFile(context, getFileName(mother_vaccines_file, prefix));
     }
 
     public static String getFileName(String fileName, String prefix) {
@@ -848,25 +844,40 @@ public class VaccinatorUtils {
         }
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(
-            @Nullable Context context) {
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context) {
         return getSpecialVaccines(context, null);
     }
 
-    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(
-            @Nullable Context context, String prefix) {
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getSpecialVaccines(@Nullable Context context, String prefix) {
 
-        return getJsonVaccineGroup(getFileName(special_vaccines_file, prefix));
+        return getVaccineFromVaccineConfigFile(context, getFileName(special_vaccines_file, prefix));
     }
+
+    public static List<VaccineGroup> getSpecialVaccineGroups(@Nullable Context context) {
+
+        return getVaccineGroupsFromVaccineConfigFile(context, special_vaccines_file);
+    }
+
 
     public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(
             @NonNull String filename) {
 
+        return getVaccineFromVaccineConfigFile(ImmunizationLibrary.getInstance().context().applicationContext(), filename);
+    }
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getJsonVaccineGroup(Context context, @NonNull String filename) {
+        return getVaccineFromVaccineConfigFile(context, filename);
+    }
+
+
+    public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getVaccineFromVaccineConfigFile(@Nullable android.content.Context context, String vaccines_file) {
+        Map<String, Object> jsonMap = new HashMap<>();
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
-        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {}.getType();
+        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
 
         if (specialVaccines == null) {
-            specialVaccines = ImmunizationLibrary.getInstance().assetJsonToJava(filename, classType, listType);
+            specialVaccines = ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, classType, listType);
         }
 
         return specialVaccines;
@@ -894,8 +905,7 @@ public class VaccinatorUtils {
         return supportedServicesString;
     }
 
-    public static int getVaccineCalculation(Context context, String vaccineName)
-            throws JSONException {
+    public static int getVaccineCalculation(Context context, String vaccineName) {
         List<VaccineGroup> supportedVaccines = getSupportedVaccines(context);
         for (VaccineGroup vaccineGroup : supportedVaccines) {
             for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
@@ -924,10 +934,7 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
-        Class<List<VaccineGroup>> clazz = (Class) List.class;
-        Type listType = new TypeToken<List<VaccineGroup>>() {
-        }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava(getFileName(vaccines_file, prefix), clazz, listType);
+        return getVaccineGroupsFromVaccineConfigFile(context, getFileName(vaccines_file, prefix));
     }
 
     public static Map<String, Date> receivedVaccines(List<org.smartregister.immunization.domain.Vaccine> vaccines) {
@@ -1010,5 +1017,161 @@ public class VaccinatorUtils {
         String prefix = text.matches("^\\d.*\\n*") ? "_" : "";
         return prefix + text.trim().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
+    }
+
+    public static String cleanVaccineName(String vaccine) {
+
+        return vaccine.trim().replace(" ", "").toLowerCase(Locale.ENGLISH);
+    }
+
+    public static Vaccine getPrerequisiteVaccine(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+
+        return vaccine.schedule != null && vaccine.schedule.due != null && vaccine.schedule.due.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.due.get(0).prerequisite) ? VaccineRepo.getVaccineEnumFromValue(vaccine.schedule.due.get(0).prerequisite) : null;
+
+    }
+
+    public static int getPrerequisiteGapDays(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+
+        String prerequisteGapOffset = vaccine.schedule != null && vaccine.schedule.due != null && vaccine.schedule.due.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.due.get(0).offset) ? vaccine.schedule.due.get(0).offset : null;
+
+        return processOffsetValueInDays(prerequisteGapOffset);
+    }
+
+    public static int getExpiryDays(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {
+
+        String expiryOffset = vaccine.schedule != null && vaccine.schedule.expiry != null && vaccine.schedule.expiry.size() > 0 && !TextUtils.isEmpty(vaccine.schedule.expiry.get(0).offset) ? vaccine.schedule.expiry.get(0).offset : null;
+
+        return processOffsetValueInDays(expiryOffset);
+    }
+
+    /*
+     * Right now we only have child and woman type vaccines
+     * To do extend for automatically supporting any vaccine type , enforce naming conventional with categories for auto-loading e.g. child_vaccines.json, mother_vaccines.json, father_vaccines.json e.t.c
+     *
+     */
+    public static List<VaccineGroup> getSupportedVaccinesByCategory(Context context, String category) {
+
+        return IMConstants.VACCINE_TYPE.CHILD.equals(category) ? getSupportedVaccines(context) : getSupportedWomanVaccines(context);
+
+    }
+
+    public static List<VaccineGroup> getVaccineGroupsFromVaccineConfigFile(@Nullable android.content.Context context, String vaccines_file) {
+        Map<String, Object> jsonMap = new HashMap<>();
+        Class<List<VaccineGroup>> clazz = (Class) List.class;
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        return ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, clazz, listType);
+    }
+
+    public static void processConfigCalendarOffset(Calendar calendar, String offset) {
+
+        Matcher m1 = getPrefixSymbolMatcher(offset);
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+            String valueString = m1.group(2);
+
+            int operator = 1;
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+
+            String[] values = valueString.split(",");
+            for (int i = 0; i < values.length; i++) {
+                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+
+                if (m2.find()) {
+                    int curValue = operator * Integer.parseInt(m2.group(1));
+                    String fieldString = m2.group(2);
+                    int field = Calendar.DATE;
+                    if ("d".equals(fieldString)) {
+                        field = Calendar.DATE;
+                    } else if ("m".equals(fieldString)) {
+                        field = Calendar.MONTH;
+                    } else if ("y".equals(fieldString)) {
+                        field = Calendar.YEAR;
+                    }
+
+                    calendar.add(field, curValue);
+                }
+            }
+        }
+
+    }
+
+    public static DateTime processConfigDateTimeOffset(DateTime afterOffset, String offset) {
+        Matcher m1 = getPrefixSymbolMatcher(offset);
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+            String valueString = m1.group(2);
+
+            int operator = 1;
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+
+            String[] values = valueString.split(",");
+            for (int i = 0; i < values.length; i++) {
+                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+
+                if (m2.find()) {
+                    int curValue = operator * Integer.parseInt(m2.group(1));
+                    String fieldString = m2.group(2);
+                    if ("d".endsWith(fieldString)) {
+                        afterOffset = afterOffset.plusDays(curValue);
+                    } else if ("m".equals(fieldString)) {
+                        afterOffset = afterOffset.plusMonths(curValue);
+                    } else if ("y".equals(fieldString)) {
+                        afterOffset = afterOffset.plusYears(curValue);
+                    }
+                }
+            }
+        }
+        return afterOffset;
+
+    }
+
+    public static int processOffsetValueInDays(String offset) {
+        if (offset == null) return -1;
+        Matcher m1 = getPrefixSymbolMatcher(offset);
+        int days = 0;
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+            String valueString = m1.group(2);
+
+            int operator = 1;
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+
+            String[] values = valueString.split(",");
+            for (int i = 0; i < values.length; i++) {
+                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+
+                if (m2.find()) {
+                    int curValue = operator * Integer.parseInt(m2.group(1));
+                    String fieldString = m2.group(2);
+                    if ("d".endsWith(fieldString)) {
+                        days += curValue;
+                    } else if ("m".equals(fieldString)) {
+                        days += (int) Math.round(30.44 * curValue);
+                    } else if ("y".equals(fieldString)) {
+                        days += 366 * curValue;
+                    }
+                }
+            }
+        }
+        return days;
+
+    }
+
+    private static Matcher getSuffixSymbolMatcher(String value) {
+        Pattern p2 = Pattern.compile("(\\d+)([dwmy]{1})");
+        return p2.matcher(value);
+    }
+
+    private static Matcher getPrefixSymbolMatcher(String offset) {
+        String offsetAfterReplace = offset.replace(" ", "").toLowerCase(Locale.ENGLISH);
+        Pattern p1 = Pattern.compile("([-+]{1})(.*)");
+        return p1.matcher(offsetAfterReplace);
     }
 }

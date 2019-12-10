@@ -95,6 +95,7 @@ public class SampleApplication extends DrishtiApplication {
         try {
             List<VaccineGroup> childVaccines = VaccinatorUtils.getSupportedVaccines(this);
             List<Vaccine> specialVaccines = VaccinatorUtils.getSpecialVaccines(this);
+            List<Vaccine> vaccineList = VaccinatorUtils.getVaccineFromVaccineConfigFile(this.getApplicationContext(), VaccinatorUtils.special_vaccines_file);
             VaccineSchedule.init(childVaccines, specialVaccines, "child");
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
