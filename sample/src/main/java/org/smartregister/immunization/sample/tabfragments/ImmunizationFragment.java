@@ -118,9 +118,13 @@ public class ImmunizationFragment extends Fragment {
         }
 
         List<VaccineGroup> supportedVaccines = VaccinatorUtils.getSupportedVaccines(getActivity());
+        boolean addedBcg2Vaccine = false;
         for (VaccineGroup vaccineGroupObject : supportedVaccines) {
 
-            VaccinateActionUtils.addBcg2SpecialVaccine(getActivity(), vaccineGroupObject, vaccineList);
+            // This method handles the multiple loops
+            if (!addedBcg2Vaccine) {
+                addedBcg2Vaccine = VaccinateActionUtils.addBcg2SpecialVaccine(getActivity(), vaccineGroupObject, vaccineList);
+            }
 
             ImmunizationRowGroup curGroup = new ImmunizationRowGroup(getActivity(), editmode);
             curGroup.setData(vaccineGroupObject, childDetails, vaccineList, alertList);

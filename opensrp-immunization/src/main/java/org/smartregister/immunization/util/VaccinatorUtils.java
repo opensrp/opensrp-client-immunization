@@ -96,6 +96,8 @@ public class VaccinatorUtils {
     public static final String vaccines_folder = "vaccines";
     private static final String TAG = "VaccinatorUtils";
 
+    private static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines;
+
     public static HashMap<String, String> providerDetails() {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
         org.smartregister.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
@@ -861,9 +863,13 @@ public class VaccinatorUtils {
             @NonNull String filename) {
 
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
-        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
-        }.getType();
-        return ImmunizationLibrary.getInstance().assetJsonToJava(filename, classType, listType);
+        Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {}.getType();
+
+        if (specialVaccines == null) {
+            specialVaccines = ImmunizationLibrary.getInstance().assetJsonToJava(filename, classType, listType);
+        }
+
+        return specialVaccines;
     }
 
     /**
