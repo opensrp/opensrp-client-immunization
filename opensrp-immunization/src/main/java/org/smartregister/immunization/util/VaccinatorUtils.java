@@ -1131,6 +1131,7 @@ public class VaccinatorUtils {
     }
 
     public static int processOffsetValueInDays(String offset) {
+        if (offset == null) return -1;
         Matcher m1 = getPrefixSymbolMatcher(offset);
         int days = 0;
         if (m1.find()) {
