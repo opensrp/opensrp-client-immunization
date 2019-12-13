@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.repository.Repository;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -18,6 +19,8 @@ public class ImmunizationLibraryTest extends BaseUnitTest {
     public void setUp() {
         Repository repository = Mockito.mock(Repository.class);
         Context context = Mockito.mock(Context.class);
+        AppProperties properties = Mockito.mock(AppProperties.class);
+        Mockito.doReturn(properties).when(context).getAppProperties();
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
         ImmunizationLibrary.init(context, repository, commonFtsObject, 0, 0);
         org.mockito.MockitoAnnotations.initMocks(this);

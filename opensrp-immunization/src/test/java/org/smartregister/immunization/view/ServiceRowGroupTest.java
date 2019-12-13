@@ -45,8 +45,6 @@ public class ServiceRowGroupTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
     private ServiceRowGroup view;
-    @Mock
-    private Context context;
 
     private ActivityController<ServiceRowGroupTestActivity> controller;
 

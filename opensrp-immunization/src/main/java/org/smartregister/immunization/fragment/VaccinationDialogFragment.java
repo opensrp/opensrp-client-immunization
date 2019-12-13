@@ -591,11 +591,11 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         for (VaccineWrapper tag : tags) {
             if (tag.getVaccine() != null) {
-                if (cleanVaccineName(tag.getVaccine().display()).equals(cleanVaccineName(name))) {
+                if (VaccinatorUtils.cleanVaccineName(tag.getVaccine().display()).equals(VaccinatorUtils.cleanVaccineName(name))) {
                     return tag;
                 }
             } else {
-                if (cleanVaccineName(tag.getName()).equals(cleanVaccineName(name))) {
+                if (VaccinatorUtils.cleanVaccineName(tag.getName()).equals(VaccinatorUtils.cleanVaccineName(name))) {
                     return tag;
                 }
             }
@@ -703,10 +703,6 @@ public class VaccinationDialogFragment extends DialogFragment {
         return maxDate;
     }
 
-    private String cleanVaccineName(String name) {
-        return name != null && !name.isEmpty() ? stripSpaces(name.replace("\n", "")) : null;
-    }
-
     private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
         Date dueDate = getMinVaccineDate(vaccineName);
         Calendar minDate = minDate_;
@@ -740,10 +736,6 @@ public class VaccinationDialogFragment extends DialogFragment {
         }
 
         return maxDate;
-    }
-
-    private String stripSpaces(String name) {
-        return name != null && !name.isEmpty() ? name.replaceAll(" ", "") : name;
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {

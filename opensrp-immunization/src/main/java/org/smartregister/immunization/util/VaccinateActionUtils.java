@@ -477,28 +477,39 @@ public class VaccinateActionUtils {
         return null;
     }
 
-    public static void addBcg2SpecialVaccine(Context context, VaccineGroup vaccineGroupObject, List<Vaccine> vaccineList) {
-        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils
-                .getSpecialVaccines(context);
-
+    /**
+     * Picks the BCG 2 special vaccine from the loaded list of special_vaccines and adds it to the birth group
+     *
+     * @param context
+     * @param vaccineGroupObject
+     * @param vaccineList
+     * @return
+     */
+    public static boolean addBcg2SpecialVaccine(Context context, VaccineGroup vaccineGroupObject, List<Vaccine> vaccineList) {
         //Add BCG2 special vaccine to birth vaccine group
-        if (specialVaccines != null && !specialVaccines.isEmpty()
-                && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)
-                && vaccineGroupObject.name != null
-                && vaccineGroupObject.name != null
+        if (VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)
                 && vaccineGroupObject.days_after_birth_due != null
                 && vaccineGroupObject.vaccines != null
                 && "Birth".equalsIgnoreCase(vaccineGroupObject.name)
                 && "0".equalsIgnoreCase(vaccineGroupObject.days_after_birth_due.toString())) {
-            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
-                if (vaccine.name != null
-                        && vaccine.type != null
-                        && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
-                        && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
-                    vaccineGroupObject.vaccines.add(vaccine);
+
+            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils
+                    .getSpecialVaccines(context);
+
+            if (specialVaccines != null && !specialVaccines.isEmpty()) {
+                for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
+                    if (vaccine.name != null
+                            && vaccine.type != null
+                            && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                            && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                        vaccineGroupObject.vaccines.add(vaccine);
+                        return true;
+                    }
                 }
             }
         }
+
+        return false;
     }
 
     public static boolean moreThanThreeMonths(Date createdAt) {

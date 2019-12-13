@@ -2,6 +2,7 @@ package org.smartregister.immunization.utils;
 
 import android.content.res.Resources;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
@@ -21,10 +22,14 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceData;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
+import org.smartregister.immunization.domain.jsonmapping.Due;
+import org.smartregister.immunization.domain.jsonmapping.Expiry;
+import org.smartregister.immunization.domain.jsonmapping.Schedule;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
@@ -38,8 +43,10 @@ import org.smartregister.util.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -156,7 +163,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        Map<String, Object> jsonMap = new HashMap<>();
+        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
@@ -196,9 +204,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
 
-        List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        Map<String, Object> jsonMap = new HashMap<>();
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicOPV0), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicNULL), -1);
@@ -211,8 +220,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType2);
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava("special_vaccines.json", clazz2, listType2))
-                .thenReturn(specialVaccines);
+        Map<String, Object> jsonMap2 = new HashMap<>();
+
+        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap2, context, "special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
+
         JSONAssert.assertEquals(VaccineData.special_vacines,
                 JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2),
                 JSONCompareMode.NON_EXTENSIBLE);
@@ -276,4 +287,199 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Assert.assertEquals("_4_weeks", translated);
     }
 
+    @Test
+    public void testGetPrerequisiteVaccineReturnsCorrectVaccine() {
+
+        org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine = new org.smartregister.immunization.domain.jsonmapping.Vaccine();
+        Schedule schedule = new Schedule();
+        Due due = new Due();
+        due.prerequisite = "opv1";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        VaccineRepo.Vaccine repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        Assert.assertEquals(VaccineRepo.Vaccine.opv1, repoVaccine);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.prerequisite = "penta1";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        Assert.assertEquals(VaccineRepo.Vaccine.penta1, repoVaccine);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.prerequisite = "rtss1";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        Assert.assertEquals(VaccineRepo.Vaccine.rtss1, repoVaccine);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.prerequisite = "tt1";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        Assert.assertEquals(VaccineRepo.Vaccine.tt1, repoVaccine);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.prerequisite = "mrce";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        Assert.assertEquals(VaccineRepo.Vaccine.mrce, repoVaccine);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.prerequisite = "measles1";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        Assert.assertEquals(VaccineRepo.Vaccine.measles1, repoVaccine);
+    }
+
+    @Test
+    public void testGetPrerequisiteGapDaysReturnsCorrectValue() {
+
+        org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine = new org.smartregister.immunization.domain.jsonmapping.Vaccine();
+        Schedule schedule = new Schedule();
+        Due due = new Due();
+        due.offset = "+20d";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        int days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(20, days);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.offset = "+5m";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(152, days);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.offset = "+3y";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(1098, days);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.offset = "+3m,10d";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(101, days);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.offset = "+2y,9m";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(1006, days);
+
+
+        schedule = new Schedule();
+        due = new Due();
+        due.offset = "+1y,9m,9d";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(649, days);
+
+        schedule = new Schedule();
+        due = new Due();
+        due.offset = "+2y,8d";
+        schedule.due = ImmutableList.of(due);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getPrerequisiteGapDays(vaccine);
+        Assert.assertEquals(740, days);
+    }
+
+    @Test
+    public void testGetExpiryDaysReturnsCorrectValue() {
+
+        org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine = new org.smartregister.immunization.domain.jsonmapping.Vaccine();
+        Schedule schedule = new Schedule();
+        Expiry expiry = new Expiry();
+        expiry.offset = "+10d";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        int days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(10, days);
+
+        schedule = new Schedule();
+        expiry = new Expiry();
+        expiry.offset = "+4m";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(122, days);
+
+        schedule = new Schedule();
+        expiry = new Expiry();
+        expiry.offset = "+2y";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(732, days);
+
+        schedule = new Schedule();
+        expiry = new Expiry();
+        expiry.offset = "+4m,10d";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(132, days);
+
+        schedule = new Schedule();
+        expiry = new Expiry();
+        expiry.offset = "+1y,9m";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(640, days);
+
+        schedule = new Schedule();
+        expiry = new Expiry();
+        expiry.offset = "+1y,9m,3d";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(643, days);
+
+        schedule = new Schedule();
+        expiry = new Expiry();
+        expiry.offset = "+1y,4d";
+        schedule.expiry = ImmutableList.of(expiry);
+        vaccine.setSchedule(schedule);
+        days = VaccinatorUtils.getExpiryDays(vaccine);
+        Assert.assertEquals(370, days);
+    }
+
+
+    @Test
+    public void testCleanVaccineNameProcessesInputsCorrectly() {
+
+        String normalVaccine = VaccinatorUtils.cleanVaccineName("BCG 1");
+
+        Assert.assertNotNull(normalVaccine);
+        Assert.assertEquals("bcg1", normalVaccine);
+
+        String rss1 = VaccinatorUtils.cleanVaccineName("RSS,S1");
+
+        Assert.assertNotNull(rss1);
+        Assert.assertEquals("rsss1", rss1);
+
+        String mrce = VaccinatorUtils.cleanVaccineName("MR - CE");
+
+        Assert.assertNotNull(mrce);
+        Assert.assertEquals("mrce", mrce);
+    }
 }

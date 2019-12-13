@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.repository.Repository;
@@ -74,17 +73,6 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         String testString2 = VaccineRepository.removeHyphen("test_string");
         org.junit.Assert.assertNotNull(testString2);
         Assert.assertFalse(testString2.contains("-"));
-    }
-
-    @Test
-    public void assertAlertServiceTest() {
-        Assert.assertNotNull(vaccineRepository.alertService());
-        VaccineRepository vaccineRepository = new VaccineRepository(repository, commonFtsObject, null);
-        Repository repository = Mockito.mock(Repository.class);
-        org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
-        CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
-        ImmunizationLibrary.init(context, repository, commonFtsObject, 0, 0);
-        vaccineRepository.alertService();
     }
 
     @Test

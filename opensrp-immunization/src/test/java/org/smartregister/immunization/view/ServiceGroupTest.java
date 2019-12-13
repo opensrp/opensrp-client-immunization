@@ -1,6 +1,5 @@
 package org.smartregister.immunization.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -20,6 +19,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.adapter.ServiceCardAdapter;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
@@ -29,6 +29,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
+import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,8 +46,6 @@ public class ServiceGroupTest extends BaseUnitTest {
     private final String magicDate = "1985-07-24T00:00:00.000Z";
     private final String type = "SERVICETYPE";
     private ServiceGroup view;
-    @Mock
-    private Context context;
     private ActivityController<ServiceGroupTestActivity> controller;
     @InjectMocks
     private ServiceGroupTestActivity activity;
@@ -54,6 +53,12 @@ public class ServiceGroupTest extends BaseUnitTest {
     private org.smartregister.Context context_;
     private ArrayList<ServiceWrapper> wrappers;
     private ServiceWrapper wrapper;
+
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+
+    @Mock
+    private AppProperties properties;
 
     @Before
     public void setUp() {
@@ -64,6 +69,8 @@ public class ServiceGroupTest extends BaseUnitTest {
         CoreLibrary.init(context_);
         controller.setup();
         view = activity.getInstance();
+        Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
+        view.setImmunizationLibraryInstance(immunizationLibrary);
     }
 
     @Test
