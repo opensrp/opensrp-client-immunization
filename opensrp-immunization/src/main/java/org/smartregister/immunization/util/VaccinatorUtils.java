@@ -1019,9 +1019,9 @@ public class VaccinatorUtils {
 
     }
 
-    public static String cleanVaccineName(String vaccine) {
+    public static String cleanVaccineName(String vaccineName) {
 
-        return vaccine.trim().replace(" ", "").toLowerCase(Locale.ENGLISH);
+        return vaccineName != null && !vaccineName.trim().isEmpty() ? vaccineName.trim().replaceAll("[-,\\s]+", "").toLowerCase(Locale.ENGLISH) : null;
     }
 
     public static Vaccine getPrerequisiteVaccine(org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine) {

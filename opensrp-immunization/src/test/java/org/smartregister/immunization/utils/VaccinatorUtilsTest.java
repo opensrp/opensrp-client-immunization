@@ -304,7 +304,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         due.prerequisite = "penta1";
         schedule.due = ImmutableList.of(due);
         vaccine.setSchedule(schedule);
-         repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
+        repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
         Assert.assertEquals(VaccineRepo.Vaccine.penta1, repoVaccine);
 
         schedule = new Schedule();
@@ -338,7 +338,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         vaccine.setSchedule(schedule);
         repoVaccine = VaccinatorUtils.getPrerequisiteVaccine(vaccine);
         Assert.assertEquals(VaccineRepo.Vaccine.measles1, repoVaccine);
-}
+    }
+
     @Test
     public void testGetPrerequisiteGapDaysReturnsCorrectValue() {
 
@@ -460,5 +461,25 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         vaccine.setSchedule(schedule);
         days = VaccinatorUtils.getExpiryDays(vaccine);
         Assert.assertEquals(370, days);
+    }
+
+
+    @Test
+    public void testCleanVaccineNameProcessesInputsCorrectly() {
+
+        String normalVaccine = VaccinatorUtils.cleanVaccineName("BCG 1");
+
+        Assert.assertNotNull(normalVaccine);
+        Assert.assertEquals("bcg1", normalVaccine);
+
+        String rss1 = VaccinatorUtils.cleanVaccineName("RSS,S1");
+
+        Assert.assertNotNull(rss1);
+        Assert.assertEquals("rsss1", rss1);
+
+        String mrce = VaccinatorUtils.cleanVaccineName("MR - CE");
+
+        Assert.assertNotNull(mrce);
+        Assert.assertEquals("mrce", mrce);
     }
 }

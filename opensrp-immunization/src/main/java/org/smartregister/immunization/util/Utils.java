@@ -124,7 +124,6 @@ public class Utils {
     private static void processVaccineGroupCore(VaccineGroup vaccineGroup, Vaccine vaccine, String category) {
         String vaccineName = VaccinatorUtils.cleanVaccineName(vaccine.getName());
 
-
         if (vaccine.getVaccineSeparator() != null && vaccineName.contains(vaccine.getVaccineSeparator().trim())) {
             String[] individualVaccines = vaccineName.split(vaccine.getVaccineSeparator().trim());
 
