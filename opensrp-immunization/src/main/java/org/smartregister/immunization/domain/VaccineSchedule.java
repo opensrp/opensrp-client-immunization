@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Jason Rogena - jrogena@ona.io on 19/05/2017.
@@ -77,7 +75,9 @@ public class VaccineSchedule {
             VaccineSchedule vaccineSchedule;
             if (curVaccine.schedule != null) {
                 vaccineSchedule = getVaccineSchedule(vaccineName, vaccineCategory, curVaccine.schedule);
-                vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
+                if (vaccineSchedule != null) {
+                    vaccineSchedules.get(vaccineCategory).put(vaccineName.toUpperCase(), vaccineSchedule);
+                }
             }
         } else {
             String[] splitNames = curVaccine.name
