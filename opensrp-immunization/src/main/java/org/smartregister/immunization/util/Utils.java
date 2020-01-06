@@ -125,6 +125,9 @@ public class Utils {
         String vaccineName = VaccinatorUtils.cleanVaccineName(vaccine.getName());
 
         if (vaccine.getVaccineSeparator() != null && vaccineName.contains(vaccine.getVaccineSeparator().trim())) {
+
+            processCombinedVaccines(vaccine);
+
             String[] individualVaccines = vaccineName.split(vaccine.getVaccineSeparator().trim());
 
             for (String individualVaccine : individualVaccines) {
@@ -151,6 +154,16 @@ public class Utils {
             processDefaultVaccineGroupCount(repoVaccine, category);
         }
 
+    }
+
+    private static void processCombinedVaccines(Vaccine vaccine) {
+        String[] individualVaccines = vaccine.getName().split(vaccine.getVaccineSeparator().trim());
+
+        for (String individualVaccine : individualVaccines) {
+            ImmunizationLibrary.getInstance().COMBINED_VACCINES.add(individualVaccine.trim());
+            ImmunizationLibrary.getInstance().COMBINED_VACCINES_MAP.put(individualVaccine.trim(), vaccine.getName().trim());
+
+        }
     }
 
     private static void processDefaultVaccineGroupCount(VaccineRepo.Vaccine repoVaccine, String category) {
