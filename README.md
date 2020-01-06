@@ -151,6 +151,9 @@ This section will provide a brief description how to build and install the appli
 2. Open Genymotion and Run the Virtual Device created previously.
 3. Run the app on Android Studio and chose the Genymotion Emulator as the ` Deployment Target`
 
+## Guidelines for vaccines names in the `vaccines.json` configuration file
+Vaccine names can contain upper and/or lowercase letters , integers, hyphens, forward slash(as a separator for combined vaccines) and commas. e.g.  `MR - CE`, `RTS,S 2` , `Measles 2 / MR 2`
+
 ## Multi Language Support
 
 ### Vaccines
