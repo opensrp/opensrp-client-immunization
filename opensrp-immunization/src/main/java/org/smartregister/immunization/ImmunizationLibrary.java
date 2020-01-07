@@ -17,7 +17,9 @@ import org.smartregister.util.AppProperties;
 import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -41,6 +43,9 @@ public class ImmunizationLibrary {
     private Map<String, Object> jsonMap = new HashMap<>();
     private static boolean allowExpiredVaccineEntry;
     private static Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
+
+    public static List<String> COMBINED_VACCINES = new ArrayList<>();
+    public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
 
     private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         this.repository = repository;

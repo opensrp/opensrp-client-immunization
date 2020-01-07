@@ -83,24 +83,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private ArrayList<VaccineGroup> vaccineGroups;
     private ArrayList<ServiceGroup> serviceGroups;
 
-    private static final ArrayList<String> COMBINED_VACCINES;
-    private static final HashMap<String, String> COMBINED_VACCINES_MAP;
-
     private static final boolean isChildActive = true;
-
-    static {
-        COMBINED_VACCINES = new ArrayList<>();
-        COMBINED_VACCINES_MAP = new HashMap<>();
-        COMBINED_VACCINES.add("Measles 1");
-        COMBINED_VACCINES_MAP.put("Measles 1", "Measles 1 / MR 1");
-        COMBINED_VACCINES.add("MR 1");
-        COMBINED_VACCINES_MAP.put("MR 1", "Measles 1 / MR 1");
-        COMBINED_VACCINES.add("Measles 2");
-        COMBINED_VACCINES_MAP.put("Measles 2", "Measles 2 / MR 2");
-        COMBINED_VACCINES.add("MR 2");
-        COMBINED_VACCINES_MAP.put("MR 2", "Measles 2 / MR 2");
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,10 +222,10 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
                 for (ServiceRecord serviceRecord : serviceRecordList) {
                     //if (serviceRecord.getSyncStatus().equals(RecurringServiceTypeRepository.TYPE_Synced)) {
-                        if (serviceRecord.getType().equals(type)) {
-                            foundServiceTypeMap.put(type, serviceTypeMap.get(type));
-                            break;
-                        }
+                    if (serviceRecord.getType().equals(type)) {
+                        foundServiceTypeMap.put(type, serviceTypeMap.get(type));
+                        break;
+                    }
                     //}
                 }
                 foundServiceTypeMap.put(type, serviceTypeMap.get(type)); // put everything that is a service
@@ -819,9 +802,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                         String curWrapperName = curWrapper.getName();
 
                         // Check if current wrapper is one of the combined vaccines
-                        if (COMBINED_VACCINES.contains(curWrapperName)) {
+                        if (ImmunizationLibrary.getInstance().COMBINED_VACCINES.contains(curWrapperName)) {
                             // Check if any of the sister vaccines is currAffectedVaccineName
-                            String[] allSisters = COMBINED_VACCINES_MAP.get(curWrapperName).split(" / ");
+                            String[] allSisters = ImmunizationLibrary.getInstance().COMBINED_VACCINES_MAP.get(curWrapperName).split(" / ");
                             for (int i = 0; i < allSisters.length; i++) {
                                 if (allSisters[i].replace(" ", "").equalsIgnoreCase(curAffectedVaccineName.replace(" ", ""))) {
                                     curWrapperName = allSisters[i];
