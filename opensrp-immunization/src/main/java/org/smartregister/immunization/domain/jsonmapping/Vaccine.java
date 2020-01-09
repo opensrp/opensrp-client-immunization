@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by samuelgithengi on 2/27/18.
  */
 
-public class Vaccine {
+public class Vaccine implements Cloneable{
 
     public String name;
 

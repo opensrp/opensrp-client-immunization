@@ -84,6 +84,22 @@ public class ServiceRecordTest extends BaseUnitTest {
 
         serviceRecord.setType(TYPE);
         Assert.assertEquals(TYPE, serviceRecord.getType());
+
+        Date DATE = new Date();
+        serviceRecord.setCreatedAt(DATE);
+        Assert.assertEquals(DATE, serviceRecord.getDate());
+
+        String TEAM = "team";
+        serviceRecord.setTeam(TEAM);
+        Assert.assertEquals(TEAM, serviceRecord.getTeam());
+
+        String TEAM_ID = "team_id";
+        serviceRecord.setTeamId(TEAM_ID);
+        Assert.assertEquals(TEAM_ID, serviceRecord.getTeamId());
+
+        String CHILD_LOCATION_ID = "child_location_id";
+        serviceRecord.setChildLocationId(CHILD_LOCATION_ID);
+        Assert.assertEquals(CHILD_LOCATION_ID, serviceRecord.getChildLocationId());
     }
 
 }
