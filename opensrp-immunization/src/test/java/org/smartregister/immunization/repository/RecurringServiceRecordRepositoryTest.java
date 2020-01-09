@@ -55,6 +55,13 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     }
 
     @Test
+    public void testMigrateCreatedAt() {
+        String sql = "UPDATE recurring_service_records SET created_at =  ( SELECT dateCreated   FROM event   WHERE eventId = recurring_service_records.event_id   OR formSubmissionId = recurring_service_records.formSubmissionId )  WHERE created_at is null ";
+        RecurringServiceRecordRepository.migrateCreatedAt(sqliteDatabase);
+        Mockito.verify(sqliteDatabase).execSQL(sql);
+    }
+
+    @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
         RecurringServiceRecordRepository vaccineNameRepository = new RecurringServiceRecordRepository();
         org.junit.Assert.assertNotNull(vaccineNameRepository);
@@ -101,10 +108,10 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     public void verifyFindbyEntityIDcallsDatabaseQueryMethod1Times() {
         RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = PowerMockito
                 .spy(recurringServiceRecordRepository);
-        String[] columns = new String[] {RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
+        String[] columns = new String[]{RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
-        cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, "", ""});
+        cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
+        cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, "", ""});
 
         Mockito.when(sqliteDatabase
                 .rawQuery(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class)))
@@ -117,9 +124,9 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindbyUniqueIDcallsDatabaseQueryMethod1Times() {
-        String[] columns = new String[] {RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
+        String[] columns = new String[]{RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
+        cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
 
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setFormSubmissionId(FORMSUBMISSIONID);
@@ -145,9 +152,9 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void assertAndVerifyFindbyCaseIDcallsDatabaseQueryMethod1Times() {
-        String[] columns = new String[] {RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
+        String[] columns = new String[]{RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
+        cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
         Assert.assertNull(recurringServiceRecordRepository.find(0l));
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
@@ -204,7 +211,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(1))
                 .update(org.mockito.ArgumentMatchers.eq(RecurringServiceRecordRepository.TABLE_NAME),
                         (ContentValues) org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.anyString(),
-                        org.mockito.ArgumentMatchers.eq(new String[] {"5"}));
+                        org.mockito.ArgumentMatchers.eq(new String[]{"5"}));
     }
 
     @Test
@@ -213,7 +220,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         recurringServiceRecordRepository.close(null);
         Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(0))
                 .update(org.mockito.ArgumentMatchers.anyString(), (ContentValues) org.mockito.ArgumentMatchers.any(),
-                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.eq(new String[] {"5"}));
+                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.eq(new String[]{"5"}));
     }
 
     @Test
@@ -225,9 +232,9 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void assertFindUnSyncedBeforeTimeTest() {
-        String[] columns = new String[] {RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
+        String[] columns = new String[]{RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[] {1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
+        cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
         Mockito.when(recurringServiceRecordRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
