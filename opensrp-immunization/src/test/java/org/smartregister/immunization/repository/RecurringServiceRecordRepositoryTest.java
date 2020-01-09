@@ -14,8 +14,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.TestApplication;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.repository.Repository;
+import org.smartregister.view.activity.DrishtiApplication;
 
 /**
  * Created by onaio on 29/08/2017.
@@ -37,17 +39,24 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     private Repository repository;
 
     @Mock
+    private DrishtiApplication application;
+
+    @Mock
     private SQLiteDatabase sqliteDatabase;
 
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.when(application.getRepository()).thenReturn(repository);
+        TestApplication.setInstance(application);
+
         org.junit.Assert.assertNotNull(recurringServiceRecordRepository);
     }
 
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
-        RecurringServiceRecordRepository vaccineNameRepository = new RecurringServiceRecordRepository(repository);
+        RecurringServiceRecordRepository vaccineNameRepository = new RecurringServiceRecordRepository();
         org.junit.Assert.assertNotNull(vaccineNameRepository);
     }
 

@@ -12,9 +12,11 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.TestApplication;
 import org.smartregister.immunization.domain.VaccineName;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
+import org.smartregister.view.activity.DrishtiApplication;
 
 /**
  * Created by onaio on 29/08/2017.
@@ -29,6 +31,9 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     private Repository repository;
 
     @Mock
+    private DrishtiApplication application;
+
+    @Mock
     private CommonFtsObject commonFtsObject;
 
     @Mock
@@ -40,12 +45,16 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.when(application.getRepository()).thenReturn(repository);
+        TestApplication.setInstance(application);
+
         org.junit.Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
-        VaccineNameRepository vaccineNameRepository = new VaccineNameRepository(repository, commonFtsObject, alertService);
+        VaccineNameRepository vaccineNameRepository = new VaccineNameRepository(commonFtsObject, alertService);
         org.junit.Assert.assertNotNull(vaccineNameRepository);
     }
 
