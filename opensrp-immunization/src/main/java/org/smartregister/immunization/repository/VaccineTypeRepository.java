@@ -28,8 +28,7 @@ public class VaccineTypeRepository extends BaseRepository {
     private CommonFtsObject commonFtsObject;
     private AlertService alertService;
 
-    public VaccineTypeRepository(Repository repository, CommonFtsObject commonFtsObject, AlertService alertService) {
-        super(repository);
+    public VaccineTypeRepository(CommonFtsObject commonFtsObject, AlertService alertService) {
         this.commonFtsObject = commonFtsObject;
         this.alertService = alertService;
     }
