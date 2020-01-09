@@ -98,7 +98,7 @@ public class ServiceRecordTest extends BaseUnitTest {
         Assert.assertEquals(TEAM_ID, serviceRecord.getTeamId());
 
         String CHILD_LOCATION_ID = "child_location_id";
-        serviceRecord.setTeamId(CHILD_LOCATION_ID);
+        serviceRecord.setChildLocationId(CHILD_LOCATION_ID);
         Assert.assertEquals(CHILD_LOCATION_ID, serviceRecord.getChildLocationId());
     }
 
