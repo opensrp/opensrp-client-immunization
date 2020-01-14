@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
@@ -208,12 +209,18 @@ public class ImmunizationRowCard extends LinearLayout {
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
             case EXPIRED:
-                setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                if(ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()){
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
+                    StatusTV.setTextColor(context.getResources().getColor(R.color.white));
+                } else {
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
+                }
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(context.getResources().getString(R.string.expired));
-                StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
                 break;
             default:
                 break;
