@@ -16,9 +16,11 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.TestApplication;
 import org.smartregister.immunization.domain.VaccineType;
 import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
+import org.smartregister.view.activity.DrishtiApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     @Mock
     private Repository repository;
     @Mock
+    private DrishtiApplication application;
+    @Mock
     private CommonFtsObject commonFtsObject;
     @Mock
     private AlertService alertService;
@@ -45,6 +49,10 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.when(application.getRepository()).thenReturn(repository);
+        TestApplication.setInstance(application);
+
         org.junit.Assert.assertNotNull(vaccineTypeRepository);
     }
 
@@ -54,7 +62,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
         VaccineType type = new VaccineType(magicL, magic10, "", "", "", "");
         list.add(type);
         //        VaccineTypeRepository vaccineTypeRepository = Mockito.mock(VaccineTypeRepository.class);
-        VaccineTypeRepository vaccineTypeRepository = new VaccineTypeRepository(repository, commonFtsObject, alertService);
+        VaccineTypeRepository vaccineTypeRepository = new VaccineTypeRepository(commonFtsObject, alertService);
         //        Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         VaccineTypeRepository spy = Mockito.spy(vaccineTypeRepository);
         PowerMockito.doReturn(list).when(spy).findIDByName(org.mockito.ArgumentMatchers.anyString());
@@ -63,7 +71,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
-        VaccineTypeRepository vaccineRepository = new VaccineTypeRepository(repository, commonFtsObject, alertService);
+        VaccineTypeRepository vaccineRepository = new VaccineTypeRepository(commonFtsObject, alertService);
         org.junit.Assert.assertNotNull(vaccineRepository);
     }
 
