@@ -1,6 +1,5 @@
 package org.smartregister.immunization.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -11,16 +10,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.BuildConfig;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.view.mock.VaccineCardTestActivity;
+import org.smartregister.repository.Repository;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -32,8 +38,7 @@ public class VaccineCardTest extends BaseUnitTest {
     private final String magicMR = "mr";
     private final String magicExpired = "expired";
     private VaccineCard view;
-    @Mock
-    private Context context;
+
     private ActivityController<VaccineCardTestActivity> controller;
     @InjectMocks
     private VaccineCardTestActivity activity;
@@ -58,6 +63,12 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() {
+        AppProperties appProperties = Mockito.mock(AppProperties.class);
+        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW)).thenReturn(true);
+        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW)).thenReturn(true);
+        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+
         Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
@@ -129,6 +140,8 @@ public class VaccineCardTest extends BaseUnitTest {
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), State.DONE_CAN_BE_UNDONE);
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
     }
 
     @Test
