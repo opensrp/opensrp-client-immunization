@@ -87,7 +87,7 @@ public class ServiceRecordTest extends BaseUnitTest {
 
         Date DATE = new Date();
         serviceRecord.setCreatedAt(DATE);
-        Assert.assertEquals(DATE, serviceRecord.getDate());
+        Assert.assertEquals(DATE, serviceRecord.getCreatedAt());
 
         String TEAM = "team";
         serviceRecord.setTeam(TEAM);
