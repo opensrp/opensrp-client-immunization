@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
@@ -57,7 +56,7 @@ public class VaccineCard extends LinearLayout {
 
         //Init date formatters here to allow for dynamic language switching
         DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-        SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM",Locale.ENGLISH);
+        SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.ENGLISH);
     }
 
     public VaccineCard(Context context, AttributeSet attrs) {
@@ -228,17 +227,13 @@ public class VaccineCard extends LinearLayout {
                 }
                 break;
             case EXPIRED:
-                if(ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()){
-                    setBackgroundResource(R.drawable.vaccine_card_background_red);
-                    nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
-                } else {
-                    setBackgroundResource(R.drawable.vaccine_card_background_white);
-                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                }
+
+                setBackgroundResource(R.drawable.vaccine_card_background_white);
+                nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setText(context.getResources().getString(R.string.expired_colon,getVaccineName()));
+                nameTV.setText(context.getResources().getString(R.string.expired_colon, getVaccineName()));
                 break;
             default:
                 break;

@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.vijay.jsonwizard.customviews.CheckBox;
 import com.vijay.jsonwizard.customviews.RadioButton;
-import com.vijay.jsonwizard.utils.DatePickerUtils;
+import com.vijay.jsonwizard.utils.NativeFormsProperties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -40,6 +40,7 @@ import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -62,6 +63,7 @@ public class VaccinationDialogFragment extends DialogFragment {
     private DialogInterface.OnDismissListener onDismissListener;
     private Integer defaultImageResourceID;
     private Integer defaultErrorImageResourceID;
+    private boolean isNumericDatePicker = Utils.isPropertyTrue(NativeFormsProperties.KEY.WIDGET_DATEPICKER_IS_NUMERIC);
 
     public static VaccinationDialogFragment newInstance(Date dateOfBirth,
                                                         List<Vaccine> issuedVaccines,
@@ -352,7 +354,8 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         }
 
-        final DatePicker earlierDatePicker = dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
+        earlierDatePicker.setVisibility(View.VISIBLE);
 
         String color = tags.get(0).getColor();
         Button status = dialogView.findViewById(R.id.status);

@@ -209,18 +209,12 @@ public class ImmunizationRowCard extends LinearLayout {
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
             case EXPIRED:
-                if(ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()){
-                    setBackgroundResource(R.drawable.vaccine_card_background_white);
-                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
-                    StatusTV.setTextColor(context.getResources().getColor(R.color.white));
-                } else {
-                    setBackgroundResource(R.drawable.vaccine_card_background_white);
-                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
-                    StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
-                }
+                setBackgroundResource(R.drawable.vaccine_card_background_white);
+                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(context.getResources().getString(R.string.expired));
+                StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
                 break;
             default:
                 break;
