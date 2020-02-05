@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -17,6 +18,7 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.UndoVaccinationDialogFragmentTestActivity;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -32,10 +34,15 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private AppProperties properties;
+
     @Before
     public void setUp() {
-        CoreLibrary.init(context_);
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        CoreLibrary.init(context_);
+        Mockito.doReturn(properties).when(context_).getAppProperties();
 
         activity = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);
