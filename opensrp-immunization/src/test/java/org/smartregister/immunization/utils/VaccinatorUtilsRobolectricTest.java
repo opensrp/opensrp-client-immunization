@@ -16,6 +16,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.customshadows.ShadowAssetHandler;
 import org.smartregister.immunization.domain.jsonmapping.Vaccine;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.AssetHandler;
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = {Build.VERSION_CODES.O_MR1})
+@Config(sdk = {Build.VERSION_CODES.O_MR1}, shadows = {ShadowAssetHandler.class})
 public class VaccinatorUtilsRobolectricTest {
 
     @Rule
@@ -40,7 +41,7 @@ public class VaccinatorUtilsRobolectricTest {
     public void getVaccineFromVaccineConfigFileShouldReturnSpecialVaccinesAndAddThemToConfigJsonMapping() {
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
-        
+
         Map<String, Object> jsonMap = new HashMap<>();
         Mockito.doReturn(jsonMap).when(immunizationLibrary).getVaccinesConfigJsonMap();
 
