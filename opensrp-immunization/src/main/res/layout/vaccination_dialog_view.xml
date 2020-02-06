@@ -114,7 +114,7 @@
                 android:visibility="gone" />
 
             <com.vijay.jsonwizard.customviews.NumericDatePicker
-                android:id="@+id/earlier_date_picker_earlier"
+                android:id="@+id/earlier_date_picker_numeric"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"

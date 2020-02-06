@@ -491,7 +491,6 @@ public class ServiceDialogFragment extends DialogFragment {
             defaultActions.setVisibility(View.VISIBLE);
 
             final DatePicker earlierDatePicker = defaultActions.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
-            earlierDatePicker.setVisibility(View.VISIBLE);
 
             final Button set = defaultActions.findViewById(R.id.set);
             set.setOnClickListener(new View.OnClickListener() {

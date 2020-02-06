@@ -178,7 +178,6 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
 
         final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
-        earlierDatePicker.setVisibility(View.VISIBLE);
 
         String color = tag.getColor();
         Button status = dialogView.findViewById(R.id.status);

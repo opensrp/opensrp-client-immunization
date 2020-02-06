@@ -230,7 +230,6 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
 
         final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
-        earlierDatePicker.setVisibility(View.VISIBLE);
 
         String color = tags.get(0).getColor();
         Button status = dialogView.findViewById(R.id.status);
