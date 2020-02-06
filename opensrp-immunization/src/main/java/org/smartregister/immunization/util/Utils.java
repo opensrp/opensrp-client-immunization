@@ -14,6 +14,7 @@ import org.smartregister.immunization.domain.GroupVaccineCount;
 import org.smartregister.immunization.domain.jsonmapping.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -85,7 +86,6 @@ public class Utils {
         return "";
     }
 
-    @NonNull
     public static void processVaccineCache(@NonNull android.content.Context context, String category) {
         try {
             if (ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category) == null) {
@@ -113,6 +113,18 @@ public class Utils {
     }
 
     private static void processVaccineGroup(VaccineGroup vaccineGroup, String category) {
+
+        if (vaccineGroup.id.equals("Birth") && category.equals(IMConstants.VACCINE_TYPE.CHILD)) {
+            List<Vaccine> vaccinesList = VaccinatorUtils.getSpecialVaccines(ImmunizationLibrary.getInstance().context().applicationContext());
+
+            for (Vaccine vaccine: vaccinesList) {
+                if (vaccineGroup.vaccines == null) {
+                    vaccineGroup.vaccines = new ArrayList<>();
+                }
+
+                vaccineGroup.vaccines.add(vaccine);
+            }
+        }
 
         for (Vaccine vaccine : vaccineGroup.vaccines) {
 

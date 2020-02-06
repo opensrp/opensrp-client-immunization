@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -87,7 +88,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito
-                .when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
+                .when(ImmunizationLibrary.getInstance().context().commonrepository(ArgumentMatchers.anyString()))
                 .thenReturn(commonRepository);
         VaccinatorUtils.getWasted("", "", "");
         VaccinatorUtils.getWasted("", "", "", "");

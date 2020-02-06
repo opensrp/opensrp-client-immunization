@@ -112,6 +112,8 @@ public class VaccineSchedule {
         }
 
         VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(vaccineName, vaccineCategory);
+
+
         if (vaccine != null) {
             ArrayList<VaccineCondition> conditions = new ArrayList<>();
             if (schedule.conditions != null) {

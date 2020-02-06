@@ -871,13 +871,12 @@ public class VaccinatorUtils {
 
 
     public static List<org.smartregister.immunization.domain.jsonmapping.Vaccine> getVaccineFromVaccineConfigFile(@Nullable android.content.Context context, String vaccines_file) {
-        Map<String, Object> jsonMap = new HashMap<>();
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
 
         if (specialVaccines == null) {
-            specialVaccines = ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, classType, listType);
+            specialVaccines = ImmunizationLibrary.assetJsonToJava(ImmunizationLibrary.getInstance().getVaccinesConfigJsonMap(), context, vaccines_file, classType, listType);
         }
 
         return specialVaccines;
