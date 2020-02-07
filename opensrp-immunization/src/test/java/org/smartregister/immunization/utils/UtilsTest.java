@@ -6,16 +6,20 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineData;
+import org.smartregister.immunization.domain.jsonmapping.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.Utils;
@@ -122,14 +126,23 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testProcessVaccineCacheFunctionsCorrectly() {
 
-        Type listType = new TypeToken<List<VaccineGroup>>() {
-        }.getType();
+        Type listType = new TypeToken<List<VaccineGroup>>() {}.getType();
+        Type vaccineListType = new TypeToken<List<Vaccine>>() {}.getType();
         List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        List<Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, vaccineListType);
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
+        Context context = Mockito.mock(Context.class);
+        android.content.Context androidContext = Mockito.mock(android.content.Context.class);
+
+        Mockito.doReturn(context).when(immunizationLibrary).context();
+        Mockito.doReturn(androidContext).when(context).applicationContext();
+        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(androidContext)).thenReturn(specialVaccines);
+
         PowerMockito.spy(VaccinatorUtils.class);
+        PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(RuntimeEnvironment.application, "child")).thenReturn(vaccines);
         PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(RuntimeEnvironment.application, "child")).thenReturn(vaccines);
 
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
@@ -148,12 +161,12 @@ public class UtilsTest extends BaseUnitTest {
 
         Assert.assertEquals(VaccineRepo.Vaccine.opv0, childVaccineCache.vaccines[0]);
         Assert.assertEquals(VaccineRepo.Vaccine.bcg, childVaccineCache.vaccines[1]);
-        Assert.assertEquals(VaccineRepo.Vaccine.opv1, childVaccineCache.vaccines[2]);
-        Assert.assertEquals(VaccineRepo.Vaccine.penta1, childVaccineCache.vaccines[3]);
+        Assert.assertEquals(VaccineRepo.Vaccine.opv1, childVaccineCache.vaccines[3]);
+        Assert.assertEquals(VaccineRepo.Vaccine.penta1, childVaccineCache.vaccines[4]);
 
-        Assert.assertEquals(VaccineRepo.Vaccine.opv4, childVaccineCache.vaccines[15]);
-        Assert.assertEquals(VaccineRepo.Vaccine.measles2, childVaccineCache.vaccines[16]);
-        Assert.assertEquals(VaccineRepo.Vaccine.mr2, childVaccineCache.vaccines[17]);
+        Assert.assertEquals(VaccineRepo.Vaccine.opv4, childVaccineCache.vaccines[16]);
+        Assert.assertEquals(VaccineRepo.Vaccine.measles2, childVaccineCache.vaccines[17]);
+        Assert.assertEquals(VaccineRepo.Vaccine.mr2, childVaccineCache.vaccines[18]);
 
 
         //Reverse look up map
@@ -168,14 +181,17 @@ public class UtilsTest extends BaseUnitTest {
         Assert.assertEquals("18 Months", childVaccineCache.reverseLookupGroupMap.get("measles2"));
         Assert.assertEquals("18 Months", childVaccineCache.reverseLookupGroupMap.get("mr2"));
 
+        // Special vaccines
+        Assert.assertEquals("Birth", childVaccineCache.reverseLookupGroupMap.get("bcg2"));
+
         //Vaccine Repo list
         Assert.assertNotNull(childVaccineCache.vaccineRepo);
-        Assert.assertTrue(childVaccineCache.vaccineRepo.size() == 18);
+        Assert.assertEquals(19, childVaccineCache.vaccineRepo.size());
 
         Assert.assertEquals(VaccineRepo.Vaccine.opv0, childVaccineCache.vaccineRepo.get(0));
         Assert.assertEquals(VaccineRepo.Vaccine.bcg, childVaccineCache.vaccineRepo.get(1));
-        Assert.assertEquals(VaccineRepo.Vaccine.opv1, childVaccineCache.vaccineRepo.get(2));
-        Assert.assertEquals(VaccineRepo.Vaccine.penta1, childVaccineCache.vaccineRepo.get(3));
+        Assert.assertEquals(VaccineRepo.Vaccine.opv1, childVaccineCache.vaccineRepo.get(3));
+        Assert.assertEquals(VaccineRepo.Vaccine.penta1, childVaccineCache.vaccineRepo.get(4));
 
         //Group vaccine count
         Assert.assertNotNull(childVaccineCache.groupVaccineCountMap);
@@ -185,7 +201,7 @@ public class UtilsTest extends BaseUnitTest {
         Assert.assertTrue(childVaccineCache.groupVaccineCountMap.containsKey("10 Weeks"));
 
 
-        Assert.assertEquals(2,childVaccineCache.groupVaccineCountMap.get("Birth").getRemaining());
+        Assert.assertEquals(3,childVaccineCache.groupVaccineCountMap.get("Birth").getRemaining());
         Assert.assertEquals(4,childVaccineCache.groupVaccineCountMap.get("6 Weeks").getRemaining());
         Assert.assertEquals(3,childVaccineCache.groupVaccineCountMap.get("14 Weeks").getRemaining());
     }
