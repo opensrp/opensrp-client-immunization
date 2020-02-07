@@ -401,4 +401,5 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertEquals("client-version", jsonObject.getString(AllConstants.VERSION_PARAM));
         Assert.assertEquals(SyncStatus.PENDING.value(), jsonObject.getString(AllConstants.SYNC_STATUS));
     }
+
 }
