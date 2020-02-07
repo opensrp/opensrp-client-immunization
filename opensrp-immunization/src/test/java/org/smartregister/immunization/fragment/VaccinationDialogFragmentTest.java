@@ -24,6 +24,7 @@ import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
+import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ import java.util.Date;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config (shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class VaccinationDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationDialogFragmentTestActivity> controller;
@@ -43,16 +44,21 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private AppProperties properties;
+
     @Before
     public void setUp() {
-        CoreLibrary.init(context_);
+
         org.mockito.MockitoAnnotations.initMocks(this);
+        CoreLibrary.init(context_);
+
+        Mockito.doReturn(properties).when(context_).getAppProperties();
 
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
 
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
-
 
         activity = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);

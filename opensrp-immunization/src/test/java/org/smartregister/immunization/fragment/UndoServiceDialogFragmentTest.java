@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -20,11 +21,12 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.UndoServiceDialogFragmentTestActivity;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config (shadows = {FontTextViewShadow.class})
+@Config(shadows = {FontTextViewShadow.class})
 public class UndoServiceDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<UndoServiceDialogFragmentTestActivity> controller;
@@ -35,10 +37,16 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private AppProperties properties;
+
     @Before
     public void setUp() {
-        CoreLibrary.init(context_);
+
         org.mockito.MockitoAnnotations.initMocks(this);
+        CoreLibrary.init(context_);
+
+        Mockito.doReturn(properties).when(context_).getAppProperties();
 
         activity = Robolectric.buildActivity(UndoServiceDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);

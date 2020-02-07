@@ -128,6 +128,14 @@
                 android:descendantFocusability="blocksDescendants"
                 android:visibility="gone" />
 
+            <com.vijay.jsonwizard.customviews.NumericDatePicker
+                android:id="@+id/earlier_date_picker_numeric"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/date_picker_height"
+                android:calendarViewShown="false"
+                android:descendantFocusability="blocksDescendants"
+                android:visibility="gone" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"

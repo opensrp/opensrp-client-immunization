@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.utils.NativeFormsProperties;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.domain.AlertStatus;
@@ -56,6 +58,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     private Calendar dcToday;
     private Integer defaultImageResourceID;
     private Integer defaultErrorImageResourceID;
+    private boolean isNumericDatePicker = Utils.isPropertyTrue(NativeFormsProperties.KEY.WIDGET_DATEPICKER_IS_NUMERIC);
 
     private VaccinationEditDialogFragment(
             Context context, Date dateOfBirth,
@@ -226,7 +229,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         }
 
-        final DatePicker earlierDatePicker = dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
 
         String color = tags.get(0).getColor();
         Button status = dialogView.findViewById(R.id.status);

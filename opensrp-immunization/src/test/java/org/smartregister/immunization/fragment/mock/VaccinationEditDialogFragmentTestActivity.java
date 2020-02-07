@@ -88,7 +88,7 @@ public class VaccinationEditDialogFragmentTestActivity extends FragmentActivity 
         issuedVaccines.add(vaccine);
 
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
-        //        vaccineWrapper.setId(VaccineWrapperTest.ID);
+        //  vaccineWrapper.setId(VaccineWrapperTest.ID);
         vaccineWrapper.setId(null);
         vaccineWrapper.setDbKey(0l);
         vaccineWrapper.setStatus(VaccineWrapperTest.STATUS);
@@ -111,6 +111,33 @@ public class VaccinationEditDialogFragmentTestActivity extends FragmentActivity 
         vaccineWrapper.setSynced(true);
 
         ArrayList<VaccineWrapper> taglist = new ArrayList<VaccineWrapper>();
+        taglist.add(vaccineWrapper);
+
+
+        vaccineWrapper = new VaccineWrapper();
+        // vaccineWrapper.setId(VaccineWrapperTest.ID);
+        vaccineWrapper.setId(null);
+        vaccineWrapper.setDbKey(0l);
+        vaccineWrapper.setStatus(VaccineWrapperTest.STATUS);
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.bcg);
+        vaccineWrapper.setVaccineDate(datetime);
+        vaccineWrapper.setAlert(alert);
+        vaccineWrapper.setName(VaccineWrapperTest.NAME);
+        vaccineWrapper.setPreviousVaccine(VaccineWrapperTest.ID);
+        vaccineWrapper.setCompact(true);
+        vaccineWrapper.setColor(VaccineWrapperTest.COLOR);
+        vaccineWrapper.setFormattedVaccineDate(VaccineWrapperTest.DD_MM_YYYY);
+        vaccineWrapper.setExistingAge(VaccineWrapperTest.AGE);
+        vaccineWrapper.setPatientName(VaccineWrapperTest.PATIENTNAME);
+        vaccineWrapper.setUpdatedVaccineDate(datetime, true);
+        vaccineWrapper.setPatientNumber(VaccineWrapperTest.NUMBER);
+        photo = Mockito.mock(Photo.class);
+        vaccineWrapper.setPhoto(photo);
+        vaccineWrapper.setGender(VaccineWrapperTest.GENDER);
+        vaccineWrapper.setDefaultName(VaccineWrapperTest.DEFAULTNAME);
+        vaccineWrapper.setSynced(true);
+
+
         taglist.add(vaccineWrapper);
 
         //        VaccinationDialogFragment fragment = VaccinationDialogFragment.newInstance(new java.util.Date(), issuedVaccines, taglist);

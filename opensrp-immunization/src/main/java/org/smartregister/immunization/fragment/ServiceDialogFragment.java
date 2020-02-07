@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.vijay.jsonwizard.utils.DatePickerUtils;
+import com.vijay.jsonwizard.utils.NativeFormsProperties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -35,6 +35,7 @@ import org.smartregister.immunization.service.intent.RecurringIntentService;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -42,7 +43,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class ServiceDialogFragment extends DialogFragment {
     public static final String DIALOG_TAG = "ServiceDialogFragment";
     public static final String WRAPPER_TAG = "tag";
@@ -53,6 +54,7 @@ public class ServiceDialogFragment extends DialogFragment {
     private boolean disableConstraints;
     private DateTime dcToday;
     private DialogInterface.OnDismissListener onDismissListener;
+    private boolean isNumericDatePicker = Utils.isPropertyTrue(NativeFormsProperties.KEY.WIDGET_DATEPICKER_IS_NUMERIC);
 
     public static ServiceDialogFragment newInstance(
             List<ServiceRecord> issuedServices,
@@ -105,14 +107,10 @@ public class ServiceDialogFragment extends DialogFragment {
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param givenToday
-     *         The 'Given done today' button
-     * @param givenEarlier
-     *         The 'Given earlier' button
-     * @param set
-     *         The 'Set' Button
-     * @param earlierDatePicker
-     *         Date picker for selecting a previous date for a vaccine
+     * @param givenToday        The 'Given done today' button
+     * @param givenEarlier      The 'Given earlier' button
+     * @param set               The 'Set' Button
+     * @param earlierDatePicker Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(Button givenToday, Button givenEarlier, Button set, DatePicker earlierDatePicker) {
         if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {
@@ -151,7 +149,7 @@ public class ServiceDialogFragment extends DialogFragment {
                 earlierDatePicker.setVisibility(View.VISIBLE);
                 set.setVisibility(View.VISIBLE);
 
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
             }
 
             earlierDatePicker.setMinDate(minDate.getMillis());
@@ -169,8 +167,7 @@ public class ServiceDialogFragment extends DialogFragment {
     /**
      * This method updates the allowed date ranges in the views
      *
-     * @param datePicker
-     *         Date picker for selecting a previous date for a vaccine
+     * @param datePicker Date picker for selecting a previous date for a vaccine
      */
     private void updateDateRanges(DatePicker datePicker, Button set) {
         if (tag == null || tag.getDob() == null || tag.getServiceType() == null || issuedServices == null) {
@@ -415,7 +412,7 @@ public class ServiceDialogFragment extends DialogFragment {
 
             // step 2
             final DatePicker itnDatePicker = step2.findViewById(R.id.itn_date_picker);
-            DatePickerUtils.themeDatePicker(itnDatePicker, new char[] {'d', 'm', 'y'});
+            DatePickerUtils.themeDatePicker(itnDatePicker, new char[]{'d', 'm', 'y'});
 
             Button recordItn = step2.findViewById(R.id.record_itn);
             recordItn.setOnClickListener(new View.OnClickListener() {
@@ -493,7 +490,7 @@ public class ServiceDialogFragment extends DialogFragment {
         } else {
             defaultActions.setVisibility(View.VISIBLE);
 
-            final DatePicker earlierDatePicker = defaultActions.findViewById(R.id.earlier_date_picker);
+            final DatePicker earlierDatePicker = defaultActions.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
 
             final Button set = defaultActions.findViewById(R.id.set);
             set.setOnClickListener(new View.OnClickListener() {
@@ -542,7 +539,7 @@ public class ServiceDialogFragment extends DialogFragment {
                     earlierDatePicker.setVisibility(View.VISIBLE);
                     set.setVisibility(View.VISIBLE);
 
-                    DatePickerUtils.themeDatePicker(earlierDatePicker, new char[] {'d', 'm', 'y'});
+                    DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
                 }
             });
 

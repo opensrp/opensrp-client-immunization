@@ -40,8 +40,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -100,13 +100,20 @@
                 android:descendantFocusability="blocksDescendants"
                 android:visibility="gone" />
 
+            <com.vijay.jsonwizard.customviews.NumericDatePicker
+                android:id="@+id/earlier_date_picker_numeric"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:descendantFocusability="blocksDescendants"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:gravity="center"
                 android:layout_weight="2"
+                android:gravity="center"
                 android:orientation="horizontal">
 
 
@@ -115,8 +122,8 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cancel"
                     android:layout_weight="1"
+                    android:text="@string/cancel"
                     android:textAllCaps="false"
                     android:textColor="@color/silver"
                     android:textSize="17sp" />
@@ -126,8 +133,8 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/set"
                     android:layout_weight="1"
+                    android:text="@string/set"
                     android:textAllCaps="false"
                     android:textColor="@color/silver"
                     android:textSize="17sp"

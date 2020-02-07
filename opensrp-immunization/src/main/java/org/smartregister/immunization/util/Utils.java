@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.GroupVaccineCount;
@@ -181,5 +182,13 @@ public class Utils {
 
             ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).groupVaccineCountMap.put(repoGroup, groupVaccineCount);
         }
+    }
+
+    /**
+     * Returns boolean for boolean values configured in the app.properties file
+     * **/
+    public static boolean isPropertyTrue(String key) {
+
+        return CoreLibrary.getInstance().context().getAppProperties().hasProperty(key) && CoreLibrary.getInstance().context().getAppProperties().getPropertyBoolean(key);
     }
 }

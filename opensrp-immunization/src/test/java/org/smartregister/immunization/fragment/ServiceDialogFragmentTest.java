@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -21,13 +22,14 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.ServiceDialogFragmentTestActivity;
+import org.smartregister.util.AppProperties;
 
 import java.util.Collections;
 
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config (shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 public class ServiceDialogFragmentTest extends BaseUnitTest {
     private ActivityController<ServiceDialogFragmentTestActivity> controller;
 
@@ -37,10 +39,16 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private AppProperties properties;
+
     @Before
     public void setUp() {
-        CoreLibrary.init(context_);
+
         org.mockito.MockitoAnnotations.initMocks(this);
+        CoreLibrary.init(context_);
+
+        Mockito.doReturn(properties).when(context_).getAppProperties();
 
         activity = Robolectric.buildActivity(ServiceDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);

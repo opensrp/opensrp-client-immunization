@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
+        classpath 'org.apache.commons:commons-lang3:3.7'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
@@ -76,20 +77,24 @@ android {
             includeAndroidResources = true
         }
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
 
-    implementation('org.smartregister:opensrp-client-core:1.8.16-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.8.25-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.7.0-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.7.16-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-
 
     implementation('com.android.support:design:28.0.0') {
         exclude group: 'com.android.support'

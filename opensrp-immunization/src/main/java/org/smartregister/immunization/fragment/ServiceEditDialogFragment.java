@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.utils.NativeFormsProperties;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.immunization.R;
@@ -49,6 +51,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
     private DateTime dateOfBirth;
     private boolean disableConstraints;
     private DateTime dcToday;
+    private boolean isNumericDatePicker = Utils.isPropertyTrue(NativeFormsProperties.KEY.WIDGET_DATEPICKER_IS_NUMERIC);
 
     private ServiceEditDialogFragment(List<ServiceRecord> issuedServices, ServiceWrapper tag, View viewGroup) {
         this.issuedServices = issuedServices;
@@ -174,7 +177,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
             }
         }
 
-        final DatePicker earlierDatePicker = dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
 
         String color = tag.getColor();
         Button status = dialogView.findViewById(R.id.status);

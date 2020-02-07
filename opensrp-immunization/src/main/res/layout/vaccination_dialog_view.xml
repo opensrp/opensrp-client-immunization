@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:gravity="center_horizontal"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -34,12 +34,12 @@
                 style="@style/CustomFontTextViewStyle.ClientList.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/name_margin_top"
                 android:paddingStart="0dp"
                 android:text="@string/vaccine_name"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/name_view_text_size"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="@dimen/name_view_text_size" />
 
 
             <org.smartregister.view.customcontrols.CustomFontTextView
@@ -47,41 +47,41 @@
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:paddingStart="0dp"
                 android:text="@string/vaccine_number"
                 android:textColor="@color/client_list_grey"
-                android:textSize="@dimen/number_view_text_size"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="@dimen/number_view_text_size" />
 
             <View
                 android:id="@+id/break_point"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/break_point_margin_top"
-                android:background="@color/client_list_header_dark_grey"
-                android:layout_gravity="center_horizontal" />
+                android:background="@color/client_list_header_dark_grey" />
 
             <LinearLayout
                 android:id="@+id/vaccination_name_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/vaccination_name_layout_bottom_margin"
-                android:layout_marginTop="@dimen/vaccination_name_layout_top_margin"
-                android:orientation="vertical"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal" />
+                android:layout_marginTop="@dimen/vaccination_name_layout_top_margin"
+                android:layout_marginBottom="@dimen/vaccination_name_layout_bottom_margin"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" />
 
             <Button
                 android:id="@+id/vaccinate_today"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/btn_margin_bottom"
                 android:layout_marginStart="@dimen/btn_margin_left"
                 android:layout_marginEnd="@dimen/btn_margin_right"
+                android:layout_marginBottom="@dimen/btn_margin_bottom"
                 android:background="@drawable/vaccination_today_bg"
-                android:paddingBottom="@dimen/btn_padding_bottom"
                 android:paddingTop="@dimen/btn_padding_top"
+                android:paddingBottom="@dimen/btn_padding_bottom"
                 android:text="@string/vaccine_done_today"
                 android:textAllCaps="false"
                 android:textAppearance="?android:textAppearanceSmall"
@@ -93,12 +93,12 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/btn_margin_bottom"
                 android:layout_marginStart="@dimen/btn_margin_left"
                 android:layout_marginEnd="@dimen/btn_margin_right"
+                android:layout_marginBottom="@dimen/btn_margin_bottom"
                 android:background="@drawable/vaccination_earlier_bg"
-                android:paddingBottom="@dimen/btn_padding_bottom"
                 android:paddingTop="@dimen/btn_padding_top"
+                android:paddingBottom="@dimen/btn_padding_bottom"
                 android:text="@string/vaccine_done_earlier"
                 android:textAllCaps="false"
                 android:textAppearance="?android:textAppearanceSmall"
@@ -113,14 +113,22 @@
                 android:descendantFocusability="blocksDescendants"
                 android:visibility="gone" />
 
+            <com.vijay.jsonwizard.customviews.NumericDatePicker
+                android:id="@+id/earlier_date_picker_numeric"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:descendantFocusability="blocksDescendants"
+                android:visibility="gone" />
+
             <LinearLayout
+                android:id="@+id/vaccination_action_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/vaccination_action_linear_layout_bottom_margin"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:id="@+id/vaccination_action_linear_layout">
+                android:orientation="horizontal">
 
 
                 <Button
@@ -128,11 +136,11 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/btn_margin_left"
                     android:layout_marginEnd="@dimen/btn_margin_right"
-                    android:paddingBottom="@dimen/btn_padding_bottom"
+                    android:layout_weight="1"
                     android:paddingTop="@dimen/btn_padding_top"
+                    android:paddingBottom="@dimen/btn_padding_bottom"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
                     android:textAppearance="?android:textAppearanceSmall"
@@ -144,11 +152,11 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="@dimen/btn_padding_bottom"
-                    android:paddingTop="@dimen/btn_padding_top"
                     android:layout_marginStart="@dimen/btn_margin_left"
                     android:layout_marginEnd="@dimen/btn_margin_right"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/btn_padding_top"
+                    android:paddingBottom="@dimen/btn_padding_bottom"
                     android:text="@string/set"
                     android:textAllCaps="false"
                     android:textAppearance="?android:textAppearanceSmall"

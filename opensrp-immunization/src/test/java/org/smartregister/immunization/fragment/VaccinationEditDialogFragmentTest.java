@@ -31,6 +31,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.reflect.Type;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config (shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
 @PrepareForTest({ImmunizationLibrary.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
@@ -62,10 +63,15 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Rule
     public PowerMockRule rule = new PowerMockRule();
 
+    @Mock
+    private AppProperties properties;
+
     @Before
     public void setUp() {
-        CoreLibrary.init(context_);
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        CoreLibrary.init(context_);
+        Mockito.doReturn(properties).when(context_).getAppProperties();
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
