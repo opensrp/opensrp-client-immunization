@@ -46,6 +46,7 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.util.SampleUtil;
 import org.smartregister.immunization.service.intent.RecurringIntentService;
 import org.smartregister.immunization.service.intent.VaccineIntentService;
+import org.smartregister.immunization.util.IMDatabaseConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
@@ -672,7 +673,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         @Override
         protected Map<String, NamedObject<?>> doInBackground(Void... voids) {
-            String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+            String dobString = Utils.getValue(childDetails.getColumnmaps(), IMDatabaseConstants.Client.DOB, false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
                 VaccineSchedule.updateOfflineAlerts(childDetails.entityId(), dateTime, "child");

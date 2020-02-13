@@ -8,7 +8,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.domain.VaccineType;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
 import java.util.ArrayList;

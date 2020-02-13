@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
-import org.smartregister.repository.Repository;
 
 import java.text.ParseException;
 import java.util.ArrayList;
