@@ -22,4 +22,18 @@ public class IMConstants {
         public static final String WOMAN = "woman";
     }
 
+    public interface BroadcastAction {
+
+        interface VaccineScheduleUpdate {
+            String SERVICE_STARTED = "vaccine-schedule-update-intent-service-started";
+            String SERVICE_FINISHED = "vaccine-schedule-update-intent-service-finished";
+        }
+    }
+
+    public interface IntentKey {
+        interface VaccineScheduleUpdateIntentService {
+            String CLIENT_TABLE_NAME = "client-table-name";
+        }
+    }
+
 }
