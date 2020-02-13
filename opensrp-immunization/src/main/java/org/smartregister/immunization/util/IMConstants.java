@@ -36,4 +36,8 @@ public class IMConstants {
         }
     }
 
+    public interface Preference {
+        String VACCINE_SCHEDULE_UPDATE_LAST_TIME_RUN = "vaccine-schedule-update-last-time-run";
+    }
+
 }

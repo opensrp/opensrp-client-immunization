@@ -17,6 +17,7 @@ import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseConstants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,6 +61,7 @@ public class VaccineSchedulesUpdateIntentService extends IntentService {
                 ServiceSchedule.updateOfflineAlerts(vaccinationClient.getBaseEntityId(), vaccinationClient.getBirthDateTime());
             }
 
+            i++;
         } while(!vaccinationClients.isEmpty());
 
         Timber.i("%s has finished running successfully", serviceName);
@@ -68,16 +70,16 @@ public class VaccineSchedulesUpdateIntentService extends IntentService {
 
     @NonNull
     protected ArrayList<VaccinationClient> getClients(@NonNull String tableName, int batchSize, int page) {
-        String sql = String.format(Locale.ENGLISH, "SELECT %s, %s FROM %s LIMIT %d, %d", IMDatabaseConstants.Client.ID, IMDatabaseConstants.Client.DOB, tableName, batchSize, (page * batchSize));
+        String sql = String.format(Locale.ENGLISH, "SELECT %s, %s FROM %s LIMIT %d, %d", IMDatabaseConstants.Client.ID, IMDatabaseConstants.Client.DOB, tableName, (page * batchSize), batchSize);
 
-        List<CommonPersonObject> personClients = CoreLibrary.getInstance().context().commonrepository(tableName)
-                .customQuery(sql, new String[]{}, tableName);
+        ArrayList<HashMap<String, String>> personClients = CoreLibrary.getInstance().context().commonrepository(tableName)
+                .rawQuery(sql, new String[]{});
 
         ArrayList<VaccinationClient> vaccinationClients = new ArrayList<>();
-        for (CommonPersonObject commonPersonObject: personClients) {
+        for (HashMap<String, String> columnMaps: personClients) {
             VaccinationClient vaccinationClient = new VaccinationClient();
-            vaccinationClient.setBaseEntityId(commonPersonObject.getColumnmaps().get(IMDatabaseConstants.Client.ID));
-            String dobString = commonPersonObject.getColumnmaps().get(IMDatabaseConstants.Client.DOB);
+            vaccinationClient.setBaseEntityId(columnMaps.get(IMDatabaseConstants.Client.ID));
+            String dobString = columnMaps.get(IMDatabaseConstants.Client.DOB);
 
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dob = new DateTime(dobString);
