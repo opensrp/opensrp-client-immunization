@@ -134,4 +134,19 @@ public class ServiceScheduleTest extends BaseUnitTest {
         Assert.assertNotNull(new ServiceSchedule(null, null));
     }
 
+    @Test
+    public void isServiceIssuedShouldReturnTrueWhenServiceIsWithinServiceRecords() {
+        ArrayList<ServiceRecord> serviceRecords = new ArrayList<>();
+
+        String[] vaccines = new String[]{"bcg2", "opv1", "opv2", "ipv", "penta"};
+
+        for (int i = 0; i < 4; i++) {
+            ServiceRecord dummyServiceRecord = new ServiceRecord();
+            dummyServiceRecord.setName(vaccines[i]);
+            serviceRecords.add(dummyServiceRecord);
+        }
+
+        Assert.assertTrue(ServiceSchedule.isServiceIssued("bcg2", serviceRecords));
+    }
+
 }
