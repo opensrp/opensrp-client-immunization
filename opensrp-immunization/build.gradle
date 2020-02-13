@@ -32,7 +32,7 @@ android {
     compileSdkVersion androidCompileSdkVersion
     buildToolsVersion androidBuildToolsVersion
 
-    defaultPublishConfig !isReleaseBuild() ? "debug" : "release"
+    //defaultPublishConfig !isReleaseBuild() ? "debug" : "release"
 
     defaultConfig {
         minSdkVersion androidMinSdkVersion
@@ -154,4 +154,4 @@ coveralls {
 }
 
 
-apply from: '../maven.gradle'
+//apply from: '../maven.gradle'
