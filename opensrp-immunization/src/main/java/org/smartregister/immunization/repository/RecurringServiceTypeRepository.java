@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.Calendar;

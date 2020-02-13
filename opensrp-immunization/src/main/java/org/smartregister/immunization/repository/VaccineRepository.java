@@ -14,7 +14,6 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
-import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 
 import java.text.ParseException;
