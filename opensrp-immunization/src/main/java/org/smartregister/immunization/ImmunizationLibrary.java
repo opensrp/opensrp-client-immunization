@@ -172,4 +172,9 @@ public class ImmunizationLibrary {
     public static Map<String, VaccineCache> getVaccineCacheMap() {
         return vaccineCacheMap;
     }
+
+    public boolean isExpiredVaccineCardRed() {
+        return getProperties().hasProperty(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
+    }
+
 }
