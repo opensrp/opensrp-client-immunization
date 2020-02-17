@@ -203,6 +203,15 @@ This behaviour can be altered via the setting below in your implementation's _ap
 ```
 vaccine.expired.entry.allow=true
 ```
+## Expired vaccine card color
+
+The current default color for expired vaccine when back-data entry is enabled is white. However, this is not intuitive and therefore we provide an option to show the expired vaccines as RED only when vaccine back-data entry is enabled.
+
+```
+vaccine.expired.red=true
+```
+
+### Vaccine Group
 
 ## Gotcha's when using the library
 
