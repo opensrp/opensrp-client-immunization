@@ -48,7 +48,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "int", "VACCINE_SYNC_TIME", '12'
+            buildConfigField "int", "VACCINE_SYNC_TIME", '0'
         }
 
         debug {
