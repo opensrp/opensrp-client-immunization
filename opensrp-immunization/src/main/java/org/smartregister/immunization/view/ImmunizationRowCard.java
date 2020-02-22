@@ -179,7 +179,7 @@ public class ImmunizationRowCard extends LinearLayout {
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !statusForMoreThanThreeMonths) {
+                if (editmode && !statusForMoreThanThreeMonths && !vaccineWrapper.isSynced()) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -191,7 +191,7 @@ public class ImmunizationRowCard extends LinearLayout {
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !statusForMoreThanThreeMonths) {
+                if (editmode && !statusForMoreThanThreeMonths && !vaccineWrapper.isSynced()) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
