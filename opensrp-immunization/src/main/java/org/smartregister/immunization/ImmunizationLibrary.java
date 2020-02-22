@@ -191,11 +191,11 @@ public class ImmunizationLibrary {
     }
 
     public void setVaccineSyncTime(int vaccineSyncTime) {
-        setGrowthMonitoringSyncTime(vaccineSyncTime, TimeUnit.HOURS);
+        setVaccineSyncTime(vaccineSyncTime, TimeUnit.HOURS);
     }
 
-    public void setGrowthMonitoringSyncTime(int growthMonitoringSyncTime, @NonNull TimeUnit timeUnit) {
-        this.vaccineSyncTime = timeUnit.toMinutes(growthMonitoringSyncTime);
+    public void setVaccineSyncTime(int vaccineSyncTime, @NonNull TimeUnit timeUnit) {
+        this.vaccineSyncTime = timeUnit.toMinutes(vaccineSyncTime);
     }
 
 }
