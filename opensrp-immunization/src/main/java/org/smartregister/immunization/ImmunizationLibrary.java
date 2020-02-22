@@ -1,5 +1,7 @@
 package org.smartregister.immunization;
 
+import android.support.annotation.NonNull;
+
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.db.VaccineRepo;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by keyman on 31/07/17.
@@ -46,6 +49,8 @@ public class ImmunizationLibrary {
 
     public static List<String> COMBINED_VACCINES = new ArrayList<>();
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
+
+    private long vaccineSyncTime = -1;
 
     private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         this.repository = repository;
@@ -175,6 +180,22 @@ public class ImmunizationLibrary {
 
     public boolean isExpiredVaccineCardRed() {
         return getProperties().hasProperty(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
+    }
+
+    public long getVaccineSyncTime() {
+        if (vaccineSyncTime == -1) {
+            setVaccineSyncTime(BuildConfig.VACCINE_SYNC_TIME);
+        }
+
+        return vaccineSyncTime;
+    }
+
+    public void setVaccineSyncTime(int vaccineSyncTime) {
+        setGrowthMonitoringSyncTime(vaccineSyncTime, TimeUnit.HOURS);
+    }
+
+    public void setGrowthMonitoringSyncTime(int growthMonitoringSyncTime, @NonNull TimeUnit timeUnit) {
+        this.vaccineSyncTime = timeUnit.toMinutes(growthMonitoringSyncTime);
     }
 
 }

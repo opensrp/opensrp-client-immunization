@@ -67,7 +67,7 @@ public class RecurringIntentService extends IntentService {
 
         try {
             List<ServiceRecord> serviceRecordList = recurringServiceRecordRepository
-                    .findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME);
+                    .findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
             if (!serviceRecordList.isEmpty()) {
                 for (ServiceRecord serviceRecord : serviceRecordList) {
 

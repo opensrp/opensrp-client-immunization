@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import org.joda.time.DateTime;
 import org.smartregister.CoreLibrary;
-import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.VaccinationClient;
 import org.smartregister.immunization.domain.VaccineSchedule;
@@ -18,7 +17,6 @@ import org.smartregister.immunization.util.IMDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import timber.log.Timber;
