@@ -96,7 +96,7 @@ public class VaccineIntentService extends IntentService {
         String concept = "concept";
 
         try {
-            List<Vaccine> vaccines = vaccineRepository.findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME);
+            List<Vaccine> vaccines = vaccineRepository.findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
             if (!vaccines.isEmpty()) {
                 for (Vaccine vaccine : vaccines) {
 

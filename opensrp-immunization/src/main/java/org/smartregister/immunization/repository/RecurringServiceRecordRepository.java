@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class RecurringServiceRecordRepository extends BaseRepository {
     public static final String TABLE_NAME = "recurring_service_records";
     public static final String ID_COLUMN = "_id";
@@ -268,12 +270,12 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         return s;
     }
 
-    public List<ServiceRecord> findUnSyncedBeforeTime(int hours) {
+    public List<ServiceRecord> findUnSyncedBeforeTime(int minutes) {
         List<ServiceRecord> serviceRecords = new ArrayList<>();
         Cursor cursor = null;
         try {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR_OF_DAY, -hours);
+            calendar.add(Calendar.MINUTE, -minutes);
 
             Long time = calendar.getTimeInMillis();
 
@@ -282,7 +284,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                             new String[] {time.toString(), TYPE_Unsynced}, null, null, null, null);
             serviceRecords = readAllServiceRecords(cursor);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();

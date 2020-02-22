@@ -22,6 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class VaccineRepository extends BaseRepository {
     public static final String VACCINE_TABLE_NAME = "vaccines";
     public static final String ID_COLUMN = "_id";
@@ -192,12 +194,12 @@ public class VaccineRepository extends BaseRepository {
         return s;
     }
 
-    public List<Vaccine> findUnSyncedBeforeTime(int hours) {
+    public List<Vaccine> findUnSyncedBeforeTime(int minutes) {
         List<Vaccine> vaccines = new ArrayList<>();
         Cursor cursor = null;
         try {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR_OF_DAY, -hours);
+            calendar.add(Calendar.MINUTE, -minutes);
 
             Long time = calendar.getTimeInMillis();
 
@@ -206,7 +208,7 @@ public class VaccineRepository extends BaseRepository {
                     null, null, null, null);
             vaccines = readAllVaccines(cursor);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
