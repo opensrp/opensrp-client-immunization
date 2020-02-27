@@ -71,7 +71,7 @@ public class ImmunizationRowCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ImmunizationRowCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
@@ -168,6 +168,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
+
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
@@ -176,6 +177,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
+
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
@@ -188,6 +190,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
                 break;
+
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
@@ -200,6 +203,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
                 break;
+
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
@@ -208,8 +212,9 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
+
             case EXPIRED:
-                if(ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry() && ImmunizationLibrary.getInstance().isExpiredVaccineCardRed()){
+                if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry() && ImmunizationLibrary.getInstance().isExpiredVaccineCardRed()) {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
                     StatusTV.setTextColor(context.getResources().getColor(R.color.white));
                 } else {
@@ -218,11 +223,11 @@ public class ImmunizationRowCard extends LinearLayout {
                 }
 
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(context.getResources().getString(R.string.expired));
                 break;
+
             default:
                 break;
         }
