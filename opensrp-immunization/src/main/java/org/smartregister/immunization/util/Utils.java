@@ -114,6 +114,7 @@ public class Utils {
 
     private static void processVaccineGroup(VaccineGroup vaccineGroup, String category) {
 
+        // Add BCG 2 and other special vaccines to the birth group
         if (vaccineGroup.id.equals("Birth") && category.equals(IMConstants.VACCINE_TYPE.CHILD)) {
             List<Vaccine> vaccinesList = VaccinatorUtils.getSpecialVaccines(ImmunizationLibrary.getInstance().context().applicationContext());
 
