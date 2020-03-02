@@ -1,6 +1,5 @@
 package org.smartregister.immunization.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 

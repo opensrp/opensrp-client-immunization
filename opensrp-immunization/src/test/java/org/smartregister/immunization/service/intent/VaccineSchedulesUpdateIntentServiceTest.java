@@ -15,8 +15,6 @@ import org.smartregister.immunization.util.IMConstants;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Ephraim Kigamba - ekigamba@ona.io on 2020-02-13
  */
