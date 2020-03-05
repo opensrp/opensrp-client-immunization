@@ -17,7 +17,7 @@ import org.smartregister.immunization.R;
 /**
  * Created by Ephraim Kigamba - ekigamba@ona.io on 04/04/2018.
  */
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class ActivateChildStatusDialogFragment extends DialogFragment {
 
     private String thirdPersonPronoun = "";
@@ -62,6 +62,7 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
 
         View inflatedView = getActivity().getLayoutInflater()
                 .inflate(R.layout.dialog_fragment_activate_child_status, container, false);
+        inflatedView.setFilterTouchesWhenObscured(true);
         ((TextView) inflatedView.findViewById(R.id.tv_dialog_activate_child_title))
                 .setText(dialogTitle);
 

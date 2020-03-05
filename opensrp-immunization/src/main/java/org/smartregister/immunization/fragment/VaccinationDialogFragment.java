@@ -190,6 +190,7 @@ public class VaccinationDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
+        dialogView.setFilterTouchesWhenObscured(true);
         TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tags.get(0).getPatientName());
         TextView numberView = dialogView.findViewById(R.id.number);

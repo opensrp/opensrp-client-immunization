@@ -61,7 +61,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     private void init(Context context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_immunization_row_group, this, true);
+        layoutInflater.inflate(R.layout.view_immunization_row_group, this, true).setFilterTouchesWhenObscured(true);;
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);

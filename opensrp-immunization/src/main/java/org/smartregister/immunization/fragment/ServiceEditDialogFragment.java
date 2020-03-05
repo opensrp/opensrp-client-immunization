@@ -149,6 +149,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_edit_dialog_view, container, false);
+        dialogView.setFilterTouchesWhenObscured(true);
         TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
         TextView numberView = dialogView.findViewById(R.id.number);

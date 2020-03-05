@@ -47,7 +47,7 @@ public class ServiceRowCard extends LinearLayout {
     private void init(Context context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
+        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true).setFilterTouchesWhenObscured(true);;
         statusIV = findViewById(R.id.status_iv);
         StatusTV = findViewById(R.id.status_text_tv);
         nameTV = findViewById(R.id.name_tv);

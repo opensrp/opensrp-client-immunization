@@ -66,7 +66,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private void init(Context context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_vaccine_group, this, true);
+        layoutInflater.inflate(R.layout.view_vaccine_group, this, true).setFilterTouchesWhenObscured(true);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
@@ -78,6 +78,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         vaccinesGV.setExpanded(true);
         recordAllTV = findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
+
     }
 
     public VaccineGroup(Context context, AttributeSet attrs) {
