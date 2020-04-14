@@ -63,7 +63,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     private void init(Context context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_service_group, this, true).setFilterTouchesWhenObscured(true);;
+        layoutInflater.inflate(R.layout.view_service_group, this, true).setFilterTouchesWhenObscured(true);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);

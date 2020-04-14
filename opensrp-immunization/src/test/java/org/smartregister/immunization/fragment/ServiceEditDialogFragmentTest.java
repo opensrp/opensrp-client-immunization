@@ -1,6 +1,7 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
@@ -27,6 +28,7 @@ import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingSer
 import org.smartregister.util.AppProperties;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -95,5 +97,21 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         activity = controller.get();
         controller.setup();
         junit.framework.Assert.assertNotNull(activity);
+    }
+
+    @Test
+    public void testSetFilterTouchesWhenObscuredSetsFlagToTrue() {
+
+        List<Fragment> fragmentList = activity.getSupportFragmentManager().getFragments();
+
+        Assert.assertNotNull(fragmentList);
+        Assert.assertTrue(fragmentList.size() > 0);
+
+        ServiceEditDialogFragment fragment = (ServiceEditDialogFragment) fragmentList.get(0);
+        Assert.assertNotNull(fragment);
+
+        boolean isEnabled = fragment.getView().getFilterTouchesWhenObscured();
+        Assert.assertTrue(isEnabled);
+
     }
 }

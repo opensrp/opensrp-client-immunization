@@ -1,11 +1,11 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import junit.framework.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +22,8 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.UndoServiceDialogFragmentTestActivity;
 import org.smartregister.util.AppProperties;
+
+import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -85,5 +87,21 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
         activity = controller.get();
         controller.setup();
         Assert.assertNotNull(activity);
+    }
+
+    @Test
+    public void testSetFilterTouchesWhenObscuredSetsFlagToTrue() {
+
+        List<Fragment> fragmentList = activity.getSupportFragmentManager().getFragments();
+
+        Assert.assertNotNull(fragmentList);
+        Assert.assertTrue(fragmentList.size() > 0);
+
+        UndoServiceDialogFragment fragment = (UndoServiceDialogFragment) fragmentList.get(0);
+        Assert.assertNotNull(fragment);
+
+        boolean isEnabled = fragment.getView().getFilterTouchesWhenObscured();
+        Assert.assertTrue(isEnabled);
+
     }
 }

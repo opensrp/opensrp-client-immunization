@@ -56,7 +56,7 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String dialogTitle = String.format(
-                getString(R.string.activate_child_status_dialog_title),
+                getActivity().getString(R.string.activate_child_status_dialog_title),
                 currentStatus,
                 thirdPersonPronoun);
 

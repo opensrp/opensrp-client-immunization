@@ -17,6 +17,7 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.VaccineWrapperTest;
+import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 
 import java.util.ArrayList;
@@ -185,7 +186,7 @@ public class VaccinationDialogFragmentTestActivity extends FragmentActivity impl
     }
 
     private void initializeFragment(List<Vaccine> issuedVaccines, ArrayList<VaccineWrapper> taglist) {
-        VaccinationDialogFragmentMock fragment = VaccinationDialogFragmentMock
+        VaccinationDialogFragment fragment = VaccinationDialogFragment
                 .newInstance(new java.util.Date(), issuedVaccines, taglist);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

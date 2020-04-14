@@ -50,7 +50,7 @@ public class VaccineCard extends LinearLayout {
     private void init(Context context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_vaccination_card, this, true).setFilterTouchesWhenObscured(true);;
+        layoutInflater.inflate(R.layout.view_vaccination_card, this, true).setFilterTouchesWhenObscured(true);
         statusIV = findViewById(R.id.status_iv);
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);

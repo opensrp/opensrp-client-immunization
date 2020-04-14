@@ -1,5 +1,6 @@
 package org.smartregister.immunization.fragment;
 
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -118,5 +119,21 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
                 .newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null));
         Assert.assertNotNull(VaccinationEditDialogFragment
                 .newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null, true));
+    }
+
+    @Test
+    public void testSetFilterTouchesWhenObscuredSetsFlagToTrue() {
+
+        List<Fragment> fragmentList = activity.getSupportFragmentManager().getFragments();
+
+        Assert.assertNotNull(fragmentList);
+        Assert.assertTrue(fragmentList.size() > 0);
+
+        VaccinationEditDialogFragment fragment = (VaccinationEditDialogFragment) fragmentList.get(0);
+        Assert.assertNotNull(fragment);
+
+        boolean isEnabled = fragment.getView().getFilterTouchesWhenObscured();
+        Assert.assertTrue(isEnabled);
+
     }
 }
