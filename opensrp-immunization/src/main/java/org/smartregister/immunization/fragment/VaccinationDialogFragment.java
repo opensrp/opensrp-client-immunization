@@ -467,7 +467,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             }
         });
 
-        //updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
+        updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
 
         if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
             vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
