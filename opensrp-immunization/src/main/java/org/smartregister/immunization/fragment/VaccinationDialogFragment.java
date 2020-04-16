@@ -180,16 +180,21 @@ public class VaccinationDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
-        Serializable serializable = bundle.getSerializable(WRAPPER_TAG);
-        if (serializable != null && serializable instanceof ArrayList) {
-            tags = (ArrayList<VaccineWrapper>) serializable;
-        }
 
-        if (tags == null || tags.isEmpty()) {
-            return null;
+        if (bundle != null) {
+
+            Serializable serializable = bundle.getSerializable(WRAPPER_TAG);
+            if (serializable != null && serializable instanceof ArrayList) {
+                tags = (ArrayList<VaccineWrapper>) serializable;
+            }
+
+            if (tags == null || tags.isEmpty()) {
+                return null;
+            }
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
+        dialogView.setFilterTouchesWhenObscured(true);
         TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tags.get(0).getPatientName());
         TextView numberView = dialogView.findViewById(R.id.number);
@@ -252,12 +257,15 @@ public class VaccinationDialogFragment extends DialogFragment {
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name, null);
                 TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
-                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vName));
+                if (vaccineView != null) {
 
-                View select = vaccinationName.findViewById(R.id.select);
-                select.setVisibility(View.GONE);
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vName));
 
-                vaccinationNameLayout.addView(vaccinationName);
+                    View select = vaccinationName.findViewById(R.id.select);
+                    select.setVisibility(View.GONE);
+
+                    vaccinationNameLayout.addView(vaccinationName);
+                }
             }
 
         } else {

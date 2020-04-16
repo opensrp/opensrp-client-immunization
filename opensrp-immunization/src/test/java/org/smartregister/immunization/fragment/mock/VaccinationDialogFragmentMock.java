@@ -126,6 +126,7 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
         dialogView.findViewById(R.id.set).performClick();
         dialogView.findViewById(R.id.vaccinate_today).performClick();
         dialogView.findViewById(R.id.vaccinate_earlier).performClick();
+        dialogViewMock.setFilterTouchesWhenObscured(dialogView.getFilterTouchesWhenObscured());//Set to same state
         return dialogViewMock;
     }
 

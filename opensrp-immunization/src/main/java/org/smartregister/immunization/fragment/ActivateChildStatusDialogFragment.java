@@ -17,7 +17,7 @@ import org.smartregister.immunization.R;
 /**
  * Created by Ephraim Kigamba - ekigamba@ona.io on 04/04/2018.
  */
-@SuppressLint ("ValidFragment")
+@SuppressLint("ValidFragment")
 public class ActivateChildStatusDialogFragment extends DialogFragment {
 
     private String thirdPersonPronoun = "";
@@ -56,12 +56,13 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String dialogTitle = String.format(
-                getString(R.string.activate_child_status_dialog_title),
+                getActivity().getString(R.string.activate_child_status_dialog_title),
                 currentStatus,
                 thirdPersonPronoun);
 
         View inflatedView = getActivity().getLayoutInflater()
                 .inflate(R.layout.dialog_fragment_activate_child_status, container, false);
+        inflatedView.setFilterTouchesWhenObscured(true);
         ((TextView) inflatedView.findViewById(R.id.tv_dialog_activate_child_title))
                 .setText(dialogTitle);
 

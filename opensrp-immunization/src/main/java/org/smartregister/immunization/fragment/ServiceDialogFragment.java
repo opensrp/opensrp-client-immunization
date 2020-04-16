@@ -315,6 +315,7 @@ public class ServiceDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.service_dialog_view, container, false);
+        dialogView.setFilterTouchesWhenObscured(true);
         TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
         TextView numberView = dialogView.findViewById(R.id.number);

@@ -1,6 +1,7 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import org.junit.After;
@@ -19,6 +20,8 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.UndoVaccinationDialogFragmentTestActivity;
 import org.smartregister.util.AppProperties;
+
+import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -79,6 +82,22 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
         Assert.assertNotNull(UndoVaccinationDialogFragment.newInstance(new VaccineWrapper()));
+    }
+
+    @Test
+    public void testSetFilterTouchesWhenObscuredSetsFlagToTrue() {
+
+        List<Fragment> fragmentList = activity.getSupportFragmentManager().getFragments();
+
+        Assert.assertNotNull(fragmentList);
+        Assert.assertTrue(fragmentList.size() > 0);
+
+        UndoVaccinationDialogFragment fragment = (UndoVaccinationDialogFragment) fragmentList.get(0);
+        Assert.assertNotNull(fragment);
+
+        boolean isEnabled = fragment.getView().getFilterTouchesWhenObscured();
+        Assert.assertTrue(isEnabled);
+
     }
 
 
