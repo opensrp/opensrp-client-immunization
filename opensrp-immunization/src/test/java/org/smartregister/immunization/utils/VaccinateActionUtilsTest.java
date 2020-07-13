@@ -183,7 +183,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         String[] womanVaccines = VaccinateActionUtils.allAlertNames(WOMAN);
 
         Assert.assertNotNull(childVaccines);
-        Assert.assertEquals(childVaccines.length, 78);
+        Assert.assertEquals(childVaccines.length, 88);
 
         Assert.assertNotNull(womanVaccines);
         Assert.assertEquals(womanVaccines.length, 10);

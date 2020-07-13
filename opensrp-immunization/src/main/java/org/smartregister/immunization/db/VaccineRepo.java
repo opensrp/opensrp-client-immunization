@@ -56,36 +56,32 @@ public class VaccineRepo {
     }
 
     public enum Vaccine {
+        //Child vaccines
         bcg("BCG", null, 366, 0, 0, "child"),
         HepB("HepB", null, 366, 0, 0, "child"),
         opv0("OPV 0", null, 13, 0, 0, "child"),
-
         opv1("OPV 1", null, 1768, 42, 0, "child"),
         penta1("PENTA 1", null, 1768, 42, 0, "child"),
         pcv1("PCV 1", null, 1768, 42, 0, "child"),
         rota1("ROTA 1", null, 213, 42, 0, "child"),
-
         opv2("OPV 2", opv1, 1799, 70, 28, "child"),
         penta2("PENTA 2", penta1, 1799, 70, 28, "child"),
         pcv2("PCV 2", pcv1, 1799, 70, 28, "child"),
         rota2("ROTA 2", rota1, 244, 70, 28, "child"),
-
         rtss1("RTSS 1", null, 304, 183, 0, "child"),
         rtss2("RTSS 2", rtss1, 608, 213, 0, "child"),
         rtss3("RTSS 3", rtss2, 639, 274, 0, "child"),
         rtss4("RTSS 4", rtss3, 1095, 730, 0, "child"),
-
         mv1("MV 1", null, 304, 152, 0, "child"),
         mv2("MV 2", null, 608, 183, 0, "child"),
         mv3("MV 3", null, 639, 213, 0, "child"),
         mv4("MV 4", null, 1095, 669, 0, "child"),
-
         opv3("OPV 3", opv2, 1830, 98, 28, "child"),
         penta3("PENTA 3", penta2, 1830, 98, 28, "child"),
         pcv3("PCV 3", pcv2, 1830, 98, 28, "child"),
+        pcv4("PCV 4", pcv3, -1, 308, 28, "child"),
         rota3("ROTA 3", rota2, 1830, 98, 28, "child"),
         ipv("IPV", null, 1830, 98, 0, "child"),
-
         mrce("MR - CE", null, -1, 183, 0, "child"),
         measles1("MEASLES 1", null, -1, 274, 0, "child"),
         mr1("MR 1", null, -1, 274, 0, "child"),
@@ -96,23 +92,22 @@ public class VaccineRepo {
         menA("MenA", null, 1830, 274, 0, "child"),
         meningococcal("Meningococcal", null, 548, 274, 28, "child"),
         typhoid("Typhoid", null, 1830, 274, 0, "child"),
-
-
         mcv2("MCV 2", mcv1, -1, 456, 183, "child"),
         rubella2("Rubella 2", null, -1, 456, 183, "child"),
-
         measles2("MEASLES 2", measles1, -1, 548, 274, "child"),
         mr2("MR 2", mr1, -1, 548, 274, "child"),
-
-
         bcg2("BCG 2", null, 366, 0, 84, "child"),
+        ipv1("IPV 1", null, 1830, 98, 0, "child"),
+        ipv2("IPV 2", ipv1, 28, 98, 0, "child"),
+        hepb0("Hep B 0", null, -1, 0, 28, "child"),
+        dtp4("DTP 4", null, -1, 448, 28, "child"),
 
+        //mother vaccines
         tt1("TT 1", null, 0, 0, 0, "woman"),
         tt2("TT 2", tt1, 366, 0, 28, "woman"),
         tt3("TT 3", tt2, 366, 0, 26 * 7, "woman"),
         tt4("TT 4", tt3, 366, 0, 52 * 7, "woman"),
-        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),
-        ;
+        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman");
 
         private String display;
         private Vaccine prerequisite;
