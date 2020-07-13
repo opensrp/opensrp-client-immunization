@@ -88,6 +88,7 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.opv3);
         vaccines.add(VaccineRepo.Vaccine.penta3);
         vaccines.add(VaccineRepo.Vaccine.pcv3);
+        vaccines.add(VaccineRepo.Vaccine.pcv4);
         vaccines.add(VaccineRepo.Vaccine.rota3);
         vaccines.add(VaccineRepo.Vaccine.ipv);
         vaccines.add(VaccineRepo.Vaccine.mrce);
@@ -105,6 +106,10 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.measles2);
         vaccines.add(VaccineRepo.Vaccine.mr2);
         vaccines.add(VaccineRepo.Vaccine.bcg2);
+        vaccines.add(VaccineRepo.Vaccine.ipv1);
+        vaccines.add(VaccineRepo.Vaccine.ipv2);
+        vaccines.add(VaccineRepo.Vaccine.hepb0);
+        vaccines.add(VaccineRepo.Vaccine.dtp4);
         Assert.assertEquals(vaccines, VaccineRepo.getVaccines(CHILD));
     }
 
