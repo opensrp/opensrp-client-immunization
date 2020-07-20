@@ -33,7 +33,7 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(shadows = {ShadowJsonFormUtils.class}, sdk = 27, constants= BuildConfig.class)
+@Config(shadows = {ShadowJsonFormUtils.class}, sdk = 27)
 public class ServiceIntentServiceRoboTest {
 
     @Rule

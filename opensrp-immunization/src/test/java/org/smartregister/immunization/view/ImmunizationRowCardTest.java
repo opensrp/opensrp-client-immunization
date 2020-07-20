@@ -80,9 +80,9 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
     public void testConstructors() {
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application));
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, true));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
+        //Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs));
+        //Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
+        //Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
     }
 
     @Test
