@@ -18,6 +18,8 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by keyman on 3/01/2017.
  */
@@ -141,7 +143,7 @@ public class VaccineIntentService extends IntentService {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 

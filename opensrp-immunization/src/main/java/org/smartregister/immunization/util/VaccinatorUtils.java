@@ -82,6 +82,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import timber.log.Timber;
+
 import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
 import static org.smartregister.util.Utils.addToRow;
@@ -730,7 +732,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e, e.toString());
         }
         return v;
     }
@@ -752,7 +754,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e, e.toString());
         }
         return v;
     }
@@ -787,7 +789,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e, e.toString());
         }
 
         return v;
@@ -933,6 +935,11 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
+        ImmunizationLibrary immunizationLibrary = ImmunizationLibrary.getInstance();
+        Map<String, String> conditionalVaccinesMap = immunizationLibrary.getConditionalVaccinesMap();
+        if (!conditionalVaccinesMap.isEmpty() && immunizationLibrary.getCurrentConditionalVaccine() != null) {
+          return getVaccineGroupsFromVaccineConfigFile(context, getFileName(conditionalVaccinesMap.get(immunizationLibrary.getCurrentConditionalVaccine()), prefix));
+        }
         return getVaccineGroupsFromVaccineConfigFile(context, getFileName(vaccines_file, prefix));
     }
 

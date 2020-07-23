@@ -49,6 +49,8 @@ public class ImmunizationLibrary {
 
     public static List<String> COMBINED_VACCINES = new ArrayList<>();
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
+    private  Map<String, String> conditionalVaccinesMap = new HashMap<>();
+    private String currentConditionalVaccine;
 
     private long vaccineSyncTime = -1;
 
@@ -58,6 +60,7 @@ public class ImmunizationLibrary {
         this.commonFtsObject = commonFtsObject;
         this.applicationVersion = applicationVersion;
         this.databaseVersion = databaseVersion;
+        setCurrentConditionalVaccine(null);
     }
 
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
@@ -69,6 +72,10 @@ public class ImmunizationLibrary {
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.CHILD);
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.WOMAN);
         }
+    }
+
+    public Map<String, String> getConditionalVaccinesMap() {
+        return conditionalVaccinesMap;
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
@@ -198,4 +205,11 @@ public class ImmunizationLibrary {
         this.vaccineSyncTime = timeUnit.toMinutes(vaccineSyncTime);
     }
 
+    public String getCurrentConditionalVaccine() {
+        return currentConditionalVaccine;
+    }
+
+    public void setCurrentConditionalVaccine(String currentConditionalVaccine) {
+        this.currentConditionalVaccine = currentConditionalVaccine;
+    }
 }

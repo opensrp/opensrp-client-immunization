@@ -430,4 +430,8 @@ public class VaccineSchedule {
 
         return null;
     }
+
+    public static void setVaccineSchedules(HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules) {
+        VaccineSchedule.vaccineSchedules = vaccineSchedules;
+    }
 }
