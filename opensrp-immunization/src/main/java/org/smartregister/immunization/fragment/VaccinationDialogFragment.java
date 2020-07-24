@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.util.Pair;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,9 +38,11 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -48,6 +51,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
@@ -636,60 +640,66 @@ public class VaccinationDialogFragment extends DialogFragment {
                     maxDate = updateMaxVaccineDate(maxDate, curVaccine.getName());
                 } else {
                     String[] sisterVaccines = curVaccine.getName().split(" / ");
-                    for (int i = 0; i < sisterVaccines.length; i++) {
-                        minDate = updateMinVaccineDate(minDate, sisterVaccines[i]);
-                        maxDate = updateMaxVaccineDate(maxDate, sisterVaccines[i]);
+                    for (String sisterVaccine : sisterVaccines) {
+                        minDate = updateMinVaccineDate(minDate, sisterVaccine);
+                        maxDate = updateMaxVaccineDate(maxDate, sisterVaccine);
                     }
                 }
             }
         }
 
-        VaccineSchedule.standardiseCalendarDate(minDate);
-        VaccineSchedule.standardiseCalendarDate(maxDate);
+        Pair<Calendar, Calendar> vaccineMinMaxDatePair = VaccinatorUtils.getVaccineMinimumAndMaximumDate(tags, issuedVaccines);
+        if (vaccineMinMaxDatePair.first != null && vaccineMinMaxDatePair.second != null) {
+            minDate = vaccineMinMaxDatePair.first;
+            maxDate = vaccineMinMaxDatePair.second;
+        }
 
-        if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
-            vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.white));
-            vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg));
-            vaccinateEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg));
-            if (today.getTimeInMillis() >= minDate.getTimeInMillis()
-                    && today.getTimeInMillis() <= maxDate.getTimeInMillis()) {
-                vaccinateToday.setClickable(true);
-                vaccinateToday.setVisibility(View.VISIBLE);
+        if (minDate != null && maxDate != null && getActivity() != null) {
+            VaccineSchedule.standardiseCalendarDate(minDate);
+            VaccineSchedule.standardiseCalendarDate(maxDate);
 
-                vaccinateEarlier.setVisibility(View.VISIBLE);
-                earlierDatePicker.setVisibility(View.GONE);
-                set.setVisibility(View.GONE);
+            if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
+                vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.white));
+                vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg));
+                vaccinateEarlier.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg));
+                if (today.getTimeInMillis() >= minDate.getTimeInMillis()
+                        && today.getTimeInMillis() <= maxDate.getTimeInMillis()) {
+                    vaccinateToday.setClickable(true);
+                    vaccinateToday.setVisibility(View.VISIBLE);
+
+                    vaccinateEarlier.setVisibility(View.VISIBLE);
+                    earlierDatePicker.setVisibility(View.GONE);
+                    set.setVisibility(View.GONE);
+                } else {
+                    vaccinateToday.setClickable(false);
+                    vaccinateToday.setVisibility(View.GONE);
+
+                    vaccinateEarlier.setVisibility(View.GONE);
+                    earlierDatePicker.setVisibility(View.VISIBLE);
+                    set.setVisibility(View.VISIBLE);
+
+                    DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
+                }
+
+                earlierDatePicker.setMinDate(minDate.getTimeInMillis());
+                earlierDatePicker.setMaxDate(maxDate.getTimeInMillis());
             } else {
                 vaccinateToday.setClickable(false);
-                vaccinateToday.setVisibility(View.GONE);
-
-                vaccinateEarlier.setVisibility(View.GONE);
-                earlierDatePicker.setVisibility(View.VISIBLE);
-                set.setVisibility(View.VISIBLE);
-
-                DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
+                vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
+                vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
+                vaccinateEarlier.setClickable(false);
+                vaccinateEarlier
+                        .setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
+                Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
             }
-
-            earlierDatePicker.setMinDate(minDate.getTimeInMillis());
-            earlierDatePicker.setMaxDate(maxDate.getTimeInMillis());
-        } else {
-            vaccinateToday.setClickable(false);
-            vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
-            vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
-            vaccinateEarlier.setClickable(false);
-            vaccinateEarlier
-                    .setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
-            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
         }
     }
 
     private Date getMinVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child", vaccineName);
         Date minDate = null;
         if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman", vaccineName);
         }
         if (curVaccineSchedule != null) {
             minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);

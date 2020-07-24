@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -61,6 +62,7 @@ import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.ServiceTrigger;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.State;
+import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
@@ -1179,5 +1181,42 @@ public class VaccinatorUtils {
         String offsetAfterReplace = offset.replace(" ", "").toLowerCase(Locale.ENGLISH);
         Pattern p1 = Pattern.compile("([-+]{1})(.*)");
         return p1.matcher(offsetAfterReplace);
+    }
+
+    /**
+     * This method is used to return minimum and maximum date as a pair for a vaccine that has a
+     * prerequisite. Example if you have IPV2 vaccine that depends on IPV1. We want to set the minimum
+     * date for IPV2 to be the date IPV1 was administered.
+     * @param vaccineWrappers Current vaccine(s) to be administered
+     * @param issuedVaccines Requisite vaccine(s) that were administered earlier
+     * @return a pair of minimum and maximum date respectively
+     */
+    public static Pair<Calendar, Calendar> getVaccineMinimumAndMaximumDate(List<VaccineWrapper> vaccineWrappers, List<org.smartregister.immunization.domain.Vaccine> issuedVaccines) {
+        boolean requisiteDateConstraintEnabled = Boolean.parseBoolean(ImmunizationLibrary.getInstance().getProperties()
+                .getProperty(IMConstants.APP_PROPERTIES.FEATURE_REQUISITE_DATE_CONSTRAINT_ENABLED, String.valueOf(false)));
+
+        Calendar maxDate = null;
+        Calendar minDate = null;
+        if (requisiteDateConstraintEnabled && vaccineWrappers.size() == 1) {
+
+            VaccineWrapper vaccineWrapper = vaccineWrappers.get(0);
+
+            VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child", vaccineWrapper.getName());
+            if (curVaccineSchedule == null) {
+                curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman", vaccineWrapper.getName());
+            }
+            if (curVaccineSchedule != null) {
+                VaccineRepo.Vaccine prerequisite = curVaccineSchedule.getVaccine().prerequisite();
+                if (prerequisite != null)
+                    for (org.smartregister.immunization.domain.Vaccine vaccine : issuedVaccines)
+                        if (vaccine.getName().equalsIgnoreCase(prerequisite.display())) {
+                            minDate = Calendar.getInstance();
+                            minDate.setTime(vaccine.getDate());
+                            maxDate = Calendar.getInstance();
+                            break;
+                        }
+            }
+        }
+        return Pair.create(minDate, maxDate);
     }
 }

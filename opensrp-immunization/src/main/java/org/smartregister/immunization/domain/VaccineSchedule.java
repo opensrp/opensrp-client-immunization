@@ -361,6 +361,10 @@ public class VaccineSchedule {
         return null;
     }
 
+    public VaccineRepo.Vaccine getVaccine() {
+        return vaccine;
+    }
+
     /**
      * Calculates the alert status based on the reference date provided. Currently, the only alert status returned is {@code
      * AlertStatus.normal}
@@ -433,5 +437,9 @@ public class VaccineSchedule {
 
     public static void setVaccineSchedules(HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules) {
         VaccineSchedule.vaccineSchedules = vaccineSchedules;
+    }
+
+    public static HashMap<String, HashMap<String, VaccineSchedule>> getVaccineSchedules() {
+        return vaccineSchedules;
     }
 }
