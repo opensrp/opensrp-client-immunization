@@ -32,6 +32,7 @@ android:
     - build-tools-29.0.3
     # The SDK version used to compile your projects
     - android-22
+    - android-28
     - android-29
 
     # Specify at least one system image,
@@ -57,10 +58,3 @@ script:
 notifications:
   slack:
     secure: fAiZ4yA7DM6nUKh7nqsCTqZBb03VEAvi5NcRu5mNh5coNn/50XNeZl+qpv7Dw70Ef85Y/k68uc6KwTGVqPXEmVq9Hk3e7lqpBNN8rufvgCYDDGPmywBmU5BhSeykKo0Ee7llM3mRR/EipjIWw1+YvMcS3hCoygf/UlMDDhG0Jo0=
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: opensrp-immunization/build/docs/javadoc/
-  on:
-    branch: master
