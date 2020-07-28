@@ -13,7 +13,6 @@ import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
-import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.JsonFormUtils;
 
 import java.text.SimpleDateFormat;

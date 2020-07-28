@@ -2,7 +2,6 @@ package org.smartregister.immunization.service.intent;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -11,7 +10,6 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.JsonFormUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
