@@ -6,7 +6,6 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.0"
         classpath 'org.apache.commons:commons-lang3:3.10'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
     }
 }
 
