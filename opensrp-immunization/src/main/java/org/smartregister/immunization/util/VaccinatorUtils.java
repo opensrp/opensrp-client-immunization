@@ -351,15 +351,6 @@ public class VaccinatorUtils {
         }
     }
 
-    private static DateTime getReceivedDate(Map<String, String> received, Vaccine v) {
-        if (received.get(v.name()) != null) {
-            return new DateTime(received.get(v.name()));
-        } else if (received.get(v.name() + "_retro") != null) {
-            return new DateTime(received.get(v.name() + "_retro"));
-        }
-        return null;
-    }
-
     public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate,
                                                                  Map<String, Date> received, List<Alert> alerts) {
         return generateScheduleList(category, milestoneDate, received, alerts, false);

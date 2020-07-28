@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,6 +44,7 @@ import org.smartregister.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -482,5 +484,32 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         Assert.assertNotNull(mrce);
         Assert.assertEquals("mrce", mrce);
+    }
+
+    @Test
+    public void testNextVaccineDue() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2019, 11, 2);
+        final DateTime someDate = new DateTime(calendar.getTime());
+        calendar.set(2019, 10, 2);
+        final DateTime someDate2 = new DateTime(calendar.getTime());
+        HashMap<String, Object> vaccineSchedule = new HashMap<String, Object>() {{
+            put("status", "due");
+            put("vaccine", VaccineRepo.Vaccine.bcg2);
+            put("date", someDate);
+        }};
+        HashMap<String, Object> vaccineSchedule2 = new HashMap<String, Object>() {{
+            put("status", "due");
+            put("vaccine", VaccineRepo.Vaccine.bcg2);
+            put("date", someDate2);
+        }};
+        List<Map<String, Object>> schedules = new ArrayList<>();
+        schedules.add(vaccineSchedule);
+        schedules.add(vaccineSchedule2);
+        calendar.set(2020, 5, 2);
+        Date lastVisit = calendar.getTime();
+        Map<String, Object> stringObjectMap = VaccinatorUtils.nextServiceDue(schedules, lastVisit);
+        Assert.assertNotNull(stringObjectMap);
+        Assert.assertEquals("due", stringObjectMap.get("status"));
     }
 }
