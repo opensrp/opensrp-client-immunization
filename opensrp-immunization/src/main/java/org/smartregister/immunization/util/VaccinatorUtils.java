@@ -1184,7 +1184,7 @@ public class VaccinatorUtils {
      */
     public static Pair<Calendar, Calendar> getVaccineMinimumAndMaximumDate(List<VaccineWrapper> vaccineWrappers, List<org.smartregister.immunization.domain.Vaccine> issuedVaccines) {
         boolean requisiteDateConstraintEnabled = Boolean.parseBoolean(ImmunizationLibrary.getInstance().getProperties()
-                .getProperty(IMConstants.APP_PROPERTIES.FEATURE_REQUISITE_DATE_CONSTRAINT_ENABLED, String.valueOf(false)));
+                .getProperty(IMConstants.APP_PROPERTIES.VACCINE_REQUISITE_DATE_CONSTRAINT_ENABLED, String.valueOf(false)));
 
         Calendar maxDate = null;
         Calendar minDate = null;
