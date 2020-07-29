@@ -2,7 +2,6 @@ package org.smartregister.immunization.service.intent;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -11,12 +10,13 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.JsonFormUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 3/01/2017.
@@ -141,7 +141,7 @@ public class VaccineIntentService extends IntentService {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 

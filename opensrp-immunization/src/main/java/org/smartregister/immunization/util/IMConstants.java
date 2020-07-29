@@ -15,6 +15,7 @@ public class IMConstants {
     public class APP_PROPERTIES {
         public static final String VACCINE_RELAXATION_DAYS = "vaccine.relaxation.days";
         public static final String VACCINE_EXPIRED_ENTRY_ALLOW = "vaccine.expired.entry.allow";
+        public static final String VACCINE_REQUISITE_DATE_CONSTRAINT_ENABLED = "vaccine.requisite.date.constraint.enabled";
         public static final String EXPIRED_CARD_AS_RED = "vaccine.expired.red";
     }
 

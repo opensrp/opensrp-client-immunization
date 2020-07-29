@@ -211,7 +211,13 @@ The current default color for expired vaccine when back-data entry is enabled is
 vaccine.expired.red=true
 ```
 
-### Vaccine Group
+## Constraints for backdated vaccines
+
+For vaccines that are dependent on previous ones, set the following property to `true` to prevent the user from recording a vaccine at a date that is earlier than the previous vaccine's. This property does not work when recording multiple vaccines with the **Record All** actions for the vaccine group. 
+
+```
+vaccine.requisite.date.constraint.enabled=true
+```
 
 ## Gotcha's when using the library
 

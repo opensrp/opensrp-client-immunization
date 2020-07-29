@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,12 +27,14 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceData;
 import org.smartregister.immunization.domain.ServiceRecord;
+import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.jsonmapping.Due;
 import org.smartregister.immunization.domain.jsonmapping.Expiry;
 import org.smartregister.immunization.domain.jsonmapping.Schedule;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
+import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.JsonFormUtils;
@@ -43,6 +46,7 @@ import org.smartregister.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -482,5 +486,56 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         Assert.assertNotNull(mrce);
         Assert.assertEquals("mrce", mrce);
+    }
+
+    @Test
+    public void testNextVaccineDueUsingLastVisit() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2019, 11, 2);
+        final DateTime someDate = new DateTime(calendar.getTime());
+        calendar.set(2019, 10, 2);
+        final DateTime someDate2 = new DateTime(calendar.getTime());
+        HashMap<String, Object> vaccineSchedule = new HashMap<String, Object>() {{
+            put("status", "due");
+            put("vaccine", VaccineRepo.Vaccine.bcg2);
+            put("date", someDate);
+        }};
+        HashMap<String, Object> vaccineSchedule2 = new HashMap<String, Object>() {{
+            put("status", "due");
+            put("vaccine", VaccineRepo.Vaccine.bcg2);
+            put("date", someDate2);
+        }};
+        List<Map<String, Object>> schedules = new ArrayList<>();
+        schedules.add(vaccineSchedule);
+        schedules.add(vaccineSchedule2);
+        calendar.set(2020, 5, 2);
+        Date lastVisit = calendar.getTime();
+        Map<String, Object> stringObjectMap = VaccinatorUtils.nextServiceDue(schedules, lastVisit);
+        Assert.assertNotNull(stringObjectMap);
+        Assert.assertEquals("due", stringObjectMap.get("status"));
+    }
+
+    @Test
+    public void testNextVaccineDueUsingServiceRecord() {
+
+        final ServiceType serviceType = new ServiceType();
+        serviceType.setName("Some Service Name");
+        serviceType.setType("Some Type");
+        HashMap<String, Object> vaccineSchedule = new HashMap<String, Object>() {{
+            put("service", serviceType);
+        }};
+
+        List<Map<String, Object>> schedules = new ArrayList<>();
+        schedules.add(vaccineSchedule);
+        ServiceRecord serviceRecord = new ServiceRecord();
+        Assert.assertNull(VaccinatorUtils.nextServiceDue(schedules, serviceRecord));
+        serviceRecord.setSyncStatus(RecurringServiceRecordRepository.TYPE_Synced);
+        Assert.assertNull(VaccinatorUtils.nextServiceDue(schedules, serviceRecord));
+        serviceRecord.setType("Some Type");
+        serviceRecord.setName("Some Service Name");
+        serviceRecord.setSyncStatus(RecurringServiceRecordRepository.TYPE_Unsynced);
+        Map<String, Object> stringObjectMap = VaccinatorUtils.nextServiceDue(schedules, serviceRecord);
+        Assert.assertNotNull(stringObjectMap);
+        Assert.assertEquals(stringObjectMap, vaccineSchedule);
     }
 }

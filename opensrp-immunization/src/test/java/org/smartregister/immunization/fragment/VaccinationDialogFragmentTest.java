@@ -59,6 +59,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
 
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
+        Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
 
         activity = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);

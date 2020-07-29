@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.evernote.android.job.DailyJob;
 import com.evernote.android.job.JobRequest;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.service.intent.VaccineSchedulesUpdateIntentService;

@@ -77,6 +77,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
 
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
 
