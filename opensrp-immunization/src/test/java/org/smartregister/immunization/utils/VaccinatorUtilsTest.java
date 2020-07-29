@@ -27,12 +27,14 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceData;
 import org.smartregister.immunization.domain.ServiceRecord;
+import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.jsonmapping.Due;
 import org.smartregister.immunization.domain.jsonmapping.Expiry;
 import org.smartregister.immunization.domain.jsonmapping.Schedule;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
+import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.immunization.util.JsonFormUtils;
@@ -487,7 +489,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testNextVaccineDue() {
+    public void testNextVaccineDueUsingLastVisit() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2019, 11, 2);
         final DateTime someDate = new DateTime(calendar.getTime());
@@ -511,5 +513,29 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Map<String, Object> stringObjectMap = VaccinatorUtils.nextServiceDue(schedules, lastVisit);
         Assert.assertNotNull(stringObjectMap);
         Assert.assertEquals("due", stringObjectMap.get("status"));
+    }
+
+    @Test
+    public void testNextVaccineDueUsingServiceRecord() {
+
+        final ServiceType serviceType = new ServiceType();
+        serviceType.setName("Some Service Name");
+        serviceType.setType("Some Type");
+        HashMap<String, Object> vaccineSchedule = new HashMap<String, Object>() {{
+            put("service", serviceType);
+        }};
+
+        List<Map<String, Object>> schedules = new ArrayList<>();
+        schedules.add(vaccineSchedule);
+        ServiceRecord serviceRecord = new ServiceRecord();
+        Assert.assertNull(VaccinatorUtils.nextServiceDue(schedules, serviceRecord));
+        serviceRecord.setSyncStatus(RecurringServiceRecordRepository.TYPE_Synced);
+        Assert.assertNull(VaccinatorUtils.nextServiceDue(schedules, serviceRecord));
+        serviceRecord.setType("Some Type");
+        serviceRecord.setName("Some Service Name");
+        serviceRecord.setSyncStatus(RecurringServiceRecordRepository.TYPE_Unsynced);
+        Map<String, Object> stringObjectMap = VaccinatorUtils.nextServiceDue(schedules, serviceRecord);
+        Assert.assertNotNull(stringObjectMap);
+        Assert.assertEquals(stringObjectMap, vaccineSchedule);
     }
 }
