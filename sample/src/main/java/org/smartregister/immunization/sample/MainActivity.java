@@ -46,6 +46,7 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.util.SampleUtil;
 import org.smartregister.immunization.service.intent.RecurringIntentService;
 import org.smartregister.immunization.service.intent.VaccineIntentService;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
@@ -183,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             name = constructChildName();
             childId = Utils.getValue(childDetails.getColumnmaps(), "zeir_id", false);
         }
-
+        findViewById(R.id.outOfCatchment).setVisibility(ImmunizationLibrary.getInstance().getProperties().isTrue(IMConstants.APP_PROPERTIES.NOVEL_OUT_OF_CATCHMENT) ? View.VISIBLE : View.GONE);
         TextView nameTV = findViewById(R.id.name_tv);
         nameTV.setText(name);
         TextView childIdTV = findViewById(R.id.child_id_tv);

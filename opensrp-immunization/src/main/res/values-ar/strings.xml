@@ -84,4 +84,5 @@
     <string name="expired_colon">%1$s
         انقضت المدة:</string>
 
+    <string name="out_of_catchment">خارج منطقة التغطية الخاصة بي</string>
 </resources>

@@ -68,7 +68,7 @@ public class ImmunizationLibrary {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
 
-            allowExpiredVaccineEntry = instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
+            allowExpiredVaccineEntry = instance.getProperties().isTrue(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
 
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.CHILD);
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.WOMAN);
@@ -196,7 +196,7 @@ public class ImmunizationLibrary {
     }
 
     public boolean isExpiredVaccineCardRed() {
-        return getProperties().hasProperty(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
+        return getProperties().isTrue(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
     }
 
     public long getVaccineSyncTime() {

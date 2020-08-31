@@ -48,6 +48,15 @@
                     android:orientation="vertical">
 
                     <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/outOfCatchment"
+                        style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/out_of_catchment"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/holo_orange_light" />
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
                         android:id="@+id/name"
                         style="@style/CustomFontTextViewStyle.ClientList.Medium"
                         android:layout_width="wrap_content"
