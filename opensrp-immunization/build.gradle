@@ -17,7 +17,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
 jacoco {
-    toolVersion = "0.8.3"
+    toolVersion = "0.8.5"
 }
 
 allprojects {
@@ -41,6 +41,7 @@ android {
         versionName project.VERSION_NAME
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
 
     buildTypes {
@@ -88,7 +89,7 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation('org.smartregister:opensrp-client-core:1.10.1-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:v2.0.6-PREVIEW2-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
@@ -99,26 +100,23 @@ dependencies {
         exclude group: 'com.google.code.gson', module: 'gson'
     }
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
 
-    testImplementation('org.robolectric:robolectric:3.8') {
-        exclude group: 'com.google.guava', module: 'guava'
-        exclude group: 'org.apache.maven', module: 'maven-model'
-        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
+    def robolectricVersion = '4.1'
+    testImplementation("org.robolectric:robolectric:$robolectricVersion") {
+        exclude group: 'com.google.auto.service', module: 'auto-service'
+        exclude group: 'com.android.support'
     }
-
-    testImplementation('org.robolectric:shadows-multidex:3.8') {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-
-    testImplementation 'org.robolectric:shadows-support-v4:3.4-rc2'
+    testImplementation "org.robolectric:shadows-multidex:$robolectricVersion"
+    testImplementation "org.robolectric:shadows-support-v4:3.3.2"
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.+') {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'junit', module: 'junit'
     }
+
     // PowerMock
-    def powerMockVersion = '1.7.1'
+    def powerMockVersion = '2.0.7'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
@@ -142,11 +140,11 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
     def mainSrc = "$project.projectDir/src/main/java"
 
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(fileTree(dir: project.buildDir, includes: [
             'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-    ])
+    ]))
 }
 
 coveralls {
