@@ -24,7 +24,7 @@ import org.smartregister.util.AppProperties;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
+@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.P)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*"
         , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
         , "org.xmlpull.v1.*", "org.smartregister.immunization.view.ExpandableHeightGridView"})
