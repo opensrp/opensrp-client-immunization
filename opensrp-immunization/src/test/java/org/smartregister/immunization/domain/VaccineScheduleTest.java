@@ -189,8 +189,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
         given3.type = "not_given";
         object.conditions.add(given3);
 
-
-        JoinCondition joinCondition = new JoinCondition("child", object);
+        VaccineCondition joinCondition = VaccineCondition.init("child", object); //new JoinCondition("child", object);
         Assert.assertTrue(joinCondition.passes(sdf.parse("2020-01-01"), list));
     }
 
