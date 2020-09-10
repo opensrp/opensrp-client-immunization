@@ -16,6 +16,8 @@ import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.domain.conditions.GivenCondition;
+import org.smartregister.immunization.domain.conditions.NotGivenCondition;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
@@ -111,23 +113,23 @@ public class VaccineScheduleTest extends BaseUnitTest {
         object.type = "";
         Assert.assertNull(VaccineCondition.init("", object));
 
-        VaccineCondition.NotGivenCondition notgiven = new VaccineCondition.NotGivenCondition(VaccineRepo.Vaccine.opv0);
+        NotGivenCondition notgiven = new NotGivenCondition(VaccineRepo.Vaccine.opv0);
         List<Vaccine> list = new ArrayList<Vaccine>();
         list.add(newVaccine);
-        Assert.assertNotNull(notgiven.passes(list));
+        Assert.assertNotNull(notgiven.passes(null, list));
 
         String magic10d = "+10d";
-        VaccineCondition.GivenCondition given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
-                VaccineCondition.GivenCondition.Comparison.AT_LEAST);
-        Assert.assertNull(VaccineCondition.GivenCondition.getComparison(""));
-        Assert.assertNotNull(given.passes(list));
+        GivenCondition given = new GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
+                GivenCondition.Comparison.AT_LEAST);
+        Assert.assertNull(GivenCondition.getComparison(""));
+        Assert.assertNotNull(given.passes(null, list));
 
-        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
-                VaccineCondition.GivenCondition.Comparison.AT_MOST);
-        Assert.assertNotNull(given.passes(list));
-        given = new VaccineCondition.GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
-                VaccineCondition.GivenCondition.Comparison.EXACTLY);
-        Assert.assertNotNull(given.passes(list));
+        given = new GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
+                GivenCondition.Comparison.AT_MOST);
+        Assert.assertNotNull(given.passes(null, list));
+        given = new GivenCondition(VaccineRepo.Vaccine.opv0, magic10d,
+                GivenCondition.Comparison.EXACTLY);
+        Assert.assertNotNull(given.passes(null, list));
 
     }
 

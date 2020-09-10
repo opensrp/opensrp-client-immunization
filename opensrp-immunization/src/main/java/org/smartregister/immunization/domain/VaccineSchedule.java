@@ -255,7 +255,7 @@ public class VaccineSchedule {
 
         // Check if all conditions pass
         for (VaccineCondition curCondition : conditions) {
-            if (!curCondition.passes(issuedVaccines)) {
+            if (!curCondition.passes(dateOfBirth, issuedVaccines)) {
                 return defaultAlert;
             }
         }
