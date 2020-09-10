@@ -4,6 +4,7 @@ import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineCondition;
 import org.smartregister.immunization.domain.VaccineSchedule;
+import org.smartregister.immunization.domain.jsonmapping.Condition;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -12,11 +13,13 @@ import java.util.List;
 public class GivenCondition extends VaccineCondition {
     private final Comparison comparison;
     private final String value;
+    private final Condition conditionData;
 
-    public GivenCondition(VaccineRepo.Vaccine vaccine, String value, Comparison comparison) {
+    public GivenCondition(VaccineRepo.Vaccine vaccine, String value, Comparison comparison, Condition conditionData) {
         super(vaccine);
         this.value = value;
         this.comparison = comparison;
+        this.conditionData = conditionData;
     }
 
     public static Comparison getComparison(String name) {
@@ -65,7 +68,7 @@ public class GivenCondition extends VaccineCondition {
             }
         }
 
-        return result;
+        return result && isWithinAge(anchorDate, conditionData);
     }
 
     public enum Comparison {

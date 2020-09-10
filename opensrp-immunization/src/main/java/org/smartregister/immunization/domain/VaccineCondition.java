@@ -6,6 +6,7 @@ import org.smartregister.immunization.domain.conditions.JoinCondition;
 import org.smartregister.immunization.domain.conditions.NotGivenCondition;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public abstract class VaccineCondition {
                     vaccineCategory);
 
             if (comparison != null && vaccine != null) {
-                return new GivenCondition(vaccine, conditionData.value, comparison);
+                return new GivenCondition(vaccine, conditionData.value, comparison, conditionData);
             }
         } else if (conditionData.type.equals(TYPE_NOT_GIVEN)) {
             VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.vaccine,
@@ -40,10 +41,7 @@ public abstract class VaccineCondition {
                 return new NotGivenCondition(vaccine);
             }
         } else if (conditionData.type.equals(JOIN)) {
-            VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(conditionData.vaccine,
-                    vaccineCategory);
-
-            return new JoinCondition(vaccine, conditionData);
+            return new JoinCondition(vaccineCategory, conditionData);
         }
 
         return null;
@@ -51,4 +49,23 @@ public abstract class VaccineCondition {
 
     public abstract boolean passes(Date anchorDate, List<Vaccine> issuedVaccines);
 
+
+    protected boolean isWithinAge(Date anchorDate, Condition conditionData) {
+        if (anchorDate != null && conditionData.age != null) {
+            Calendar baseDate = getDate(anchorDate, "+0d");
+            Calendar startDate = getDate(anchorDate, conditionData.age.get("from"));
+            Calendar endDate = conditionData.age.containsKey("to") ?
+                    getDate(anchorDate, conditionData.age.get("to")) : getDate(new Date(), "+0d");
+
+            return startDate.getTimeInMillis() <= baseDate.getTimeInMillis() && endDate.getTimeInMillis() >= baseDate.getTimeInMillis();
+        }
+        return true;
+    }
+
+    private Calendar getDate(Date anchorDate, String window) {
+        Calendar dueDateCalendar = Calendar.getInstance();
+        dueDateCalendar.setTime(anchorDate);
+        VaccineSchedule.standardiseCalendarDate(dueDateCalendar);
+        return VaccineSchedule.addOffsetToCalendar(dueDateCalendar, window);
+    }
 }
