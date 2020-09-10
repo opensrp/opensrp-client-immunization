@@ -101,6 +101,8 @@ public class VaccineRepo {
         ipv2("IPV 2", ipv1, 28, 98, 0, "child"),
         hepb0("Hep B 0", null, -1, 0, 28, "child"),
         dtp4("DTP 4", null, -1, 448, 28, "child"),
+        hpv1("HPV 1", null, -1, 3287, 28, "child"),
+        hpv2("HPV 2", null, -1, 3287, 28, "child"),
 
         //mother vaccines
         tt1("TT 1", null, 0, 0, 0, "woman"),

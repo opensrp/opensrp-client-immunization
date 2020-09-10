@@ -17,7 +17,6 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.conditions.GivenCondition;
-import org.smartregister.immunization.domain.conditions.JoinCondition;
 import org.smartregister.immunization.domain.conditions.NotGivenCondition;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
