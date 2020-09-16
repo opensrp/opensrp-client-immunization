@@ -169,12 +169,21 @@ public class ImmunizationLibrary {
         return ImmunizationLibrary.getInstance().context().getAppProperties();
     }
 
-    public void setVaccines(VaccineRepo.Vaccine[] vaccines) {
-        this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines = vaccines;
+    /**
+     * @param vaccines the vaccines repo enum values
+     * @param category the category/entity the vaccines are for e.g. CHILD, MOTHER
+     *
+     * */
+    public void setVaccines(VaccineRepo.Vaccine[] vaccines, String category) {
+        this.vaccineCacheMap.get(category).vaccines = vaccines;
     }
 
-    public VaccineRepo.Vaccine[] getVaccines() {
-        return this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines;
+    /**
+     * @param category the category/Entity of the vaccines to be retrieved
+     *               returns an array of the vaccines from the specified category
+     * */
+    public VaccineRepo.Vaccine[] getVaccines(String category) {
+        return this.vaccineCacheMap.get(category).vaccines;
     }
 
     public boolean isAllowExpiredVaccineEntry() {

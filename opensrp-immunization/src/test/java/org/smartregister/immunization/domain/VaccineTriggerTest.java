@@ -14,6 +14,7 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Due;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Calendar;
@@ -50,7 +51,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getVaccines()).thenReturn(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.opv0, VaccineRepo.Vaccine.opv1, VaccineRepo.Vaccine.bcg});
+        PowerMockito.when(immunizationLibrary.getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.opv0, VaccineRepo.Vaccine.opv1, VaccineRepo.Vaccine.bcg});
         VaccineTrigger vaccineTrigger = VaccineTrigger.init(CHILD, data2);
         Assert.assertNotNull(vaccineTrigger);
     }

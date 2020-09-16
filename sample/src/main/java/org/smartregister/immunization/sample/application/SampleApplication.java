@@ -12,6 +12,7 @@ import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.sample.BuildConfig;
 import org.smartregister.immunization.sample.repository.SampleRepository;
 import org.smartregister.immunization.sample.util.VaccineDuplicate;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.Repository;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -48,12 +49,12 @@ public class SampleApplication extends DrishtiApplication {
     }
 
     private void updateHardcodedVaccineDefinition() {
-        VaccineRepo.Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines();
+        VaccineRepo.Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.CHILD);
 
         HashMap<String, VaccineDuplicate> replacementVaccines = new HashMap<>();
         replacementVaccines.put("MR 2", new VaccineDuplicate("MR 2", VaccineRepo.Vaccine.mr1, -1, 548, 183, "child"));
 
-        for (VaccineRepo.Vaccine vaccine: vaccines) {
+        for (VaccineRepo.Vaccine vaccine : vaccines) {
             if (replacementVaccines.containsKey(vaccine.display())) {
                 VaccineDuplicate vaccineDuplicate = replacementVaccines.get(vaccine.display());
 
@@ -65,7 +66,7 @@ public class SampleApplication extends DrishtiApplication {
             }
         }
 
-        ImmunizationLibrary.getInstance().setVaccines(vaccines);
+        ImmunizationLibrary.getInstance().setVaccines(vaccines, IMConstants.VACCINE_TYPE.CHILD);
     }
 
     public static synchronized SampleApplication getInstance() {

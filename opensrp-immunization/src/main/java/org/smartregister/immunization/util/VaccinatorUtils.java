@@ -374,7 +374,7 @@ public class VaccinatorUtils {
         boolean m2Given = false;
         boolean oGiven = false;
         try {
-            ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
+            List<Vaccine> vl = VaccineRepo.getVaccines(category);
             for (Vaccine v : vl) {
                 Map<String, Object> m = new HashMap<>();
                 Date recDate = received.get(v.display().toLowerCase(Locale.ENGLISH));
@@ -931,7 +931,7 @@ public class VaccinatorUtils {
         ImmunizationLibrary immunizationLibrary = ImmunizationLibrary.getInstance();
         Map<String, String> conditionalVaccinesMap = immunizationLibrary.getConditionalVaccinesMap();
         if (!conditionalVaccinesMap.isEmpty() && immunizationLibrary.getCurrentConditionalVaccine() != null) {
-          return getVaccineGroupsFromVaccineConfigFile(context, getFileName(conditionalVaccinesMap.get(immunizationLibrary.getCurrentConditionalVaccine()), prefix));
+            return getVaccineGroupsFromVaccineConfigFile(context, getFileName(conditionalVaccinesMap.get(immunizationLibrary.getCurrentConditionalVaccine()), prefix));
         }
         return getVaccineGroupsFromVaccineConfigFile(context, getFileName(vaccines_file, prefix));
     }
@@ -1178,8 +1178,9 @@ public class VaccinatorUtils {
      * This method is used to return minimum and maximum date as a pair for a vaccine that has a
      * prerequisite. Example if you have IPV2 vaccine that depends on IPV1. We want to set the minimum
      * date for IPV2 to be the date IPV1 was administered.
+     *
      * @param vaccineWrappers Current vaccine(s) to be administered
-     * @param issuedVaccines Requisite vaccine(s) that were administered earlier
+     * @param issuedVaccines  Requisite vaccine(s) that were administered earlier
      * @return a pair of minimum and maximum date respectively
      */
     public static Pair<Calendar, Calendar> getVaccineMinimumAndMaximumDate(List<VaccineWrapper> vaccineWrappers, List<org.smartregister.immunization.domain.Vaccine> issuedVaccines) {

@@ -21,6 +21,7 @@ import org.smartregister.immunization.domain.conditions.NotGivenCondition;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.service.AlertService;
 import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
@@ -63,7 +64,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
     }
 
     @Test

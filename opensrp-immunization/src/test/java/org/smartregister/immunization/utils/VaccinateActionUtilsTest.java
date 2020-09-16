@@ -37,6 +37,7 @@ import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
@@ -94,7 +95,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(vaccinateActionUtils);
 
         mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
-        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
     }
 
     @Test
