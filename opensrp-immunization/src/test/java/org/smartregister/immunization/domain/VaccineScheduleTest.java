@@ -109,10 +109,9 @@ public class VaccineScheduleTest extends BaseUnitTest {
         mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, magicChild);
-        VaccineSchedule.init(vaccines, specialVaccines, "");
         Assert.assertNotNull(VaccineSchedule.getVaccineSchedule(magicChild, magicOPV0));
         Assert.assertNull(VaccineSchedule.getVaccineSchedule("", ""));
-        //vaccine cnodition test
+        //vaccine condition test
         Condition object = new Condition();
         object.type = "";
         Assert.assertNull(VaccineCondition.init("", object));
@@ -153,7 +152,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         VaccineSchedule.init(vaccines, specialVaccines, "child");
-        VaccineSchedule.init(vaccines, specialVaccines, "");
 
         List<Vaccine> list = new ArrayList<>();
         list.add(new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "MCV 1", 0,

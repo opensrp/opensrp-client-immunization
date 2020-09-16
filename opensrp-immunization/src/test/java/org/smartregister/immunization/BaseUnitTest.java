@@ -45,7 +45,10 @@ public abstract class BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
+
         PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(VaccineRepo.Vaccine.values());
+        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.WOMAN)).thenReturn(VaccineRepo.Vaccine.values());
+
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
         PowerMockito.when(ImmunizationLibrary.getInstance().getProperties()).thenReturn(appProperties);

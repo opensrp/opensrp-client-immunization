@@ -64,7 +64,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     public static final String WOMAN = "woman";
     private final String magicData = "data";
     private final String magicChild = "child";
-    private final String magicNULL = "NULL";
+    private final String magicNULL = null;
     private final String magicBCG = "BCG";
     private final int magic400 = 400;
     private final String magicID = "uselessentityID";

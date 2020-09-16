@@ -49,7 +49,7 @@ public class ImmunizationLibrary {
 
     public static List<String> COMBINED_VACCINES = new ArrayList<>();
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
-    private  Map<String, String> conditionalVaccinesMap = new HashMap<>();
+    private Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private String currentConditionalVaccine;
 
     private long vaccineSyncTime = -1;
@@ -171,18 +171,18 @@ public class ImmunizationLibrary {
 
     /**
      * @param vaccines the vaccines repo enum values
-     * @param category the category/entity the vaccines are for e.g. CHILD, MOTHER
-     *
-     * */
+     * @param category the category the vaccines are for e.g. CHILD, WOMAN
+     */
     public void setVaccines(VaccineRepo.Vaccine[] vaccines, String category) {
         this.vaccineCacheMap.get(category).vaccines = vaccines;
     }
 
     /**
-     * @param category the category/Entity of the vaccines to be retrieved
-     *               returns an array of the vaccines from the specified category
-     * */
-    public VaccineRepo.Vaccine[] getVaccines(String category) {
+     * @param category the category of the vaccines to be retrieved
+     *                 returns an array of the vaccines from the specified category
+     */
+    public VaccineRepo.Vaccine[]
+    getVaccines(String category) {
         return this.vaccineCacheMap.get(category).vaccines;
     }
 
