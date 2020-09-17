@@ -27,7 +27,7 @@ import org.smartregister.util.AppProperties;
 @Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "javax.xml.*", "org.xml.sax.*"
         , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
-        , "org.xmlpull.v1.*"})
+        , "org.xmlpull.v1.*", "org.smartregister.immunization.view.ExpandableHeightGridView"})
 public abstract class BaseUnitTest {
     public final static String BASEENTITYID = "baseEntityId";
     public final static String LOCATIONID = "locationID";

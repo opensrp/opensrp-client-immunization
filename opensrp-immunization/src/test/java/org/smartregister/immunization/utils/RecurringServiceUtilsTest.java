@@ -48,7 +48,6 @@ public class RecurringServiceUtilsTest extends BaseUnitTest {
 
     @Test
     public void testGetLastOpenedServiceViewReturnsCorrectView() {
-
         List<ServiceGroup> serviceGroups = new ArrayList<>();
 
         ServiceGroup serviceGroup = new ServiceGroup(RuntimeEnvironment.application);
