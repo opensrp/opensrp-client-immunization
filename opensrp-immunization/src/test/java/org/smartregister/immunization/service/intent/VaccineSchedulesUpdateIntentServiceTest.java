@@ -29,7 +29,7 @@ public class VaccineSchedulesUpdateIntentServiceTest {
     public VaccineSchedulesUpdateIntentService vaccineScheduleUpdateIntentService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         vaccineScheduleUpdateIntentService = Mockito.spy(new VaccineSchedulesUpdateIntentService());
     }
 

@@ -224,6 +224,6 @@ vaccine.requisite.date.constraint.enabled=true
 1. Vaccine schedule not changing after changing the `vaccines.json` file!
 
 Some of the vaccine configurations are not dependent on change done to the `vaccines.json`, in this case you should check the current configuration [here](https://github.com/OpenSRP/opensrp-client-immunization/blob/67a15611b53c55e111a0b7bff4f32a02c27b2920/opensrp-immunization/src/main/java/org/smartregister/immunization/db/VaccineRepo.java#L37)
-and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines()` and add 
-modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[])`
+and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines(category)` and add 
+modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[], category)`
 to re-set all the vaccine configs using the configurations array you retrieved.

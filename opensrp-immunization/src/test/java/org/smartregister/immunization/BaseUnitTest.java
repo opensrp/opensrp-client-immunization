@@ -14,6 +14,7 @@ import org.smartregister.Context;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.service.AlertService;
 import org.smartregister.util.AppProperties;
 
@@ -23,10 +24,10 @@ import org.smartregister.util.AppProperties;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
+@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "javax.xml.*", "org.xml.sax.*"
         , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
-        , "org.xmlpull.v1.*"})
+        , "org.xmlpull.v1.*", "org.smartregister.immunization.view.ExpandableHeightGridView"})
 public abstract class BaseUnitTest {
     public final static String BASEENTITYID = "baseEntityId";
     public final static String LOCATIONID = "locationID";
@@ -44,7 +45,10 @@ public abstract class BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines()).thenReturn(VaccineRepo.Vaccine.values());
+
+        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(VaccineRepo.Vaccine.values());
+        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.WOMAN)).thenReturn(VaccineRepo.Vaccine.values());
+
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
         PowerMockito.when(ImmunizationLibrary.getInstance().getProperties()).thenReturn(appProperties);

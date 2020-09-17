@@ -3,16 +3,17 @@ package org.smartregister.immunization.db;
 import org.smartregister.immunization.ImmunizationLibrary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VaccineRepo {
 
-    public static ArrayList<Vaccine> getVaccines(String category) {
+    public static List<Vaccine> getVaccines(String category) {
         return getVaccines(category, false);
     }
 
-    public static ArrayList<Vaccine> getVaccines(String category, boolean useDefault) {
+    public static List<Vaccine> getVaccines(String category, boolean useDefault) {
         ArrayList<Vaccine> vl = new ArrayList<>();
-        Vaccine[] vaccines = useDefault ? Vaccine.values() : ImmunizationLibrary.getInstance().getVaccines();
+        Vaccine[] vaccines = useDefault ? Vaccine.values() : ImmunizationLibrary.getInstance().getVaccines(category);
         for (Vaccine v : vaccines) {
             if (v.category().equalsIgnoreCase(category.trim())) {
                 vl.add(v);
@@ -22,10 +23,9 @@ public class VaccineRepo {
     }
 
     public static Vaccine getVaccine(String name, String category) {
-        Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines();
+        Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines(category);
         for (Vaccine curVaccine : vaccines) {
-            if (curVaccine.display.equalsIgnoreCase(name)
-                    && curVaccine.category.equalsIgnoreCase(category)) {
+            if (curVaccine.display.equalsIgnoreCase(name)) {
                 return curVaccine;
             }
         }

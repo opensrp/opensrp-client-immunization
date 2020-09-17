@@ -24,6 +24,7 @@ import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
         ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
 
-        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
 
         activity = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class).create().start().get();

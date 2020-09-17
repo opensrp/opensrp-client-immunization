@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -45,6 +47,7 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -537,5 +540,52 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Map<String, Object> stringObjectMap = VaccinatorUtils.nextServiceDue(schedules, serviceRecord);
         Assert.assertNotNull(stringObjectMap);
         Assert.assertEquals(stringObjectMap, vaccineSchedule);
+    }
+
+    @Test
+    public void testNextVaccineDueFromLastVisit() {
+        List<Map<String, Object>> schedules = new ArrayList<>();
+
+        Map<String, Object> scheduleItem = new HashMap<>();
+        scheduleItem.put("status", "due");
+        scheduleItem.put("vaccine", VaccineRepo.Vaccine.opv1);
+        scheduleItem.put("date", DateTime.parse("2020-07-13T07:21:01Z"));
+
+        schedules.add(scheduleItem);
+
+        scheduleItem = new HashMap<>();
+        scheduleItem.put("status", "due");
+        scheduleItem.put("vaccine", VaccineRepo.Vaccine.HepB);
+        scheduleItem.put("date", DateTime.parse("2020-01-16T07:32:01Z"));
+
+        schedules.add(scheduleItem);
+
+        scheduleItem = new HashMap<>();
+        scheduleItem.put("status", "due");
+        scheduleItem.put("vaccine", VaccineRepo.Vaccine.bcg2);
+        scheduleItem.put("date", DateTime.parse("2020-01-16T07:32:01Z"));
+
+        schedules.add(scheduleItem);
+
+        scheduleItem = new HashMap<>();
+        scheduleItem.put("status", "due");
+        scheduleItem.put("vaccine", VaccineRepo.Vaccine.penta1);
+        scheduleItem.put("date", DateTime.parse("2020-05-12T07:32:01Z"));
+
+        schedules.add(scheduleItem);
+
+        Date lastVisitDate = java.sql.Date.valueOf(LocalDate.of(2020, 02, 03).toString());
+        Map<String, Object> nextVaccineDue = VaccinatorUtils.nextVaccineDue(schedules, lastVisitDate);
+
+        Assert.assertNotNull(nextVaccineDue);
+        Assert.assertEquals(3, nextVaccineDue.size());
+        Assert.assertEquals("due", nextVaccineDue.get("status"));
+        Assert.assertEquals(VaccineRepo.Vaccine.penta1, nextVaccineDue.get("vaccine"));
+
+        DateTime vaccineDate = (DateTime) nextVaccineDue.get("date");
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+        String vaccineDateString = vaccineDate.toString(fmt);
+        Assert.assertEquals("2020-05-12", vaccineDateString);
+
     }
 }
