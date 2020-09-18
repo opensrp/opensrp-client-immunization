@@ -115,15 +115,14 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.antitbbcg);
         vaccines.add(VaccineRepo.Vaccine.polioopv0);
         vaccines.add(VaccineRepo.Vaccine.polioopv1);
-        vaccines.add(VaccineRepo.Vaccine.pneumopcv1);
         vaccines.add(VaccineRepo.Vaccine.polioopv2);
-        vaccines.add(VaccineRepo.Vaccine.pneumopcv2);
         vaccines.add(VaccineRepo.Vaccine.polioopv3);
+        vaccines.add(VaccineRepo.Vaccine.pneumopcv1);
+        vaccines.add(VaccineRepo.Vaccine.pneumopcv2);
         vaccines.add(VaccineRepo.Vaccine.pneumopcv3);
+        vaccines.add(VaccineRepo.Vaccine.polioipv1);
         vaccines.add(VaccineRepo.Vaccine.measlesmcv1);
         vaccines.add(VaccineRepo.Vaccine.measlesmcv2);
-        vaccines.add(VaccineRepo.Vaccine.polioipv1);
-        vaccines.add(VaccineRepo.Vaccine.polioipv2);
         Assert.assertEquals(vaccines, VaccineRepo.getVaccines(CHILD));
     }
 
