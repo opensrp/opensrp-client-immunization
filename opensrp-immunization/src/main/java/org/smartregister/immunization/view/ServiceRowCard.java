@@ -3,6 +3,7 @@ package org.smartregister.immunization.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ public class ServiceRowCard extends LinearLayout {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.view_immunization_row_card, this, true).setFilterTouchesWhenObscured(true);
         statusIV = findViewById(R.id.status_iv);
+       // statusIV.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange));
         StatusTV = findViewById(R.id.status_text_tv);
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);
@@ -69,7 +71,7 @@ public class ServiceRowCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ServiceRowCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);

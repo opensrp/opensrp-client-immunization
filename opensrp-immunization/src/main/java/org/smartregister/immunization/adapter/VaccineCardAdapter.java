@@ -226,8 +226,8 @@ public class VaccineCardAdapter extends BaseAdapter {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
                     }
                     tag.setDbKey(vaccine.getId());
-                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus()
-                            .equals(VaccineRepository.TYPE_Synced));
+                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    tag.setOutOfCatchment("1".equals(vaccine.getOutOfCatchment()));
                     if (tag.getName().contains("/")) {
                         String[] array = tag.getName().split("/");
 
