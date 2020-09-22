@@ -20,6 +20,7 @@ import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +53,7 @@ public class ImmunizationLibrary {
     private Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private String currentConditionalVaccine;
     private boolean allowSyncImmediately = false;
+    private List<VaccineRepo.Vaccine> skippableVaccines = new ArrayList<>();
 
     private long vaccineSyncTime = -1;
 
@@ -62,6 +64,7 @@ public class ImmunizationLibrary {
         this.applicationVersion = applicationVersion;
         this.databaseVersion = databaseVersion;
         setCurrentConditionalVaccine(null);
+        setSkippableVaccines(Arrays.asList(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1}));
     }
 
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
@@ -224,7 +227,7 @@ public class ImmunizationLibrary {
     }
 
     public boolean allowSyncImmediately() {
-        if(instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE))
+        if (instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE))
             allowSyncImmediately = instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE);
 
         return allowSyncImmediately;
@@ -233,5 +236,18 @@ public class ImmunizationLibrary {
     @Deprecated
     public void setAllowSyncImmediately(boolean allowSyncImmediately) {
         this.allowSyncImmediately = allowSyncImmediately;
+    }
+
+    public List<VaccineRepo.Vaccine> getSkippableVaccines() {
+        return skippableVaccines;
+    }
+
+    /**
+     * Set the Vaccines to skip from normal processing e.g. bcg2
+     *
+     * @param skippableVaccines
+     */
+    public void setSkippableVaccines(List<VaccineRepo.Vaccine> skippableVaccines) {
+        this.skippableVaccines = skippableVaccines;
     }
 }

@@ -12,12 +12,14 @@ import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.ImageUtils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import org.smartregister.util.Utils;
@@ -130,9 +132,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             for (Vaccine vaccine : vaccineList) {
                 if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
 
-                    //Add exception for bcg 2
-                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
-                            .equalsIgnoreCase(vaccine.getName())) {
+                    //Add exceptions
+                    if (VaccinatorUtils.isSkippableVaccine(tag.getName()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
                         continue;
                     }
 
@@ -190,9 +191,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
 
-                //Add exception for bcg 2
-                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
-                        .equalsIgnoreCase(vaccine.display())) {
+                //Add exceptions
+                if (VaccinatorUtils.isSkippableVaccine(tag.getName()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
 

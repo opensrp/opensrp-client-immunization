@@ -1211,4 +1211,24 @@ public class VaccinatorUtils {
         }
         return Pair.create(minDate, maxDate);
     }
+
+    public static boolean isSkippableVaccine(String vaccine) {
+
+        if (ImmunizationLibrary.getInstance().getSkippableVaccines() == null || ImmunizationLibrary.getInstance().getSkippableVaccines().size() == 0) {
+            return false;
+        }
+
+        String[] vaccineNames = vaccine.replaceAll("\\s", "").split("/");
+        for (String vaccineName : vaccineNames) {
+            try {
+                if (ImmunizationLibrary.getInstance().getSkippableVaccines().contains(VaccineRepo.Vaccine.valueOf(VaccinatorUtils.cleanVaccineName(vaccineName)))) {
+                    return true;
+                }
+            } catch (IllegalArgumentException e) {
+                Timber.d(e.getMessage());
+            }
+        }
+
+        return false;
+    }
 }
