@@ -2,8 +2,10 @@ package org.smartregister.immunization.view.mock;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import org.robolectric.Robolectric;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.view.ServiceRowCard;
 
@@ -14,6 +16,7 @@ import org.smartregister.immunization.view.ServiceRowCard;
 public class ServiceRowCardTestActivity extends Activity {
 
     private ServiceRowCard view;
+    private AttributeSet attrs;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -22,6 +25,7 @@ public class ServiceRowCardTestActivity extends Activity {
         LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
+        attrs = Robolectric.buildAttributeSet().build();
     }
 
     @Override
@@ -59,15 +63,15 @@ public class ServiceRowCardTestActivity extends Activity {
     }
 
     public ServiceRowCard getInstance2() {
-        return new ServiceRowCard(this, ViewAttributes.attrs);
+        return new ServiceRowCard(this, attrs);
     }
 
     public ServiceRowCard getInstance3() {
-        return new ServiceRowCard(this, ViewAttributes.attrs, 0);
+        return new ServiceRowCard(this, attrs, 0);
     }
 
     public ServiceRowCard getInstance1() {
-        return new ServiceRowCard(this, ViewAttributes.attrs, 0, 0);
+        return new ServiceRowCard(this, attrs, 0, 0);
     }
 
 }

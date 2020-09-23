@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +49,7 @@ public class ServiceCard extends LinearLayout {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.view_vaccination_card, this, true).setFilterTouchesWhenObscured(true);
         statusIV = findViewById(R.id.status_iv);
-      //  statusIV.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange));
+        //  statusIV.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange));
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);
     }

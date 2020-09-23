@@ -87,6 +87,10 @@ android {
             returnDefaultValues = true
             includeAndroidResources = true
         }
+
+        unitTests.all {
+            jvmArgs "-Xmx3g"
+        }
     }
 
     compileOptions {
@@ -117,6 +121,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
+    testImplementation 'com.ibm.fhir:fhir-model:4.2.3'
 
     testImplementation 'junit:junit:4.13'
 

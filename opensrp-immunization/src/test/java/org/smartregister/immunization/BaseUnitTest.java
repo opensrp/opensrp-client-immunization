@@ -40,6 +40,7 @@ public abstract class BaseUnitTest {
     public static final String FORMSUBMISSIONID = "formSubmissionId";
     public static final String VALUE = "value";
 
+
     public void mockImmunizationLibrary(@NonNull ImmunizationLibrary immunizationLibrary, @NonNull Context context, @NonNull VaccineRepository vaccineRepository, @NonNull AlertService alertService, @NonNull AppProperties appProperties) {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
