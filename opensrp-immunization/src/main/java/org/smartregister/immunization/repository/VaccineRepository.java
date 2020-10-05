@@ -217,6 +217,25 @@ public class VaccineRepository extends BaseRepository {
         return vaccines;
     }
 
+    public List<Vaccine> findUnSynced() {
+        List<Vaccine> vaccines = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+
+            cursor = getReadableDatabase().query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS,
+                    SYNC_STATUS + " = ? ", new String[] {TYPE_Unsynced},
+                    null, null, null, null);
+            vaccines = readAllVaccines(cursor);
+        } catch (Exception e) {
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return vaccines;
+    }
+
     private List<Vaccine> readAllVaccines(Cursor cursor) {
         List<Vaccine> vaccines = new ArrayList<>();
 

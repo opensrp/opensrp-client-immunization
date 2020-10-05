@@ -29,6 +29,7 @@ public class VaccineIntentService extends IntentService {
     private VaccineRepository vaccineRepository;
     private List<VaccineGroup> availableVaccines;
     private List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines;
+    private ImmunizationLibrary immunizationLibrary;
 
 
     public VaccineIntentService() {
@@ -79,6 +80,7 @@ public class VaccineIntentService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
+        immunizationLibrary = ImmunizationLibrary.getInstance();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -96,7 +98,9 @@ public class VaccineIntentService extends IntentService {
         String concept = "concept";
 
         try {
-            List<Vaccine> vaccines = vaccineRepository.findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
+            List<Vaccine> vaccines = immunizationLibrary.allowSyncImmediately() ?
+                    vaccineRepository.findUnSynced() :
+                    vaccineRepository.findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
             if (!vaccines.isEmpty()) {
                 for (Vaccine vaccine : vaccines) {
 

@@ -42,4 +42,7 @@ public class IMConstants {
         String VACCINE_SCHEDULE_UPDATE_LAST_TIME_RUN = "vaccine-schedule-update-last-time-run";
     }
 
+    public interface VaccineEvent {
+        String PROGRAM_CLIENT_ID = "program_client_id";
+    }
 }

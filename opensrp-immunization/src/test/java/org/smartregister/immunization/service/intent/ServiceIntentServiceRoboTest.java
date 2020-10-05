@@ -49,9 +49,12 @@ public class ServiceIntentServiceRoboTest {
 
         RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito.mock(RecurringServiceRecordRepository.class);
         RecurringServiceTypeRepository recurringServiceTypeRepository = Mockito.mock(RecurringServiceTypeRepository.class);
+        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        Mockito.doReturn(false).when(immunizationLibrary).allowSyncImmediately();
 
         ReflectionHelpers.setField(recurringIntentService, "recurringServiceRecordRepository", recurringServiceRecordRepository);
         ReflectionHelpers.setField(recurringIntentService, "recurringServiceTypeRepository", recurringServiceTypeRepository);
+        ReflectionHelpers.setField(recurringIntentService, "immunizationLibrary", immunizationLibrary);
         Date date = Calendar.getInstance().getTime();
 
         String baseEntityId = "9080s8dfdsc";

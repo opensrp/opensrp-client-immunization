@@ -51,6 +51,7 @@ public class ImmunizationLibrary {
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
     private Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private String currentConditionalVaccine;
+    private boolean allowSyncImmediately = false;
 
     private long vaccineSyncTime = -1;
 
@@ -220,5 +221,13 @@ public class ImmunizationLibrary {
 
     public void setCurrentConditionalVaccine(String currentConditionalVaccine) {
         this.currentConditionalVaccine = currentConditionalVaccine;
+    }
+
+    public boolean allowSyncImmediately() {
+        return allowSyncImmediately;
+    }
+
+    public void setAllowSyncImmediately(boolean allowSyncImmediately) {
+        this.allowSyncImmediately = allowSyncImmediately;
     }
 }

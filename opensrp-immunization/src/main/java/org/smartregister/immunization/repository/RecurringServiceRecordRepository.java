@@ -293,6 +293,24 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         return serviceRecords;
     }
 
+    public List<ServiceRecord> findUnSynced() {
+        List<ServiceRecord> serviceRecords = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase()
+                    .query(TABLE_NAME, TABLE_COLUMNS, SYNC_STATUS + " = ?",
+                            new String[] {TYPE_Unsynced}, null, null, null, null);
+            serviceRecords = readAllServiceRecords(cursor);
+        } catch (Exception e) {
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return serviceRecords;
+    }
+
     public List<ServiceRecord> findByEntityId(String entityId) {
         SQLiteDatabase database = getReadableDatabase();
         String sql = " SELECT " + TABLE_NAME + ".*, " + RecurringServiceTypeRepository.TABLE_NAME + ".name, " + RecurringServiceTypeRepository.TABLE_NAME + ".type FROM " + TABLE_NAME + " LEFT JOIN " + RecurringServiceTypeRepository.TABLE_NAME +
