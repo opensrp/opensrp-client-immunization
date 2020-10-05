@@ -41,6 +41,8 @@ public class VaccineIntentServiceRoboTest {
     @Test
     public void onHandleIntentShouldGenerateValidJsonFieldsForEventCreation() {
         VaccineIntentService vaccineIntentService = Robolectric.setupService(VaccineIntentService.class);
+        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        Mockito.doReturn(false).when(immunizationLibrary).allowSyncImmediately();
 
         org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
         Mockito.doReturn(new AppProperties()).when(context).getAppProperties();
@@ -48,6 +50,7 @@ public class VaccineIntentServiceRoboTest {
 
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
         ReflectionHelpers.setField(vaccineIntentService, "vaccineRepository", vaccineRepository);
+        ReflectionHelpers.setField(vaccineIntentService, "immunizationLibrary", immunizationLibrary);
 
         Date date = Calendar.getInstance().getTime();
 
