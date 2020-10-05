@@ -37,6 +37,7 @@ public class RecurringIntentService extends IntentService {
     protected final String OPENMRS_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     private RecurringServiceTypeRepository recurringServiceTypeRepository;
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
+    private ImmunizationLibrary immunizationLibrary;
 
 
     public RecurringIntentService() {
@@ -47,6 +48,7 @@ public class RecurringIntentService extends IntentService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
         recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+        immunizationLibrary = ImmunizationLibrary.getInstance();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -65,8 +67,9 @@ public class RecurringIntentService extends IntentService {
         String DATE_DATA_TYPE = "date";
 
         try {
-            List<ServiceRecord> serviceRecordList = recurringServiceRecordRepository
-                    .findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
+            List<ServiceRecord> serviceRecordList = immunizationLibrary.allowSyncImmediately() ?
+                    recurringServiceRecordRepository.findUnSynced() :
+                    recurringServiceRecordRepository.findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
             if (!serviceRecordList.isEmpty()) {
                 for (ServiceRecord serviceRecord : serviceRecordList) {
 
