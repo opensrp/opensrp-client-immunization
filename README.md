@@ -191,7 +191,7 @@ Example: `6 Weeks` group name has a name `6 Weeks` thus the key in _strings.xml_
 You can allow vaccine event generation immediately a vaccine has been submitted as opposed to after a configured time.
 To enable vaccine-event generation on submission, add this config. (Default is false)
 ```
-ImmunizationLibrary.getInstance().setAllowSyncImmediately(true);
+vaccine.sync.immediate=true
 ```
 
 ## Vaccine Relaxation
