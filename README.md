@@ -186,6 +186,14 @@ Example: `6 Weeks` group name has a name `6 Weeks` thus the key in _strings.xml_
         English <string name="_6_weeks">6 weeks</string>
         French <string name="_6_weeks">6 semaines</string>
 ```
+
+## Allow event generation for vaccines on submission
+You can allow vaccine event generation immediately a vaccine has been submitted as opposed to after a configured time.
+To enable vaccine-event generation on submission, add this config. (Default is false)
+```
+ImmunizationLibrary.getInstance().setAllowSyncImmediately(true);
+```
+
 ## Vaccine Relaxation
 You can relax your vaccine schedules and specifies how many days prior to the actual due date of the vaccine one can allow its administration
 This can be done via the setting below in your implementation's _app.properties_ file
