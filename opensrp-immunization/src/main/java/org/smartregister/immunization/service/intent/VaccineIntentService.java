@@ -133,12 +133,10 @@ public class VaccineIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.VALUE, vaccine.getCalculation());
                     jsonArray.put(jsonObject);
 
-                    JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventType(), getEntityType(),
-                            jsonArray);
+                    JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventType(), getEntityType(), jsonArray);
                     //log out of catchment service since this is required in some of the hia2 report indicators
-                    if (vaccine.getBaseEntityId() == null || vaccine.getBaseEntityId().isEmpty()) {
-                        JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventTypeOutOfCatchment(),
-                                getEntityType(), jsonArray);
+                    if (vaccine.getBaseEntityId() == null || vaccine.getBaseEntityId().isEmpty() || new Integer(1).equals(vaccine.getOutOfCatchment())) {
+                        JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventTypeOutOfCatchment(), getEntityType(), jsonArray);
 
                     }
                     vaccineRepository.close(vaccine.getId());
