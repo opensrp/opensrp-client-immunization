@@ -224,9 +224,13 @@ public class ImmunizationLibrary {
     }
 
     public boolean allowSyncImmediately() {
+        if(instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE))
+            allowSyncImmediately = instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE);
+
         return allowSyncImmediately;
     }
 
+    @Deprecated
     public void setAllowSyncImmediately(boolean allowSyncImmediately) {
         this.allowSyncImmediately = allowSyncImmediately;
     }
