@@ -370,6 +370,15 @@ public class VaccineRepository extends BaseRepository {
         return vaccines;
     }
 
+    public void deleteVaccine(String baseEntityId, String vaccineName) {
+        try {
+            getWritableDatabase().delete(VACCINE_TABLE_NAME, BASE_ENTITY_ID + " = ? AND " + NAME + " = ? ", new String[] {baseEntityId, vaccineName});
+            updateFtsSearch(baseEntityId, vaccineName);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+    }
+
     public void deleteVaccine(Long caseId) {
         try {
             Vaccine vaccine = find(caseId);

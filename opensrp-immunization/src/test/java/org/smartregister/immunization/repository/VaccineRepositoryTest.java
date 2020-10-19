@@ -296,6 +296,16 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
+    public void deleteVaccineByBaseEntityIdAndName() {
+        VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
+        Mockito.when(vaccineRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
+        vaccineRepositoryspy.deleteVaccine("baseEntityID","opv_1");
+        Mockito.verify(sqliteDatabase, Mockito.times(1))
+                .delete(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(),
+                        org.mockito.ArgumentMatchers.any(String[].class));
+    }
+
+    @Test
     public void findWithNullHia2StatusTest() {
 
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
