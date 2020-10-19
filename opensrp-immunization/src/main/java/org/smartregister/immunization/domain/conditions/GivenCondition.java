@@ -43,32 +43,31 @@ public class GivenCondition extends VaccineCondition {
                 break;
             }
         }
+        if (comparisonVaccine == null) return false;
 
-        if (comparisonVaccine != null) {
-            Calendar comparisonDate = Calendar.getInstance();
-            VaccineSchedule.standardiseCalendarDate(comparisonDate);
-            comparisonDate = VaccineSchedule.addOffsetToCalendar(comparisonDate, value);
+        Calendar comparisonDate = Calendar.getInstance();
+        VaccineSchedule.standardiseCalendarDate(comparisonDate);
+        comparisonDate = VaccineSchedule.addOffsetToCalendar(comparisonDate, value);
 
-            Calendar vaccinationDate = Calendar.getInstance();
-            vaccinationDate.setTime(comparisonVaccine.getDate());
-            VaccineSchedule.standardiseCalendarDate(vaccinationDate);
+        Calendar vaccinationDate = Calendar.getInstance();
+        vaccinationDate.setTime(comparisonVaccine.getDate());
+        VaccineSchedule.standardiseCalendarDate(vaccinationDate);
 
-            switch (comparison) {
-                case EXACTLY:
-                    result = comparisonDate.getTimeInMillis() == vaccinationDate.getTimeInMillis();
-                    break;
-                case AT_LEAST:
-                    result = comparisonDate.getTimeInMillis() >= vaccinationDate.getTimeInMillis();
-                    break;
-                case AT_MOST:
-                    result = comparisonDate.getTimeInMillis() <= vaccinationDate.getTimeInMillis();
-                    break;
-                default:
-                    break;
-            }
+        switch (comparison) {
+            case EXACTLY:
+                result = comparisonDate.getTimeInMillis() == vaccinationDate.getTimeInMillis();
+                break;
+            case AT_LEAST:
+                result = comparisonDate.getTimeInMillis() >= vaccinationDate.getTimeInMillis();
+                break;
+            case AT_MOST:
+                result = comparisonDate.getTimeInMillis() <= vaccinationDate.getTimeInMillis();
+                break;
+            default:
+                break;
         }
 
-        return result && isWithinAge(anchorDate, conditionData);
+        return result && isWithinAge(anchorDate, comparisonVaccine.getDate(), conditionData);
     }
 
     public enum Comparison {
