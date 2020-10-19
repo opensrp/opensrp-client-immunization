@@ -236,7 +236,7 @@ public class VaccineRepository extends BaseRepository {
         return vaccines;
     }
 
-    private List<Vaccine> readAllVaccines(Cursor cursor) {
+    public List<Vaccine> readAllVaccines(Cursor cursor) {
         List<Vaccine> vaccines = new ArrayList<>();
 
         try {
@@ -375,7 +375,7 @@ public class VaccineRepository extends BaseRepository {
             getWritableDatabase().delete(VACCINE_TABLE_NAME, BASE_ENTITY_ID + " = ? AND " + NAME + " = ? ", new String[] {baseEntityId, vaccineName});
             updateFtsSearch(baseEntityId, vaccineName);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
