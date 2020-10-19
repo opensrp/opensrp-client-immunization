@@ -50,9 +50,9 @@ public abstract class VaccineCondition {
     public abstract boolean passes(Date anchorDate, List<Vaccine> issuedVaccines);
 
 
-    protected boolean isWithinAge(Date anchorDate, Condition conditionData) {
+    protected boolean isWithinAge(Date anchorDate, Date vaccineDate, Condition conditionData) {
         if (anchorDate != null && conditionData.age != null) {
-            Calendar baseDate = getDate(anchorDate, "+0d");
+            Calendar baseDate = getDate(vaccineDate, "+0d");
             Calendar startDate = getDate(anchorDate, conditionData.age.get("from"));
             Calendar endDate = conditionData.age.containsKey("to") ?
                     getDate(anchorDate, conditionData.age.get("to")) : getDate(new Date(), "+0d");
