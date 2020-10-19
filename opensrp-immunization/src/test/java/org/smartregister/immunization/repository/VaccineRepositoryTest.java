@@ -167,6 +167,36 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
+    public void testReadAllReturnsListOfVaccines(){
+        String[] columns = new String[]{
+                VaccineRepository.ID_COLUMN,
+                VaccineRepository.BASE_ENTITY_ID,
+                VaccineRepository.PROGRAM_CLIENT_ID,
+                VaccineRepository.NAME,
+                VaccineRepository.CALCULATION,
+                VaccineRepository.DATE,
+                VaccineRepository.ANMID,
+                VaccineRepository.LOCATION_ID,
+                VaccineRepository.SYNC_STATUS,
+                VaccineRepository.HIA2_STATUS,
+                VaccineRepository.UPDATED_AT_COLUMN,
+                VaccineRepository.EVENT_ID,
+                VaccineRepository.FORMSUBMISSION_ID,
+                VaccineRepository.OUT_OF_AREA,
+                VaccineRepository.CREATED_AT,
+                VaccineRepository.TEAM,
+                VaccineRepository.TEAM_ID,
+                VaccineRepository.CHILD_LOCATION_ID
+        };
+
+        MatrixCursor cursor = new MatrixCursor(columns);
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1,magicTime,"","",""});
+
+        List<Vaccine> vaccines = vaccineRepository.readAllVaccines(cursor);
+        Assert.assertFalse(vaccines.isEmpty());
+    }
+
+    @Test
     public void verifyUpdateTestCallsDatabaseUpdate1Time() {
         Vaccine vaccine = new Vaccine();
         vaccine.setId(0l);
@@ -290,6 +320,16 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.doReturn(vaccine).when(vaccineRepositoryspy).find(0l);
         Mockito.when(vaccineRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepositoryspy.deleteVaccine(0l);
+        Mockito.verify(sqliteDatabase, Mockito.times(1))
+                .delete(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(),
+                        org.mockito.ArgumentMatchers.any(String[].class));
+    }
+
+    @Test
+    public void deleteVaccineByBaseEntityIdAndName() {
+        VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
+        Mockito.when(vaccineRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
+        vaccineRepositoryspy.deleteVaccine("baseEntityID","opv_1");
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .delete(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(),
                         org.mockito.ArgumentMatchers.any(String[].class));
