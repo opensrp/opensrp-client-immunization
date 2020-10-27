@@ -50,9 +50,7 @@ before_script:
 
 script:
   - travis_wait ./gradlew :opensrp-immunization:jacocoTestReport  --stacktrace
-
-after_success:
-  - travis_wait ./gradlew :opensrp-immunization:coveralls --stacktrace
+  - travis_wait ./gradlew :opensrp-immunization:coveralls  --stacktrace
 
 after_failure:
   - pandoc opensrp-child/build/reports/tests/index.html -t plain
