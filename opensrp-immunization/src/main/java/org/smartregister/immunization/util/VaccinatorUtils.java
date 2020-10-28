@@ -1193,9 +1193,9 @@ public class VaccinatorUtils {
 
             VaccineWrapper vaccineWrapper = vaccineWrappers.get(0);
 
-            VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child", vaccineWrapper.getName());
+            VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule(IMConstants.VACCINE_TYPE.CHILD, vaccineWrapper.getName());
             if (curVaccineSchedule == null) {
-                curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman", vaccineWrapper.getName());
+                curVaccineSchedule = VaccineSchedule.getVaccineSchedule(IMConstants.VACCINE_TYPE.WOMAN, vaccineWrapper.getName());
             }
             if (curVaccineSchedule != null) {
                 VaccineRepo.Vaccine prerequisite = curVaccineSchedule.getVaccine().prerequisite();
@@ -1210,5 +1210,25 @@ public class VaccinatorUtils {
             }
         }
         return Pair.create(minDate, maxDate);
+    }
+
+    public static boolean isSkippableVaccine(String vaccine) {
+
+        if (ImmunizationLibrary.getInstance().getSkippableVaccines() == null || ImmunizationLibrary.getInstance().getSkippableVaccines().size() == 0) {
+            return false;
+        }
+
+        String[] vaccineNames = vaccine.replaceAll("\\s", "").split("/");
+        for (String vaccineName : vaccineNames) {
+            try {
+                if (ImmunizationLibrary.getInstance().getSkippableVaccines().contains(VaccineRepo.Vaccine.valueOf(VaccinatorUtils.cleanVaccineName(vaccineName)))) {
+                    return true;
+                }
+            } catch (IllegalArgumentException e) {
+                Timber.d(e.getMessage());
+            }
+        }
+
+        return false;
     }
 }

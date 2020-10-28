@@ -49,6 +49,7 @@ import org.smartregister.util.Utils;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -587,5 +588,28 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         String vaccineDateString = vaccineDate.toString(fmt);
         Assert.assertEquals("2020-05-12", vaccineDateString);
 
+    }
+
+    @Test
+    public void testIsSkippableVaccineReturnsTrueForSkippableVaccines() {
+
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.doReturn(Arrays.asList(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.bcg2})).when(immunizationLibrary).getSkippableVaccines();
+
+        Boolean result = VaccinatorUtils.isSkippableVaccine("BCG 2");
+        Assert.assertNotNull(result);
+        Assert.assertEquals(true, result);
+    }
+
+    @Test
+    public void testIsSkippableVaccineReturnsFalseForNonSkippableVaccines() {
+
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+
+        Boolean result = VaccinatorUtils.isSkippableVaccine("OPV 1");
+        Assert.assertNotNull(result);
+        Assert.assertEquals(false, result);
     }
 }

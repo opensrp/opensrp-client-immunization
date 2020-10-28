@@ -83,6 +83,6 @@
 
     <string name="expired">Expired</string>
     <string name="expired_colon">Expired: %1$s</string>
-
+    <string name="out_of_catchment">Out of Catchment</string>
 
 </resources>
