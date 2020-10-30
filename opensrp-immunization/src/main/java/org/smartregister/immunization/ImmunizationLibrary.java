@@ -20,6 +20,7 @@ import org.smartregister.util.AssetHandler;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +50,10 @@ public class ImmunizationLibrary {
 
     public static List<String> COMBINED_VACCINES = new ArrayList<>();
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
+    private Map<String, String> conditionalVaccinesMap = new HashMap<>();
+    private String currentConditionalVaccine;
+    private boolean allowSyncImmediately = false;
+    private List<VaccineRepo.Vaccine> skippableVaccines = new ArrayList<>();
 
     private long vaccineSyncTime = -1;
 
@@ -58,17 +63,23 @@ public class ImmunizationLibrary {
         this.commonFtsObject = commonFtsObject;
         this.applicationVersion = applicationVersion;
         this.databaseVersion = databaseVersion;
+        setCurrentConditionalVaccine(null);
+        setSkippableVaccines(Arrays.asList(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1}));
     }
 
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
         if (instance == null) {
             instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
 
-            allowExpiredVaccineEntry = instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
+            allowExpiredVaccineEntry = instance.getProperties().isTrue(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
 
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.CHILD);
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.WOMAN);
         }
+    }
+
+    public Map<String, String> getConditionalVaccinesMap() {
+        return conditionalVaccinesMap;
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
@@ -162,12 +173,21 @@ public class ImmunizationLibrary {
         return ImmunizationLibrary.getInstance().context().getAppProperties();
     }
 
-    public void setVaccines(VaccineRepo.Vaccine[] vaccines) {
-        this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines = vaccines;
+    /**
+     * @param vaccines the vaccines repo enum values
+     * @param category the category the vaccines are for e.g. CHILD, WOMAN
+     */
+    public void setVaccines(VaccineRepo.Vaccine[] vaccines, String category) {
+        this.vaccineCacheMap.get(category).vaccines = vaccines;
     }
 
-    public VaccineRepo.Vaccine[] getVaccines() {
-        return this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines;
+    /**
+     * @param category the category of the vaccines to be retrieved
+     *                 returns an array of the vaccines from the specified category
+     */
+    public VaccineRepo.Vaccine[]
+    getVaccines(String category) {
+        return this.vaccineCacheMap.get(category).vaccines;
     }
 
     public boolean isAllowExpiredVaccineEntry() {
@@ -179,7 +199,7 @@ public class ImmunizationLibrary {
     }
 
     public boolean isExpiredVaccineCardRed() {
-        return getProperties().hasProperty(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
+        return getProperties().isTrue(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
     }
 
     public long getVaccineSyncTime() {
@@ -198,4 +218,36 @@ public class ImmunizationLibrary {
         this.vaccineSyncTime = timeUnit.toMinutes(vaccineSyncTime);
     }
 
+    public String getCurrentConditionalVaccine() {
+        return currentConditionalVaccine;
+    }
+
+    public void setCurrentConditionalVaccine(String currentConditionalVaccine) {
+        this.currentConditionalVaccine = currentConditionalVaccine;
+    }
+
+    public boolean allowSyncImmediately() {
+        if (instance.getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE))
+            allowSyncImmediately = instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_SYNC_IMMEDIATE);
+
+        return allowSyncImmediately;
+    }
+
+    @Deprecated
+    public void setAllowSyncImmediately(boolean allowSyncImmediately) {
+        this.allowSyncImmediately = allowSyncImmediately;
+    }
+
+    public List<VaccineRepo.Vaccine> getSkippableVaccines() {
+        return skippableVaccines;
+    }
+
+    /**
+     * Set the Vaccines to skip from normal processing e.g. bcg2
+     *
+     * @param skippableVaccines
+     */
+    public void setSkippableVaccines(List<VaccineRepo.Vaccine> skippableVaccines) {
+        this.skippableVaccines = skippableVaccines;
+    }
 }

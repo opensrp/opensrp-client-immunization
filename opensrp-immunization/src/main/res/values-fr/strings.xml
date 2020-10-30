@@ -8,8 +8,8 @@
     <string name="done_today">Fait aujourd\'hui</string>
     <string name="vaccine_done_today">Vaccin fait aujourd\'hui</string>
     <string name="vaccine_done_earlier">Vaccin fait plus tôt</string>
-    <string name="vaccines_done_today">Vaccins fait aujourd\'hui</string>
-    <string name="vaccines_done_earlier">Vaccins fait plus tôt</string>
+    <string name="vaccines_done_today">Vaccins faits aujourd\'hui</string>
+    <string name="vaccines_done_earlier">Vaccins faits plus tôt</string>
     <string name="vaccine_name">prénom</string>
     <string name="vaccine_number">nombre</string>
     <string name="vaccine">Vaccin</string>
@@ -32,7 +32,7 @@
     <string name="today">Aujourd\'hui</string>
 
     <!-- Recurring Services -->
-    <string name="recurring_services">Services récurrentes</string>
+    <string name="recurring_services">Services récurrents</string>
     <string name="given_today">%1$s donné aujourd\'hui</string>
     <string name="given_earlier">%1$s donné plus tôt</string>
     <string name="itn_given">Est-ce que l\'enfant a reçu un ITN?</string>
@@ -82,6 +82,7 @@
 
     <string name="expired">Expiré</string>
     <string name="expired_colon">Expiré: %1$s</string>
+    <string name="out_of_catchment">Hors de la zone sanitaire</string>
 
 
 </resources>

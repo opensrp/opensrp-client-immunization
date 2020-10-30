@@ -110,6 +110,8 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.ipv2);
         vaccines.add(VaccineRepo.Vaccine.hepb0);
         vaccines.add(VaccineRepo.Vaccine.dtp4);
+        vaccines.add(VaccineRepo.Vaccine.hpv1);
+        vaccines.add(VaccineRepo.Vaccine.hpv2);
         Assert.assertEquals(vaccines, VaccineRepo.getVaccines(CHILD));
     }
 

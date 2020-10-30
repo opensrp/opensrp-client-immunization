@@ -301,31 +301,17 @@ public class VaccinateActionUtils {
         if (category == null) {
             return null;
         }
-        if ("child".equals(category)) {
 
-            ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines("child");
-            List<String> names = new ArrayList<>();
+        List<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines(category);
+        List<String> names = new ArrayList<>();
 
-            for (VaccineRepo.Vaccine vaccine : vaccines) {
-                names.add(vaccine.display());
-                names.add(vaccine.name());
-            }
-
-            return names.toArray(new String[names.size()]);
+        for (VaccineRepo.Vaccine vaccine : vaccines) {
+            names.add(vaccine.display());
+            names.add(vaccine.name());
         }
-        if ("woman".equals(category)) {
 
-            ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines("woman");
-            List<String> names = new ArrayList<>();
+        return names.toArray(new String[names.size()]);
 
-            for (VaccineRepo.Vaccine vaccine : vaccines) {
-                names.add(vaccine.display());
-                names.add(vaccine.name());
-            }
-
-            return names.toArray(new String[names.size()]);
-        }
-        return null;
     }
 
     public static String[] allAlertNames(Collection<List<ServiceType>> typeList) {

@@ -49,6 +49,7 @@ public class ServiceRowCard extends LinearLayout {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.view_immunization_row_card, this, true).setFilterTouchesWhenObscured(true);
         statusIV = findViewById(R.id.status_iv);
+        // statusIV.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange));
         StatusTV = findViewById(R.id.status_text_tv);
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);
@@ -69,7 +70,7 @@ public class ServiceRowCard extends LinearLayout {
         init(context);
     }
 
-    @TargetApi (Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ServiceRowCard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);

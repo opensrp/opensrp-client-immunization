@@ -32,6 +32,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
@@ -77,8 +78,9 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
 
-        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
 
         activity = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class).create().start().get();
         activity.setContentView(R.layout.service_dialog_view);

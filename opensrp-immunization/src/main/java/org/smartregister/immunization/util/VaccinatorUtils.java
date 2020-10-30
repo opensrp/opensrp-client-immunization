@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -61,6 +62,7 @@ import org.smartregister.immunization.domain.ServiceSchedule;
 import org.smartregister.immunization.domain.ServiceTrigger;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.State;
+import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
@@ -81,6 +83,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import timber.log.Timber;
 
 import static org.smartregister.immunization.R.id.vaccine;
 import static org.smartregister.util.Utils.addToList;
@@ -347,15 +351,6 @@ public class VaccinatorUtils {
         }
     }
 
-    private static DateTime getReceivedDate(Map<String, String> received, Vaccine v) {
-        if (received.get(v.name()) != null) {
-            return new DateTime(received.get(v.name()));
-        } else if (received.get(v.name() + "_retro") != null) {
-            return new DateTime(received.get(v.name() + "_retro"));
-        }
-        return null;
-    }
-
     public static List<Map<String, Object>> generateScheduleList(String category, DateTime milestoneDate,
                                                                  Map<String, Date> received, List<Alert> alerts) {
         return generateScheduleList(category, milestoneDate, received, alerts, false);
@@ -379,7 +374,7 @@ public class VaccinatorUtils {
         boolean m2Given = false;
         boolean oGiven = false;
         try {
-            ArrayList<Vaccine> vl = VaccineRepo.getVaccines(category);
+            List<Vaccine> vl = VaccineRepo.getVaccines(category);
             for (Vaccine v : vl) {
                 Map<String, Object> m = new HashMap<>();
                 Date recDate = received.get(v.display().toLowerCase(Locale.ENGLISH));
@@ -730,7 +725,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e, e.toString());
         }
         return v;
     }
@@ -752,7 +747,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e, e.toString());
         }
         return v;
     }
@@ -787,7 +782,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e, e.toString());
         }
 
         return v;
@@ -933,6 +928,11 @@ public class VaccinatorUtils {
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedVaccines(@Nullable Context context, String prefix) {
+        ImmunizationLibrary immunizationLibrary = ImmunizationLibrary.getInstance();
+        Map<String, String> conditionalVaccinesMap = immunizationLibrary.getConditionalVaccinesMap();
+        if (!conditionalVaccinesMap.isEmpty() && immunizationLibrary.getCurrentConditionalVaccine() != null) {
+            return getVaccineGroupsFromVaccineConfigFile(context, getFileName(conditionalVaccinesMap.get(immunizationLibrary.getCurrentConditionalVaccine()), prefix));
+        }
         return getVaccineGroupsFromVaccineConfigFile(context, getFileName(vaccines_file, prefix));
     }
 
@@ -1172,5 +1172,63 @@ public class VaccinatorUtils {
         String offsetAfterReplace = offset.replace(" ", "").toLowerCase(Locale.ENGLISH);
         Pattern p1 = Pattern.compile("([-+]{1})(.*)");
         return p1.matcher(offsetAfterReplace);
+    }
+
+    /**
+     * This method is used to return minimum and maximum date as a pair for a vaccine that has a
+     * prerequisite. Example if you have IPV2 vaccine that depends on IPV1. We want to set the minimum
+     * date for IPV2 to be the date IPV1 was administered.
+     *
+     * @param vaccineWrappers Current vaccine(s) to be administered
+     * @param issuedVaccines  Requisite vaccine(s) that were administered earlier
+     * @return a pair of minimum and maximum date respectively
+     */
+    public static Pair<Calendar, Calendar> getVaccineMinimumAndMaximumDate(List<VaccineWrapper> vaccineWrappers, List<org.smartregister.immunization.domain.Vaccine> issuedVaccines) {
+        boolean requisiteDateConstraintEnabled = Boolean.parseBoolean(ImmunizationLibrary.getInstance().getProperties()
+                .getProperty(IMConstants.APP_PROPERTIES.VACCINE_REQUISITE_DATE_CONSTRAINT_ENABLED, String.valueOf(false)));
+
+        Calendar maxDate = null;
+        Calendar minDate = null;
+        if (requisiteDateConstraintEnabled && vaccineWrappers.size() == 1) {
+
+            VaccineWrapper vaccineWrapper = vaccineWrappers.get(0);
+
+            VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule(IMConstants.VACCINE_TYPE.CHILD, vaccineWrapper.getName());
+            if (curVaccineSchedule == null) {
+                curVaccineSchedule = VaccineSchedule.getVaccineSchedule(IMConstants.VACCINE_TYPE.WOMAN, vaccineWrapper.getName());
+            }
+            if (curVaccineSchedule != null) {
+                VaccineRepo.Vaccine prerequisite = curVaccineSchedule.getVaccine().prerequisite();
+                if (prerequisite != null)
+                    for (org.smartregister.immunization.domain.Vaccine vaccine : issuedVaccines)
+                        if (vaccine.getName().equalsIgnoreCase(prerequisite.display())) {
+                            minDate = Calendar.getInstance();
+                            minDate.setTime(vaccine.getDate());
+                            maxDate = Calendar.getInstance();
+                            break;
+                        }
+            }
+        }
+        return Pair.create(minDate, maxDate);
+    }
+
+    public static boolean isSkippableVaccine(String vaccine) {
+
+        if (ImmunizationLibrary.getInstance().getSkippableVaccines() == null || ImmunizationLibrary.getInstance().getSkippableVaccines().size() == 0) {
+            return false;
+        }
+
+        String[] vaccineNames = vaccine.replaceAll("\\s", "").split("/");
+        for (String vaccineName : vaccineNames) {
+            try {
+                if (ImmunizationLibrary.getInstance().getSkippableVaccines().contains(VaccineRepo.Vaccine.valueOf(VaccinatorUtils.cleanVaccineName(vaccineName)))) {
+                    return true;
+                }
+            } catch (IllegalArgumentException e) {
+                Timber.d(e.getMessage());
+            }
+        }
+
+        return false;
     }
 }

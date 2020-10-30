@@ -2,6 +2,7 @@ package org.smartregister.immunization.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.AttributeSet;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +20,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -48,15 +50,21 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest ({ImmunizationLibrary.class})
-@Config (shadows = {FontTextViewShadow.class})
-@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest({ImmunizationLibrary.class})
+@Config(shadows = {FontTextViewShadow.class})
+@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
     private ImmunizationRowGroup view;
+
     @Mock
     private Context context;
+
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+
+    private AttributeSet attrs;
 
     @Mock
     private org.smartregister.Context context_;
@@ -79,6 +87,8 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         CoreLibrary.init(context_);
         controller.setup();
         view = activity.getInstance();
+
+        attrs = Robolectric.buildAttributeSet().build();
 
     }
 
@@ -352,6 +362,9 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() {
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+
         setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers);
         wrapper = new VaccineWrapper();
@@ -386,10 +399,17 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Test
     public void asertConstructorsNotNull() {
+
         Assert.assertNotNull(activity.getInstance());
-        //Assert.assertNotNull(activity.getInstance1());
-        //Assert.assertNotNull(activity.getInstance2());
-        //Assert.assertNotNull(activity.getInstance3());
+      
+        ImmunizationRowGroup instance1 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs);
+        Assert.assertNotNull(instance1);
+
+        ImmunizationRowGroup instance2 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0);
+        Assert.assertNotNull(instance2);
+
+        ImmunizationRowGroup instance3 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0, 0);
+        Assert.assertNotNull(instance3);
     }
 
     @After
@@ -397,6 +417,8 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         destroyController();
         activity = null;
         controller = null;
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
 
     }
 

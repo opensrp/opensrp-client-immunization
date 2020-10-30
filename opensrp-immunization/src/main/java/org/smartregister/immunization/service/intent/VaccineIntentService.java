@@ -2,7 +2,6 @@ package org.smartregister.immunization.service.intent;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -11,12 +10,13 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.JsonFormUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 3/01/2017.
@@ -29,6 +29,7 @@ public class VaccineIntentService extends IntentService {
     private VaccineRepository vaccineRepository;
     private List<VaccineGroup> availableVaccines;
     private List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines;
+    private ImmunizationLibrary immunizationLibrary;
 
 
     public VaccineIntentService() {
@@ -79,6 +80,7 @@ public class VaccineIntentService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
+        immunizationLibrary = ImmunizationLibrary.getInstance();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -96,7 +98,9 @@ public class VaccineIntentService extends IntentService {
         String concept = "concept";
 
         try {
-            List<Vaccine> vaccines = vaccineRepository.findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
+            List<Vaccine> vaccines = immunizationLibrary.allowSyncImmediately() ?
+                    vaccineRepository.findUnSynced() :
+                    vaccineRepository.findUnSyncedBeforeTime((int) ImmunizationLibrary.getInstance().getVaccineSyncTime());
             if (!vaccines.isEmpty()) {
                 for (Vaccine vaccine : vaccines) {
 
@@ -129,19 +133,17 @@ public class VaccineIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.VALUE, vaccine.getCalculation());
                     jsonArray.put(jsonObject);
 
-                    JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventType(), getEntityType(),
-                            jsonArray);
+                    JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventType(), getEntityType(), jsonArray);
                     //log out of catchment service since this is required in some of the hia2 report indicators
-                    if (vaccine.getBaseEntityId() == null || vaccine.getBaseEntityId().isEmpty()) {
-                        JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventTypeOutOfCatchment(),
-                                getEntityType(), jsonArray);
+                    if (vaccine.getBaseEntityId() == null || vaccine.getBaseEntityId().isEmpty() || new Integer(1).equals(vaccine.getOutOfCatchment())) {
+                        JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventTypeOutOfCatchment(), getEntityType(), jsonArray);
 
                     }
                     vaccineRepository.close(vaccine.getId());
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 

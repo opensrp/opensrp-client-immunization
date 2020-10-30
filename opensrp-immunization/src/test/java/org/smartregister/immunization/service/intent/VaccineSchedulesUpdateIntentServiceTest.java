@@ -1,5 +1,7 @@
 package org.smartregister.immunization.service.intent;
 
+import android.os.Build;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  */
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 27)
+@Config(sdk = Build.VERSION_CODES.P)
 public class VaccineSchedulesUpdateIntentServiceTest {
 
     @Rule
@@ -29,7 +31,7 @@ public class VaccineSchedulesUpdateIntentServiceTest {
     public VaccineSchedulesUpdateIntentService vaccineScheduleUpdateIntentService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         vaccineScheduleUpdateIntentService = Mockito.spy(new VaccineSchedulesUpdateIntentService());
     }
 

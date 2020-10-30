@@ -10,18 +10,29 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <LinearLayout
+            android:id="@+id/profile_name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="#218CC5"
-            android:id="@+id/profile_name_layout">
+            android:orientation="vertical">
 
             <org.smartregister.immunization.sample.view.RoundedImageView
                 android:id="@+id/profile_image_iv"
-                android:layout_height="100dp"
                 android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/outOfCatchment"
+                style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/out_of_catchment"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/holo_orange_light"
+                android:visibility="gone"/>
 
             <org.smartregister.view.customcontrols.CustomFontTextView
                 android:id="@+id/name"
@@ -29,18 +40,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:paddingStart="0dp"
                 android:text="Joyce Mwansa"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/activity_title_size"
-                android:paddingStart="0dp"
-                android:layout_marginTop="5dp"/>
+                android:textSize="@dimen/activity_title_size" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 android:paddingBottom="10dp">
 
 
@@ -61,6 +72,7 @@
                     android:layout_marginStart="10dp"
                     android:text="Age"
                     android:textColor="@color/white" />
+
                 <org.smartregister.view.customcontrols.CustomFontTextView
                     android:id="@+id/status"
                     style="@style/CustomFontTextViewStyle.ClientList.Light"
@@ -68,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="Status: Active"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
 

@@ -1,5 +1,7 @@
 package org.smartregister.immunization.service.intent;
 
+import android.os.Build;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,7 +14,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonFtsObject;
-import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.customshadows.ShadowJsonFormUtils;
 import org.smartregister.immunization.domain.Vaccine;
@@ -31,7 +32,7 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(shadows = {ShadowJsonFormUtils.class}, sdk = 27)
+@Config(shadows = {ShadowJsonFormUtils.class}, sdk = Build.VERSION_CODES.P)
 public class VaccineIntentServiceRoboTest {
 
 
@@ -41,6 +42,8 @@ public class VaccineIntentServiceRoboTest {
     @Test
     public void onHandleIntentShouldGenerateValidJsonFieldsForEventCreation() {
         VaccineIntentService vaccineIntentService = Robolectric.setupService(VaccineIntentService.class);
+        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        Mockito.doReturn(false).when(immunizationLibrary).allowSyncImmediately();
 
         org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
         Mockito.doReturn(new AppProperties()).when(context).getAppProperties();
@@ -48,6 +51,7 @@ public class VaccineIntentServiceRoboTest {
 
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
         ReflectionHelpers.setField(vaccineIntentService, "vaccineRepository", vaccineRepository);
+        ReflectionHelpers.setField(vaccineIntentService, "immunizationLibrary", immunizationLibrary);
 
         Date date = Calendar.getInstance().getTime();
 

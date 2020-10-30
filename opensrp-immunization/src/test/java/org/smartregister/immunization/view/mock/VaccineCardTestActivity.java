@@ -2,11 +2,13 @@ package org.smartregister.immunization.view.mock;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import org.joda.time.DateTime;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.Photo;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 public class VaccineCardTestActivity extends Activity implements View.OnClickListener {
 
     private VaccineCard view;
+    private AttributeSet attrs;
 
     @Override
     public void onClick(View view) {
@@ -38,6 +41,7 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
         LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
+        attrs = Robolectric.buildAttributeSet().build();
     }
 
     @Override
@@ -75,15 +79,15 @@ public class VaccineCardTestActivity extends Activity implements View.OnClickLis
     }
 
     public VaccineCard getInstance1() {
-        return new VaccineCard(this, ViewAttributes.attrs);
+        return new VaccineCard(this, attrs);
     }
 
     public VaccineCard getInstance2() {
-        return new VaccineCard(this, ViewAttributes.attrs, 0);
+        return new VaccineCard(this, attrs, 0);
     }
 
     public VaccineCard getInstance3() {
-        return new VaccineCard(this, ViewAttributes.attrs, 0, 0);
+        return new VaccineCard(this, attrs, 0, 0);
     }
 
     public ArrayList<VaccineWrapper> vaccineWrapperList() {

@@ -485,16 +485,24 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         }
 
-        VaccineSchedule.standardiseCalendarDate(minDate);
-        VaccineSchedule.standardiseCalendarDate(maxDate);
+        Pair<Calendar, Calendar> vaccineMinMaxDatePair = VaccinatorUtils.getVaccineMinimumAndMaximumDate(tags, issuedVaccines);
+        if (vaccineMinMaxDatePair.first != null && vaccineMinMaxDatePair.second != null) {
+            minDate = vaccineMinMaxDatePair.first;
+            maxDate = vaccineMinMaxDatePair.second;
+        }
 
-        if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
-            set.setVisibility(View.GONE);
-            datePicker.setMinDate(minDate.getTimeInMillis());
-            datePicker.setMaxDate(maxDate.getTimeInMillis());
-        } else {
-            set.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+        if (minDate != null && maxDate != null) {
+            VaccineSchedule.standardiseCalendarDate(minDate);
+            VaccineSchedule.standardiseCalendarDate(maxDate);
+
+            if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
+                set.setVisibility(View.GONE);
+                datePicker.setMinDate(minDate.getTimeInMillis());
+                datePicker.setMaxDate(maxDate.getTimeInMillis());
+            } else {
+                set.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

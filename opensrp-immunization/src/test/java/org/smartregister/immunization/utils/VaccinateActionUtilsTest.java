@@ -37,6 +37,7 @@ import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
@@ -63,7 +64,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     public static final String WOMAN = "woman";
     private final String magicData = "data";
     private final String magicChild = "child";
-    private final String magicNULL = "NULL";
+    private final String magicNULL = null;
     private final String magicBCG = "BCG";
     private final int magic400 = 400;
     private final String magicID = "uselessentityID";
@@ -94,7 +95,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(vaccinateActionUtils);
 
         mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
-        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines();
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
     }
 
     @Test
@@ -183,7 +184,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         String[] womanVaccines = VaccinateActionUtils.allAlertNames(WOMAN);
 
         Assert.assertNotNull(childVaccines);
-        Assert.assertEquals(childVaccines.length, 88);
+        Assert.assertEquals(childVaccines.length, 92);
 
         Assert.assertNotNull(womanVaccines);
         Assert.assertEquals(womanVaccines.length, 10);

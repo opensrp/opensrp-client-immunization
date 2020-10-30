@@ -39,6 +39,7 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.tabfragments.ImmunizationFragment;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
@@ -75,10 +76,13 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
     public static final String EXTRA_CHILD_DETAILS = "child_details";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private ImmunizationFragment immunizationFragment;
+
     public CommonPersonObjectClient getChildDetails() {
         return childDetails;
     }
+
     private ViewPagerAdapter adapter;
+
     public ViewPagerAdapter getViewPagerAdapter() {
         return adapter;
     }
@@ -89,9 +93,11 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
     AllSharedPreferences allSharedPreferences;
 
     public DetailsRepository detailsRepository;
+
     public DetailsRepository getDetailsRepository() {
         return detailsRepository;
     }
+
     Map<String, String> details;
 
 
@@ -164,14 +170,14 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
 
 
     private void profileWidget() {
-        TextView profilename = (TextView) findViewById(R.id.name);
-        TextView profileZeirID = (TextView) findViewById(R.id.idforclient);
-        TextView profileage = (TextView) findViewById(R.id.ageforclient);
+
+        findViewById(R.id.outOfCatchment).setVisibility(ImmunizationLibrary.getInstance().getProperties().isTrue(IMConstants.APP_PROPERTIES.NOVEL_OUT_OF_CATCHMENT) ? View.VISIBLE : View.GONE);
+        TextView profilename = findViewById(R.id.name);
+        TextView profileZeirID = findViewById(R.id.idforclient);
+        TextView profileage = findViewById(R.id.ageforclient);
         String name = "";
         String childId = "";
-        String dobString = "";
         String formattedAge = "";
-        String formattedDob = "";
         if (isDataOk()) {
             name = Utils.getValue(childDetails.getColumnmaps(), "first_name", true)
                     + " " + Utils.getValue(childDetails.getColumnmaps(), "last_name", true);
@@ -179,11 +185,10 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
             if (StringUtils.isNotBlank(childId)) {
                 childId = childId.replace("-", "");
             }
-            dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+            String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
                 Date dob = dateTime.toDate();
-                formattedDob = DATE_FORMAT.format(dob);
                 long timeDiff = Calendar.getInstance().getTimeInMillis() - dob.getTime();
                 if (timeDiff >= 0) {
                     formattedAge = DateUtil.getDuration(timeDiff);
@@ -195,15 +200,7 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         profileage.setText(String.format("%s: %s", "Age", formattedAge));
         profileZeirID.setText(String.format("%s: %s", "ID", childId));
         profilename.setText(name);
-        Gender gender = Gender.UNKNOWN;
-        if (isDataOk()) {
-            String genderString = Utils.getValue(childDetails, "gender", false);
-            if (genderString != null && genderString.toLowerCase().equals("female")) {
-                gender = Gender.FEMALE;
-            } else if (genderString != null && genderString.toLowerCase().equals("male")) {
-                gender = Gender.MALE;
-            }
-        }
+
     }
 
 

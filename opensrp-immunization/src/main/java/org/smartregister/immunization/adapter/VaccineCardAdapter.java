@@ -180,9 +180,8 @@ public class VaccineCardAdapter extends BaseAdapter {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
             if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
 
-                //Add exception for bcg 2
-                if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
-                        .equalsIgnoreCase(vaccine.display())) {
+                //Add exceptions
+                if (VaccinatorUtils.isSkippableVaccine(tag.getName()) && !tag.getName().equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
 
@@ -213,9 +212,8 @@ public class VaccineCardAdapter extends BaseAdapter {
             for (Vaccine vaccine : vaccineList) {
                 if (tag.getName().toLowerCase().contains(vaccine.getName().toLowerCase()) && vaccine.getDate() != null) {
 
-                    //Add exception for bcg 2
-                    if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
-                            .equalsIgnoreCase(vaccine.getName())) {
+                    //Add exceptions
+                    if (VaccinatorUtils.isSkippableVaccine(tag.getName()) && !tag.getName().equalsIgnoreCase(vaccine.getName())) {
                         continue;
                     }
 
@@ -226,8 +224,8 @@ public class VaccineCardAdapter extends BaseAdapter {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
                     }
                     tag.setDbKey(vaccine.getId());
-                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus()
-                            .equals(VaccineRepository.TYPE_Synced));
+                    tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
+                    tag.setOutOfCatchment("1".equals(vaccine.getOutOfCatchment()));
                     if (tag.getName().contains("/")) {
                         String[] array = tag.getName().split("/");
 

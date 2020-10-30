@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,9 +40,9 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest ({ImmunizationLibrary.class})
-@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
-@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest({ImmunizationLibrary.class})
+@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
+@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -119,7 +120,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        junit.framework.Assert.assertNotNull(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
+        Assert.assertNotNull(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
     }
 
     @Test
@@ -128,14 +129,14 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
         ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(context, view, true, vaccinelist,
                 alertlist);
-        junit.framework.Assert.assertNotNull(immunizationRowAdapter);
+        Assert.assertNotNull(immunizationRowAdapter);
         int len = new JSONArray(VaccineData.vaccines).getJSONObject(0).getJSONArray("vaccines").length();
-        junit.framework.Assert.assertEquals(len, immunizationRowAdapter.getCount());
+        Assert.assertEquals(len, immunizationRowAdapter.getCount());
 
         //should return null
-        junit.framework.Assert.assertNull(immunizationRowAdapter.getItem(0));
+        Assert.assertNull(immunizationRowAdapter.getItem(0));
 
-        junit.framework.Assert.assertEquals(immunizationRowAdapter.getItemId(0), magicNumber);
+        Assert.assertEquals(immunizationRowAdapter.getItemId(0), magicNumber);
 
     }
 
@@ -144,7 +145,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view,
                 true, vaccinelist, alertlist);
 
-        junit.framework.Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
+        Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
 
     }
 

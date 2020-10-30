@@ -217,7 +217,26 @@ public class VaccineRepository extends BaseRepository {
         return vaccines;
     }
 
-    private List<Vaccine> readAllVaccines(Cursor cursor) {
+    public List<Vaccine> findUnSynced() {
+        List<Vaccine> vaccines = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+
+            cursor = getReadableDatabase().query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS,
+                    SYNC_STATUS + " = ? ", new String[] {TYPE_Unsynced},
+                    null, null, null, null);
+            vaccines = readAllVaccines(cursor);
+        } catch (Exception e) {
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return vaccines;
+    }
+
+    public List<Vaccine> readAllVaccines(Cursor cursor) {
         List<Vaccine> vaccines = new ArrayList<>();
 
         try {
@@ -349,6 +368,15 @@ public class VaccineRepository extends BaseRepository {
             }
         }
         return vaccines;
+    }
+
+    public void deleteVaccine(String baseEntityId, String vaccineName) {
+        try {
+            getWritableDatabase().delete(VACCINE_TABLE_NAME, BASE_ENTITY_ID + " = ? AND " + NAME + " = ? ", new String[] {baseEntityId, vaccineName});
+            updateFtsSearch(baseEntityId, vaccineName);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
     public void deleteVaccine(Long caseId) {

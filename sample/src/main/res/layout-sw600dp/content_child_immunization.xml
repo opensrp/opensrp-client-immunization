@@ -14,10 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -50,6 +50,15 @@
                     android:orientation="vertical"
                     android:paddingStart="10dp"
                     android:paddingEnd="20dp">
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/outOfCatchment"
+                        style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/out_of_catchment"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/holo_orange_light" />
 
                     <org.smartregister.view.customcontrols.CustomFontTextView
                         android:id="@+id/name_tv"
@@ -114,10 +123,10 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
                     android:paddingStart="10dp"
+                    android:paddingTop="10dp"
                     android:paddingEnd="20dp"
-                    android:paddingTop="10dp">
+                    android:paddingBottom="10dp">
 
                     <org.smartregister.view.customcontrols.CustomFontTextView
                         style="@style/CustomFontTextViewStyle.ClientList"

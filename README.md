@@ -186,6 +186,14 @@ Example: `6 Weeks` group name has a name `6 Weeks` thus the key in _strings.xml_
         English <string name="_6_weeks">6 weeks</string>
         French <string name="_6_weeks">6 semaines</string>
 ```
+
+## Allow event generation for vaccines on submission
+You can allow vaccine event generation immediately a vaccine has been submitted as opposed to after a configured time.
+To enable vaccine-event generation on submission, add this config. (Default is false)
+```
+vaccine.sync.immediate=true
+```
+
 ## Vaccine Relaxation
 You can relax your vaccine schedules and specifies how many days prior to the actual due date of the vaccine one can allow its administration
 This can be done via the setting below in your implementation's _app.properties_ file
@@ -211,13 +219,19 @@ The current default color for expired vaccine when back-data entry is enabled is
 vaccine.expired.red=true
 ```
 
-### Vaccine Group
+## Constraints for backdated vaccines
+
+For vaccines that are dependent on previous ones, set the following property to `true` to prevent the user from recording a vaccine at a date that is earlier than the previous vaccine's. This property does not work when recording multiple vaccines with the **Record All** actions for the vaccine group. 
+
+```
+vaccine.requisite.date.constraint.enabled=true
+```
 
 ## Gotcha's when using the library
 
 1. Vaccine schedule not changing after changing the `vaccines.json` file!
 
 Some of the vaccine configurations are not dependent on change done to the `vaccines.json`, in this case you should check the current configuration [here](https://github.com/OpenSRP/opensrp-client-immunization/blob/67a15611b53c55e111a0b7bff4f32a02c27b2920/opensrp-immunization/src/main/java/org/smartregister/immunization/db/VaccineRepo.java#L37)
-and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines()` and add 
-modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[])`
+and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines(category)` and add 
+modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[], category)`
 to re-set all the vaccine configs using the configurations array you retrieved.

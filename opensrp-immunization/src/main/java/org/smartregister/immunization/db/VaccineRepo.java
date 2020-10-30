@@ -3,16 +3,17 @@ package org.smartregister.immunization.db;
 import org.smartregister.immunization.ImmunizationLibrary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VaccineRepo {
 
-    public static ArrayList<Vaccine> getVaccines(String category) {
+    public static List<Vaccine> getVaccines(String category) {
         return getVaccines(category, false);
     }
 
-    public static ArrayList<Vaccine> getVaccines(String category, boolean useDefault) {
+    public static List<Vaccine> getVaccines(String category, boolean useDefault) {
         ArrayList<Vaccine> vl = new ArrayList<>();
-        Vaccine[] vaccines = useDefault ? Vaccine.values() : ImmunizationLibrary.getInstance().getVaccines();
+        Vaccine[] vaccines = useDefault ? Vaccine.values() : ImmunizationLibrary.getInstance().getVaccines(category);
         for (Vaccine v : vaccines) {
             if (v.category().equalsIgnoreCase(category.trim())) {
                 vl.add(v);
@@ -22,10 +23,9 @@ public class VaccineRepo {
     }
 
     public static Vaccine getVaccine(String name, String category) {
-        Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines();
+        Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines(category);
         for (Vaccine curVaccine : vaccines) {
-            if (curVaccine.display.equalsIgnoreCase(name)
-                    && curVaccine.category.equalsIgnoreCase(category)) {
+            if (curVaccine.display.equalsIgnoreCase(name)) {
                 return curVaccine;
             }
         }
@@ -101,6 +101,8 @@ public class VaccineRepo {
         ipv2("IPV 2", ipv1, 28, 98, 0, "child"),
         hepb0("Hep B 0", null, -1, 0, 28, "child"),
         dtp4("DTP 4", null, -1, 448, 28, "child"),
+        hpv1("HPV 1", null, -1, 3287, 28, "child"),
+        hpv2("HPV 2", null, -1, 3287, 28, "child"),
 
         //mother vaccines
         tt1("TT 1", null, 0, 0, 0, "woman"),

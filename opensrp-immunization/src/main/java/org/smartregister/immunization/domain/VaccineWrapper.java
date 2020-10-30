@@ -37,6 +37,7 @@ public class VaccineWrapper implements Serializable {
 
     private boolean today;
     private boolean synced;
+    private boolean isOutOfCatchment;
 
     private Date createdAt;
 
@@ -219,5 +220,13 @@ public class VaccineWrapper implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isOutOfCatchment() {
+        return isOutOfCatchment;
+    }
+
+    public void setOutOfCatchment(boolean outOfCatchment) {
+        isOutOfCatchment = outOfCatchment;
     }
 }
