@@ -10,4 +10,6 @@ public class Due extends Expiry {
 
     public String prerequisite;
 
+    public Condition condition;
+
 }
