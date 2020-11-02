@@ -28,12 +28,12 @@ public class JoinCondition extends VaccineCondition {
         if (conditionData.conditions != null && conditionData.conditions.size() > 0) {
 
             boolean isOr = "or".equalsIgnoreCase(conditionData.value);
-            boolean passes = true;
+            boolean passes = false;
             for (Condition condition : conditionData.conditions) {
                 VaccineCondition vacCondition = VaccineCondition.init(vaccineCategory,
                         condition);
 
-                passes = vacCondition == null || vacCondition.passes(anchorDate, issuedVaccines);
+                passes = vacCondition != null && vacCondition.passes(anchorDate, issuedVaccines);
 
                 // any or condition
                 if (isOr && passes)
