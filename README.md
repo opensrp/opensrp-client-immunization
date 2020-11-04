@@ -226,6 +226,14 @@ For vaccines that are dependent on previous ones, set the following property to 
 ```
 vaccine.requisite.date.constraint.enabled=true
 ```
+## Generic vaccination configuration
+Sometimes (maybe all times) you'd like in your implementation to automatically load vaccines from a configuration file without having to specify the category. The `vaccineCacheMap` is the primary data structure that holds all vaccine configuration data for various vaccine categories _e.g. child, mother, some_other_special, category e.t.c_ 
+
+Following the concept of convention over configuration, you can now drop vaccine configuration files in the `assets/vaccine` folder and have the `vaccineCacheMap` auto-loaded with configuration data for that special category. 
+
+To use this approach, the file name should contain the name of the category as the prefix e.g. _over_5_vaccines.json_. You can then get vaccines in your implementation using _VaccineRepo.getVaccines(`some category name>`)_
+
+Note that you can have any number of underscores and the filename must end in __vaccines.json_ . By default, only **Child** and **Woman** category vaccines are supported by the library
 
 ## Gotcha's when using the library
 
