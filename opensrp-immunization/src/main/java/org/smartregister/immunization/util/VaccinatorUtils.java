@@ -1071,7 +1071,7 @@ public class VaccinatorUtils {
      */
     public static List<String> getVaccineFiles(Context context) throws IOException {
         AssetManager assetManager = context.getAssets();
-        String[] files = assetManager.list("vaccines");
+        String[] files = assetManager.list(vaccines_folder);
         return Arrays.asList(files);
     }
 

@@ -27,10 +27,13 @@ import org.smartregister.immunization.util.VaccineCache;
 import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Created by ndegwamartin on 2019-07-23.
@@ -43,6 +46,9 @@ public class UtilsTest extends BaseUnitTest {
     private ImmunizationLibrary immunizationLibrary;
     @Mock
     private AppProperties properties;
+
+    @Mock
+    private android.content.Context androidContext;
 
     private static String OFFSET_days = "+2d";
     private static String OFFSET_days_negative = "-2d";
@@ -125,8 +131,10 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testProcessVaccineCacheFunctionsCorrectly() {
 
-        Type listType = new TypeToken<List<VaccineGroup>>() {}.getType();
-        Type vaccineListType = new TypeToken<List<Vaccine>>() {}.getType();
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        Type vaccineListType = new TypeToken<List<Vaccine>>() {
+        }.getType();
         List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
         List<Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, vaccineListType);
 
@@ -141,7 +149,6 @@ public class UtilsTest extends BaseUnitTest {
         PowerMockito.when(VaccinatorUtils.getSpecialVaccines(androidContext)).thenReturn(specialVaccines);
 
         PowerMockito.spy(VaccinatorUtils.class);
-        PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(RuntimeEnvironment.application, "child")).thenReturn(vaccines);
         PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(RuntimeEnvironment.application, "child")).thenReturn(vaccines);
 
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
@@ -200,8 +207,70 @@ public class UtilsTest extends BaseUnitTest {
         Assert.assertTrue(childVaccineCache.groupVaccineCountMap.containsKey("10 Weeks"));
 
 
-        Assert.assertEquals(3,childVaccineCache.groupVaccineCountMap.get("Birth").getRemaining());
-        Assert.assertEquals(4,childVaccineCache.groupVaccineCountMap.get("6 Weeks").getRemaining());
-        Assert.assertEquals(3,childVaccineCache.groupVaccineCountMap.get("14 Weeks").getRemaining());
+        Assert.assertEquals(3, childVaccineCache.groupVaccineCountMap.get("Birth").getRemaining());
+        Assert.assertEquals(4, childVaccineCache.groupVaccineCountMap.get("6 Weeks").getRemaining());
+        Assert.assertEquals(3, childVaccineCache.groupVaccineCountMap.get("14 Weeks").getRemaining());
+    }
+
+
+    @Test
+    public void testGenericProcessVaccineCache() throws IOException {
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.girls_over_5_vaccines, listType);
+
+        Context context = Mockito.mock(Context.class);
+        Mockito.doReturn(context).when(immunizationLibrary).context();
+
+        PowerMockito.mockStatic(VaccinatorUtils.class);
+        PowerMockito.when(VaccinatorUtils.cleanVaccineName("HPV 1")).thenReturn("hpv1");
+        PowerMockito.when(VaccinatorUtils.cleanVaccineName("HPV 2")).thenReturn("hpv2");
+
+        PowerMockito.when(VaccinatorUtils.getVaccineFiles(androidContext)).thenReturn(Arrays.asList(new String[]{"girls_over_5_vaccines.json"}));
+        PowerMockito.when(VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(androidContext, "vaccines/girls_over_5_vaccines.json")).thenReturn(vaccines);
+
+        Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
+
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccineCacheMap()).thenReturn(vaccineCacheMap);
+
+        Utils.processVaccineCache(androidContext);
+
+        VaccineCache childVaccineCache = vaccineCacheMap.get("girls_over_5");
+
+        //Test a few random entries (order is important)
+        //Vaccines
+        Assert.assertNotNull(childVaccineCache);
+        Assert.assertNotNull(childVaccineCache.vaccines);
+        Assert.assertTrue(childVaccineCache.vaccines.length == 2);
+
+        Assert.assertEquals(VaccineRepo.Vaccine.hpv1, childVaccineCache.vaccines[0]);
+        Assert.assertEquals(VaccineRepo.Vaccine.hpv2, childVaccineCache.vaccines[1]);
+
+        //Reverse look up map
+
+        Assert.assertNotNull(childVaccineCache.reverseLookupGroupMap);
+        Assert.assertTrue(childVaccineCache.reverseLookupGroupMap.size() == 2);
+
+        Assert.assertEquals("108 Months", childVaccineCache.reverseLookupGroupMap.get("hpv1"));
+        Assert.assertEquals("114 Months", childVaccineCache.reverseLookupGroupMap.get("hpv2"));
+
+        //Vaccine Repo list
+        Assert.assertNotNull(childVaccineCache.vaccineRepo);
+        Assert.assertEquals(2, childVaccineCache.vaccineRepo.size());
+
+        Assert.assertEquals(VaccineRepo.Vaccine.hpv1, childVaccineCache.vaccineRepo.get(0));
+        Assert.assertEquals(VaccineRepo.Vaccine.hpv2, childVaccineCache.vaccineRepo.get(1));
+
+        //Group vaccine count
+        Assert.assertNotNull(childVaccineCache.groupVaccineCountMap);
+        Assert.assertTrue(childVaccineCache.groupVaccineCountMap.size() == 2);
+        Assert.assertTrue(childVaccineCache.groupVaccineCountMap.containsKey("108 Months"));
+        Assert.assertTrue(childVaccineCache.groupVaccineCountMap.containsKey("114 Months"));
+
+        Assert.assertEquals(1, childVaccineCache.groupVaccineCountMap.get("108 Months").getRemaining());
+        Assert.assertEquals(1, childVaccineCache.groupVaccineCountMap.get("114 Months").getRemaining());
+
     }
 }

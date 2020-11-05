@@ -14,6 +14,7 @@ import org.smartregister.immunization.domain.GroupVaccineCount;
 import org.smartregister.immunization.domain.jsonmapping.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -131,8 +132,7 @@ public class Utils {
                 if (ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category) == null) {
                     ImmunizationLibrary.getInstance().getVaccineCacheMap().put(category, new VaccineCache());
 
-
-                    List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(context, "vaccines/" + fileName);
+                    List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(context, VaccinatorUtils.vaccines_folder + File.separator + fileName);
 
                     processVaccineCore(category, vaccinesJsonMapping);
                 }
