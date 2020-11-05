@@ -199,6 +199,10 @@ public class ImmunizationLibrary {
         return getProperties().hasProperty(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.EXPIRED_CARD_AS_RED);
     }
 
+    public boolean isHideVaccineOverdueStatus() {
+        return getProperties().hasProperty(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE) && instance.getProperties().getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE);
+    }
+
     public long getVaccineSyncTime() {
         if (vaccineSyncTime == -1) {
             setVaccineSyncTime(BuildConfig.VACCINE_SYNC_TIME);

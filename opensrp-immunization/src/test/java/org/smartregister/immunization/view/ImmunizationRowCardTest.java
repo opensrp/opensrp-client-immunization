@@ -1,5 +1,7 @@
 package org.smartregister.immunization.view;
 
+import android.widget.Button;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -11,6 +13,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonFtsObject;
@@ -19,6 +22,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.db.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
@@ -48,6 +52,8 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
     public PowerMockRule rule = new PowerMockRule();
     private ImmunizationRowCard view;
 
+    private ImmunizationLibrary immunizationLibrary;
+
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -63,7 +69,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         event.setDateCreated(new DateTime());
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
-        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
         ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
                 Mockito.mock(CommonFtsObject.class), 0, 0);
@@ -159,6 +165,69 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), State.DONE_CAN_BE_UNDONE);
+    }
+
+    @Test
+    public void testHideVaccineOverdueRowCardColor() {
+        PowerMockito.when(immunizationLibrary.isHideVaccineOverdueStatus()).thenReturn(true);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+
+        ImmunizationRowCard rowCard = Mockito.spy(view);
+        Button statusIV = Mockito.mock(Button.class);
+        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        rowCard.setVaccineWrapper(wrapper);
+
+        Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_white);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+        wrapper.setDbKey(0L);
+        rowCard.setVaccineWrapper(wrapper);
+
+        Mockito.verify(statusIV, Mockito.times(2)).setBackgroundResource(R.drawable.vaccine_card_background_white);
+
+    }
+
+    @Test
+    public void testShowVaccineOverdueRowCardColor() {
+        PowerMockito.when(immunizationLibrary.isHideVaccineOverdueStatus()).thenReturn(false);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+
+        ImmunizationRowCard rowCard = Mockito.spy(view);
+        Button statusIV = Mockito.mock(Button.class);
+        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        rowCard.setVaccineWrapper(wrapper);
+
+        Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_red);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+        wrapper.setDbKey(0L);
+        rowCard.setVaccineWrapper(wrapper);
+
+        Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_blue);
     }
 
 }

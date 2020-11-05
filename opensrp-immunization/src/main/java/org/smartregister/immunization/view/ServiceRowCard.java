@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.State;
@@ -185,7 +186,11 @@ public class ServiceRowCard extends LinearLayout {
                 break;
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                } else {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                }
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
@@ -217,7 +222,11 @@ public class ServiceRowCard extends LinearLayout {
                 break;
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
+                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                } else {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
+                }
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());

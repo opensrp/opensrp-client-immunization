@@ -21,6 +21,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.IMConstants;
@@ -150,6 +151,72 @@ public class VaccineCardTest extends BaseUnitTest {
         Assert.assertNotNull(activity.getInstance1());
         Assert.assertNotNull(activity.getInstance2());
         Assert.assertNotNull(activity.getInstance3());
+    }
+
+    @Test
+    public void testHideVaccineOverdueVaccineCardColor() {
+        AppProperties appProperties = Mockito.mock(AppProperties.class);
+        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(true);
+        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(true);
+        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+
+        VaccineCard cardView = Mockito.spy(view);
+        cardView.setVaccineWrapper(wrapper);
+//        cardView.getState();
+
+        Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_white);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+        cardView.setVaccineWrapper(wrapper);
+
+        Mockito.verify(cardView, Mockito.times(2)).setBackgroundResource(R.drawable.vaccine_card_background_white);
+    }
+
+    @Test
+    public void testShowVaccineOverdueVaccineCardColor() {
+        AppProperties appProperties = Mockito.mock(AppProperties.class);
+        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(false);
+        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(false);
+        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+
+        VaccineCard cardView = Mockito.spy(view);
+        cardView.setVaccineWrapper(wrapper);
+//        cardView.getState();
+
+        Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_red);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+        cardView.setVaccineWrapper(wrapper);
+
+        Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_blue);
     }
 
     @After

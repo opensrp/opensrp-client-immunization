@@ -17,6 +17,7 @@ public class IMConstants {
         public static final String VACCINE_EXPIRED_ENTRY_ALLOW = "vaccine.expired.entry.allow";
         public static final String VACCINE_REQUISITE_DATE_CONSTRAINT_ENABLED = "vaccine.requisite.date.constraint.enabled";
         public static final String EXPIRED_CARD_AS_RED = "vaccine.expired.red";
+        public static final String VACCINE_OVERDUE_STATUS_HIDE = "vaccine.overdue.status.hide";
         public static final String VACCINE_SYNC_IMMEDIATE = "vaccine.sync.immediate";
     }
 

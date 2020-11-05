@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.State;
@@ -175,11 +176,16 @@ public class ServiceCard extends LinearLayout {
                 setVisibility(VISIBLE);
                 break;
             case DUE:
-                setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
+                } else {
+                    setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                    nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
+                }
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 nameTV.setText(String.format(context.getString(R.string.record_), getServiceName()));
                 break;
             case DONE_CAN_BE_UNDONE:
@@ -205,11 +211,16 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setText(getServiceName() + " - " + DATE_FORMAT.format(getDateDone()));
                 break;
             case OVERDUE:
-                setBackgroundResource(R.drawable.vaccine_card_background_red);
+                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
+                } else {
+                    setBackgroundResource(R.drawable.vaccine_card_background_red);
+                    nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
+                }
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 String serviceName = getServiceName();
                 if (getDateDue() != null) {
                     nameTV.setText(String.format(context.getString(R.string.record_due_),
