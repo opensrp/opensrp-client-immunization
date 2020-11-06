@@ -14,6 +14,7 @@ import org.smartregister.immunization.domain.GroupVaccineCount;
 import org.smartregister.immunization.domain.jsonmapping.Vaccine;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -93,20 +94,52 @@ public class Utils {
 
                 List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getSupportedVaccinesByCategory(context, category);
 
-                if (vaccinesJsonMapping != null && vaccinesJsonMapping.size() > 0) {
-                    for (VaccineGroup vaccineGroup : vaccinesJsonMapping) {
-                        processVaccineGroup(vaccineGroup, category);
-                    }
-
-                    //Set vaccines Array
-                    ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccines = ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccineRepo.toArray(new VaccineRepo.Vaccine[]{});//Reset globally
-
-                } else {
-                    //Eject from map if no values found. Will allow reprocessing if invoked later
-                    ImmunizationLibrary.getInstance().getVaccineCacheMap().remove(category);
-                    Log.e(Utils.class.getCanonicalName(), "No such vaccine configuration file found for category");
-                }
+                processVaccineCore(category, vaccinesJsonMapping);
             }
+        } catch (Exception e) {
+            Log.e(Utils.class.getCanonicalName(), e.getMessage());
+        }
+    }
+
+    private static void processVaccineCore(String category, List<VaccineGroup> vaccinesJsonMapping) {
+        if (vaccinesJsonMapping != null && vaccinesJsonMapping.size() > 0) {
+            for (VaccineGroup vaccineGroup : vaccinesJsonMapping) {
+                processVaccineGroup(vaccineGroup, category);
+            }
+
+            //Set vaccines Array
+            ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccines = ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccineRepo.toArray(new VaccineRepo.Vaccine[]{});//Reset globally
+
+        } else {
+            //Eject from map if no values found. Will allow reprocessing if invoked later
+            ImmunizationLibrary.getInstance().getVaccineCacheMap().remove(category);
+            Log.e(Utils.class.getCanonicalName(), "No such vaccine configuration file found for category");
+        }
+    }
+
+    public static void processVaccineCache(@NonNull android.content.Context context) {
+        try {
+
+            List<String> files = VaccinatorUtils.getVaccineFiles(context);
+            String category;
+
+            String fileName;
+            for (int i = 0; i < files.size(); i++) {
+                fileName = files.get(i);
+                category = fileName.substring(0, fileName.lastIndexOf('_'));
+
+
+                if (ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category) == null) {
+                    ImmunizationLibrary.getInstance().getVaccineCacheMap().put(category, new VaccineCache());
+
+                    List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(context, VaccinatorUtils.vaccines_folder + File.separator + fileName);
+
+                    processVaccineCore(category, vaccinesJsonMapping);
+                }
+
+            }
+
+
         } catch (Exception e) {
             Log.e(Utils.class.getCanonicalName(), e.getMessage());
         }
