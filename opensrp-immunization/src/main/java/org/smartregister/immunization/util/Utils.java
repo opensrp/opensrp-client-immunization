@@ -118,13 +118,14 @@ public class Utils {
         if (vaccineGroup.id.equals("Birth") && category.equals(IMConstants.VACCINE_TYPE.CHILD)) {
             List<Vaccine> vaccinesList = VaccinatorUtils.getSpecialVaccines(ImmunizationLibrary.getInstance().context().applicationContext());
 
-            for (Vaccine vaccine: vaccinesList) {
-                if (vaccineGroup.vaccines == null) {
-                    vaccineGroup.vaccines = new ArrayList<>();
-                }
+            if (vaccinesList != null)
+                for (Vaccine vaccine : vaccinesList) {
+                    if (vaccineGroup.vaccines == null) {
+                        vaccineGroup.vaccines = new ArrayList<>();
+                    }
 
-                vaccineGroup.vaccines.add(vaccine);
-            }
+                    vaccineGroup.vaccines.add(vaccine);
+                }
         }
 
         for (Vaccine vaccine : vaccineGroup.vaccines) {
@@ -199,7 +200,7 @@ public class Utils {
 
     /**
      * Returns boolean for boolean values configured in the app.properties file
-     * **/
+     **/
     public static boolean isPropertyTrue(String key) {
 
         return CoreLibrary.getInstance().context().getAppProperties().hasProperty(key) && CoreLibrary.getInstance().context().getAppProperties().getPropertyBoolean(key);
