@@ -232,7 +232,7 @@ vaccine.requisite.date.constraint.enabled=true
 The current default background indication color for overdue vaccines is red and due is blue. Setting the following property to `true` will disable the indication colors for overdue and due vaccines and will be shown with only white background color.
 
 ```
-vaccine.overdue.status.hide=true
+hide.overdue.vaccine.status=true
 ```
 
 ## Gotcha's when using the library

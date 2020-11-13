@@ -203,7 +203,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Test
     public void testHideVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.isHideVaccineOverdueStatus()).thenReturn(true);
+        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
@@ -236,7 +236,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Test
     public void testShowVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.isHideVaccineOverdueStatus()).thenReturn(false);
+        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();

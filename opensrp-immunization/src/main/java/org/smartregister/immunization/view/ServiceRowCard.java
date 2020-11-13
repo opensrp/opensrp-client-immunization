@@ -186,7 +186,7 @@ public class ServiceRowCard extends LinearLayout {
                 break;
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 } else {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
@@ -222,7 +222,7 @@ public class ServiceRowCard extends LinearLayout {
                 break;
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 } else {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);

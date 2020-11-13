@@ -171,7 +171,7 @@ public class ImmunizationRowCard extends LinearLayout {
 
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 } else {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
@@ -210,7 +210,7 @@ public class ImmunizationRowCard extends LinearLayout {
 
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 } else {
                     statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);

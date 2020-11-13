@@ -180,7 +180,7 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 break;
             case DUE:
-                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
                     setBackgroundResource(R.drawable.vaccine_card_background_white);
                     nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 } else {
@@ -219,7 +219,7 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setText(getVaccineName() + " - " + DATE_FORMAT.format(getDateDone()));
                 break;
             case OVERDUE:
-                if (ImmunizationLibrary.getInstance().isHideVaccineOverdueStatus()) {
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
                     setBackgroundResource(R.drawable.vaccine_card_background_white);
                     nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 } else {

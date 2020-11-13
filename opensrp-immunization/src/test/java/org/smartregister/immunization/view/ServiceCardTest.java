@@ -153,8 +153,8 @@ public class ServiceCardTest extends BaseUnitTest {
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
 
         AppProperties appProperties = Mockito.mock(AppProperties.class);
-        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(true);
-        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(true);
+        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
+        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
         Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
         ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
 
@@ -191,8 +191,8 @@ public class ServiceCardTest extends BaseUnitTest {
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
 
         AppProperties appProperties = Mockito.mock(AppProperties.class);
-        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(false);
-        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.VACCINE_OVERDUE_STATUS_HIDE)).thenReturn(false);
+        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
+        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
         Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
         ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
 
