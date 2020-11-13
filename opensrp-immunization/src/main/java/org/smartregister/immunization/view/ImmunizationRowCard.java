@@ -3,6 +3,7 @@ package org.smartregister.immunization.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -193,6 +194,8 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
+                statusIV.setBackground(vaccineWrapper.isOutOfCatchment()?ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange):ContextCompat.getDrawable(context, R.drawable.ic_action_check));
+
                 break;
 
             case DONE_CAN_NOT_BE_UNDONE:
@@ -206,6 +209,8 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
+                statusIV.setBackground(vaccineWrapper.isOutOfCatchment()?ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange):ContextCompat.getDrawable(context, R.drawable.ic_action_check));
+
                 break;
 
             case OVERDUE:

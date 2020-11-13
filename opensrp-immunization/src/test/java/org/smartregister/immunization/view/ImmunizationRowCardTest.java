@@ -14,12 +14,13 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
@@ -29,7 +30,6 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.view.mock.ViewAttributes;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 
@@ -39,9 +39,9 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest ({ImmunizationLibrary.class})
-@Config (shadows = {FontTextViewShadow.class})
-@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest({ImmunizationLibrary.class})
+@Config(shadows = {FontTextViewShadow.class})
+@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
     private final String magicDue = "due";
@@ -84,11 +84,12 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
     @Test
     public void testConstructors() {
+
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application));
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, true));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
+        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
     }
 
     @Test

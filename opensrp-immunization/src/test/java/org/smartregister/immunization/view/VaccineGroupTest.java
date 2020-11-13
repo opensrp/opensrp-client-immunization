@@ -1,13 +1,18 @@
 package org.smartregister.immunization.view;
 
+import android.util.AttributeSet;
+
 import com.google.gson.reflect.TypeToken;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -22,7 +27,6 @@ import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.view.mock.ViewAttributes;
 import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
@@ -65,7 +69,7 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void assertGetAlertListNotNull() {
-        view.setAlertList(new ArrayList<Alert>());
+        view.setAlertList(new ArrayList<>());
         Assert.assertNotNull(view.getAlertList());
     }
 
@@ -270,6 +274,9 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void assertUpdateWrapperStatusCallsUpdateWrapperStatus() {
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+
         setDataForTest(magicDate);
         view.updateWrapperStatus(wrappers, VaccineRepository.TYPE_Synced);
         wrapper = new VaccineWrapper();
@@ -293,10 +300,16 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsNotNull() {
+        AttributeSet attrs = Robolectric.buildAttributeSet().build();
         Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, attrs));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, attrs, 0));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, attrs, 0, 0));
     }
 
+    @After
+    public void tearDown() {
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
+    }
 }

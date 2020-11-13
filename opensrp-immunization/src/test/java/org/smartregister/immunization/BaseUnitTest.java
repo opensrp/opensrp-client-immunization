@@ -24,8 +24,8 @@ import org.smartregister.util.AppProperties;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.O_MR1)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "javax.xml.*", "org.xml.sax.*"
+@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.P)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*"
         , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
         , "org.xmlpull.v1.*", "org.smartregister.immunization.view.ExpandableHeightGridView"})
 public abstract class BaseUnitTest {
@@ -39,6 +39,7 @@ public abstract class BaseUnitTest {
     public static final String ANMID = "anmId";
     public static final String FORMSUBMISSIONID = "formSubmissionId";
     public static final String VALUE = "value";
+
 
     public void mockImmunizationLibrary(@NonNull ImmunizationLibrary immunizationLibrary, @NonNull Context context, @NonNull VaccineRepository vaccineRepository, @NonNull AlertService alertService, @NonNull AppProperties appProperties) {
         PowerMockito.mockStatic(ImmunizationLibrary.class);

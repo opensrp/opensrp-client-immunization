@@ -1,5 +1,7 @@
 package org.smartregister.immunization.service.intent;
 
+import android.os.Build;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,7 +14,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonFtsObject;
-import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.customshadows.ShadowJsonFormUtils;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -33,7 +34,7 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(shadows = {ShadowJsonFormUtils.class}, sdk = 27, constants= BuildConfig.class)
+@Config(shadows = {ShadowJsonFormUtils.class}, sdk = Build.VERSION_CODES.P)
 public class ServiceIntentServiceRoboTest {
 
     @Rule

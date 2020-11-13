@@ -49,6 +49,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     private static final String CREATE_TABLE_SQL = "CREATE TABLE recurring_service_records (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,recurring_service_id INTERGER NOT NULL,value VARCHAR, date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR, event_id VARCHAR, formSubmissionId VARCHAR, updated_at INTEGER NULL, UNIQUE(base_entity_id, recurring_service_id) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
+    public static final String UPDATE_TABLE_ADD_OUT_OF_AREA_COL = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + VaccineRepository.OUT_OF_AREA + " INTEGER;";
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_SQL);
@@ -57,6 +58,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         database.execSQL(EVENT_ID_INDEX);
         database.execSQL(FORMSUBMISSION_INDEX);
         database.execSQL(UPDATED_AT_INDEX);
+        database.execSQL(UPDATE_TABLE_ADD_OUT_OF_AREA_COL);
     }
 
     public static void migrateCreatedAt(SQLiteDatabase database) {

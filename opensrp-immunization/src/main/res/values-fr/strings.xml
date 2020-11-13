@@ -82,6 +82,7 @@
 
     <string name="expired">Expiré</string>
     <string name="expired_colon">Expiré: %1$s</string>
+    <string name="out_of_catchment">Hors de la zone sanitaire</string>
 
 
 </resources>
