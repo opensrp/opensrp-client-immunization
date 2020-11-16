@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -187,11 +188,13 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Test
     public void testShowVaccineOverdueVaccineCardColor() {
+        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         AppProperties appProperties = Mockito.mock(AppProperties.class);
-        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
-        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
         Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+
+        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
@@ -216,6 +219,8 @@ public class VaccineCardTest extends BaseUnitTest {
         cardView.setVaccineWrapper(wrapper);
 
         Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_blue);
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
     }
 
     @After
