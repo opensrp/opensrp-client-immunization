@@ -13,8 +13,8 @@ buildscript {
 plugins {
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.10.2'
+    id 'com.android.library'
 }
-apply plugin: 'com.android.library'
 
 description = 'OpenSRP immunization client library'
 
