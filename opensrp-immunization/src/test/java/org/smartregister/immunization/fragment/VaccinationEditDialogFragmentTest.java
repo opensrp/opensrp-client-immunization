@@ -1,6 +1,6 @@
 package org.smartregister.immunization.fragment;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +33,8 @@ import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
 import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.UserService;
 import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
@@ -68,9 +70,22 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private AppProperties properties;
 
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
+
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
+        Mockito.doReturn(allSharedPreferences).when(context).allSharedPreferences();
 
         CoreLibrary.init(context_);
         Mockito.doReturn(properties).when(context_).getAppProperties();

@@ -9,6 +9,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -22,6 +24,7 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
+import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceCardShadow.class})
+@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceCardShadow.class})
 public class ServiceCardAdapterTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -161,5 +164,32 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
         serviceCardAdapter.getView(0, null, null);
         org.junit.Assert.assertEquals(1, serviceCardAdapter.allWrappers().size());
+    }
+
+    @Test
+    public void testUpdateAll() {
+
+        ServiceCard serviceCard = Mockito.mock(ServiceCard.class);
+
+        HashMap<String, ServiceCard> serviceCards = new HashMap<>();
+        serviceCards.put("sample", serviceCard);
+
+        Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
+        serviceCardAdapter.updateAll();
+        Mockito.verify(serviceCard).updateState();
+
+    }
+
+    @Test
+    public void testUpdateChildsActiveStatus() {
+
+        ServiceCard serviceCard = Mockito.mock(ServiceCard.class);
+
+        HashMap<String, ServiceCard> serviceCards = new HashMap<>();
+        serviceCards.put("sample", serviceCard);
+
+        Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
+        serviceCardAdapter.updateChildsActiveStatus();
+        Mockito.verify(serviceCard).updateChildsActiveStatus();
     }
 }

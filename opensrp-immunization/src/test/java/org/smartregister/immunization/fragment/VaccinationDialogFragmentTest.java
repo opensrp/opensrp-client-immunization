@@ -25,6 +25,8 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationDialogFragmentTestActivity;
 import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.UserService;
 import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
@@ -48,10 +50,22 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     @Mock
     private AppProperties properties;
 
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
+
     @Before
     public void setUp() {
 
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
+
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
         CoreLibrary.init(context_);
 
         Mockito.doReturn(properties).when(context_).getAppProperties();

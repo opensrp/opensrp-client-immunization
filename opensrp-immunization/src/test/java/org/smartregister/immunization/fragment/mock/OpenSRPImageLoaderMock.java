@@ -3,7 +3,7 @@ package org.smartregister.immunization.fragment.mock;
 import android.app.Service;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import org.smartregister.util.OpenSRPImageLoader;
 

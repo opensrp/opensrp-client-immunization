@@ -1,7 +1,7 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
@@ -25,6 +25,8 @@ import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.UserService;
 import org.smartregister.util.AppProperties;
 
 import java.util.Collections;
@@ -47,10 +49,22 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private AppProperties properties;
 
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
+
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
+
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
         CoreLibrary.init(context_);
 
         Mockito.doReturn(properties).when(context_).getAppProperties();

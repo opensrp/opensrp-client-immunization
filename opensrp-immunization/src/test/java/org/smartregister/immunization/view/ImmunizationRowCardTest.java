@@ -84,6 +84,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
         Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+
     }
 
     @Test
