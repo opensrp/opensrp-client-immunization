@@ -124,9 +124,21 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindbyUniqueIDcallsDatabaseQueryMethod1Times() {
-        String[] columns = new String[]{RecurringServiceRecordRepository.ID_COLUMN, RecurringServiceRecordRepository.BASE_ENTITY_ID, RecurringServiceRecordRepository.PROGRAM_CLIENT_ID, RecurringServiceRecordRepository.RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, RecurringServiceRecordRepository.DATE, RecurringServiceRecordRepository.ANMID, RecurringServiceRecordRepository.LOCATION_ID, RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID, RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
+        String[] columns = new String[]{
+                RecurringServiceRecordRepository.CREATED_AT,
+                RecurringServiceRecordRepository.ID_COLUMN,
+                RecurringServiceRecordRepository.BASE_ENTITY_ID,
+                RecurringServiceRecordRepository.PROGRAM_CLIENT_ID,
+                RecurringServiceRecordRepository.RECURRING_SERVICE_ID,
+                RecurringServiceRecordRepository.VALUE,
+                RecurringServiceRecordRepository.DATE,
+                RecurringServiceRecordRepository.ANMID,
+                RecurringServiceRecordRepository.LOCATION_ID,
+                RecurringServiceRecordRepository.SYNC_STATUS, RecurringServiceRecordRepository.EVENT_ID, RecurringServiceRecordRepository.FORMSUBMISSION_ID,
+                RecurringServiceRecordRepository.UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME,
+                RecurringServiceRecordRepository.TEAM, RecurringServiceRecordRepository.TEAM_ID, RecurringServiceRecordRepository.CHILD_LOCATION_ID};
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});
+        cursor.addRow(new Object[]{"2020-01-01",1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME,"","",""});
 
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setFormSubmissionId(FORMSUBMISSIONID);
