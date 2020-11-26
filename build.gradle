@@ -7,6 +7,8 @@ buildscript {
             url "https://maven.google.com"
         }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven{  url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
@@ -70,6 +72,7 @@ subprojects {
 }
 
 apply plugin: 'java'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'build-dashboard'
 apply plugin: 'io.codearte.nexus-staging'
 
