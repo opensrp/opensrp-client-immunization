@@ -1,8 +1,9 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
+
+import androidx.fragment.app.Fragment;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -19,6 +20,8 @@ import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.fragment.mock.UndoVaccinationDialogFragmentTestActivity;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.UserService;
 import org.smartregister.util.AppProperties;
 
 import java.util.List;
@@ -40,9 +43,21 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
     @Mock
     private AppProperties properties;
 
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
+
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
 
         CoreLibrary.init(context_);
         Mockito.doReturn(properties).when(context_).getAppProperties();
