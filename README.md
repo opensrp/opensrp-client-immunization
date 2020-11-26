@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/OpenSRP/opensrp-client-immunization.svg?branch=master)](https://travis-ci.org/OpenSRP/opensrp-client-immunization) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a58cd4e1748432780ac66a9fbee0394)](https://www.codacy.com/app/OpenSRP/opensrp-client-immunization?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OpenSRP/opensrp-client-immunization&amp;utm_campaign=Badge_Grade)
+![Build status](https://github.com/OpenSRP/opensrp-client-immunization/workflows/Android%20CI%20with%20Gradle/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a58cd4e1748432780ac66a9fbee0394)](https://www.codacy.com/app/OpenSRP/opensrp-client-immunization?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OpenSRP/opensrp-client-immunization&amp;utm_campaign=Badge_Grade)
 
 [![Dristhi](https://raw.githubusercontent.com/OpenSRP/opensrp-client/master/opensrp-app/res/drawable-mdpi/login_logo.png)](https://smartregister.atlassian.net/wiki/dashboard.action)
 
@@ -226,6 +226,14 @@ For vaccines that are dependent on previous ones, set the following property to 
 ```
 vaccine.requisite.date.constraint.enabled=true
 ```
+## Generic vaccination configuration
+Sometimes (maybe all times) you'd like in your implementation to automatically load vaccines from a configuration file without having to specify the category. The `vaccineCacheMap` is the primary data structure that holds all vaccine configuration data for various vaccine categories _e.g. child, mother, some_other_special, category e.t.c_ 
+
+Following the concept of convention over configuration, you can now drop vaccine configuration files in the `assets/vaccine` folder and have the `vaccineCacheMap` auto-loaded with configuration data for that special category. 
+
+To use this approach, the file name should contain the name of the category as the prefix e.g. _over_5_vaccines.json_. You can then get vaccines in your implementation using _VaccineRepo.getVaccines(`some category name>`)_
+
+Note that you can have any number of underscores and the filename must end in __vaccines.json_ . By default, only **Child** and **Woman** category vaccines are supported by the library
 
 ## Gotcha's when using the library
 
