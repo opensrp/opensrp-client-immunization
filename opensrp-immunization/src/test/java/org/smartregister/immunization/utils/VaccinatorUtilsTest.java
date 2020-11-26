@@ -22,6 +22,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.ANM;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.BuildConfig;
@@ -43,8 +44,13 @@ import org.smartregister.immunization.util.JsonFormUtils;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.repository.AllSettings;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.ANMService;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
+import org.smartregister.view.controller.ANMController;
+import org.smartregister.view.controller.ANMLocationController;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -611,5 +617,35 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Boolean result = VaccinatorUtils.isSkippableVaccine("OPV 1");
         Assert.assertNotNull(result);
         Assert.assertEquals(false, result);
+    }
+
+    @Test
+    public void testReadProviderDetails() {
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+
+        Mockito.doReturn(context).when(immunizationLibrary).context();
+
+        Mockito.doReturn(Mockito.mock(ANMController.class)).when(context).anmController();
+        Mockito.doReturn(Mockito.mock(AllSettings.class)).when(context).allSettings();
+
+        AllSharedPreferences allSharedPreferences = Mockito.mock(AllSharedPreferences.class);
+        Mockito.doReturn(allSharedPreferences).when(context).allSharedPreferences();
+
+        String team = "{\"person\": {\"display\": \"\"},\"identifier\": \"\",\"team\": {\"teamName\": \"\"}}";
+        Mockito.doReturn(team).when(allSharedPreferences).getPreference("team");
+
+        ANMLocationController anmLocationController = Mockito.mock(ANMLocationController.class);
+        Mockito.doReturn(anmLocationController).when(context).anmLocationController();
+        String info = "{}";
+        Mockito.doReturn(info).when(anmLocationController).get();
+
+        ANMService anmService = Mockito.mock(ANMService.class);
+        Mockito.doReturn(Mockito.mock(ANM.class)).when(anmService).fetchDetails();
+        Mockito.doReturn(anmService).when(context).anmService();
+
+
+        HashMap<String, String> result = VaccinatorUtils.providerDetails();
+        Assert.assertEquals(result.size(), 10);
     }
 }
