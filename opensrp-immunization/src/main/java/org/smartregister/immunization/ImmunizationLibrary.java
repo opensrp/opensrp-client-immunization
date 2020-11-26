@@ -75,6 +75,11 @@ public class ImmunizationLibrary {
 
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.CHILD);
             Utils.processVaccineCache(context.applicationContext(), IMConstants.VACCINE_TYPE.WOMAN);
+
+            //Auto populated vaccines
+
+            Utils.processVaccineCache(context.applicationContext());
+
         }
     }
 
