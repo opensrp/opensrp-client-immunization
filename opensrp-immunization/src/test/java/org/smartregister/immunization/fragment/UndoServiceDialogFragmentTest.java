@@ -15,7 +15,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
-import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
@@ -46,7 +45,6 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
     public void setUp() {
 
         org.mockito.MockitoAnnotations.initMocks(this);
-        CoreLibrary.init(context_);
 
         Mockito.doReturn(properties).when(context_).getAppProperties();
 
