@@ -401,10 +401,9 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     public void asertConstructorsNotNull() {
 
         Assert.assertNotNull(activity.getInstance());
-
+      
         ImmunizationRowGroup instance1 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs);
         Assert.assertNotNull(instance1);
-
 
         ImmunizationRowGroup instance2 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0);
         Assert.assertNotNull(instance2);

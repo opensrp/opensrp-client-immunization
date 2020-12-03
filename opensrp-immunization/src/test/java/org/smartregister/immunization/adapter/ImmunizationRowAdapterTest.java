@@ -14,7 +14,6 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -49,8 +48,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     private final int magicNumber = 231231;
     @Mock
     private Context context;
-    @Mock
-    private org.smartregister.Context context_;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
@@ -63,7 +60,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        CoreLibrary.init(context_);
         view = new ImmunizationRowGroup(RuntimeEnvironment.application, false);
         setDataForTest(magicDate);
     }

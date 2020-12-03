@@ -5,8 +5,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
-        classpath 'org.apache.commons:commons-lang3:3.7'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        classpath 'org.apache.commons:commons-lang3:3.10'
     }
 }
 
@@ -91,7 +90,7 @@ android {
 
 dependencies {
 
-    implementation('org.smartregister:opensrp-client-core:2.2.4-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.ibm.fhir', module: 'fhir-model'
@@ -100,13 +99,13 @@ dependencies {
     jarJar 'com.ibm.fhir:fhir-model:4.2.3'
 
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
-    implementation('org.smartregister:opensrp-client-native-form:1.14.5.0-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.14.6.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
 
-    implementation('com.android.support:design:28.0.0') {
+    implementation('com.google.android.material:material:1.0.0') {
         exclude group: 'com.android.support'
     }
 

@@ -7,12 +7,15 @@ buildscript {
             url "https://maven.google.com"
         }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven{  url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+        classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'
         classpath 'org.smartregister:gradle-jarjar-plugin:1.0.0-SNAPSHOT'
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'
     }
 }
 
@@ -26,6 +29,7 @@ configure(allprojects) { project ->
             jcenter()
             mavenCentral()
             maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+            maven{  url "https://plugins.gradle.org/m2/" }
             mavenLocal()
         }
     }
@@ -69,6 +73,7 @@ subprojects {
 }
 
 apply plugin: 'java'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'build-dashboard'
 apply plugin: 'io.codearte.nexus-staging'
 

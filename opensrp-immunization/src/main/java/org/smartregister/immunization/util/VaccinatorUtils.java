@@ -18,13 +18,14 @@ package org.smartregister.immunization.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -71,6 +72,7 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.IntegerUtil;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -824,6 +826,7 @@ public class VaccinatorUtils {
      * Returns a list of VaccineGroup containing a list of supported woman vaccines
      *
      * @param context Current valid context to be used
+     * @param prefix  vaccine config file prefix
      * @return list of VaccineGroup with the supported vaccines
      */
     public static List<VaccineGroup> getSupportedWomanVaccines(@Nullable Context context, String prefix) {
@@ -1060,6 +1063,16 @@ public class VaccinatorUtils {
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
         return ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, clazz, listType);
+    }
+
+    /***
+     * Get list of vaccine files from
+     * @param context android context
+     */
+    public static List<String> getVaccineFiles(Context context) throws IOException {
+        AssetManager assetManager = context.getAssets();
+        String[] files = assetManager.list(vaccines_folder);
+        return Arrays.asList(files);
     }
 
     public static void processConfigCalendarOffset(Calendar calendar, String offset) {

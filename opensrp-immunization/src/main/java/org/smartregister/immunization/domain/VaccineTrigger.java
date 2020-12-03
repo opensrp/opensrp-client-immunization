@@ -18,11 +18,13 @@ public class VaccineTrigger {
     private final String offset;
     private final String window;
     private final VaccineRepo.Vaccine prerequisite;
+    private final VaccineCondition vaccineCondition;
 
     public VaccineTrigger(String offset, String window, Reference reference) {
         this.reference = reference;
         this.offset = offset;
         prerequisite = null;
+        vaccineCondition = null;
         this.window = window;
     }
 
@@ -31,10 +33,23 @@ public class VaccineTrigger {
         this.offset = offset;
         this.prerequisite = prerequisite;
         this.window = window;
+        vaccineCondition = null;
+    }
+
+    public VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite, VaccineCondition vaccineCondition) {
+        reference = Reference.PREREQUISITE;
+        this.offset = offset;
+        this.prerequisite = prerequisite;
+        this.window = window;
+        this.vaccineCondition = vaccineCondition;
     }
 
     public static VaccineTrigger init(String vaccineCategory, Due data) {
         if (data != null) {
+
+            VaccineCondition curCondition = (data.condition != null) ?
+                    VaccineCondition.init(vaccineCategory, data.condition) : null;
+
             if (data.reference.equalsIgnoreCase(Reference.DOB.name())) {
                 return new VaccineTrigger(data.offset, data.window, Reference.DOB);
             } else if (data.reference.equalsIgnoreCase(Reference.LMP.name())) {
@@ -45,7 +60,7 @@ public class VaccineTrigger {
 
                     //Vaccine Relaxation Logic
                     data.offset = Utils.updateRelaxationDays(data.offset);
-                    return new VaccineTrigger(data.offset, data.window, prerequisite);
+                    return new VaccineTrigger(data.offset, data.window, prerequisite, curCondition);
                 }
             }
         }
@@ -70,7 +85,7 @@ public class VaccineTrigger {
      * @return {@link Date} if able to get trigger date, or {@code null} if prerequisite hasn't been administered yet
      */
     public Date getFireDate(List<Vaccine> issuedVaccines, Date dob) {
-        if (reference.equals(Reference.DOB)) {
+        if (reference.equals(Reference.DOB) && (vaccineCondition == null || vaccineCondition.passes(dob, issuedVaccines))) {
             if (dob != null) {
                 Calendar dobCalendar = Calendar.getInstance();
                 dobCalendar.setTime(dob);
@@ -79,7 +94,7 @@ public class VaccineTrigger {
                 dobCalendar = VaccineSchedule.addOffsetToCalendar(dobCalendar, offset);
                 return dobCalendar.getTime();
             }
-        } else if (reference.equals(Reference.LMP)) {
+        } else if (reference.equals(Reference.LMP) && (vaccineCondition == null || vaccineCondition.passes(dob, issuedVaccines))) {
             if (dob != null) {
                 Calendar dobCalendar = Calendar.getInstance();
                 dobCalendar.setTime(dob);
@@ -88,7 +103,7 @@ public class VaccineTrigger {
                 dobCalendar = VaccineSchedule.addOffsetToCalendar(dobCalendar, offset);
                 return dobCalendar.getTime();
             }
-        } else if (reference.equals(Reference.PREREQUISITE)) {
+        } else if (reference.equals(Reference.PREREQUISITE) && (vaccineCondition == null || vaccineCondition.passes(dob, issuedVaccines))) {
             // Check if prerequisite is in the list of issued vaccines
             Vaccine issuedPrerequisite = null;
             for (Vaccine curVaccine : issuedVaccines) {

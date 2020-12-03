@@ -1,3 +1,4 @@
+description = 'OpenSRP immunization client library'
 
 buildscript {
     repositories {
@@ -6,17 +7,13 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
-        classpath 'org.apache.commons:commons-lang3:3.7'
+        classpath 'org.apache.commons:commons-lang3:3.10'
     }
 }
 
-plugins {
-    id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.10.2'
-    id 'com.android.library'
-}
-
-description = 'OpenSRP immunization client library'
+apply plugin: 'com.android.library'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 jacoco {
     toolVersion = "0.8.5"
@@ -43,7 +40,7 @@ android {
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
 
@@ -72,14 +69,21 @@ android {
 
     // avoid errors with message 'Duplicate files copied in APK ...'
     packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.md'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
         exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/NOTICE.md'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
         exclude 'androidsupportmultidexversion.txt'
     }
@@ -111,14 +115,14 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('org.smartregister:opensrp-client-core:2.2.4-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'jakarta.annotation', module: 'jakarta.annotation-api'
         exclude group: 'com.ibm.fhir', module: 'fhir-model'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.14.5.0-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.14.6.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.google.code.gson', module: 'gson'
@@ -126,6 +130,10 @@ dependencies {
     testImplementation 'com.ibm.fhir:fhir-model:4.2.3'
 
     testImplementation 'junit:junit:4.13'
+
+    testImplementation('org.robolectric:shadows-multidex:4.0.1') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
 
     def robolectricVersion = '4.1'
     testImplementation("org.robolectric:robolectric:$robolectricVersion") {
@@ -135,7 +143,7 @@ dependencies {
     testImplementation "org.robolectric:shadows-multidex:$robolectricVersion"
     testImplementation "org.robolectric:shadows-support-v4:3.3.2"
 
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.+') {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0') {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'junit', module: 'junit'
     }
@@ -174,7 +182,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
-    sourceDirs = ["$project.projectDir/src/main/java"]
 }
 
 apply from: '../maven.gradle'
