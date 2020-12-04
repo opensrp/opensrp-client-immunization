@@ -235,6 +235,14 @@ To use this approach, the file name should contain the name of the category as t
 
 Note that you can have any number of underscores and the filename must end in __vaccines.json_ . By default, only **Child** and **Woman** category vaccines are supported by the library
 
+## Overdue status indication
+
+The current default background indication color for overdue vaccines is red and due is blue. Setting the following property to `true` will disable the indication colors for overdue and due vaccines and will be shown with only white background color.
+
+```
+hide.overdue.vaccine.status=true
+```
+
 ## Gotcha's when using the library
 
 1. Vaccine schedule not changing after changing the `vaccines.json` file!

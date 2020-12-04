@@ -3,6 +3,7 @@ package org.smartregister.immunization.view;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
 
 import org.joda.time.DateTime;
 import org.json.JSONObject;
@@ -18,6 +19,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
@@ -29,6 +31,7 @@ import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceRecordTest;
@@ -67,12 +70,21 @@ public class ServiceRowCardTest extends BaseUnitTest {
     private ServiceRowCardTestActivity activity;
     @Mock
     private org.smartregister.Context context_;
+    private ImmunizationLibrary immunizationLibrary;
 
     @Mock
     private AllSharedPreferences allSharedPreferences;
 
     @Mock
     private UserService userService;
+
+    @Test
+    public void testConstructors() {
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application));
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
 
     @Before
     public void setUp() {
@@ -103,7 +115,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
-        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito
                 .mock(RecurringServiceRecordRepository.class);
         ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
@@ -210,6 +222,72 @@ public class ServiceRowCardTest extends BaseUnitTest {
         //Assert.assertNotNull(activity.getInstance1());
         //Assert.assertNotNull(activity.getInstance2());
         //Assert.assertNotNull(activity.getInstance3());
+    }
+
+    @Test
+    public void testHideVaccineOverdueRowCardColor() {
+        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        ServiceWrapper wrapper = new ServiceWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setDbKey(0l);
+        wrapper.setDefaultName(magicDefault);
+        wrapper.setVaccineDate(new DateTime());
+
+        ServiceRowCard rowCard = Mockito.spy(view);
+        Button statusIV = Mockito.mock(Button.class);
+        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        rowCard.setServiceWrapper(wrapper);
+
+        Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_white);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setDbKey(0l);
+        wrapper.setDefaultName(magicDefault);
+        wrapper.setVaccineDate(new DateTime());
+        view.setServiceWrapper(wrapper);
+        rowCard.setServiceWrapper(wrapper);
+
+        Mockito.verify(statusIV, Mockito.times(2)).setBackgroundResource(R.drawable.vaccine_card_background_white);
+    }
+
+    @Test
+    public void testShowVaccineOverdueRowCardColor() {
+        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        ServiceWrapper wrapper = new ServiceWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setDbKey(0l);
+        wrapper.setDefaultName(magicDefault);
+        wrapper.setVaccineDate(new DateTime());
+
+        ServiceRowCard rowCard = Mockito.spy(view);
+        Button statusIV = Mockito.mock(Button.class);
+        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        rowCard.setServiceWrapper(wrapper);
+
+        Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_red);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setDbKey(0l);
+        wrapper.setDefaultName(magicDefault);
+        wrapper.setVaccineDate(new DateTime());
+        view.setServiceWrapper(wrapper);
+        rowCard.setServiceWrapper(wrapper);
+
+        Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_blue);
     }
 
     @After

@@ -68,6 +68,14 @@ public class VaccineGroupTest extends BaseUnitTest {
     }
 
     @Test
+    public void testConstructors() {
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
+
+    @Test
     public void assertGetAlertListNotNull() {
         view.setAlertList(new ArrayList<>());
         Assert.assertNotNull(view.getAlertList());

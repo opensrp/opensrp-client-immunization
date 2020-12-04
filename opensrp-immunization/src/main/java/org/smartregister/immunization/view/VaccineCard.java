@@ -182,11 +182,16 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 break;
             case DUE:
-                setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
+                } else {
+                    setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                    nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
+                }
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 String vaccineName = getVaccineName();
                 nameTV.setText(String.format(context.getString(R.string.record_), vaccineName));
                 if (vaccineName.toLowerCase().contains("measles") || vaccineName.toLowerCase().contains("mr")) {
@@ -220,11 +225,16 @@ public class VaccineCard extends LinearLayout {
 
                 break;
             case OVERDUE:
-                setBackgroundResource(R.drawable.vaccine_card_background_red);
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
+                } else {
+                    setBackgroundResource(R.drawable.vaccine_card_background_red);
+                    nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
+                }
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 String vName = getVaccineName();
                 nameTV.setText(String.format(context.getString(R.string.record_due_),
                         vName, DATE_FORMAT.format(getDateDue())));

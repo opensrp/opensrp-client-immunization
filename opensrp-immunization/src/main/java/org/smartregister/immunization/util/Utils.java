@@ -151,13 +151,14 @@ public class Utils {
         if (vaccineGroup.id.equals("Birth") && category.equals(IMConstants.VACCINE_TYPE.CHILD)) {
             List<Vaccine> vaccinesList = VaccinatorUtils.getSpecialVaccines(ImmunizationLibrary.getInstance().context().applicationContext());
 
-            for (Vaccine vaccine : vaccinesList) {
-                if (vaccineGroup.vaccines == null) {
-                    vaccineGroup.vaccines = new ArrayList<>();
-                }
+            if (vaccinesList != null)
+                for (Vaccine vaccine : vaccinesList) {
+                    if (vaccineGroup.vaccines == null) {
+                        vaccineGroup.vaccines = new ArrayList<>();
+                    }
 
-                vaccineGroup.vaccines.add(vaccine);
-            }
+                    vaccineGroup.vaccines.add(vaccine);
+                }
         }
 
         for (Vaccine vaccine : vaccineGroup.vaccines) {
