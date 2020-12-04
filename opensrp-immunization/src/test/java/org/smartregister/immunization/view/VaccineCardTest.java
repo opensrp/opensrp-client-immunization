@@ -79,6 +79,14 @@ public class VaccineCardTest extends BaseUnitTest {
     }
 
     @Test
+    public void testConstructors() {
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application));
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
+
+    @Test
     public void assertgetStateCallsUpdateStateReturnsWrapperState() {
         AppProperties appProperties = Mockito.mock(AppProperties.class);
         Mockito.when(appProperties.isTrue(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW)).thenReturn(true);

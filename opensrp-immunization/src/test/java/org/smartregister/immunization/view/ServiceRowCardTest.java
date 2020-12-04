@@ -78,6 +78,14 @@ public class ServiceRowCardTest extends BaseUnitTest {
     @Mock
     private UserService userService;
 
+    @Test
+    public void testConstructors() {
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application));
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);

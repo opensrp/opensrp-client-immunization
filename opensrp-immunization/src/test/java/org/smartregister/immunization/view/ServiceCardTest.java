@@ -149,6 +149,14 @@ public class ServiceCardTest extends BaseUnitTest {
     }
 
     @Test
+    public void testConstructors() {
+        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application));
+        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
+
+    @Test
     public void testHideVaccineOverdueVaccineCardColor() {
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
 
