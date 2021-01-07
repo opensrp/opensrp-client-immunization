@@ -4,5 +4,5 @@ host = https://www.transifex.com
 [opensrp-client-immunization.strings-xml--master]
 file_filter = opensrp-immunization/src/main/res/values-<lang>/strings.xml
 source_file = opensrp-immunization/src/main/res/values/strings.xml
-source_lang = en
+source_lang = en_US
 type = ANDROID
