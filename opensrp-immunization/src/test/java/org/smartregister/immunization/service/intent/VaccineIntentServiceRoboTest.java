@@ -58,8 +58,8 @@ public class VaccineIntentServiceRoboTest {
         String baseEntityId = "9080s8dfdsc";
         String anmId = "demo";
         String locationId = "093209d-sdfds909";
-        Vaccine opv1 = new Vaccine(3L, baseEntityId, "", "opv", 1, date, anmId, locationId, BaseRepository.TYPE_Unsynced, "", date.getTime(), "eventId1", "formSubmissionId1", 0, date);
-        Vaccine penta3 = new Vaccine(4L, baseEntityId, "", "penta", 3, date, anmId, locationId, BaseRepository.TYPE_Unsynced, "", date.getTime(), "eventId2", "formSubmissionId2", 0, date);
+        Vaccine opv1 = new Vaccine(3L, baseEntityId, "", "opv", 1, date, anmId, locationId, BaseRepository.TYPE_Unsynced, "", date.getTime(), "eventId1", "formSubmissionId1", 0, date, 1);
+        Vaccine penta3 = new Vaccine(4L, baseEntityId, "", "penta", 3, date, anmId, locationId, BaseRepository.TYPE_Unsynced, "", date.getTime(), "eventId2", "formSubmissionId2", 0, date, 1);
 
         List<Vaccine> vaccineList = new ArrayList<>();
         vaccineList.add(opv1);

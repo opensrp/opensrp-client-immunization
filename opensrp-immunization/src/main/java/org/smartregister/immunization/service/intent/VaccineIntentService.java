@@ -24,6 +24,7 @@ import timber.log.Timber;
 public class VaccineIntentService extends IntentService {
     public static final String EVENT_TYPE = "Vaccination";
     public static final String EVENT_TYPE_OUT_OF_CATCHMENT = "Out of Area Service - Vaccination";
+    public static final String EVENT_TYPE_IS_VOIDED = "Void Event";
     public static final String ENTITY_TYPE = "vaccination";
     private static final String TAG = VaccineIntentService.class.getCanonicalName();
     private VaccineRepository vaccineRepository;
@@ -139,6 +140,10 @@ public class VaccineIntentService extends IntentService {
                         JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventTypeOutOfCatchment(), getEntityType(), jsonArray);
 
                     }
+                    if (vaccine.getBaseEntityId() == null || vaccine.getBaseEntityId().isEmpty() || new Integer(1).equals(vaccine.getOutOfCatchment())) {
+                        JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventTypeIsVoided(), getEntityType(), jsonArray);
+
+                    }
                     vaccineRepository.close(vaccine.getId());
                 }
             }
@@ -153,6 +158,10 @@ public class VaccineIntentService extends IntentService {
 
     protected String getEventTypeOutOfCatchment() {
         return EVENT_TYPE_OUT_OF_CATCHMENT;
+    }
+
+    protected String getEventTypeIsVoided() {
+        return EVENT_TYPE_IS_VOIDED;
     }
 
     protected String getEntityType() {
