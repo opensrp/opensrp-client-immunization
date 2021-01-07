@@ -70,7 +70,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     @Test
     public void verifyCreateTableCallsExecuteSQLMethod() {
         RecurringServiceRecordRepository.createTable(sqliteDatabase);
-        Mockito.verify(sqliteDatabase, Mockito.times(7)).execSQL(org.mockito.ArgumentMatchers.anyString());
+        Mockito.verify(sqliteDatabase, Mockito.times(8)).execSQL(org.mockito.ArgumentMatchers.anyString());
     }
 
     @Test

@@ -24,6 +24,7 @@ public class Vaccine {
     private Long updatedAt;
     private String eventId;
     private String formSubmissionId;
+    private Integer isVoided;
     private Integer outOfCatchment;
     private Date createdAt;
 
@@ -53,7 +54,7 @@ public class Vaccine {
     public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
             calculation, Date date, String anmId, String locationId, String syncStatus, String
                            hia2Status, Long updatedAt, String eventId, String formSubmissionId, Integer
-                           outOfCatchment, Date createdAt) {
+                           outOfCatchment, Date createdAt, Integer isVoided) {
         this.id = id;
         this.baseEntityId = baseEntityId;
         this.programClientId = programClientId;
@@ -69,6 +70,7 @@ public class Vaccine {
         this.formSubmissionId = formSubmissionId;
         this.outOfCatchment = outOfCatchment;
         this.createdAt = createdAt;
+        this.isVoided = isVoided;
     }
 
     public Long getId() {
@@ -102,6 +104,14 @@ public class Vaccine {
             identifiers.put(ZEIR_ID, programClientId);
         }
         return identifiers;
+    }
+
+    public Integer getIsVoided() {
+        return isVoided;
+    }
+
+    public void setIsVoided(Integer isVoided) {
+        this.isVoided = isVoided;
     }
 
     public String getName() {

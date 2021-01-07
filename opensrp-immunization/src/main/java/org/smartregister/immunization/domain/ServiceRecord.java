@@ -26,6 +26,7 @@ public class ServiceRecord {
     private String team;
     private String teamId;
     private String childLocationId;
+    private Integer isVoided;
 
     public ServiceRecord() {
     }
@@ -212,5 +213,13 @@ public class ServiceRecord {
 
     public void setChildLocationId(String childLocationId) {
         this.childLocationId = childLocationId;
+    }
+
+    public Integer getIsVoided() {
+        return isVoided;
+    }
+
+    public void setIsVoided(Integer isVoided) {
+        this.isVoided = isVoided;
     }
 }
