@@ -27,8 +27,8 @@
     <string name="record_all">Registrar Tudo</string>
     <string name="record_">Registar%1$s</string>
     <string name="record_due_">Registar %1$s- Vencimento %2$s</string>
-    <string name="mr_due_">%1$s - Vencimento %2$s</string>
-    <string name="due_">%1$s: Vencimento %2$s</string>
+    <string name="mr_due_">%1$s - Limite %2$s</string>
+    <string name="due_">%1$s: Limite %2$s</string>
     <string name="today">Hoje</string>
 
     <!-- Recurring Services -->

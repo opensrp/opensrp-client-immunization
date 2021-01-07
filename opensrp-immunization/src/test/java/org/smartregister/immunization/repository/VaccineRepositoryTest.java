@@ -154,7 +154,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0,
                 new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
-                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date());
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1);
 
         VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
         Vaccine vaccineToReturn = Mockito.mock(Vaccine.class);
@@ -186,11 +186,12 @@ public class VaccineRepositoryTest extends BaseUnitTest {
                 VaccineRepository.CREATED_AT,
                 VaccineRepository.TEAM,
                 VaccineRepository.TEAM_ID,
-                VaccineRepository.CHILD_LOCATION_ID
+                VaccineRepository.CHILD_LOCATION_ID,
+                VaccineRepository.IS_VOIDED
         };
 
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1,magicTime,"","",""});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1,magicTime,"","","", 1});
 
         List<Vaccine> vaccines = vaccineRepository.readAllVaccines(cursor);
         Assert.assertFalse(vaccines.isEmpty());

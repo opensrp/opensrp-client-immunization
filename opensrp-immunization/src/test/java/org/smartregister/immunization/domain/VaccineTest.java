@@ -36,7 +36,7 @@ public class VaccineTest extends BaseUnitTest {
         junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0));
         junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
-                ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date()));
+                ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1));
     }
 
     @Test
