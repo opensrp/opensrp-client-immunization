@@ -159,7 +159,7 @@ public class ServiceRowAdapter extends BaseAdapter {
 
         if (!serviceRecordList.isEmpty()) {
             for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (tag.getName().toLowerCase().equalsIgnoreCase(serviceRecord.getName().toLowerCase()) && serviceRecord
+                if (tag.getName().equalsIgnoreCase(serviceRecord.getName()) && serviceRecord
                         .getDate() != null) {
                     long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
                     if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
