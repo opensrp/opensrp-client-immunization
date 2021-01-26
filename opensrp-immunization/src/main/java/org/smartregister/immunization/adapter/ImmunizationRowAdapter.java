@@ -265,14 +265,14 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             vaccineCard.setVaccineWrapper(vaccineWrapper);
             vaccineGroup.toggleRecordAllTV();
             if (vaccineWrapper.getStatus() == null) {
-                removeVaccine(vaccineName, vaccineWrapper);
+                removeVaccine(vaccineName);
             } else {
                 notifyDataSetChanged();
             }
         }
     }
 
-    private void removeVaccine(String vaccineName, VaccineWrapper vaccineWrapper) {
+    private void removeVaccine(String vaccineName) {
         vaccineCards.remove(vaccineName);
         for (int i = 0; i < vaccineGroup.getVaccineData().vaccines.size(); i++) {
             org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine = vaccineGroup.getVaccineData().vaccines
