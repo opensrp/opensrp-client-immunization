@@ -264,7 +264,25 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         protected void onPostExecute(VaccineWrapper vaccineWrapper) {
             vaccineCard.setVaccineWrapper(vaccineWrapper);
             vaccineGroup.toggleRecordAllTV();
-            notifyDataSetChanged();
+            if (vaccineWrapper.getStatus() == null) {
+                removeVaccine(vaccineName, vaccineWrapper);
+            } else {
+                notifyDataSetChanged();
+            }
         }
+    }
+
+    private void removeVaccine(String vaccineName, VaccineWrapper vaccineWrapper) {
+        vaccineCards.remove(vaccineName);
+        for (int i = 0; i < vaccineGroup.getVaccineData().vaccines.size(); i++) {
+            org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine = vaccineGroup.getVaccineData().vaccines
+                    .get(i);
+            if (vaccine.getName().equalsIgnoreCase(vaccineName)) {
+                vaccineGroup.getVaccineData().vaccines
+                        .remove(i);
+            }
+        }
+        notifyDataSetChanged();
+        vaccineGroup.getVaccinesGV().invalidateViews();
     }
 }
