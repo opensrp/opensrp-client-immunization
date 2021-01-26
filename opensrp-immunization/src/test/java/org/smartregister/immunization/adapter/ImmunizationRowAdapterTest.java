@@ -10,10 +10,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -81,6 +83,11 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         wrapper.setName(VaccineRepo.Vaccine.measles2.display());
         wrapper.setVaccine(VaccineRepo.Vaccine.measles2);
         wrappers.add(wrapper);
+        wrapper.setDbKey(0l);
+        wrapper.setName(VaccineRepo.Vaccine.opv0.display());
+        wrapper.setVaccine(VaccineRepo.Vaccine.opv0);
+        wrapper.setStatus(null);
+        wrappers.add(wrapper);
 
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
@@ -141,8 +148,20 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view,
                 true, vaccinelist, alertlist);
 
-        Assert.assertEquals(immunizationRowAdapter.getView(0, null, null) != null, true);
+        Assert.assertNotNull(immunizationRowAdapter.getView(0, null, null));
 
+    }
+
+    @Test
+    public void assertVaccineRemovedWithNullStatus() {
+        ImmunizationRowAdapter mockAdapter = Mockito
+                .spy(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
+
+        ReflectionHelpers.callInstanceMethod(mockAdapter, "removeVaccine",
+                ReflectionHelpers.ClassParameter.from(String.class, "OPV 0"));
+
+
+        Assert.assertEquals(view.getVaccineData().vaccines.size(), 1);
     }
 
 }
