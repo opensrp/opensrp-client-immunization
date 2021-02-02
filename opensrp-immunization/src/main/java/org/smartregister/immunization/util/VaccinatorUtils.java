@@ -601,18 +601,23 @@ public class VaccinatorUtils {
                 }
             }
 
-            if (hasPrerequisite && StringUtils.isNotBlank(serviceType.getPreOffset())) {
-                DateTime prereqDateTime = new DateTime(prereq);
-                return ServiceSchedule.addOffsetToDateTime(prereqDateTime, serviceType.getPreOffset());
-            } else if (StringUtils.isNotBlank(serviceType.getMilestoneOffset())) {
-                String[] milestones = convertToArray(serviceType.getMilestoneOffset());
-                if (milestones != null) {
-                    List<String> milestoneList = Arrays.asList(milestones);
-                    return ServiceSchedule.addOffsetToDateTime(milestoneDate, milestoneList);
-                }
-            }
+            return getSchedules(hasPrerequisite, serviceType, milestoneDate, prereq);
         } catch (Exception e) {
             Log.e(TAG, e.toString(), e);
+        }
+        return null;
+    }
+
+    private static DateTime getSchedules(boolean hasPrerequisite, ServiceType serviceType, DateTime milestoneDate, Date prereq) {
+        if (hasPrerequisite && StringUtils.isNotBlank(serviceType.getPreOffset())) {
+            DateTime prereqDateTime = new DateTime(prereq);
+            return ServiceSchedule.addOffsetToDateTime(prereqDateTime, serviceType.getPreOffset());
+        } else if (StringUtils.isNotBlank(serviceType.getMilestoneOffset())) {
+            String[] milestones = convertToArray(serviceType.getMilestoneOffset());
+            if (milestones != null) {
+                List<String> milestoneList = Arrays.asList(milestones);
+                return ServiceSchedule.addOffsetToDateTime(milestoneDate, milestoneList);
+            }
         }
         return null;
     }
