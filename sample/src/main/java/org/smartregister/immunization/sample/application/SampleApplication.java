@@ -39,7 +39,7 @@ public class SampleApplication extends DrishtiApplication {
         context.updateApplicationContext(getApplicationContext());
 
         //Initialize Modules
-        CoreLibrary.init(context);
+        CoreLibrary.init(context, new SampleSyncConfiguration());
         ImmunizationLibrary.init(context, getRepository(), null, BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         // This method updates some of the hardcoded vaccine definitions in VaccineRepo.Vaccine enum
@@ -71,6 +71,10 @@ public class SampleApplication extends DrishtiApplication {
 
     public static synchronized SampleApplication getInstance() {
         return (SampleApplication) mInstance;
+    }
+
+    public Context context() {
+        return context;
     }
 
     @Override
