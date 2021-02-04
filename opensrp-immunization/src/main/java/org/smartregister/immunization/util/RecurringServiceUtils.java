@@ -105,7 +105,8 @@ public class RecurringServiceUtils {
         return null;
     }
 
-    public static void saveService(ServiceWrapper tag, String baseEntityId, String providerId, String locationId) {
+    public static void saveService(ServiceWrapper tag, String baseEntityId, String providerId, String locationId,
+                                   String team, String teamId, String childLocationId) {
         if (tag.getUpdatedVaccineDate() == null) {
             return;
         }
@@ -127,9 +128,9 @@ public class RecurringServiceUtils {
             serviceRecord.setValue(tag.getValue());
             serviceRecord.setLocationId(locationId);
 
-            serviceRecord.setTeam("testTeam");
-            serviceRecord.setTeamId("testTeamId");
-            serviceRecord.setChildLocationId("testChildLocationId");
+            serviceRecord.setTeam(team);
+            serviceRecord.setTeamId(teamId);
+            serviceRecord.setChildLocationId(childLocationId);
         }
 
         recurringServiceRecordRepository.add(serviceRecord);
