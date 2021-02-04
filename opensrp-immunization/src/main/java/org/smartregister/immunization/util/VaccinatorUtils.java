@@ -509,7 +509,12 @@ public class VaccinatorUtils {
                 }
 
                 if (m.isEmpty()) {
-                    DateTime dueDateTime = getServiceDueDate(s, milestoneDate, received);
+                    DateTime referenceDate = milestoneDate;
+                    if (!schedule.isEmpty()) {
+                        Map<String, Object> leadingService = (Map<String, Object>) schedule.get(schedule.size()-1);
+                        referenceDate = (DateTime) leadingService.get("date");
+                    }
+                    DateTime dueDateTime = getServiceDueDate(s, referenceDate, received, referenceDate.equals(milestoneDate));
                     m = createServiceMap("due", null, dueDateTime, s);
                 }
 
@@ -549,7 +554,8 @@ public class VaccinatorUtils {
         return m;
     }
 
-    public static DateTime getServiceDueDate(ServiceType serviceType, DateTime milestoneDate, Map<String, Date> received) {
+    public static DateTime getServiceDueDate(ServiceType serviceType, DateTime milestoneDate,
+                                             Map<String, Date> received, boolean isMilestoneDateDOB) {
         try {
             if (serviceType == null || milestoneDate == null || received == null) {
                 return null;
@@ -565,6 +571,11 @@ public class VaccinatorUtils {
                             String preService = preArray[1];
                             prereq = received.get(preService);
                             if (prereq != null) {
+                                hasPrerequisite = true;
+                            }
+                            // Calculate recurring vaccine date based on its pre-requisite date
+                            else if (!isMilestoneDateDOB) {
+                                prereq = milestoneDate.toDate();
                                 hasPrerequisite = true;
                             }
                         } else if (preArray[0].equalsIgnoreCase(ServiceTrigger.Reference.MULTIPLE.name())) {
@@ -590,18 +601,23 @@ public class VaccinatorUtils {
                 }
             }
 
-            if (hasPrerequisite && StringUtils.isNotBlank(serviceType.getPreOffset())) {
-                DateTime prereqDateTime = new DateTime(prereq);
-                return ServiceSchedule.addOffsetToDateTime(prereqDateTime, serviceType.getPreOffset());
-            } else if (StringUtils.isNotBlank(serviceType.getMilestoneOffset())) {
-                String[] milestones = convertToArray(serviceType.getMilestoneOffset());
-                if (milestones != null) {
-                    List<String> milestoneList = Arrays.asList(milestones);
-                    return ServiceSchedule.addOffsetToDateTime(milestoneDate, milestoneList);
-                }
-            }
+            return getSchedules(hasPrerequisite, serviceType, milestoneDate, prereq);
         } catch (Exception e) {
             Log.e(TAG, e.toString(), e);
+        }
+        return null;
+    }
+
+    private static DateTime getSchedules(boolean hasPrerequisite, ServiceType serviceType, DateTime milestoneDate, Date prereq) {
+        if (hasPrerequisite && StringUtils.isNotBlank(serviceType.getPreOffset())) {
+            DateTime prereqDateTime = new DateTime(prereq);
+            return ServiceSchedule.addOffsetToDateTime(prereqDateTime, serviceType.getPreOffset());
+        } else if (StringUtils.isNotBlank(serviceType.getMilestoneOffset())) {
+            String[] milestones = convertToArray(serviceType.getMilestoneOffset());
+            if (milestones != null) {
+                List<String> milestoneList = Arrays.asList(milestones);
+                return ServiceSchedule.addOffsetToDateTime(milestoneDate, milestoneList);
+            }
         }
         return null;
     }
@@ -643,7 +659,7 @@ public class VaccinatorUtils {
 
     public static DateTime getServiceDueDate(ServiceType serviceType, DateTime milestoneDate,
                                              List<ServiceRecord> serviceRecordList) {
-        return getServiceDueDate(serviceType, milestoneDate, receivedServices(serviceRecordList));
+        return getServiceDueDate(serviceType, milestoneDate, receivedServices(serviceRecordList), true);
     }
 
     public static Map<String, Date> receivedServices(List<ServiceRecord> serviceRecordList) {
