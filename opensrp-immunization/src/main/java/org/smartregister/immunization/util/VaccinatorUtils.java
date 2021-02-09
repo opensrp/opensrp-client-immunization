@@ -21,11 +21,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -404,11 +406,10 @@ public class VaccinatorUtils {
 
                 // Remove status to avoid vaccine entry, if it is expired
                 // and its pre-requisite isn't given yet
-                if (!m.isEmpty() && v.prerequisite() != null) {
-                    if (((String) m.get("status")).equalsIgnoreCase("expired")
-                            && received.get(v.prerequisite().display().toLowerCase(Locale.ENGLISH)) == null) {
-                        m.clear();
-                    }
+                if (!m.isEmpty() && v.prerequisite() != null
+                        && ((String) m.get("status")).equalsIgnoreCase("expired")
+                        && received.get(v.prerequisite().display().toLowerCase(Locale.ENGLISH)) == null) {
+                    m.clear();
                 }
 
                 if (m.isEmpty()) {
