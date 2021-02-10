@@ -1,5 +1,7 @@
 package org.smartregister.immunization.util;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.apache.commons.lang3.StringUtils;
 import org.opensrp.api.constants.Gender;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -7,6 +9,8 @@ import org.smartregister.domain.Photo;
 import org.smartregister.domain.ProfileImage;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
+
+import java.util.Map;
 
 import static org.smartregister.util.Utils.getValue;
 
@@ -27,16 +31,24 @@ public class ImageUtils {
     }
 
     public static Photo profilePhotoByClient(CommonPersonObjectClient client) {
+
+        String gender = getValue(client, IMConstants.KEY.GENDER, true);
+
+        return profilePhotoByClient(ImmutableMap.of(IMConstants.KEY.BASE_ENTITY_ID, client.entityId(), IMConstants.KEY.GENDER, gender));
+    }
+
+    public static Photo profilePhotoByClient(Map<String, String> clientDetailsMap) {
+
         Photo photo = new Photo();
-        ProfileImage profileImage = ImmunizationLibrary.getInstance().context().imageRepository()
-                .findByEntityId(client.entityId());
+        ProfileImage profileImage = ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(getValue(clientDetailsMap, IMConstants.KEY.BASE_ENTITY_ID, false));
         if (profileImage != null) {
             photo.setFilePath(profileImage.getFilepath());
         } else {
-            String gender = getValue(client, "gender", true);
-            photo.setResourceId(profileImageResourceByGender(gender));
+            String gender = getValue(clientDetailsMap, IMConstants.KEY.GENDER, true);
+            photo.setResourceId(ImageUtils.profileImageResourceByGender(gender));
         }
         return photo;
+
     }
 
     public static int profileImageResourceByGender(String gender) {
@@ -51,5 +63,4 @@ public class ImageUtils {
         }
         return R.drawable.child_boy_infant;
     }
-
 }

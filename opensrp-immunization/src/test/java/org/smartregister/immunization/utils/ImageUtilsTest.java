@@ -1,9 +1,12 @@
 package org.smartregister.immunization.utils;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -14,16 +17,18 @@ import org.smartregister.domain.ProfileImage;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.repository.ImageRepository;
 
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest ({ImmunizationLibrary.class})
+@PrepareForTest({ImmunizationLibrary.class})
 public class ImageUtilsTest extends BaseUnitTest {
 
     @Rule
@@ -96,8 +101,8 @@ public class ImageUtilsTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()
-                .findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        Mockito.doReturn("test-base-entity-id").when(commonPersonObjectClient).entityId();
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
         org.junit.Assert.assertNotNull(photo);
         org.junit.Assert.assertEquals(photo.getResourceId(), R.drawable.child_boy_infant);
@@ -121,6 +126,22 @@ public class ImageUtilsTest extends BaseUnitTest {
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
         org.junit.Assert.assertNotNull(photo);
         org.junit.Assert.assertEquals(imagePath, photo.getFilePath());
+    }
+
+
+    @Test
+    public void assertProfilePhotoByClientReturnsGirlPhotoForFemaleGender() {
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+
+        Map<String, String> childDetails = ImmutableMap.of(IMConstants.KEY.GENDER, "female");
+
+        Photo photo = ImageUtils.profilePhotoByClient(childDetails);
+        org.junit.Assert.assertNotNull(photo);
+        org.junit.Assert.assertEquals(photo.getResourceId(), R.drawable.child_girl_infant);
     }
 
 }
