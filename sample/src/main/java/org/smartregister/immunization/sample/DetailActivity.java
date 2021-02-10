@@ -513,7 +513,7 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
             ArrayList<ServiceWrapper> list = new ArrayList<>();
 
             for (ServiceWrapper tag : params) {
-                RecurringServiceUtils.saveService(tag, childDetails.entityId(), null, null);
+                RecurringServiceUtils.saveService(tag, childDetails.entityId(), null, null, null, null, null);
                 list.add(tag);
 
                 ServiceSchedule.updateOfflineAlerts(tag.getType(), childDetails.entityId(), Utils.dobToDateTime(childDetails));
