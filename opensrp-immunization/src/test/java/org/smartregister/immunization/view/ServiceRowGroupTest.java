@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -27,6 +28,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceRowGroupTestActivity;
+import org.smartregister.repository.AllSharedPreferences;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,10 +53,18 @@ public class ServiceRowGroupTest extends BaseUnitTest {
     private ServiceRowGroupTestActivity activity;
 
     @Mock
-    private org.smartregister.Context context_;
+    private org.smartregister.Context openSRPContext;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private CoreLibrary coreLibrary;
 
     private ServiceWrapper wrapper;
+
     private String type = "SERVICETYPE";
+
 
     @Before
     public void setUp() {
@@ -62,7 +72,9 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
-        CoreLibrary.init(context_);
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
+        Mockito.when(coreLibrary.context()).thenReturn(openSRPContext);
+        Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
         controller.setup();
         view = activity.getInstance();
     }
@@ -70,17 +82,6 @@ public class ServiceRowGroupTest extends BaseUnitTest {
     @Test
     public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
-        //Assert.assertNotNull(activity.getInstance1());
-        //Assert.assertNotNull(activity.getInstance2());
-        //Assert.assertNotNull(activity.getInstance3());
-    }
-
-    @Test
-    public void testConstructors() {
-        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application));
-        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
     }
 
     @After
@@ -88,7 +89,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         destroyController();
         activity = null;
         controller = null;
-
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", null);
     }
 
     private void destroyController() {
