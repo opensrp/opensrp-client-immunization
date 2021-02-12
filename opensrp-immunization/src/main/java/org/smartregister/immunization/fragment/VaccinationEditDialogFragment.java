@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.DialogFragment;
-
 import android.util.Pair;
 import android.view.Display;
 import android.view.Gravity;
@@ -23,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.vijay.jsonwizard.utils.NativeFormsProperties;
 

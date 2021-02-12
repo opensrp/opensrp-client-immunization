@@ -14,6 +14,7 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -29,6 +30,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.view.mock.ServiceGroupTestActivity;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ public class ServiceGroupTest extends BaseUnitTest {
     @InjectMocks
     private ServiceGroupTestActivity activity;
     @Mock
-    private org.smartregister.Context context_;
+    private org.smartregister.Context openSRPContext;
     private ArrayList<ServiceWrapper> wrappers;
     private ServiceWrapper wrapper;
 
@@ -60,33 +62,25 @@ public class ServiceGroupTest extends BaseUnitTest {
     @Mock
     private AppProperties properties;
 
+    @Mock
+    private CoreLibrary coreLibrary;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
-        CoreLibrary.init(context_);
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
+        Mockito.when(coreLibrary.context()).thenReturn(openSRPContext);
+        Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
         controller.setup();
         view = activity.getInstance();
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
         view.setImmunizationLibraryInstance(immunizationLibrary);
-    }
-
-    @Test
-    public void assertConstructorsNotNull() {
-        Assert.assertNotNull(activity.getInstance());
-        //Assert.assertNotNull(activity.getInstance1());
-        //Assert.assertNotNull(activity.getInstance2());
-        //Assert.assertNotNull(activity.getInstance3());
-    }
-
-    @Test
-    public void testConstructors() {
-        Assert.assertNotNull(new ServiceGroup(RuntimeEnvironment.application));
-        Assert.assertNotNull(new ServiceGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new ServiceGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new ServiceGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
     }
 
     @After

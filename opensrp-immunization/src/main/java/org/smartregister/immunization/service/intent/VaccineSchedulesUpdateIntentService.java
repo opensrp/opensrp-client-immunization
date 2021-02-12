@@ -2,10 +2,11 @@ package org.smartregister.immunization.service.intent;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import android.text.TextUtils;
 
 import org.joda.time.DateTime;
 import org.smartregister.CoreLibrary;

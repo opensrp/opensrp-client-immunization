@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.DialogFragment;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +16,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;

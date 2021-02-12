@@ -27,6 +27,7 @@ import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.view.mock.ServiceCardTestActivity;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.Repository;
 import org.smartregister.util.AppProperties;
 
@@ -46,7 +47,13 @@ public class ServiceCardTest extends BaseUnitTest {
     @InjectMocks
     private ServiceCardTestActivity activity;
     @Mock
-    private org.smartregister.Context context_;
+    private org.smartregister.Context openSRPContext;
+
+    @Mock
+    private CoreLibrary coreLibrary;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
 
     @Before
     public void setUp() {
@@ -54,7 +61,9 @@ public class ServiceCardTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceCardTestActivity.class, intent);
         activity = controller.start().resume().get();
-        CoreLibrary.init(context_);
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
+        Mockito.when(coreLibrary.context()).thenReturn(openSRPContext);
+        Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
         controller.setup();
         view = activity.getInstance();
 
@@ -141,30 +150,14 @@ public class ServiceCardTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertConstructorsNotNull() {
-        Assert.assertNotNull(activity.getInstance());
-        //Assert.assertNotNull(activity.getInstance1());
-        //Assert.assertNotNull(activity.getInstance2());
-        //Assert.assertNotNull(activity.getInstance3());
-    }
-
-    @Test
-    public void testConstructors() {
-        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application));
-        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new ServiceCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
-    }
-
-    @Test
     public void testHideVaccineOverdueVaccineCardColor() {
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
 
         AppProperties appProperties = Mockito.mock(AppProperties.class);
         Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
         Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
-        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+        Mockito.when(openSRPContext.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(openSRPContext, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
@@ -201,8 +194,8 @@ public class ServiceCardTest extends BaseUnitTest {
         AppProperties appProperties = Mockito.mock(AppProperties.class);
         Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
         Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
-        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+        Mockito.when(openSRPContext.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(openSRPContext, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
@@ -236,7 +229,7 @@ public class ServiceCardTest extends BaseUnitTest {
         destroyController();
         activity = null;
         controller = null;
-
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", null);
     }
 
     private void destroyController() {
