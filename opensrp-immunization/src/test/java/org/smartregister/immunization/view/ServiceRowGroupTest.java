@@ -75,6 +75,14 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         //Assert.assertNotNull(activity.getInstance3());
     }
 
+    @Test
+    public void testConstructors() {
+        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application));
+        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ServiceRowGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
+
     @After
     public void tearDown() {
         destroyController();

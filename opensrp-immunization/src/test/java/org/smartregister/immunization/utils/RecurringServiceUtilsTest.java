@@ -83,7 +83,8 @@ public class RecurringServiceUtilsTest extends BaseUnitTest {
         String baseEntityId = "test-entity-id";
         String providerId = "testProvider";
         String locationId = "test-location-id";
-        RecurringServiceUtils.saveService(tag, baseEntityId, providerId, locationId);
+        RecurringServiceUtils.saveService(tag, baseEntityId, providerId, locationId,
+               "testTeam", "testTeamId", "testChildLocation");
         Mockito.verify(recurringServiceRecordRepository, Mockito.times(1)).add((ServiceRecord) ArgumentMatchers.any());
     }
 }
