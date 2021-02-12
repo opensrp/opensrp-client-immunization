@@ -50,7 +50,6 @@
     <string name="activate_child_status_dialog_message">l\'Activation de l\'enfant va relancer l\'horaire de service de l\'application et vous permettra d\'enregistrer les services.</string>
     <string name="make_active">Activer</string>
 
-
     <!-- Immunization Names-->
     <string name="bcg">BCG</string>
     <string name="hepb">HepB à la naissance</string>
@@ -73,6 +72,8 @@
     <string name="mr_2">RR 2</string>
     <string name="vit_a_1">Vit A 6 Mois</string>
     <string name="vit_a_2">Vit A 12 Mois</string>
+
+
     <string name="at_birth">Naissance</string>
     <string name="_6_weeks">6 Semaines</string>
     <string name="_10_weeks">10 Semaines</string>
@@ -83,6 +84,5 @@
     <string name="expired">Expiré</string>
     <string name="expired_colon">Expiré: %1$s</string>
     <string name="out_of_catchment">Hors de la zone sanitaire</string>
-
 
 </resources>

@@ -38,6 +38,7 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.view.mock.ImmunizationRowGroupTestActivity;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.reflect.Type;
@@ -67,7 +68,13 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     private AttributeSet attrs;
 
     @Mock
-    private org.smartregister.Context context_;
+    private org.smartregister.Context openSRPContext;
+
+    @Mock
+    private CoreLibrary coreLibrary;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
 
     private org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData;
     private CommonPersonObjectClient childdetails;
@@ -84,7 +91,9 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         Intent intent = new Intent(RuntimeEnvironment.application, ImmunizationRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ImmunizationRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
-        CoreLibrary.init(context_);
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
+        Mockito.when(coreLibrary.context()).thenReturn(openSRPContext);
+        Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
         controller.setup();
         view = activity.getInstance();
 
@@ -419,6 +428,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         controller = null;
 
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", null);
 
     }
 

@@ -1,9 +1,10 @@
 package org.smartregister.immunization.job;
 
 import android.content.Intent;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import android.text.TextUtils;
 
 import com.evernote.android.job.DailyJob;
 import com.evernote.android.job.JobRequest;

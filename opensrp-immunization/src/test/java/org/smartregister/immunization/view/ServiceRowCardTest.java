@@ -1,6 +1,5 @@
 package org.smartregister.immunization.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
@@ -24,6 +23,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
@@ -51,9 +51,9 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest ({ImmunizationLibrary.class})
-@Config (shadows = {FontTextViewShadow.class})
-@PowerMockIgnore ({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PrepareForTest({ImmunizationLibrary.class})
+@Config(shadows = {FontTextViewShadow.class})
+@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
 
     private final String magicOne = "1";
@@ -62,14 +62,11 @@ public class ServiceRowCardTest extends BaseUnitTest {
     private final String magicExpired = "expired";
     @Rule
     public PowerMockRule rule = new PowerMockRule();
-    private ServiceRowCard view;
-    @Mock
-    private Context context;
-    private ActivityController<ServiceRowCardTestActivity> controller;
+
     @InjectMocks
     private ServiceRowCardTestActivity activity;
     @Mock
-    private org.smartregister.Context context_;
+    private org.smartregister.Context openSRPContext;
     private ImmunizationLibrary immunizationLibrary;
 
     @Mock
@@ -78,28 +75,29 @@ public class ServiceRowCardTest extends BaseUnitTest {
     @Mock
     private UserService userService;
 
-    @Test
-    public void testConstructors() {
-        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application));
-        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new ServiceRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
-    }
+    @Mock
+    private CoreLibrary coreLibrary;
+
+    private ServiceRowCard view;
+
+    private ActivityController<ServiceRowCardTestActivity> controller;
 
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
 
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
-        Mockito.doReturn(userService).when(context_).userService();
+        Mockito.doReturn(userService).when(openSRPContext).userService();
 
         Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
-        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
+        Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
 
         Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowCardTestActivity.class, intent);
         activity = controller.start().resume().get();
-        CoreLibrary.init(context_);
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
+        Mockito.when(coreLibrary.context()).thenReturn(openSRPContext);
+        Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
 
         ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
                 ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
@@ -219,9 +217,6 @@ public class ServiceRowCardTest extends BaseUnitTest {
     @Test
     public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
-        //Assert.assertNotNull(activity.getInstance1());
-        //Assert.assertNotNull(activity.getInstance2());
-        //Assert.assertNotNull(activity.getInstance3());
     }
 
     @Test
@@ -295,7 +290,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         destroyController();
         activity = null;
         controller = null;
-
+        ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", null);
     }
 
     private void destroyController() {

@@ -2,9 +2,10 @@ package org.smartregister.immunization.util;
 
 import android.app.Activity;
 import android.content.res.Configuration;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.CoreLibrary;
