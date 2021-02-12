@@ -1,6 +1,6 @@
 package org.smartregister.immunization.fragment.mock;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,22 +32,9 @@ import java.util.List;
  */
 
 public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
+    private LayoutInflater inflater;
+
     public VaccinationDialogFragmentMock() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void setDateOfBirth(Date dateOfBirth) {
-        super.setDateOfBirth(dateOfBirth);
-    }
-
-    @Override
-    public void setIssuedVaccines(List<Vaccine> issuedVaccines) {
-        super.setIssuedVaccines(issuedVaccines);
     }
 
     public static VaccinationDialogFragmentMock newInstance(Date dateOfBirth,
@@ -66,11 +53,39 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
     }
 
     @Override
+    public void setDateOfBirth(Date dateOfBirth) {
+        super.setDateOfBirth(dateOfBirth);
+    }
+
+    @Override
+    public void setIssuedVaccines(List<Vaccine> issuedVaccines) {
+        super.setIssuedVaccines(issuedVaccines);
+    }
+
+    @Override
     public void setDisableConstraints(boolean disableConstraints) {
         super.setDisableConstraints(disableConstraints);
     }
 
-    private LayoutInflater inflater;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,12 +93,14 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
         ViewGroup dialogViewMock = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
         ViewGroup dialogView = Mockito.spy((ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false));
         Mockito.doReturn(dialogView).when(this.inflater).inflate(R.layout.vaccination_dialog_view, container, false);
-        LinearLayout vaccinationNameLayout = Mockito.spy((LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout));
+        LinearLayout vaccinationNameLayout = Mockito
+                .spy((LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout));
         Mockito.doReturn(vaccinationNameLayout).when(dialogView).findViewById(R.id.vaccination_name_layout);
 
         LinearLayout vaccineName = Mockito.spy(new LinearLayout(RuntimeEnvironment.application));
         CheckBoxMock checkBox = Mockito.mock(CheckBoxMock.class);
-        RadioButtonMock radioButton = Mockito.mock(RadioButtonMock.class);//new RadioButtonMock(RuntimeEnvironment.application);
+        RadioButtonMock radioButton = Mockito
+                .mock(RadioButtonMock.class);//new RadioButtonMock(RuntimeEnvironment.application);
         TextView textView = new TextView(RuntimeEnvironment.application);
         Mockito.doReturn(vaccineName).when(this.inflater).inflate(R.layout.vaccination_name, null);
         Mockito.doReturn(radioButton).when(vaccineName).findViewById(R.id.radio);
@@ -99,7 +116,8 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
 
         listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
-        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.special_vacines, listType);
 
         VaccineSchedule.init(vaccines, specialVaccines, "child");
 
@@ -108,31 +126,17 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
         dialogView.findViewById(R.id.set).performClick();
         dialogView.findViewById(R.id.vaccinate_today).performClick();
         dialogView.findViewById(R.id.vaccinate_earlier).performClick();
+        dialogViewMock.setFilterTouchesWhenObscured(dialogView.getFilterTouchesWhenObscured());//Set to same state
         return dialogViewMock;
-    }
-
-    @Override
-    public void dismiss() {
-//        super.dismiss();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
     }
 
     @Override
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         super.setOnDismissListener(onDismissListener);
+    }
+
+    @Override
+    public void dismiss() {
+        //        super.dismiss();
     }
 }

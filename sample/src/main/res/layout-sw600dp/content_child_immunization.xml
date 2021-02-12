@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="@dimen/immun_child_card_height"
             android:clickable="true"
@@ -48,8 +48,17 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="20dp">
+                    android:paddingStart="10dp"
+                    android:paddingEnd="20dp">
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/outOfCatchment"
+                        style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/out_of_catchment"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/holo_orange_light" />
 
                     <org.smartregister.view.customcontrols.CustomFontTextView
                         android:id="@+id/name_tv"
@@ -80,7 +89,7 @@
                             style="@style/CustomFontTextViewStyle.ClientList.Light"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:text="Age"
                             android:textColor="@color/dark_grey"
                             android:textSize="@dimen/activity_sub_title_size" />
@@ -91,12 +100,12 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:layout_marginRight="12.5dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12.5dp"
                 android:src="@drawable/ic_more_vert" />
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/card_category_horizontal_margin"
@@ -114,16 +123,16 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="10dp">
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="10dp">
 
                     <org.smartregister.view.customcontrols.CustomFontTextView
                         style="@style/CustomFontTextViewStyle.ClientList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:text="@string/label_immunization_records"
                         android:textColor="@color/text_black"
@@ -134,10 +143,10 @@
                         style="@style/CustomFontTextViewStyle.ClientList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_gravity="right"
-                        android:gravity="right"
+                        android:layout_gravity="end"
+                        android:gravity="end"
                         android:textColor="@color/text_black"
                         android:textSize="@dimen/activity_sub_title_size" />
                 </RelativeLayout>
@@ -158,7 +167,7 @@
 
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
 </ScrollView>

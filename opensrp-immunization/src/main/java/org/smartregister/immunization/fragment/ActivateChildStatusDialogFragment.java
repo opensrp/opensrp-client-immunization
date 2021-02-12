@@ -1,11 +1,11 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,19 +44,30 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         String dialogTitle = String.format(
-                getString(R.string.activate_child_status_dialog_title),
+                getActivity().getString(R.string.activate_child_status_dialog_title),
                 currentStatus,
                 thirdPersonPronoun);
 
-        View inflatedView = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_activate_child_status, container, false);
+        View inflatedView = getActivity().getLayoutInflater()
+                .inflate(R.layout.dialog_fragment_activate_child_status, container, false);
+        inflatedView.setFilterTouchesWhenObscured(true);
         ((TextView) inflatedView.findViewById(R.id.tv_dialog_activate_child_title))
                 .setText(dialogTitle);
 
-        Button negativeButton = (Button) inflatedView.findViewById(android.R.id.button2);
-        Button positiveButton = (Button) inflatedView.findViewById(android.R.id.button1);
+        Button negativeButton = inflatedView.findViewById(android.R.id.button2);
+        Button positiveButton = inflatedView.findViewById(android.R.id.button1);
 
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,15 +90,6 @@ public class ActivateChildStatusDialogFragment extends DialogFragment {
         });
 
         return inflatedView;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialog);
-        }
     }
 
     public DialogInterface.OnDismissListener getOnDismissListener() {

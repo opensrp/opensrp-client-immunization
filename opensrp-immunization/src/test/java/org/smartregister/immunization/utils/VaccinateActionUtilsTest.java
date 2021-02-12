@@ -5,10 +5,11 @@ import android.widget.TableRow;
 
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.Assert;
-
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,9 +20,15 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.util.ReflectionHelpers;
+import org.smartregister.AllConstants;
+import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
+import org.smartregister.domain.SyncStatus;
+import org.smartregister.domain.form.FormSubmission;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
@@ -29,10 +36,13 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
+import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.repository.AlertRepository;
 import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
@@ -48,31 +58,44 @@ import java.util.Set;
  * Created by real on 31/10/17.
  */
 
-@PrepareForTest({FormUtils.class, VaccinatorUtils.class})
+@PrepareForTest({FormUtils.class, VaccinatorUtils.class, ImmunizationLibrary.class})
 public class VaccinateActionUtilsTest extends BaseUnitTest {
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
-    @Mock
-    private VaccinateActionUtils vaccinateActionUtils;
-
-    @Mock
-    private FormUtils formUtils;
-
+    public static final String WOMAN = "woman";
     private final String magicData = "data";
     private final String magicChild = "child";
-    private final String magicNULL = "NULL";
+    private final String magicNULL = null;
     private final String magicBCG = "BCG";
     private final int magic400 = 400;
     private final String magicID = "uselessentityID";
     private final int magic2 = 2;
     private final int magic12 = 12;
 
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    @Mock
+    private VaccinateActionUtils vaccinateActionUtils;
+    @Mock
+    private FormUtils formUtils;
+
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private VaccineRepository vaccineRepository;
+    @Mock
+    private Context context;
+    @Mock
+    private AlertService alertService;
+    @Mock
+    private AppProperties appProperties;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         Assert.assertNotNull(vaccinateActionUtils);
+
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
     }
 
     @Test
@@ -80,63 +103,53 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(FormUtils.class);
         Assert.assertNull(VaccinateActionUtils.formData(context, "", "", ""));
-        PowerMockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(formUtils);
-        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(magicData);
+        PowerMockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .thenReturn(formUtils);
+        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(),
+                org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(magicData);
         Assert.assertEquals(VaccinateActionUtils.formData(context, "", "", ""), magicData);
 
     }
 
-//    @Test
-//    public void vaccinateTodayTest()throws Exception {
-//        ActivityUtils activity = Robolectric.setupActivity(ActivityUtils.class);
-//        TableRow row = (TableRow) LayoutInflater
-//                .from(activity)
-//                .inflate(R.layout.vaccinate_row_view, null);
-////        View v = new View(RuntimeEnvironment.application);
-////        TableRow row = new TableRow(RuntimeEnvironment.application);
-////        PowerMockito.doReturn(v).when(row).findViewById(R.id.date);
-//        VaccinateActionUtils.vaccinateToday(row, null);
-//    }
-
     @Test
-    public void assertAddDialogHookCustomFilterTestForDifferentAgeAndVaccines() throws Exception {
+    public void assertAddDialogHookCustomFilterTestForDifferentAgeAndVaccines() {
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("36");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv1);
-        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
+        Assert.assertTrue(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper));
 
         vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("64");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv2);
-        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
+        Assert.assertTrue(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper));
 
         vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("92");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv3);
-        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
+        Assert.assertTrue(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper));
 
         vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("251");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.measles1);
-        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
+        Assert.assertTrue(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper));
 
         vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("351");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.measles2);
-        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
+        Assert.assertTrue(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper));
 
         vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setExistingAge("0");
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.bcg);
-        Assert.assertEquals(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper), true);
+        Assert.assertTrue(VaccinateActionUtils.addDialogHookCustomFilter(vaccineWrapper));
 
     }
 
     @Test
-    public void assertFindRowTestReturnsTableRow() throws Exception {
+    public void assertFindRowTestReturnsTableRow() {
         String tag = "TAG";
         String wrong_tag = "WRONG TAG";
-        Set<TableLayout> tables = new HashSet<TableLayout>();
+        Set<TableLayout> tables = new HashSet<>();
         TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
         TableRow row = new TableRow(RuntimeEnvironment.application);
         row.setTag(tag);
@@ -149,7 +162,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertRetrieveFieldOveridesTestReturnsFieldOverieds() throws Exception {
+    public void assertRetrieveFieldOveridesTestReturnsFieldOverieds() {
         String s = "{\"fieldOverrides\":\"{}\"}";
         Assert.assertNotNull(VaccinateActionUtils.retrieveFieldOverides(s));
         //throws Exception
@@ -157,17 +170,25 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAllAlertNamesTestReturnsAlertForACategory() throws Exception {
+    public void assertAllAlertNamesTestReturnsAlertForACategory() {
 
-        List<ServiceType> typeList = new ArrayList<ServiceType>();
-        HashMap<String, List<ServiceType>> collection = new HashMap<String, List<ServiceType>>();
+        List<ServiceType> typeList = new ArrayList<>();
+        HashMap<String, List<ServiceType>> collection = new HashMap<>();
         ServiceType st = new ServiceType();
         st.setName("SERVICE NAME");
         collection.put("1", typeList);
         collection.put("2", null);
         Assert.assertNotNull(VaccinateActionUtils.allAlertNames(collection.values()));
 
-        Assert.assertNotNull(VaccinateActionUtils.allAlertNames(magicChild));
+        String[] childVaccines = VaccinateActionUtils.allAlertNames(magicChild);
+        String[] womanVaccines = VaccinateActionUtils.allAlertNames(WOMAN);
+
+        Assert.assertNotNull(childVaccines);
+        Assert.assertEquals(childVaccines.length, 92);
+
+        Assert.assertNotNull(womanVaccines);
+        Assert.assertEquals(womanVaccines.length, 10);
+
         Assert.assertNull(VaccinateActionUtils.allAlertNames(magicNULL));
     }
 
@@ -200,35 +221,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertPreviousStateKeyTestWithVariousVaccineNames() throws Exception {
-        Assert.assertNull(VaccinateActionUtils.previousStateKey(null, null));
-        Vaccine v = new Vaccine();
-        v.setName(magicBCG);
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName(magicNULL);
-        Assert.assertNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("OPV 0");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("OPV 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("OPV 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("OPV 3");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("OPV 4");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("MR 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("MR 2");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("IPV");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey(magicChild, v));
-        v.setName("TT 1");
-        Assert.assertNotNull(VaccinateActionUtils.previousStateKey("woman", v));
-    }
-
-    @Test
-    public void assertHyphenTestReturnsHyphenatedString() throws Exception {
+    public void assertHyphenTestReturnsHyphenatedString() {
         Assert.assertNotNull(VaccinateActionUtils.addHyphen(""));
         Assert.assertNotNull(VaccinateActionUtils.addHyphen("a b"));
         Assert.assertNotNull(VaccinateActionUtils.removeHyphen(""));
@@ -236,8 +229,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertAddBcg2SpecialVaccineTestReturnsSpecialVaccinesOnHasVaccineAndGetVaccineMethods() throws Exception {
-        List<Vaccine> list = new ArrayList<Vaccine>();
+    public void assertAddBcg2SpecialVaccineTestReturnsSpecialVaccinesOnHasVaccineAndGetVaccineMethods() {
+        List<Vaccine> list = new ArrayList<>();
         Vaccine v = new Vaccine();
         v.setName("BCG 2");
         list.add(v);
@@ -248,12 +241,17 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
         listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
-        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.special_vacines, listType);
 
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(specialVaccines);
+        PowerMockito
+                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .thenReturn(specialVaccines);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class))).thenReturn(null);
+        PowerMockito
+                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .thenReturn(null);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
         //choto related methods
@@ -269,19 +267,19 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertPopulateDefaultAlertsTestReturnsAlerts() throws Exception {
+    public void assertPopulateDefaultAlertsTestReturnsAlerts() {
         VaccinateActionUtils.populateDefaultAlerts(null, null, null, null, null, null);
-        List<Vaccine> vlist = new ArrayList<Vaccine>();
+        List<Vaccine> vlist = new ArrayList<>();
         Vaccine v = new Vaccine();
         v.setName(magicBCG);
         vlist.add(v);
         List<Alert> alist = new ArrayList<Alert>();
         Alert a = new Alert("caseID", magicBCG, magicBCG, AlertStatus.normal, new Date().toString(), new Date().toString());
         alist.add(a);
-        VaccineRepo.Vaccine vaccine[] = {VaccineRepo.Vaccine.bcg};
+        VaccineRepo.Vaccine[] vaccine = {VaccineRepo.Vaccine.bcg};
         AlertService alertService = new AlertService(Mockito.mock(AlertRepository.class));
         VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, magicID, new DateTime(), vaccine);
-        VaccineRepo.Vaccine vaccine2[] = {VaccineRepo.Vaccine.bcg2};
+        VaccineRepo.Vaccine[] vaccine2 = {VaccineRepo.Vaccine.bcg2};
         VaccinateActionUtils.populateDefaultAlerts(alertService, vlist, alist, magicID, new DateTime(), vaccine2);
 
 
@@ -297,7 +295,7 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertCreateDefaultAlertTestReturnsAlert() throws Exception {
+    public void assertCreateDefaultAlertTestReturnsAlert() {
         DateTime dateTime = new DateTime();
 
         Assert.assertNotNull(VaccinateActionUtils.createDefaultAlert(VaccineRepo.Vaccine.opv0, "", dateTime));
@@ -321,73 +319,88 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
 
     @Test
-    public void assertMoreThanThreeMonthsReturnsTrueForDatesMoreThanThreeMonths() throws Exception {
+    public void assertMoreThanThreeMonthsReturnsTrueForDatesMoreThanThreeMonths() {
         DateTime dateTime = new DateTime();
         dateTime = dateTime.minusMonths(magic2);
 
-        Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+        Assert.assertFalse(VaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
 
-        Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+        Assert.assertFalse(VaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
         dateTime = new DateTime();
-        dateTime = dateTime.minusMonths(3);
+        dateTime = dateTime.minusMonths(3).minusHours(1);
 
-        Assert.assertFalse(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+        Assert.assertTrue(VaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
         dateTime = new DateTime();
         dateTime = dateTime.minusMonths(3);
         dateTime = dateTime.minusWeeks(magic2);
 
-        Assert.assertTrue(vaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
+        Assert.assertTrue(VaccinateActionUtils.moreThanThreeMonths(new Date(dateTime.getMillis())));
 
     }
 
     @Test
-    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtVaccineDatesLessThanThreeMonths() throws Exception {
+    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtVaccineDatesLessThanThreeMonths() {
 
         Vaccine vaccine = null;
-        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+        Assert.assertTrue(VaccinateActionUtils.lessThanThreeMonths(vaccine));
 
         vaccine = new Vaccine();
-        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+        Assert.assertTrue(VaccinateActionUtils.lessThanThreeMonths(vaccine));
 
         vaccine = new Vaccine();
         DateTime dateTime = new DateTime();
         dateTime = dateTime.minusMonths(magic2);
         vaccine.setCreatedAt(new Date(dateTime.getMillis()));
-        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+        Assert.assertTrue(VaccinateActionUtils.lessThanThreeMonths(vaccine));
 
         vaccine = new Vaccine();
         dateTime = new DateTime();
         dateTime = dateTime.minusMonths(5);
         vaccine.setCreatedAt(new Date(dateTime.getMillis()));
-        Assert.assertFalse(vaccinateActionUtils.lessThanThreeMonths(vaccine));
+        Assert.assertFalse(VaccinateActionUtils.lessThanThreeMonths(vaccine));
 
 
     }
 
     @Test
-    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtServiceRecordDatesLessThanThreeMonths() throws Exception {
+    public void assertLessThanThreeMonthsReturnsTrueForCreatedAtServiceRecordDatesLessThanThreeMonths() {
 
         ServiceRecord serviceRecord = null;
-        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+        Assert.assertTrue(VaccinateActionUtils.lessThanThreeMonths(serviceRecord));
 
         serviceRecord = new ServiceRecord();
-        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+        Assert.assertTrue(VaccinateActionUtils.lessThanThreeMonths(serviceRecord));
 
         serviceRecord = new ServiceRecord();
         DateTime dateTime = new DateTime();
         dateTime = dateTime.minusMonths(magic2);
         serviceRecord.setCreatedAt(new Date(dateTime.getMillis()));
-        Assert.assertTrue(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
+        Assert.assertTrue(VaccinateActionUtils.lessThanThreeMonths(serviceRecord));
 
         serviceRecord = new ServiceRecord();
         dateTime = new DateTime();
         dateTime = dateTime.minusMonths(5);
         serviceRecord.setCreatedAt(new Date(dateTime.getMillis()));
-        Assert.assertFalse(vaccinateActionUtils.lessThanThreeMonths(serviceRecord));
-
-
+        Assert.assertFalse(VaccinateActionUtils.lessThanThreeMonths(serviceRecord));
     }
+
+    @Test
+    public void getParamsShouldProvideJsonStringWith5properties() throws JSONException {
+        FormSubmission formSubmission = new FormSubmission("instance-id", "entity-id", "form-name", "{}", "client-version", SyncStatus.SYNCED, "synced");
+        String jsonString = ReflectionHelpers.callStaticMethod(VaccinateActionUtils.class, "getParams", ReflectionHelpers.ClassParameter.from(FormSubmission.class, formSubmission));
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONArray keys = jsonObject.names();
+
+        Assert.assertEquals(5, keys.length());
+        Assert.assertEquals("instance-id", jsonObject.getString(AllConstants.INSTANCE_ID_PARAM));
+        Assert.assertEquals("entity-id", jsonObject.getString(AllConstants.ENTITY_ID_PARAM));
+        Assert.assertEquals("form-name", jsonObject.getString(AllConstants.FORM_NAME_PARAM));
+        Assert.assertEquals("client-version", jsonObject.getString(AllConstants.VERSION_PARAM));
+        Assert.assertEquals(SyncStatus.PENDING.value(), jsonObject.getString(AllConstants.SYNC_STATUS));
+    }
+
 }

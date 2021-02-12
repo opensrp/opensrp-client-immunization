@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.adapter.VaccineCardAdapter;
 import org.smartregister.immunization.domain.GroupState;
@@ -21,6 +22,7 @@ import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,16 +50,35 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
-    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
+    private SimpleDateFormat READABLE_DATE_FORMAT;
     private boolean modalOpen;
     private String type;
 
     private boolean isChildActive = true;
     private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
+    private ImmunizationLibrary immunizationLibraryInstance;
 
     public VaccineGroup(Context context) {
         super(context);
         init(context);
+    }
+
+    private void init(Context context) {
+        this.context = context;
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.view_vaccine_group, this, true).setFilterTouchesWhenObscured(true);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(layoutParams);
+
+        READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy");
+
+        nameTV = findViewById(R.id.name_tv);
+        vaccinesGV = findViewById(R.id.vaccines_gv);
+        vaccinesGV.setExpanded(true);
+        recordAllTV = findViewById(R.id.record_all_tv);
+        recordAllTV.setOnClickListener(this);
+
     }
 
     public VaccineGroup(Context context, AttributeSet attrs) {
@@ -71,61 +91,44 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         init(context);
     }
 
-    public CommonPersonObjectClient getChildDetails() {
-        return this.childDetails;
-    }
-
-    public org.smartregister.immunization.domain.jsonmapping.VaccineGroup getVaccineData() {
-        return this.vaccineData;
-    }
-
-    public List<Vaccine> getVaccineList() {
-        return this.vaccineList;
-    }
-
-    public List<Alert> getAlertList() {
-        return alertList;
-    }
-
-    public void setVaccineList(List<Vaccine> vaccineList) {
-        this.vaccineList = vaccineList;
-    }
-
-    public void setAlertList(List<Alert> alertList) {
-        this.alertList = alertList;
-    }
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public VaccineGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 
-    private void init(Context context) {
-        this.context = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_vaccine_group, this, true);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        setLayoutParams(layoutParams);
-        nameTV = (TextView) findViewById(R.id.name_tv);
-        vaccinesGV = (ExpandableHeightGridView) findViewById(R.id.vaccines_gv);
-        vaccinesGV.setExpanded(true);
-        recordAllTV = (TextView) findViewById(R.id.record_all_tv);
-        recordAllTV.setOnClickListener(this);
+    public CommonPersonObjectClient getChildDetails() {
+        return childDetails;
     }
 
-    public void setData(org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData, CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts, String type) {
+    public org.smartregister.immunization.domain.jsonmapping.VaccineGroup getVaccineData() {
+        return vaccineData;
+    }
+
+    public List<Vaccine> getVaccineList() {
+        return vaccineList;
+    }
+
+    public void setVaccineList(List<Vaccine> vaccineList) {
+        this.vaccineList = vaccineList;
+    }
+
+    public List<Alert> getAlertList() {
+        return alertList;
+    }
+
+    public void setAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
+
+    public void setData(org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData,
+                        CommonPersonObjectClient childDetails, List<Vaccine> vaccines, List<Alert> alerts, String type) {
         this.vaccineData = vaccineData;
         this.childDetails = childDetails;
-        this.vaccineList = vaccines;
-        this.alertList = alerts;
+        vaccineList = vaccines;
+        alertList = alerts;
         this.type = type;
         updateViews();
-    }
-
-    public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
-        this.onVaccineUndoClickListener = onVaccineUndoClickListener;
     }
 
     /**
@@ -136,15 +139,14 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     }
 
     /**
-     * This method will update vaccine group views, and the vaccine cards corresponding to the list
-     * of {@link VaccineWrapper}s specified
+     * This method will update vaccine group views, and the vaccine cards corresponding to the list of {@link
+     * VaccineWrapper}s specified
      *
-     * @param vaccinesToUpdate List of vaccines who's views we want updated, or NULL if we want to
-     *                         update all vaccine views
+     * @param vaccinesToUpdate List of vaccines who's views we want updated, or NULL if we want to update all vaccine views
      */
     public void updateViews(ArrayList<VaccineWrapper> vaccinesToUpdate) {
-        this.groupState = GroupState.IN_PAST;
-        if (this.vaccineData != null) {
+        groupState = GroupState.IN_PAST;
+        if (vaccineData != null) {
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             DateTime dateTime = new DateTime(dobString);
             Date dob = dateTime.toDate();
@@ -157,11 +159,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
             long timeDiff = today.getTimeInMillis() - dob.getTime();
 
             if (timeDiff < today.getTimeInMillis()) {
-                this.groupState = GroupState.IN_PAST;
+                groupState = GroupState.IN_PAST;
             } else if (timeDiff > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                this.groupState = GroupState.IN_FUTURE;
+                groupState = GroupState.IN_FUTURE;
             } else {
-                this.groupState = GroupState.CURRENT;
+                groupState = GroupState.CURRENT;
             }
             updateStatusViews();
             updateVaccineCards(vaccinesToUpdate);
@@ -169,13 +171,13 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     }
 
     private void updateStatusViews() {
-        switch (this.groupState) {
+        switch (groupState) {
             case IN_PAST:
-                nameTV.setText(vaccineData.name);
+                nameTV.setText(VaccinatorUtils.translate(context, vaccineData.name));
                 break;
             case CURRENT:
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        vaccineData.name, context.getString(R.string.today)));
+                        VaccinatorUtils.translate(context, vaccineData.name), context.getString(R.string.today)));
                 break;
             case IN_FUTURE:
                 String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
@@ -184,7 +186,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                 dobCalender.setTime(dateTime.toDate());
                 dobCalender.add(Calendar.DATE, vaccineData.days_after_birth_due);
                 nameTV.setText(String.format(context.getString(R.string.due_),
-                        vaccineData.name,
+                        VaccinatorUtils.translate(context, vaccineData.name),
                         READABLE_DATE_FORMAT.format(dobCalender.getTime())));
                 break;
             default:
@@ -216,6 +218,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                                     onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
                                 }
                                 break;
+                            case EXPIRED:
+                                if (onVaccineClickedListener != null && getImmunizationLibraryInstance().isAllowExpiredVaccineEntry()) {
+                                    onVaccineClickedListener.onClick(VaccineGroup.this, vaccineCard.getVaccineWrapper());
+                                }
+                                break;
                             case DONE_CAN_BE_UNDONE:
                                 onUndoClick(vaccineCard);
                                 break;
@@ -235,6 +242,24 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    public void onUndoClick(VaccineCard vaccineCard) {
+        if (onVaccineUndoClickListener != null) {
+            onVaccineUndoClickListener.onUndoClick(this, vaccineCard.getVaccineWrapper());
+        }
+    }
+
+    public void toggleRecordAllTV() {
+        if (vaccineCardAdapter.getDueVaccines().size() > 0 && isChildActive) {
+            recordAllTV.setVisibility(VISIBLE);
+        } else {
+            recordAllTV.setVisibility(GONE);
+        }
+    }
+
+    public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
+        this.onVaccineUndoClickListener = onVaccineUndoClickListener;
+    }
+
     public void setChildActive(boolean childActive) {
         isChildActive = childActive;
     }
@@ -252,14 +277,6 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public void toggleRecordAllTV() {
-        if (vaccineCardAdapter.getDueVaccines().size() > 0 && isChildActive) {
-            recordAllTV.setVisibility(VISIBLE);
-        } else {
-            recordAllTV.setVisibility(GONE);
-        }
-    }
-
     @Override
     public void onClick(View v) {
         v.setEnabled(false);
@@ -269,31 +286,12 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         v.setEnabled(true);
     }
 
-    public void onUndoClick(VaccineCard vaccineCard) {
-        if (this.onVaccineUndoClickListener != null) {
-            this.onVaccineUndoClickListener.onUndoClick(this, vaccineCard.getVaccineWrapper());
-        }
-    }
-
     public void setOnRecordAllClickListener(OnRecordAllClickListener onRecordAllClickListener) {
         this.onRecordAllClickListener = onRecordAllClickListener;
     }
 
     public void setOnVaccineClickedListener(OnVaccineClickedListener onVaccineClickedListener) {
         this.onVaccineClickedListener = onVaccineClickedListener;
-    }
-
-    public static interface OnRecordAllClickListener {
-        void onClick(VaccineGroup vaccineGroup, ArrayList<VaccineWrapper> dueVaccines);
-    }
-
-    public static interface OnVaccineClickedListener {
-        void onClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine);
-    }
-
-    public static interface OnVaccineUndoClickListener {
-        void onUndoClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine);
-
     }
 
     public ArrayList<VaccineWrapper> getDueVaccines() {
@@ -348,5 +346,29 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         if (vaccineCardAdapterLoadingListener != null && vaccineCardAdapter != null) {
             vaccineCardAdapter.setVaccineCardAdapterLoadingListener(vaccineCardAdapterLoadingListener);
         }
+    }
+
+    public ImmunizationLibrary getImmunizationLibraryInstance() {
+        if (immunizationLibraryInstance == null) {
+            immunizationLibraryInstance = ImmunizationLibrary.getInstance();
+        }
+        return immunizationLibraryInstance;
+    }
+
+    public void setImmunizationLibraryInstance(ImmunizationLibrary immunizationLibrary) {
+        this.immunizationLibraryInstance = immunizationLibrary;
+    }
+
+    public interface OnRecordAllClickListener {
+        void onClick(VaccineGroup vaccineGroup, ArrayList<VaccineWrapper> dueVaccines);
+    }
+
+    public interface OnVaccineClickedListener {
+        void onClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine);
+    }
+
+    public interface OnVaccineUndoClickListener {
+        void onUndoClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine);
+
     }
 }

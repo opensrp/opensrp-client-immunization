@@ -1,9 +1,9 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FAFAFA"
@@ -36,16 +36,25 @@
                         android:id="@+id/imageView2"
                         android:layout_width="@dimen/navigation_icon_size"
                         android:layout_height="@dimen/navigation_icon_size"
-                        android:layout_gravity="left|top" />
+                        android:layout_gravity="start|top" />
                 </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/outOfCatchment"
+                        style="@style/CustomFontTextViewStyle.ClientList.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/out_of_catchment"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/holo_orange_light" />
 
                     <org.smartregister.view.customcontrols.CustomFontTextView
                         android:id="@+id/name"
@@ -67,7 +76,7 @@
                             style="@style/CustomFontTextViewStyle.ClientList.Light"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ZEIR: 5425428"
+                            android:text="ID: 5425428"
                             android:textColor="@color/dark_grey"
                             android:textSize="@dimen/activity_sub_title_size" />
 
@@ -76,7 +85,7 @@
                             style="@style/CustomFontTextViewStyle.ClientList.Light"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:text="Age: 6w 4d"
                             android:textColor="@color/dark_grey"
                             android:textSize="@dimen/activity_sub_title_size" />
@@ -88,8 +97,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="25dp"
                     android:orientation="vertical">
 
                     <ImageView
@@ -123,7 +132,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -134,13 +143,13 @@
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/female_dark_pink"
             app:tabTextAppearance="@style/CustomFontTextViewStyle.tabIndicator" />
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAlignment="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

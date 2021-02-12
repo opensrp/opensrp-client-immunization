@@ -1,5 +1,6 @@
 package org.smartregister.immunization.domain;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
@@ -24,9 +25,13 @@ public class ServiceRecordTest extends BaseUnitTest {
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        junit.framework.Assert.assertNotNull(new ServiceRecord());
-        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED, EVENTID, FORMSUBMISSIONID, 0l));
-        junit.framework.Assert.assertNotNull(new ServiceRecord(0l, BASEENTITYID, PROGRAMCLIENTID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED, EVENTID, FORMSUBMISSIONID, 0l, new Date()));
+        Assert.assertNotNull(new ServiceRecord());
+        Assert.assertNotNull(
+                new ServiceRecord(0l, BASEENTITYID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED, EVENTID,
+                        FORMSUBMISSIONID, 0l));
+        Assert.assertNotNull(
+                new ServiceRecord(0l, BASEENTITYID, PROGRAMCLIENTID, 0l, VALUE, new Date(), ANMID, LOCATIONID, SYNCED,
+                        EVENTID, FORMSUBMISSIONID, 0l, new Date()));
     }
 
     @Test
@@ -34,51 +39,67 @@ public class ServiceRecordTest extends BaseUnitTest {
         ServiceRecord serviceRecord = new ServiceRecord();
 
         serviceRecord.setId(0l);
-        junit.framework.Assert.assertEquals(0l, serviceRecord.getId().longValue());
+        Assert.assertEquals(0l, serviceRecord.getId().longValue());
 
         serviceRecord.setBaseEntityId(BASEENTITYID);
-        junit.framework.Assert.assertEquals(BASEENTITYID, serviceRecord.getBaseEntityId());
+        Assert.assertEquals(BASEENTITYID, serviceRecord.getBaseEntityId());
 
         serviceRecord.setRecurringServiceId(0l);
-        junit.framework.Assert.assertEquals(0l, serviceRecord.getRecurringServiceId().longValue());
+        Assert.assertEquals(0l, serviceRecord.getRecurringServiceId().longValue());
 
         serviceRecord.setValue(VALUE);
-        junit.framework.Assert.assertEquals(VALUE, serviceRecord.getValue());
+        Assert.assertEquals(VALUE, serviceRecord.getValue());
 
         Date date = new Date();
         serviceRecord.setDate(date);
-        junit.framework.Assert.assertEquals(date, serviceRecord.getDate());
+        Assert.assertEquals(date, serviceRecord.getDate());
 
         serviceRecord.setAnmId(ANMID);
-        junit.framework.Assert.assertEquals(ANMID, serviceRecord.getAnmId());
+        Assert.assertEquals(ANMID, serviceRecord.getAnmId());
 
         serviceRecord.setLocationId(LOCATIONID);
-        junit.framework.Assert.assertEquals(LOCATIONID, serviceRecord.getLocationId());
+        Assert.assertEquals(LOCATIONID, serviceRecord.getLocationId());
 
         serviceRecord.setSyncStatus(SYNCED);
-        junit.framework.Assert.assertEquals(SYNCED, serviceRecord.getSyncStatus());
+        Assert.assertEquals(SYNCED, serviceRecord.getSyncStatus());
 
         serviceRecord.setEventId(EVENTID);
-        junit.framework.Assert.assertEquals(EVENTID, serviceRecord.getEventId());
+        Assert.assertEquals(EVENTID, serviceRecord.getEventId());
 
         serviceRecord.setFormSubmissionId(FORMSUBMISSIONID);
-        junit.framework.Assert.assertEquals(FORMSUBMISSIONID, serviceRecord.getFormSubmissionId());
+        Assert.assertEquals(FORMSUBMISSIONID, serviceRecord.getFormSubmissionId());
 
         serviceRecord.setUpdatedAt(0l);
-        junit.framework.Assert.assertEquals(0l, serviceRecord.getUpdatedAt().longValue());
+        Assert.assertEquals(0l, serviceRecord.getUpdatedAt().longValue());
 
         serviceRecord.setProgramClientId(PROGRAMCLIENTID);
-        junit.framework.Assert.assertEquals(PROGRAMCLIENTID, serviceRecord.getProgramClientId());
+        Assert.assertEquals(PROGRAMCLIENTID, serviceRecord.getProgramClientId());
 
         HashMap<String, String> identifiers = new HashMap<>();
         identifiers.put("ZEIR_ID", PROGRAMCLIENTID);
-        junit.framework.Assert.assertEquals(identifiers, serviceRecord.getIdentifiers());
+        Assert.assertEquals(identifiers, serviceRecord.getIdentifiers());
 
         serviceRecord.setName(NAME);
-        junit.framework.Assert.assertEquals(NAME, serviceRecord.getName());
+        Assert.assertEquals(NAME, serviceRecord.getName());
 
         serviceRecord.setType(TYPE);
-        junit.framework.Assert.assertEquals(TYPE, serviceRecord.getType());
+        Assert.assertEquals(TYPE, serviceRecord.getType());
+
+        Date DATE = new Date();
+        serviceRecord.setCreatedAt(DATE);
+        Assert.assertEquals(DATE, serviceRecord.getCreatedAt());
+
+        String TEAM = "team";
+        serviceRecord.setTeam(TEAM);
+        Assert.assertEquals(TEAM, serviceRecord.getTeam());
+
+        String TEAM_ID = "team_id";
+        serviceRecord.setTeamId(TEAM_ID);
+        Assert.assertEquals(TEAM_ID, serviceRecord.getTeamId());
+
+        String CHILD_LOCATION_ID = "child_location_id";
+        serviceRecord.setChildLocationId(CHILD_LOCATION_ID);
+        Assert.assertEquals(CHILD_LOCATION_ID, serviceRecord.getChildLocationId());
     }
 
 }

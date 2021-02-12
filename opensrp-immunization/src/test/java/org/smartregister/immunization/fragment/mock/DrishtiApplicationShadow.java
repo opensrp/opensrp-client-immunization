@@ -3,6 +3,7 @@ package org.smartregister.immunization.fragment.mock;
 import android.content.Context;
 
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.shadow.api.Shadow;
@@ -15,18 +16,26 @@ import org.smartregister.view.activity.DrishtiApplication;
  */
 @Implements(DrishtiApplication.class)
 public class DrishtiApplicationShadow extends Shadow {
-    Repository repository;
     private static OpenSRPImageLoader openSRPImageLoader;
+    private Repository repository;
+
+    private DrishtiApplication drishtiApplication;
 
     public DrishtiApplicationShadow() {
         super();
         repository = Mockito.mock(Repository.class);
+        drishtiApplication = Mockito.mock(DrishtiApplication.class);
+
+
+        PowerMockito.mockStatic(DrishtiApplication.class);
+        PowerMockito.when(DrishtiApplication.getInstance()).thenReturn(drishtiApplication);
+        Mockito.doReturn(Mockito.mock(Context.class)).when(drishtiApplication).getApplicationContext();
     }
 
     @Implementation
     public static OpenSRPImageLoader getCachedImageLoaderInstance() {
         openSRPImageLoader = Mockito.mock(OpenSRPImageLoader.class);
-//        Mockito.doNothing().when(openSRPImageLoader).getImageByClientId(Mockito.anyString(),Mockito.any(OpenSRPImageListener.class));
+        //        Mockito.doNothing().when(openSRPImageLoader).getImageByClientId(Mockito.anyString(),Mockito.any(OpenSRPImageListener.class));
 
 
         return openSRPImageLoader;
@@ -59,6 +68,14 @@ public class DrishtiApplicationShadow extends Shadow {
 
     @Implementation
     public void logoutCurrentUser() {
+
+    }
+
+
+    @Implementation
+    public DrishtiApplication getInstance() {
+
+        return drishtiApplication;
 
     }
 

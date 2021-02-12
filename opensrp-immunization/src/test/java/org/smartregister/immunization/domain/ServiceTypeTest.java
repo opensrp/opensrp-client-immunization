@@ -3,6 +3,8 @@ package org.smartregister.immunization.domain;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -13,6 +15,7 @@ public class ServiceTypeTest extends BaseUnitTest {
     public static final String EXPIRYOFFSET = "ExpiryOffset";
     public static final String MILESTONEOFFSET = "MilestoneOffset";
     public static final String NAME = "name";
+    public static final String SERVICE_GROUP = "service_group";
     public static final String SERVICENAMEENTITY = "serviceNameEntity";
     public static final String SERVICENAMEENTITYID = "serviceNameEntityId";
     public static final String DATEENTITY = "dateEntity";
@@ -21,10 +24,54 @@ public class ServiceTypeTest extends BaseUnitTest {
     public static final String SERVICELOGIC = "serviceLogic";
     public static final String PREREQUISITE = "prerequisite";
 
+
     @Test
-    public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        junit.framework.Assert.assertNotNull(new ServiceType());
-        junit.framework.Assert.assertNotNull(new ServiceType(0l, TYPE, NAME, SERVICENAMEENTITY, SERVICENAMEENTITYID, DATEENTITY, DATEENTITYID, UNITS, SERVICELOGIC, PREREQUISITE, "preOffset", "expiryOffset", "milestoneOffset", 0l));
+    public void assertBuilderInitializesAllFields() {
+        Long id = 0L;
+        String type = "type";
+        String name = "name";
+        String serviceGroup = "serviceGroup";
+        String serviceNameEntity = "serviceNameEntity";
+        String serviceNameEntityId = "serviceNameEntityId";
+        String dateEntity = "dateEntity";
+        String dateEntityId = "dateEntityId";
+        String units = "units";
+        String serviceLogic = "serviceLogic";
+        String prerequisite = "prerequisite";
+        String preOffset = "preOffset";
+        String expiryOffset = "expiryOffset";
+        String milestoneOffset = "milestoneOffset";
+        Long updatedAt = 11L;
+
+        ServiceType serviceType = new ServiceType.Builder(id, type, name)
+                .withServiceGroup(serviceGroup)
+                .withServiceNameEntity(serviceNameEntity)
+                .withServiceNameEntityId(serviceNameEntityId)
+                .withDateEntity(dateEntity)
+                .withDateEntityId(dateEntityId)
+                .withUnits(units)
+                .withServiceLogic(serviceLogic)
+                .withPrerequisite(prerequisite)
+                .withPreOffset(preOffset)
+                .withExpiryOffset(expiryOffset)
+                .withMilestoneOffset(milestoneOffset)
+                .withUpdatedAt(updatedAt).build();
+
+        assertEquals(serviceType.getId(), id);
+        assertEquals(serviceType.getType(), type);
+        assertEquals(serviceType.getName(), name);
+        assertEquals(serviceType.getServiceGroup(), serviceGroup);
+        assertEquals(serviceType.getServiceNameEntity(), serviceNameEntity);
+        assertEquals(serviceType.getServiceNameEntityId(), serviceNameEntityId);
+        assertEquals(serviceType.getDateEntity(), dateEntity);
+        assertEquals(serviceType.getDateEntityId(), dateEntityId);
+        assertEquals(serviceType.getUnits(), units);
+        assertEquals(serviceType.getServiceLogic(), serviceLogic);
+        assertEquals(serviceType.getPrerequisite(), prerequisite);
+        assertEquals(serviceType.getPreOffset(), preOffset);
+        assertEquals(serviceType.getExpiryOffset(), expiryOffset);
+        assertEquals(serviceType.getMilestoneOffset(), milestoneOffset);
+        assertEquals(serviceType.getUpdatedAt(), updatedAt);
     }
 
     @Test

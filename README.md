@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/OpenSRP/opensrp-client-immunization.svg?branch=master)](https://travis-ci.org/OpenSRP/opensrp-client-immunization) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a58cd4e1748432780ac66a9fbee0394)](https://www.codacy.com/app/OpenSRP/opensrp-client-immunization?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OpenSRP/opensrp-client-immunization&amp;utm_campaign=Badge_Grade)
+![Build status](https://github.com/OpenSRP/opensrp-client-immunization/workflows/Android%20CI%20with%20Gradle/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a58cd4e1748432780ac66a9fbee0394)](https://www.codacy.com/app/OpenSRP/opensrp-client-immunization?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OpenSRP/opensrp-client-immunization&amp;utm_campaign=Badge_Grade)
 
 [![Dristhi](https://raw.githubusercontent.com/OpenSRP/opensrp-client/master/opensrp-app/res/drawable-mdpi/login_logo.png)](https://smartregister.atlassian.net/wiki/dashboard.action)
 
@@ -12,6 +12,8 @@
    * [Pre-requisites](#pre-requisites)
    * [Installation Devices](#installation-devices)
    * [How to install](#how-to-install)
+* [Gotcha's when using the library](#gotchas-when-using-the-library)
+   * Vaccine schedule not changing after changing the vaccines.json file
 
 # Introduction
 
@@ -146,5 +148,106 @@ This section will provide a brief description how to build and install the appli
 
 1. Import the project into Android Studio by: **Import a gradle project** option
    _All the plugins required are explicitly stated, therefore it can work with any Android Studio version - Just enable it to download any packages not available offline_
-1. Open Genymotion and Run the Virtual Device created previously.
-1. Run the app on Android Studio and chose the Genymotion Emulator as the ` Deployment Target`
+2. Open Genymotion and Run the Virtual Device created previously.
+3. Run the app on Android Studio and chose the Genymotion Emulator as the ` Deployment Target`
+
+## Guidelines for vaccines names in the `vaccines.json` configuration file
+Vaccine names can contain upper and/or lowercase letters , integers, hyphens, forward slash(as a separator for combined vaccines) and commas. e.g.  `MR - CE`, `RTS,S 2` , `Measles 2 / MR 2`
+
+## Multi Language Support
+
+### Vaccines
+
+The library supports translated vaccines e.g. in Arabic `OPV 0` is called `الشلل فموي ۰`
+In order to use this in your implementation,
+
+1. Create translations the corresponding string.xml files
+2. The key of the resource identifier should be the english key(vaccine name) used in the vaccine configuration for that vaccine converted to lowercase
+3. For the vaccines with spaces, replace with underscore.
+
+Example: `OPV 1` in the vaccine configuration file becomes the key `opv_1` in the _strings.xml_ resource file
+
+ ```
+           English <string name="opv_1">OPV</string>
+           French <string name="opv_1">VPO</string>
+ ```
+
+### Vaccine Groups
+
+For Vaccine groups (which usually begin with a number e.g. 6 Weeks) an underscore is automatically appended since strings which start with digits/numbers CANNOT be used to define an android resource key in a _strings.xml_ file
+
+**Steps:**
+
+1. Add key in _strings.xml_ using the lowercase underscore version of the Group name. If none is defined, it will fallback to the vaccine name during render time.
+
+Example: `6 Weeks` group name has a name `6 Weeks` thus the key in _strings.xml_ should be `_6_weeks`.
+
+```
+        English <string name="_6_weeks">6 weeks</string>
+        French <string name="_6_weeks">6 semaines</string>
+```
+
+## Allow event generation for vaccines on submission
+You can allow vaccine event generation immediately a vaccine has been submitted as opposed to after a configured time.
+To enable vaccine-event generation on submission, add this config. (Default is false)
+```
+vaccine.sync.immediate=true
+```
+
+## Vaccine Relaxation
+You can relax your vaccine schedules and specifies how many days prior to the actual due date of the vaccine one can allow its administration
+This can be done via the setting below in your implementation's _app.properties_ file
+
+```
+vaccine.relaxation.days=2
+```
+## Expired vaccines edits
+By default, once a vaccine has expired you can not administer it when it is in the Expired state e.g. `Expired: HepB`. You might want alter this behaviour to cater for the 
+use case where you need to register a child who already has previous vaccines (as shown on their vaccine cards) and entering the earlier dates recorded for those vaccines.
+The app can now be used to track the rest of the upcoming vaccines.
+
+This behaviour can be altered via the setting below in your implementation's _app.properties_ file
+
+```
+vaccine.expired.entry.allow=true
+```
+## Expired vaccine card color
+
+The current default color for expired vaccine when back-data entry is enabled is white. However, this is not intuitive and therefore we provide an option to show the expired vaccines as RED only when vaccine back-data entry is enabled.
+
+```
+vaccine.expired.red=true
+```
+
+## Constraints for backdated vaccines
+
+For vaccines that are dependent on previous ones, set the following property to `true` to prevent the user from recording a vaccine at a date that is earlier than the previous vaccine's. This property does not work when recording multiple vaccines with the **Record All** actions for the vaccine group. 
+
+```
+vaccine.requisite.date.constraint.enabled=true
+```
+## Generic vaccination configuration
+Sometimes (maybe all times) you'd like in your implementation to automatically load vaccines from a configuration file without having to specify the category. The `vaccineCacheMap` is the primary data structure that holds all vaccine configuration data for various vaccine categories _e.g. child, mother, some_other_special, category e.t.c_ 
+
+Following the concept of convention over configuration, you can now drop vaccine configuration files in the `assets/vaccine` folder and have the `vaccineCacheMap` auto-loaded with configuration data for that special category. 
+
+To use this approach, the file name should contain the name of the category as the prefix e.g. _over_5_vaccines.json_. You can then get vaccines in your implementation using _VaccineRepo.getVaccines(`some category name>`)_
+
+Note that you can have any number of underscores and the filename must end in __vaccines.json_ . By default, only **Child** and **Woman** category vaccines are supported by the library
+
+## Overdue status indication
+
+The current default background indication color for overdue vaccines is red and due is blue. Setting the following property to `true` will disable the indication colors for overdue and due vaccines and will be shown with only white background color.
+
+```
+hide.overdue.vaccine.status=true
+```
+
+## Gotcha's when using the library
+
+1. Vaccine schedule not changing after changing the `vaccines.json` file!
+
+Some of the vaccine configurations are not dependent on change done to the `vaccines.json`, in this case you should check the current configuration [here](https://github.com/OpenSRP/opensrp-client-immunization/blob/67a15611b53c55e111a0b7bff4f32a02c27b2920/opensrp-immunization/src/main/java/org/smartregister/immunization/db/VaccineRepo.java#L37)
+and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines(category)` and add 
+modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[], category)`
+to re-set all the vaccine configs using the configurations array you retrieved.

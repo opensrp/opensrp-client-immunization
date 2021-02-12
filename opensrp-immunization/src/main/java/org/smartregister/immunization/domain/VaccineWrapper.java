@@ -23,6 +23,7 @@ public class VaccineWrapper implements Serializable {
     private DateTime vaccineDate;
     private Alert alert;
     private String previousVaccineId;
+    private String notGivenCondition;
     private boolean compact;
 
     private String color;
@@ -36,6 +37,7 @@ public class VaccineWrapper implements Serializable {
 
     private boolean today;
     private boolean synced;
+    private boolean isOutOfCatchment;
 
     private Date createdAt;
 
@@ -63,12 +65,12 @@ public class VaccineWrapper implements Serializable {
         this.status = status;
     }
 
-    public void setVaccine(VaccineRepo.Vaccine vaccine) {
-        this.vaccine = vaccine;
-    }
-
     public VaccineRepo.Vaccine getVaccine() {
         return vaccine;
+    }
+
+    public void setVaccine(VaccineRepo.Vaccine vaccine) {
+        this.vaccine = vaccine;
     }
 
     public DateTime getVaccineDate() {
@@ -87,12 +89,12 @@ public class VaccineWrapper implements Serializable {
         this.alert = alert;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
-    public String getName() {
-        return this.name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPreviousVaccineId() {
@@ -101,6 +103,14 @@ public class VaccineWrapper implements Serializable {
 
     public void setPreviousVaccine(String previousVaccineId) {
         this.previousVaccineId = previousVaccineId;
+    }
+
+    public String getNotGivenCondition() {
+        return notGivenCondition;
+    }
+
+    public void setNotGivenCondition(String notGivenCondition) {
+        this.notGivenCondition = notGivenCondition;
     }
 
     public boolean isCompact() {
@@ -172,12 +182,12 @@ public class VaccineWrapper implements Serializable {
         return updatedVaccineDate != null ? updatedVaccineDate.toString("yyyy-MM-dd") : "";
     }
 
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
-
     public Photo getPhoto() {
         return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
     }
 
     public String getGender() {
@@ -204,11 +214,19 @@ public class VaccineWrapper implements Serializable {
         this.synced = synced;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public boolean isOutOfCatchment() {
+        return isOutOfCatchment;
+    }
+
+    public void setOutOfCatchment(boolean outOfCatchment) {
+        isOutOfCatchment = outOfCatchment;
     }
 }

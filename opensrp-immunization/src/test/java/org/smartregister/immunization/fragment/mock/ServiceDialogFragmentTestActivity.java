@@ -1,10 +1,10 @@
 package org.smartregister.immunization.fragment.mock;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -29,7 +29,7 @@ import java.util.List;
  * Created by real on 05/11/17.
  */
 
-public class ServiceDialogFragmentTestActivity extends Activity implements ServiceActionListener {
+public class ServiceDialogFragmentTestActivity extends FragmentActivity implements ServiceActionListener {
 
     private ServiceDialogFragment fragment;
 
@@ -37,11 +37,120 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
     public void onCreate(Bundle bundle) {
         setTheme(R.style.AppTheme); //we need this here
         super.onCreate(bundle);
-        LinearLayout linearLayout;
-        linearLayout = new LinearLayout(this);
+        LinearLayout linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
         startFragment();
         startFragmentWithITN();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+  /*  @Override
+    protected void onStart() {
+        super.onStart();
+    }*/
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    public void startFragment() {
+        DateTime datetime = new DateTime();
+        Alert alert = Mockito.mock(Alert.class);
+
+        List<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+
+        issuedServices.add(serviceRecord);
+        ServiceWrapper serviceWrapper = new ServiceWrapper();
+        serviceWrapper.setId(ServiceWrapperTest.ID);
+        serviceWrapper.setDbKey(0l);
+        serviceWrapper.setStatus(ServiceWrapperTest.STATUS);
+        serviceWrapper.setVaccineDate(datetime);
+        serviceWrapper.setAlert(alert);
+        serviceWrapper.setDefaultName("Vitamin X");
+        serviceWrapper.setPreviousVaccine(ServiceWrapperTest.ID);
+        serviceWrapper.setColor(ServiceWrapperTest.COLOR);
+        serviceWrapper.setDob(datetime);
+        ServiceType serviceType = new ServiceType();
+        serviceType.setUnits("units");
+        serviceType.setType("type");
+        serviceType.setId(0l);
+        serviceWrapper.setServiceType(serviceType);
+        serviceType.setName(ServiceWrapperTest.NAME);
+        serviceWrapper.setValue(ServiceWrapperTest.VALUE);
+        serviceWrapper.setPatientName(ServiceWrapperTest.PATIENTNAME);
+        serviceWrapper.setUpdatedVaccineDate(datetime, true);
+        serviceWrapper.setPatientNumber(ServiceWrapperTest.NUMBER);
+        Photo photo = Mockito.mock(Photo.class);
+        serviceWrapper.setPhoto(photo);
+        serviceWrapper.setGender(ServiceWrapperTest.GENDER);
+        serviceWrapper.setSynced(true);
+        initializeFragment(datetime, issuedServices, serviceWrapper);
+    }
+
+    public void startFragmentWithITN() {
+        DateTime datetime = new DateTime();
+        Alert alert = Mockito.mock(Alert.class);
+
+        List<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
+        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID,
+                ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID,
+                ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID,
+                ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
+
+        issuedServices.add(serviceRecord);
+        ServiceWrapper serviceWrapper = new ServiceWrapper();
+        serviceWrapper.setId(ServiceWrapperTest.ID);
+        serviceWrapper.setDbKey(0l);
+        serviceWrapper.setStatus(ServiceWrapperTest.STATUS);
+        serviceWrapper.setVaccineDate(datetime);
+        serviceWrapper.setAlert(alert);
+        serviceWrapper.setDefaultName("Vitamin X");
+        serviceWrapper.setPreviousVaccine(ServiceWrapperTest.ID);
+        serviceWrapper.setColor(ServiceWrapperTest.COLOR);
+        serviceWrapper.setDob(datetime);
+        ServiceType serviceType = new ServiceType();
+        serviceType.setUnits("units");
+        serviceType.setType("ITN");
+        serviceType.setId(0l);
+        serviceWrapper.setServiceType(serviceType);
+        serviceType.setName(ServiceWrapperTest.NAME);
+        serviceWrapper.setValue(ServiceWrapperTest.VALUE);
+        serviceWrapper.setPatientName(ServiceWrapperTest.PATIENTNAME);
+        serviceWrapper.setUpdatedVaccineDate(datetime, true);
+        serviceWrapper.setPatientNumber(ServiceWrapperTest.NUMBER);
+        Photo photo = Mockito.mock(Photo.class);
+        serviceWrapper.setPhoto(photo);
+        serviceWrapper.setGender(ServiceWrapperTest.GENDER);
+        serviceWrapper.setSynced(true);
+
+        initializeFragment(datetime, issuedServices, serviceWrapper);
+    }
+
+    private void initializeFragment(DateTime datetime, List<ServiceRecord> issuedServices, ServiceWrapper serviceWrapper) {
+        fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, serviceWrapper, true);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(fragment, null);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -64,6 +173,11 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
     public void onGiveToday(ServiceWrapper tag, View view) {
 
     }
@@ -76,114 +190,6 @@ public class ServiceDialogFragmentTestActivity extends Activity implements Servi
     @Override
     public void onUndoService(ServiceWrapper tag, View view) {
 
-    }
-
-    public void startFragment() {
-        DateTime datetime = new DateTime();
-        Alert alert = Mockito.mock(Alert.class);
-
-        List<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
-
-        issuedServices.add(serviceRecord);
-        ServiceWrapper tag = new ServiceWrapper();
-        tag.setId(ServiceWrapperTest.ID);
-        tag.setDbKey(0l);
-        tag.setStatus(ServiceWrapperTest.STATUS);
-        tag.setVaccineDate(datetime);
-        tag.setAlert(alert);
-        tag.setDefaultName("Vitamin X");
-        tag.setPreviousVaccine(ServiceWrapperTest.ID);
-        tag.setColor(ServiceWrapperTest.COLOR);
-        tag.setDob(datetime);
-        ServiceType serviceType = new ServiceType();
-        serviceType.setUnits("units");
-        serviceType.setType("type");
-        serviceType.setId(0l);
-        tag.setServiceType(serviceType);
-        serviceType.setName(ServiceWrapperTest.NAME);
-        tag.setValue(ServiceWrapperTest.VALUE);
-        tag.setPatientName(ServiceWrapperTest.PATIENTNAME);
-        tag.setUpdatedVaccineDate(datetime, true);
-        tag.setPatientNumber(ServiceWrapperTest.NUMBER);
-        Photo photo = Mockito.mock(Photo.class);
-        tag.setPhoto(photo);
-        tag.setGender(ServiceWrapperTest.GENDER);
-        tag.setSynced(true);
-        fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(fragment, null);
-        fragmentTransaction.commit();
-    }
-
-    public void startFragmentWithITN() {
-        DateTime datetime = new DateTime();
-        Alert alert = Mockito.mock(Alert.class);
-
-        List<ServiceRecord> issuedServices = new ArrayList<ServiceRecord>();
-        ServiceRecord serviceRecord = new ServiceRecord(0l, ServiceRecordTest.BASEENTITYID, ServiceRecordTest.PROGRAMCLIENTID, 0l, ServiceRecordTest.VALUE, new Date(), ServiceRecordTest.ANMID, ServiceRecordTest.LOCATIONID, ServiceRecordTest.SYNCED, ServiceRecordTest.EVENTID, ServiceRecordTest.FORMSUBMISSIONID, 0l, new Date());
-
-        issuedServices.add(serviceRecord);
-        ServiceWrapper tag = new ServiceWrapper();
-        tag.setId(ServiceWrapperTest.ID);
-        tag.setDbKey(0l);
-        tag.setStatus(ServiceWrapperTest.STATUS);
-        tag.setVaccineDate(datetime);
-        tag.setAlert(alert);
-        tag.setDefaultName("Vitamin X");
-        tag.setPreviousVaccine(ServiceWrapperTest.ID);
-        tag.setColor(ServiceWrapperTest.COLOR);
-        tag.setDob(datetime);
-        ServiceType serviceType = new ServiceType();
-        serviceType.setUnits("units");
-        serviceType.setType("ITN");
-        serviceType.setId(0l);
-        tag.setServiceType(serviceType);
-        serviceType.setName(ServiceWrapperTest.NAME);
-        tag.setValue(ServiceWrapperTest.VALUE);
-        tag.setPatientName(ServiceWrapperTest.PATIENTNAME);
-        tag.setUpdatedVaccineDate(datetime, true);
-        tag.setPatientNumber(ServiceWrapperTest.NUMBER);
-        Photo photo = Mockito.mock(Photo.class);
-        tag.setPhoto(photo);
-        tag.setGender(ServiceWrapperTest.GENDER);
-        tag.setSynced(true);
-        fragment = ServiceDialogFragment.newInstance(datetime, issuedServices, tag, true);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(fragment, null);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
 }

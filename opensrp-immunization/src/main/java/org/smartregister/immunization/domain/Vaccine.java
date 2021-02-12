@@ -24,6 +24,7 @@ public class Vaccine {
     private Long updatedAt;
     private String eventId;
     private String formSubmissionId;
+    private Integer isVoided;
     private Integer outOfCatchment;
     private Date createdAt;
 
@@ -36,7 +37,7 @@ public class Vaccine {
                            outOfCatchment) {
         this.id = id;
         this.baseEntityId = baseEntityId;
-        this.programClientId = null;
+        programClientId = null;
         this.name = name;
         this.calculation = calculation;
         this.date = date;
@@ -71,6 +72,28 @@ public class Vaccine {
         this.createdAt = createdAt;
     }
 
+    public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
+            calculation, Date date, String anmId, String locationId, String syncStatus, String
+                           hia2Status, Long updatedAt, String eventId, String formSubmissionId, Integer
+                           outOfCatchment, Date createdAt, Integer isVoided) {
+        this.id = id;
+        this.baseEntityId = baseEntityId;
+        this.programClientId = programClientId;
+        this.name = name;
+        this.calculation = calculation;
+        this.date = date;
+        this.anmId = anmId;
+        this.locationId = locationId;
+        this.syncStatus = syncStatus;
+        this.hia2Status = hia2Status;
+        this.updatedAt = updatedAt;
+        this.eventId = eventId;
+        this.formSubmissionId = formSubmissionId;
+        this.outOfCatchment = outOfCatchment;
+        this.createdAt = createdAt;
+        this.isVoided = isVoided;
+    }
+
     public Long getId() {
         return id;
     }
@@ -102,6 +125,14 @@ public class Vaccine {
             identifiers.put(ZEIR_ID, programClientId);
         }
         return identifiers;
+    }
+
+    public Integer getIsVoided() {
+        return isVoided;
+    }
+
+    public void setIsVoided(Integer isVoided) {
+        this.isVoided = isVoided;
     }
 
     public String getName() {
@@ -192,12 +223,12 @@ public class Vaccine {
         this.outOfCatchment = outOfCatchment;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getTeam() {

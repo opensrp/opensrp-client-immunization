@@ -2,8 +2,10 @@ package org.smartregister.immunization.view.mock;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import org.robolectric.Robolectric;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 
@@ -14,6 +16,7 @@ import org.smartregister.immunization.view.ImmunizationRowGroup;
 public class ImmunizationRowGroupTestActivity extends Activity {
 
     private ImmunizationRowGroup view;
+    private AttributeSet attrs;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -22,22 +25,7 @@ public class ImmunizationRowGroupTestActivity extends Activity {
         LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
-    }
-
-    public ImmunizationRowGroup getInstance() {
-        return (view == null) ? new ImmunizationRowGroup(this, true) : view;
-    }
-
-    public ImmunizationRowGroup getInstance2() {
-        return new ImmunizationRowGroup(this, ViewAttributes.attrs);
-    }
-
-    public ImmunizationRowGroup getInstance3() {
-        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0);
-    }
-
-    public ImmunizationRowGroup getInstance1() {
-        return new ImmunizationRowGroup(this, ViewAttributes.attrs, 0, 0);
+        attrs = Robolectric.buildAttributeSet().build();
     }
 
     @Override
@@ -68,6 +56,22 @@ public class ImmunizationRowGroupTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ImmunizationRowGroup getInstance() {
+        return (view == null) ? new ImmunizationRowGroup(this, true) : view;
+    }
+
+    public ImmunizationRowGroup getInstance2() {
+        return new ImmunizationRowGroup(this, attrs);
+    }
+
+    public ImmunizationRowGroup getInstance3() {
+        return new ImmunizationRowGroup(this, attrs, 0);
+    }
+
+    public ImmunizationRowGroup getInstance1() {
+        return new ImmunizationRowGroup(this, attrs, 0, 0);
     }
 
 }

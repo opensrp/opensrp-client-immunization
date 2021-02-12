@@ -4,27 +4,33 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.VaccinateActionUtils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by raihan on 13/03/2017.
  */
 
 public class ImmunizationRowCard extends LinearLayout {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    private static SimpleDateFormat DATE_FORMAT;
     private Context context;
     private Button statusIV;
     private TextView nameTV;
@@ -39,6 +45,17 @@ public class ImmunizationRowCard extends LinearLayout {
         super(context);
         this.editmode = editmode;
         init(context);
+    }
+
+    private void init(Context context) {
+        this.context = context;
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true).setFilterTouchesWhenObscured(true);
+        statusIV = findViewById(R.id.status_iv);
+        StatusTV = findViewById(R.id.status_text_tv);
+        nameTV = findViewById(R.id.name_tv);
+        undoB = findViewById(R.id.undo_b);
+        DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 
     public ImmunizationRowCard(Context context) {
@@ -62,14 +79,8 @@ public class ImmunizationRowCard extends LinearLayout {
         init(context);
     }
 
-    private void init(Context context) {
-        this.context = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.view_immunization_row_card, this, true);
-        statusIV = (Button) findViewById(R.id.status_iv);
-        StatusTV = (TextView) findViewById(R.id.status_text_tv);
-        nameTV = (TextView) findViewById(R.id.name_tv);
-        undoB = (Button) findViewById(R.id.undo_b);
+    public VaccineWrapper getVaccineWrapper() {
+        return vaccineWrapper;
     }
 
     public void setVaccineWrapper(VaccineWrapper vaccineWrapper) {
@@ -77,12 +88,8 @@ public class ImmunizationRowCard extends LinearLayout {
         updateState();
     }
 
-    public VaccineWrapper getVaccineWrapper() {
-        return this.vaccineWrapper;
-    }
-
     public void updateState() {
-        this.state = State.NOT_DUE;
+        state = State.NOT_DUE;
         if (vaccineWrapper != null) {
             Date dateDone = getDateDone();
             boolean isSynced = isSynced();
@@ -90,9 +97,9 @@ public class ImmunizationRowCard extends LinearLayout {
 
             if (dateDone != null) {// Vaccination was done
                 if (isSynced) {
-                    this.state = State.DONE_CAN_NOT_BE_UNDONE;
+                    state = State.DONE_CAN_NOT_BE_UNDONE;
                 } else {
-                    this.state = State.DONE_CAN_BE_UNDONE;
+                    state = State.DONE_CAN_BE_UNDONE;
                 }
             } else {// Vaccination has not been done
                 if (status != null) {
@@ -117,15 +124,34 @@ public class ImmunizationRowCard extends LinearLayout {
 
     }
 
-    public State getState() {
-        if (this.state == null) {
-            updateState();
+    private Date getDateDone() {
+        if (vaccineWrapper != null) {
+            DateTime dateDone = vaccineWrapper.getUpdatedVaccineDate();
+            if (dateDone != null) return dateDone.toDate();
         }
-        return this.state;
+
+        return null;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    private boolean isSynced() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.isSynced();
+        }
+        return false;
+    }
+
+    private String getStatus() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getStatus();
+        }
+        return null;
+    }
+
+    private Alert getAlert() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getAlert();
+        }
+        return null;
     }
 
     private void updateStateUi() {
@@ -144,18 +170,24 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
+
             case DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                } else {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                }
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
+
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !statusForMoreThanThreeMonths) {
+                if (editmode && !statusForMoreThanThreeMonths && !vaccineWrapper.isSynced()) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -163,11 +195,14 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
+                statusIV.setBackground(vaccineWrapper.isOutOfCatchment()?ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange):ContextCompat.getDrawable(context, R.drawable.ic_action_check));
+
                 break;
+
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_green);
-                if (editmode && !statusForMoreThanThreeMonths) {
+                if (editmode && !statusForMoreThanThreeMonths && !vaccineWrapper.isSynced()) {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
@@ -175,31 +210,68 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
+                statusIV.setBackground(vaccineWrapper.isOutOfCatchment()? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange):ContextCompat.getDrawable(context, R.drawable.ic_action_check));
+
                 break;
+
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
+                if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                } else {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
+                }
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
                 break;
+
             case EXPIRED:
+                if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry() && ImmunizationLibrary.getInstance().isExpiredVaccineCardRed()) {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_red);
+                    StatusTV.setTextColor(context.getResources().getColor(R.color.white));
+                } else {
+                    statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
+                }
+
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 undoB.setVisibility(INVISIBLE);
                 nameTV.setText(getVaccineName());
-                StatusTV.setText("Expired");
-                StatusTV.setTextColor(context.getResources().getColor(R.color.silver));
+                StatusTV.setText(context.getResources().getString(R.string.expired));
                 break;
+
             default:
                 break;
         }
     }
 
+    private Long getDbKey() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getDbKey();
+        }
+        return null;
+    }
+
+    private Date getCreatedAt() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getCreatedAt();
+        }
+        return null;
+    }
+
     private String getVaccineName() {
         if (vaccineWrapper != null) {
-            return vaccineWrapper.getName();
+            String name = vaccineWrapper.getName();
+
+            try {
+                name = VaccinatorUtils.getTranslatedVaccineName(context, name);
+            } catch (Exception e) {
+                Log.i(VaccineGroup.class.getCanonicalName(), e.getMessage(), e);
+            }
+
+            return name;
         }
         return null;
     }
@@ -212,48 +284,15 @@ public class ImmunizationRowCard extends LinearLayout {
         return null;
     }
 
-    private Date getDateDone() {
-        if (vaccineWrapper != null) {
-            DateTime dateDone = vaccineWrapper.getUpdatedVaccineDate();
-            if (dateDone != null) return dateDone.toDate();
+    public State getState() {
+        if (state == null) {
+            updateState();
         }
-
-        return null;
+        return state;
     }
 
-    private boolean isSynced() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.isSynced();
-        }
-        return false;
-    }
-
-    private Alert getAlert() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getAlert();
-        }
-        return null;
-    }
-
-    private String getStatus() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getStatus();
-        }
-        return null;
-    }
-
-    private Date getCreatedAt() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getCreatedAt();
-        }
-        return null;
-    }
-
-    private Long getDbKey() {
-        if (vaccineWrapper != null) {
-            return vaccineWrapper.getDbKey();
-        }
-        return null;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Button getUndoB() {

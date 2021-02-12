@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">opensrp-immunization</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="problem_applying_vaccine_constraints">Contraintes au vaccin non-réussi.</string>
+    <string name="immunizations">IMMUNISATIONS</string>
+    <string name="recurring">SERVICES RÉCURRENTS</string>
+    <string name="done_today">Fait aujourd\'hui</string>
+    <string name="vaccine_done_today">Vaccin fait aujourd\'hui</string>
+    <string name="vaccine_done_earlier">Vaccin fait plus tôt</string>
+    <string name="vaccines_done_today">Vaccins faits aujourd\'hui</string>
+    <string name="vaccines_done_earlier">Vaccins faits plus tôt</string>
+    <string name="vaccine_name">prénom</string>
+    <string name="vaccine_number">nombre</string>
+    <string name="vaccine">Vaccin</string>
+    <string name="set">Ensemble</string>
+    <string name="undo_record_vaccination">Annuler la vaccination?</string>
+    <string name="change_service_date">Changer date de service</string>
+    <string name="birth">Naissance</string>
+    <string name="yes_undo_vaccination">Oui, annuler la vaccination</string>
+    <string name="no_go_back">Non, retourne</string>
+    <string name="service">un service</string>
+    <string name="units">des unités</string>
+    <string name="edit">Modifier</string>
+    <string name="undo">Annuler</string>
+
+    <string name="record_all">Enregistrer tous</string>
+    <string name="record_">Enregistrer %1$s</string>
+    <string name="record_due_">Enregistrer %1$s - dû %2$s</string>
+    <string name="mr_due_">%1$s - dû %2$s</string>
+    <string name="due_">%1$s: dû %2$s</string>
+    <string name="today">Aujourd\'hui</string>
+
+    <!-- Recurring Services -->
+    <string name="recurring_services">Services récurrents</string>
+    <string name="given_today">%1$s donné aujourd\'hui</string>
+    <string name="given_earlier">%1$s donné plus tôt</string>
+    <string name="itn_given">Est-ce que l\'enfant a reçu un ITN?</string>
+    <string name="itn_date">Date à laquelle l\'ITN a été fourni:</string>
+    <string name="itn_under_net">L\'enfant dors-t-il ou elle sous un moustiquaire?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="record_itn">Enregistrement ITN fourni</string>
+    <string name="go_back">Retourner</string>
+    <string name="undo_service">Annuler service?</string>
+    <string name="yes_undo_service">Oui, annuler service</string>
+    <string name="cannot_record_vaccine">Ne peut pas enregistrer %1$s</string>
+
+    <string name="activate_child_status_dialog_title">l\'État de l\'enfant est %1$s. Activer %2$s ?</string>
+    <string name="activate_child_status_dialog_message">l\'Activation de l\'enfant va relancer l\'horaire de service de l\'application et vous permettra d\'enregistrer les services.</string>
+    <string name="make_active">Activer</string>
+
+
+    <!-- Immunization Names-->
+    <string name="bcg">BCG</string>
+    <string name="hepb">HepB à la naissance</string>
+    <string name="opv_0">Polio Oral 0</string>
+    <string name="opv_1">Polio Oral 1</string>
+    <string name="pcv_1">Pneumo 1</string>
+    <string name="penta_1">Penta 1</string>
+    <string name="rota_1">Rota Virus 1</string>
+    <string name="opv_2">Polio Oral 2</string>
+    <string name="pcv_2">Pneumo 2</string>
+    <string name="penta_2">Penta 2</string>
+    <string name="rota_2">Rota Virus 2</string>
+    <string name="opv_3">Polio Oral 3</string>
+    <string name="ipv">Polio Injectable</string>
+    <string name="pcv_3">Pneumo 3</string>
+    <string name="penta_3">Penta 3</string>
+    <string name="meningococcal">Men A</string>
+    <string name="yellow_fever">F. Jaune (VAA)</string>
+    <string name="mr_1">RR 1</string>
+    <string name="mr_2">RR 2</string>
+    <string name="vit_a_1">Vit A 6 Mois</string>
+    <string name="vit_a_2">Vit A 12 Mois</string>
+    <string name="at_birth">Naissance</string>
+    <string name="_6_weeks">6 Semaines</string>
+    <string name="_10_weeks">10 Semaines</string>
+    <string name="_14_weeks">14 Semaines</string>
+    <string name="_9_months">9 Mois</string>
+    <string name="_18_months">18 Mois</string>
+
+    <string name="expired">Expiré</string>
+    <string name="expired_colon">Expiré: %1$s</string>
+    <string name="out_of_catchment">Hors de la zone sanitaire</string>
+
+
+</resources>

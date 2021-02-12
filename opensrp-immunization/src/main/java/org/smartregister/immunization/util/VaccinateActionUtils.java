@@ -1,10 +1,10 @@
 package org.smartregister.immunization.util;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -114,14 +114,14 @@ public class VaccinateActionUtils {
     }
 
     public static void vaccinateToday(TableRow tableRow, VaccineWrapper tag) {
-        TextView textView = (TextView) tableRow.findViewById(R.id.date);
+        TextView textView = tableRow.findViewById(R.id.date);
         textView.setText(R.string.done_today);
 
-        Button button = (Button) tableRow.findViewById(R.id.undo);
+        Button button = tableRow.findViewById(R.id.undo);
         button.setVisibility(View.VISIBLE);
 
         String color = "#31B404";
-        Button status = (Button) tableRow.findViewById(R.id.status);
+        Button status = tableRow.findViewById(R.id.status);
         status.setBackgroundColor(Color.parseColor(color));
 
         tableRow.setOnClickListener(null);
@@ -130,43 +130,46 @@ public class VaccinateActionUtils {
     public static void vaccinateEarlier(TableRow tableRow, VaccineWrapper tag) {
         String vaccineDate = convertDateFormat(tag.getUpdatedVaccineDateAsString(), true);
 
-        TextView textView = (TextView) tableRow.findViewById(R.id.date);
+        TextView textView = tableRow.findViewById(R.id.date);
         textView.setText(vaccineDate);
 
-        Button button = (Button) tableRow.findViewById(R.id.undo);
+        Button button = tableRow.findViewById(R.id.undo);
         button.setVisibility(View.VISIBLE);
 
         String color = "#31B404";
-        Button status = (Button) tableRow.findViewById(R.id.status);
+        Button status = tableRow.findViewById(R.id.status);
         status.setBackgroundColor(Color.parseColor(color));
 
         tableRow.setOnClickListener(null);
     }
 
     public static void undoVaccination(final Context context, TableRow tableRow, final VaccineWrapper tag) {
-        Button button = (Button) tableRow.findViewById(R.id.undo);
+        Button button = tableRow.findViewById(R.id.undo);
         button.setVisibility(View.GONE);
 
         String color = tag.getColor();
-        Button status = (Button) tableRow.findViewById(R.id.status);
+        Button status = tableRow.findViewById(R.id.status);
         status.setBackgroundColor(Color.parseColor(color));
 
-        TextView v = (TextView) tableRow.findViewById(R.id.date);
+        TextView v = tableRow.findViewById(R.id.date);
         v.setText(tag.getFormattedVaccineDate());
 
         if ("due".equalsIgnoreCase(tag.getStatus())) {
             tableRow.setOnClickListener(new TableRow.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentTransaction ft = ((Activity) context).getFragmentManager().beginTransaction();
-                    Fragment prev = ((Activity) context).getFragmentManager().findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                    FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+                    Fragment prev =
+                            ((FragmentActivity) context).getSupportFragmentManager()
+                                    .findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
                     if (prev != null) {
                         ft.remove(prev);
                     }
                     ft.addToBackStack(null);
                     ArrayList<VaccineWrapper> list = new ArrayList<VaccineWrapper>();
                     list.add(tag);
-                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(null, null, list);
+                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment
+                            .newInstance(null, null, list);
                     vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
 
                 }
@@ -175,14 +178,16 @@ public class VaccinateActionUtils {
 
     }
 
-    public static void saveFormSubmission(Context appContext, final String formSubmission, String id, final String formName, JSONObject fieldOverrides) {
+    public static void saveFormSubmission(Context appContext, String formSubmission, String id, String formName,
+                                          JSONObject fieldOverrides) {
 
         Log.v("fieldoverride", fieldOverrides.toString());
 
         // save the form
         try {
             FormUtils formUtils = FormUtils.getInstance(appContext);
-            final FormSubmission submission = formUtils.generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
+            FormSubmission submission = formUtils
+                    .generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
 
             org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
             ZiggyService ziggyService = context.ziggyService();
@@ -292,110 +297,21 @@ public class VaccinateActionUtils {
 
     }
 
-
-    public static String stateKey(VaccineRepo.Vaccine vaccine) {
-
-        switch (vaccine) {
-            case opv0:
-            case bcg:
-                return "at birth";
-
-            case opv1:
-            case penta1:
-            case pcv1:
-            case rota1:
-                return "6 weeks";
-
-            case opv2:
-            case penta2:
-            case pcv2:
-            case rota2:
-                return "10 weeks";
-
-            case opv3:
-            case penta3:
-            case pcv3:
-                return "14 weeks";
-
-            case measles1:
-            case mr1:
-            case opv4:
-            case ipv:
-                return "9 months";
-
-            case measles2:
-            case mr2:
-                return "18 months";
-            case tt1:
-                return "After LMP";
-            case tt2:
-                return "4 Weeks after TT 1";
-            case tt3:
-                return "26 Weeks after TT 2";
-            case tt4:
-                return " 1 Year after  TT 3 ";
-            case tt5:
-                return " 1 Year after  TT 4 ";
-            default:
-                break;
-        }
-
-        return "";
-    }
-
-    public static String previousStateKey(String category, Vaccine v) {
-        if (v == null || category == null) {
-            return null;
-        }
-        ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines(category);
-
-        VaccineRepo.Vaccine vaccine = null;
-        for (VaccineRepo.Vaccine vrp : vaccines) {
-            if (vrp.display().toLowerCase().equalsIgnoreCase(v.getName().toLowerCase())) {
-                vaccine = vrp;
-            }
-        }
-
-        if (vaccine == null) {
-            return null;
-        } else {
-            String stateKey = stateKey(vaccine);
-            if ("at birth".equals(stateKey)) {
-                stateKey = "Birth";
-            }
-            return stateKey;
-        }
-    }
-
     public static String[] allAlertNames(String category) {
         if (category == null) {
             return null;
         }
-        if ("child".equals(category)) {
 
-            ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines("child");
-            List<String> names = new ArrayList<>();
+        List<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines(category);
+        List<String> names = new ArrayList<>();
 
-            for (VaccineRepo.Vaccine vaccine : vaccines) {
-                names.add(vaccine.display());
-                names.add(vaccine.name());
-            }
-
-            return names.toArray(new String[names.size()]);
+        for (VaccineRepo.Vaccine vaccine : vaccines) {
+            names.add(vaccine.display());
+            names.add(vaccine.name());
         }
-        if ("woman".equals(category)) {
 
-            ArrayList<VaccineRepo.Vaccine> vaccines = VaccineRepo.getVaccines("woman");
-            List<String> names = new ArrayList<>();
+        return names.toArray(new String[names.size()]);
 
-            for (VaccineRepo.Vaccine vaccine : vaccines) {
-                names.add(vaccine.display());
-                names.add(vaccine.name());
-            }
-
-            return names.toArray(new String[names.size()]);
-        }
-        return null;
     }
 
     public static String[] allAlertNames(Collection<List<ServiceType>> typeList) {
@@ -466,34 +382,6 @@ public class VaccinateActionUtils {
         }
     }
 
-    public static boolean hasAlert(List<Alert> alerts, VaccineRepo.Vaccine vaccine) {
-        if (alerts == null || alerts.isEmpty() || vaccine == null) {
-            return false;
-        }
-
-        for (Alert alert : alerts) {
-            if (alert.scheduleName().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())
-                    || alert.visitCode().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static Alert getAlert(List<Alert> alerts, VaccineRepo.Vaccine vaccine) {
-        if (alerts == null || alerts.isEmpty() || vaccine == null) {
-            return null;
-        }
-
-        for (Alert alert : alerts) {
-            if (alert.scheduleName().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())
-                    || alert.visitCode().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())) {
-                return alert;
-            }
-        }
-        return null;
-    }
-
     public static boolean hasVaccine(List<Vaccine> vaccineList, VaccineRepo.Vaccine v) {
         if (vaccineList == null || vaccineList.isEmpty() || v == null) {
             return false;
@@ -507,17 +395,18 @@ public class VaccinateActionUtils {
         return false;
     }
 
-    public static Vaccine getVaccine(List<Vaccine> vaccineList, VaccineRepo.Vaccine v) {
-        if (vaccineList == null || vaccineList.isEmpty() || v == null) {
-            return null;
+    public static boolean hasAlert(List<Alert> alerts, VaccineRepo.Vaccine vaccine) {
+        if (alerts == null || alerts.isEmpty() || vaccine == null) {
+            return false;
         }
 
-        for (Vaccine vaccine : vaccineList) {
-            if (vaccine.getName().equalsIgnoreCase(v.display().toLowerCase())) {
-                return vaccine;
+        for (Alert alert : alerts) {
+            if (alert.scheduleName().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())
+                    || alert.visitCode().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public static Alert createDefaultAlert(VaccineRepo.Vaccine vaccine, String entityId, DateTime birthDateTime) {
@@ -542,31 +431,71 @@ public class VaccinateActionUtils {
             alertStatus = AlertStatus.normal;
         }
 
-        return new Alert(entityId, vaccine.display(), vaccine.name(), alertStatus, DateUtil.yyyyMMdd.format(birthDate), null);
+        return new Alert(entityId, vaccine.display(), vaccine.name(), alertStatus, DateUtil.yyyyMMdd.format(birthDate),
+                null);
 
     }
 
-    public static void addBcg2SpecialVaccine(Context context, VaccineGroup vaccineGroupObject, List<Vaccine> vaccineList) {
-        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils.getSpecialVaccines(context);
+    public static Alert getAlert(List<Alert> alerts, VaccineRepo.Vaccine vaccine) {
+        if (alerts == null || alerts.isEmpty() || vaccine == null) {
+            return null;
+        }
 
+        for (Alert alert : alerts) {
+            if (alert.scheduleName().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())
+                    || alert.visitCode().replaceAll(" ", "").equalsIgnoreCase(vaccine.name())) {
+                return alert;
+            }
+        }
+        return null;
+    }
+
+    public static Vaccine getVaccine(List<Vaccine> vaccineList, VaccineRepo.Vaccine v) {
+        if (vaccineList == null || vaccineList.isEmpty() || v == null) {
+            return null;
+        }
+
+        for (Vaccine vaccine : vaccineList) {
+            if (vaccine.getName().equalsIgnoreCase(v.display().toLowerCase())) {
+                return vaccine;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Picks the BCG 2 special vaccine from the loaded list of special_vaccines and adds it to the birth group
+     *
+     * @param context
+     * @param vaccineGroupObject
+     * @param vaccineList
+     * @return
+     */
+    public static boolean addBcg2SpecialVaccine(Context context, VaccineGroup vaccineGroupObject, List<Vaccine> vaccineList) {
         //Add BCG2 special vaccine to birth vaccine group
-        if (specialVaccines != null && !specialVaccines.isEmpty()
-                && VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)
-                && vaccineGroupObject.name != null
-                && vaccineGroupObject.name != null
+        if (VaccinateActionUtils.hasVaccine(vaccineList, VaccineRepo.Vaccine.bcg2)
                 && vaccineGroupObject.days_after_birth_due != null
                 && vaccineGroupObject.vaccines != null
                 && "Birth".equalsIgnoreCase(vaccineGroupObject.name)
                 && "0".equalsIgnoreCase(vaccineGroupObject.days_after_birth_due.toString())) {
-            for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
-                if (vaccine.name != null
-                        && vaccine.type != null
-                        && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
-                        && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
-                    vaccineGroupObject.vaccines.add(vaccine);
+
+            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = VaccinatorUtils
+                    .getSpecialVaccines(context);
+
+            if (specialVaccines != null && !specialVaccines.isEmpty()) {
+                for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : specialVaccines) {
+                    if (vaccine.name != null
+                            && vaccine.type != null
+                            && vaccine.name.equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display())
+                            && vaccine.type.equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())) {
+                        vaccineGroupObject.vaccines.add(vaccine);
+                        return true;
+                    }
                 }
             }
         }
+
+        return false;
     }
 
     public static boolean moreThanThreeMonths(Date createdAt) {
@@ -575,14 +504,16 @@ public class VaccinateActionUtils {
 
     public static boolean lessThanThreeMonths(Vaccine vaccine) {
         ////////////////////////check 3 months///////////////////////////////
-        return vaccine == null || vaccine.getCreatedAt() == null || !org.smartregister.util.DateUtil.checkIfDateThreeMonthsOlder(vaccine.getCreatedAt());
+        return vaccine == null || vaccine.getCreatedAt() == null || !org.smartregister.util.DateUtil
+                .checkIfDateThreeMonthsOlder(vaccine.getCreatedAt());
         ///////////////////////////////////////////////////////////////////////
     }
 
 
     public static boolean lessThanThreeMonths(ServiceRecord serviceRecord) {
         ////////////////////////check 3 months///////////////////////////////
-        return serviceRecord == null || serviceRecord.getCreatedAt() == null || !org.smartregister.util.DateUtil.checkIfDateThreeMonthsOlder(serviceRecord.getCreatedAt());
+        return serviceRecord == null || serviceRecord.getCreatedAt() == null || !org.smartregister.util.DateUtil
+                .checkIfDateThreeMonthsOlder(serviceRecord.getCreatedAt());
         ///////////////////////////////////////////////////////////////////////
     }
 

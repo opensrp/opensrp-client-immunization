@@ -31,7 +31,8 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
 
     private HashMap<String, VaccineWrapper> map;
 
-    public VaccinateFormSubmissionWrapper(String formData, String entityId, String formName, String metaData, String category) {
+    public VaccinateFormSubmissionWrapper(String formData, String entityId, String formName, String metaData,
+                                          String category) {
         this.formData = formData;
         this.entityId = entityId;
         this.formName = formName;
@@ -45,19 +46,15 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
         }
     }
 
-    public void remove(VaccineWrapper tag) {
-        map().remove(tag.getId());
-    }
-
-    public int updates() {
-        return map().size();
-    }
-
     public HashMap<String, VaccineWrapper> map() {
         if (map == null) {
             map = new HashMap<String, VaccineWrapper>();
         }
         return map;
+    }
+
+    public void remove(VaccineWrapper tag) {
+        map().remove(tag.getId());
     }
 
     public String updateFormSubmission() {
@@ -145,6 +142,10 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
             Log.e(VaccinateFormSubmissionWrapper.class.getName(), "", e);
         }
         return null;
+    }
+
+    public int updates() {
+        return map().size();
     }
 
     public String getEntityId() {

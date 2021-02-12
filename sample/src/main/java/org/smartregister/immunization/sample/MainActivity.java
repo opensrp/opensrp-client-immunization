@@ -1,17 +1,17 @@
 package org.smartregister.immunization.sample;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -46,6 +46,8 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.util.SampleUtil;
 import org.smartregister.immunization.service.intent.RecurringIntentService;
 import org.smartregister.immunization.service.intent.VaccineIntentService;
+import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.immunization.util.IMDatabaseConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
@@ -63,7 +65,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import static org.smartregister.util.Utils.getName;
 
@@ -84,33 +85,16 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private ArrayList<VaccineGroup> vaccineGroups;
     private ArrayList<ServiceGroup> serviceGroups;
 
-    private static final ArrayList<String> COMBINED_VACCINES;
-    private static final HashMap<String, String> COMBINED_VACCINES_MAP;
-
     private static final boolean isChildActive = true;
-
-    static {
-        COMBINED_VACCINES = new ArrayList<>();
-        COMBINED_VACCINES_MAP = new HashMap<>();
-        COMBINED_VACCINES.add("Measles 1");
-        COMBINED_VACCINES_MAP.put("Measles 1", "Measles 1 / MR 1");
-        COMBINED_VACCINES.add("MR 1");
-        COMBINED_VACCINES_MAP.put("MR 1", "Measles 1 / MR 1");
-        COMBINED_VACCINES.add("Measles 2");
-        COMBINED_VACCINES_MAP.put("Measles 2", "Measles 2 / MR 2");
-        COMBINED_VACCINES.add("MR 2");
-        COMBINED_VACCINES_MAP.put("MR 2", "Measles 2 / MR 2");
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,13 +131,13 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     protected void onResume() {
         super.onResume();
         if (vaccineGroups != null) {
-            LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
+            LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
             vaccineGroupCanvasLL.removeAllViews();
             vaccineGroups = null;
         }
 
         if (serviceGroups != null) {
-            LinearLayout serviceGroupCanvasLL = (LinearLayout) findViewById(R.id.service_group_canvas_ll);
+            LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
             serviceGroupCanvasLL.removeAllViews();
             serviceGroups = null;
         }
@@ -200,10 +184,10 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             name = constructChildName();
             childId = Utils.getValue(childDetails.getColumnmaps(), "zeir_id", false);
         }
-
-        TextView nameTV = (TextView) findViewById(R.id.name_tv);
+        findViewById(R.id.outOfCatchment).setVisibility(ImmunizationLibrary.getInstance().getProperties().isTrue(IMConstants.APP_PROPERTIES.NOVEL_OUT_OF_CATCHMENT) ? View.VISIBLE : View.GONE);
+        TextView nameTV = findViewById(R.id.name_tv);
         nameTV.setText(name);
-        TextView childIdTV = (TextView) findViewById(R.id.child_id_tv);
+        TextView childIdTV = findViewById(R.id.child_id_tv);
         childIdTV.setText(String.format("%s: %s", "ID", childId));
     }
 
@@ -223,9 +207,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
             }
         }
-        TextView dobTV = (TextView) findViewById(R.id.dob_tv);
+        TextView dobTV = findViewById(R.id.dob_tv);
         dobTV.setText(String.format("%s: %s", "Birth Date", formattedDob));
-        TextView ageTV = (TextView) findViewById(R.id.age_tv);
+        TextView ageTV = findViewById(R.id.age_tv);
         ageTV.setText(String.format("%s: %s", "Age", formattedAge));
     }
 
@@ -239,13 +223,14 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
 
                 for (ServiceRecord serviceRecord : serviceRecordList) {
-                    if (serviceRecord.getSyncStatus().equals(RecurringServiceTypeRepository.TYPE_Unsynced)) {
-                        if (serviceRecord.getType().equals(type)) {
-                            foundServiceTypeMap.put(type, serviceTypeMap.get(type));
-                            break;
-                        }
+                    //if (serviceRecord.getSyncStatus().equals(RecurringServiceTypeRepository.TYPE_Synced)) {
+                    if (serviceRecord.getType().equals(type)) {
+                        foundServiceTypeMap.put(type, serviceTypeMap.get(type));
+                        break;
                     }
+                    //}
                 }
+                foundServiceTypeMap.put(type, serviceTypeMap.get(type)); // put everything that is a service
 
                 if (foundServiceTypeMap.containsKey(type)) {
                     continue;
@@ -267,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
 
             serviceGroups = new ArrayList<>();
-            LinearLayout serviceGroupCanvasLL = (LinearLayout) findViewById(R.id.service_group_canvas_ll);
+            LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
 
             ServiceGroup curGroup = new ServiceGroup(this);
             curGroup.setChildActive(isChildActive);
@@ -309,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
 
     private void addVaccineGroup(int canvasId, org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineGroupData, List<Vaccine> vaccineList, List<Alert> alerts) {
-        LinearLayout vaccineGroupCanvasLL = (LinearLayout) findViewById(R.id.vaccine_group_canvas_ll);
+        LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
         VaccineGroup curGroup = new VaccineGroup(this);
         curGroup.setChildActive(isChildActive);
         curGroup.setData(vaccineGroupData, childDetails, vaccineList, alerts, "child");
@@ -342,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             parent.setId(canvasId);
             vaccineGroupCanvasLL.addView(parent);
         } else {
-            parent = (LinearLayout) findViewById(canvasId);
+            parent = findViewById(canvasId);
             parent.removeAllViews();
         }
         parent.addView(curGroup);
@@ -352,8 +337,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     }
 
     private void addVaccineUndoDialogFragment(VaccineGroup vaccineGroup, VaccineWrapper vaccineWrapper) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -366,8 +351,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     }
 
     private void addServiceUndoDialogFragment(ServiceGroup serviceGroup, ServiceWrapper serviceWrapper) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -412,8 +397,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     public void addVaccinationDialogFragment(ArrayList<VaccineWrapper> vaccineWrappers, VaccineGroup vaccineGroup) {
 
-        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
-        Fragment prev = this.getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        Fragment prev = this.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -437,8 +422,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     public void addServiceDialogFragment(ServiceWrapper serviceWrapper, ServiceGroup serviceGroup) {
 
-        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
-        Fragment prev = this.getFragmentManager().findFragmentByTag(DIALOG_TAG);
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        Fragment prev = this.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -689,7 +674,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         @Override
         protected Map<String, NamedObject<?>> doInBackground(Void... voids) {
-            String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+            String dobString = Utils.getValue(childDetails.getColumnmaps(), IMDatabaseConstants.Client.DOB, false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
                 VaccineSchedule.updateOfflineAlerts(childDetails.entityId(), dateTime, "child");
@@ -819,9 +804,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                         String curWrapperName = curWrapper.getName();
 
                         // Check if current wrapper is one of the combined vaccines
-                        if (COMBINED_VACCINES.contains(curWrapperName)) {
+                        if (ImmunizationLibrary.getInstance().COMBINED_VACCINES.contains(curWrapperName)) {
                             // Check if any of the sister vaccines is currAffectedVaccineName
-                            String[] allSisters = COMBINED_VACCINES_MAP.get(curWrapperName).split(" / ");
+                            String[] allSisters = ImmunizationLibrary.getInstance().COMBINED_VACCINES_MAP.get(curWrapperName).split(" / ");
                             for (int i = 0; i < allSisters.length; i++) {
                                 if (allSisters[i].replace(" ", "").equalsIgnoreCase(curAffectedVaccineName.replace(" ", ""))) {
                                     curWrapperName = allSisters[i];
@@ -1008,6 +993,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             tag.setDbKey(null);
 
             RecurringServiceUtils.updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, true);
+
         }
     }
 

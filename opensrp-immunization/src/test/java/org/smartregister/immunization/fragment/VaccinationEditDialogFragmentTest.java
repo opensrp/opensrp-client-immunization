@@ -1,28 +1,41 @@
 package org.smartregister.immunization.fragment;
 
-import android.content.Intent;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
+import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.VaccinationEditDialogFragmentTestActivity;
+import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.UserService;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.reflect.Type;
@@ -35,6 +48,7 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
+@PrepareForTest({ImmunizationLibrary.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationEditDialogFragmentTestActivity> controller;
@@ -45,24 +59,57 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private Context context;
+
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+
+    @Mock
+    private AppProperties properties;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
 
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationEditDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
-        activity = controller.start().resume().get();
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
+
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
+        Mockito.doReturn(allSharedPreferences).when(context).allSharedPreferences();
+
         CoreLibrary.init(context_);
+        Mockito.doReturn(properties).when(context_).getAppProperties();
+
+        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
+
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
+
+        activity = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class).create().start().get();
+        activity.setContentView(R.layout.service_dialog_view);
+
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
         List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
         listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
-        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, listType);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.special_vacines, listType);
 
         VaccineSchedule.init(vaccines, specialVaccines, "child");
-        controller.setup();
     }
 
     @After
@@ -70,16 +117,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         destroyController();
         activity = null;
         controller = null;
-    }
-
-    @Test
-    public void onCreateViewTest() throws Exception {
-        destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationEditDialogFragmentTestActivity.class);
-        controller = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class, intent);
-        activity = controller.get();
-        controller.setup();
-
     }
 
     private void destroyController() {
@@ -94,7 +131,26 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null));
-        junit.framework.Assert.assertNotNull(VaccinationEditDialogFragment.newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null, true));
+
+        Assert.assertNotNull(VaccinationEditDialogFragment
+                .newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null));
+        Assert.assertNotNull(VaccinationEditDialogFragment
+                .newInstance(null, new Date(), Collections.EMPTY_LIST, new ArrayList<VaccineWrapper>(), null, true));
+    }
+
+    @Test
+    public void testSetFilterTouchesWhenObscuredSetsFlagToTrue() {
+
+        List<Fragment> fragmentList = activity.getSupportFragmentManager().getFragments();
+
+        Assert.assertNotNull(fragmentList);
+        Assert.assertTrue(fragmentList.size() > 0);
+
+        VaccinationEditDialogFragment fragment = (VaccinationEditDialogFragment) fragmentList.get(0);
+        Assert.assertNotNull(fragment);
+
+        boolean isEnabled = fragment.getView().getFilterTouchesWhenObscured();
+        Assert.assertTrue(isEnabled);
+
     }
 }

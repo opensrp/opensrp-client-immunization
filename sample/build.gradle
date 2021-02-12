@@ -4,28 +4,31 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.1.2"
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
+        classpath 'org.apache.commons:commons-lang3:3.10'
     }
 }
 
 allprojects {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+        maven { url "https://dl.bintray.com/ibm-watson-health/ibm-fhir-server-releases" }
         mavenLocal()
     }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'org.smartregister.gradle.jarjar'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
         applicationId "org.smartregister.immunization.sample"
-        minSdkVersion 18
-        targetSdkVersion 27
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -54,12 +57,15 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/NOTICE.md'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/license.txt'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
         exclude 'LICENSE.txt'
+        exclude 'androidsupportmultidexversion.txt'
     }
 
     lintOptions {
@@ -68,23 +74,51 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
 
-    testImplementation 'junit:junit:4.12'
-    implementation('org.smartregister:opensrp-client-core:1.3.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
+        exclude group: 'com.ibm.fhir', module: 'fhir-model'
     }
-    implementation('org.smartregister:opensrp-client-native-form:1.2.2-SNAPSHOT@aar') {
+
+    jarJar 'com.ibm.fhir:fhir-model:4.2.3'
+
+    implementation fileTree(dir: "./build/libs", include: ['*.jar'])
+    implementation('org.smartregister:opensrp-client-native-form:1.14.6.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
+
+    implementation('com.google.android.material:material:1.0.0') {
+        exclude group: 'com.android.support'
     }
 
     implementation project(':opensrp-immunization')
 
-    implementation('com.android.support:design:27.1.1') {
-        exclude group: 'com.android.support'
+    testImplementation 'junit:junit:4.12'
+    testImplementation('org.robolectric:robolectric:3.8') {
+        exclude group: 'com.google.guava', module: 'guava'
+        exclude group: 'org.apache.maven', module: 'maven-model'
+        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
+    testImplementation('org.robolectric:shadows-multidex:3.8') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    testImplementation 'org.robolectric:shadows-support-v4:3.4-rc2'
 }

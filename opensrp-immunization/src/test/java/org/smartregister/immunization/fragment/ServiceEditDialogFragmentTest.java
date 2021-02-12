@@ -1,28 +1,36 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.fragment.mock.DrishtiApplicationShadow;
 import org.smartregister.immunization.fragment.mock.FragmentUtilActivityUsingServiceActionListener;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.UserService;
+import org.smartregister.util.AppProperties;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -38,17 +46,32 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private org.smartregister.Context context_;
 
+    @Mock
+    private AppProperties properties;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
+
 
     @Before
-    public void setUp() throws Exception {
-        org.mockito.MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
 
-        Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
-        controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
-        activity = controller.start().resume().get();
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
 
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
         CoreLibrary.init(context_);
-        controller.setup();
+
+        Mockito.doReturn(properties).when(context_).getAppProperties();
+
+        activity = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class).create().start().get();
+        activity.setContentView(R.layout.service_dialog_view);
+
 
     }
 
@@ -58,23 +81,6 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         activity = null;
         controller = null;
 
-    }
-
-    @Test
-    public void assertThatCallToNewInstanceCreatesAFragment() {
-        View view = Mockito.mock(View.class);
-        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
-        junit.framework.Assert.assertNotNull(ServiceEditDialogFragment.newInstance(new DateTime(), Collections.EMPTY_LIST, new ServiceWrapper(), view, true));
-    }
-
-    @Test
-    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
-        destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
-        controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
-        activity = controller.get();
-        controller.setup();
-        junit.framework.Assert.assertNotNull(activity);
     }
 
     private void destroyController() {
@@ -87,5 +93,39 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         }
 
         System.gc();
+    }
+
+    @Test
+    public void assertThatCallToNewInstanceCreatesAFragment() {
+        View view = Mockito.mock(View.class);
+        Assert.assertNotNull(ServiceEditDialogFragment.newInstance(Collections.EMPTY_LIST, new ServiceWrapper(), view));
+        Assert.assertNotNull(ServiceEditDialogFragment
+                .newInstance(new DateTime(), Collections.EMPTY_LIST, new ServiceWrapper(), view, true));
+    }
+
+    @Test
+    public void assertOnCreateViewTestSetsUpTheActivity() throws Exception {
+        destroyController();
+        Intent intent = new Intent(RuntimeEnvironment.application, FragmentUtilActivityUsingServiceActionListener.class);
+        controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
+        activity = controller.get();
+        controller.setup();
+        junit.framework.Assert.assertNotNull(activity);
+    }
+
+    @Test
+    public void testSetFilterTouchesWhenObscuredSetsFlagToTrue() {
+
+        List<Fragment> fragmentList = activity.getSupportFragmentManager().getFragments();
+
+        Assert.assertNotNull(fragmentList);
+        Assert.assertTrue(fragmentList.size() > 0);
+
+        ServiceEditDialogFragment fragment = (ServiceEditDialogFragment) fragmentList.get(0);
+        Assert.assertNotNull(fragment);
+
+        boolean isEnabled = fragment.getView().getFilterTouchesWhenObscured();
+        Assert.assertTrue(isEnabled);
+
     }
 }

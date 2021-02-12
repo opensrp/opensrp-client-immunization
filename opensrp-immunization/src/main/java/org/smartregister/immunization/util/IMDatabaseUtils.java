@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by keyman on 17/05/2017.
  */
 public class IMDatabaseUtils {
 
-    public static void populateRecurringServices(Context context, SQLiteDatabase database, RecurringServiceTypeRepository recurringServiceTypeRepository) {
+    public static void populateRecurringServices(Context context, SQLiteDatabase database,
+                                                 RecurringServiceTypeRepository recurringServiceTypeRepository) {
         try {
             String supportedRecurringServices = VaccinatorUtils.getSupportedRecurringServices(context);
             if (StringUtils.isNotBlank(supportedRecurringServices)) {
@@ -41,6 +44,7 @@ public class IMDatabaseUtils {
                     String type = JsonFormUtils.getString(jsonObject, "type");
                     String serviceLogic = JsonFormUtils.getString(jsonObject, "service_logic");
                     String units = JsonFormUtils.getString(jsonObject, "units");
+                    String service_group = JsonFormUtils.getString(jsonObject, "service_group");
                     String serviceNameEntity = null;
                     String serviceNameEntityId = null;
 
@@ -86,7 +90,8 @@ public class IMDatabaseUtils {
                                             prerequisite = dueTrigger.getReference().name().toLowerCase();
                                             break;
                                         case PREREQUISITE:
-                                            prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + dueTrigger.getPrerequisite();
+                                            prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + dueTrigger
+                                                    .getPrerequisite();
                                             break;
                                         case MULTIPLE:
                                             ServiceTrigger.Multiple multiple = dueTrigger.getMultiple();
@@ -94,7 +99,8 @@ public class IMDatabaseUtils {
                                             List<String> prerequisites = multiple.getPrerequisites();
                                             String[] preArray = prerequisites.toArray(new String[prerequisites.size()]);
 
-                                            prerequisite = dueTrigger.getReference().name().toLowerCase() + "|" + condition + "|" + Arrays.toString(preArray);
+                                            prerequisite = dueTrigger.getReference().name()
+                                                    .toLowerCase() + "|" + condition + "|" + Arrays.toString(preArray);
                                             break;
                                         default:
                                             break;
@@ -119,6 +125,7 @@ public class IMDatabaseUtils {
                             serviceType.setId(id);
                             serviceType.setType(type);
                             serviceType.setName(name);
+                            serviceType.setServiceGroup(service_group);
                             serviceType.setServiceNameEntity(serviceNameEntity);
                             serviceType.setServiceNameEntityId(serviceNameEntityId);
                             serviceType.setDateEntity(dateEntity);
@@ -140,7 +147,7 @@ public class IMDatabaseUtils {
                 }
             }
         } catch (JSONException e) {
-            Log.e(IMDatabaseUtils.class.getName(), e.getMessage(), e);
+            Timber.e(e);
         }
     }
 
@@ -152,11 +159,14 @@ public class IMDatabaseUtils {
                 JSONArray vaccinetypeArray = new JSONArray(vaccinetype);
                 for (int i = 0; i < vaccinetypeArray.length(); i++) {
                     JSONObject vaccinrtypeObject = vaccinetypeArray.getJSONObject(i);
-                    VaccineType vtObject = new VaccineType(null, vaccinrtypeObject.getInt("doses"), vaccinrtypeObject.getString("name"), vaccinrtypeObject.getString("openmrs_parent_entity_id"), vaccinrtypeObject.getString("openmrs_date_concept_id"), vaccinrtypeObject.getString("openmrs_dose_concept_id"));
+                    VaccineType vtObject = new VaccineType(null, vaccinrtypeObject.getInt("doses"),
+                            vaccinrtypeObject.getString("name"), vaccinrtypeObject.getString("openmrs_parent_entity_id"),
+                            vaccinrtypeObject.getString("openmrs_date_concept_id"),
+                            vaccinrtypeObject.getString("openmrs_dose_concept_id"));
                     vaccineTypeRepository.add(vtObject, db);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(IMDatabaseUtils.class.getName(), e.getMessage(), e);
             }
         }
     }

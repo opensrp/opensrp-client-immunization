@@ -1,12 +1,12 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.DialogFragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import androidx.fragment.app.DialogFragment;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.vijay.jsonwizard.utils.NativeFormsProperties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -41,24 +43,25 @@ import java.util.List;
 
 @SuppressLint("ValidFragment")
 public class ServiceEditDialogFragment extends DialogFragment {
+    public static final String DIALOG_TAG = "ServiceEditDialogFragment";
     private final ServiceWrapper tag;
     private final View viewGroup;
     private ServiceActionListener listener;
-    public static final String DIALOG_TAG = "ServiceEditDialogFragment";
-
     private List<ServiceRecord> issuedServices;
     private DateTime dateOfBirth;
     private boolean disableConstraints;
     private DateTime dcToday;
+    private boolean isNumericDatePicker = Utils.isPropertyTrue(NativeFormsProperties.KEY.WIDGET_DATEPICKER_IS_NUMERIC);
 
     private ServiceEditDialogFragment(List<ServiceRecord> issuedServices, ServiceWrapper tag, View viewGroup) {
         this.issuedServices = issuedServices;
         this.tag = tag;
         this.viewGroup = viewGroup;
-        this.disableConstraints = false;
+        disableConstraints = false;
     }
 
-    private ServiceEditDialogFragment(DateTime dateOfBirth, List<ServiceRecord> issuedServices, ServiceWrapper tag, View viewGroup, boolean disableConstraints) {
+    private ServiceEditDialogFragment(DateTime dateOfBirth, List<ServiceRecord> issuedServices, ServiceWrapper tag,
+                                      View viewGroup, boolean disableConstraints) {
         this.issuedServices = issuedServices;
         this.tag = tag;
         this.viewGroup = viewGroup;
@@ -66,7 +69,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
         this.dateOfBirth = dateOfBirth;
         this.disableConstraints = disableConstraints;
         if (disableConstraints) {
-            this.dcToday = ServiceSchedule.standardiseDateTime(DateTime.now());
+            dcToday = ServiceSchedule.standardiseDateTime(DateTime.now());
         }
     }
 
@@ -90,7 +93,55 @@ public class ServiceEditDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public void onStart() {
+        super.onStart();
+
+        // without a handler, the window sizes itself correctly
+        // but the keyboard does not show up
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
+                Point size = new Point();
+
+                Display display = window.getWindowManager().getDefaultDisplay();
+                display.getSize(size);
+
+                int width = size.x;
+
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
+
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setGravity(Gravity.CENTER);
+
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (ServiceActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement ServiceActionListener");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (tag == null) {
@@ -98,41 +149,44 @@ public class ServiceEditDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_edit_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        dialogView.setFilterTouchesWhenObscured(true);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tag.getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tag.getPatientNumber());
-        TextView service_date = (TextView) dialogView.findViewById(R.id.service_date);
+        TextView service_date = dialogView.findViewById(R.id.service_date);
         service_date.setText("Service date: " + tag.getUpdatedVaccineDateAsString() + "");
-        final LinearLayout vaccinationNameLayout = (LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout);
+        LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
 
         View vaccinationName = inflater.inflate(R.layout.vaccination_name_edit_dialog, null);
-        TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+        TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
-        vaccineView.setText(tag.getName());
+
+        String name = VaccinatorUtils.getTranslatedVaccineName(getActivity(), tag.getName());
+        vaccineView.setText(name);
         vaccinationNameLayout.addView(vaccinationName);
 
 
         if (tag.getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tag.getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tag.getId());
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader.getStaticImageListener((ImageView) mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()), ImageUtils.profileImageResourceByGender(tag.getGender())));
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tag.getId(), OpenSRPImageLoader
+                        .getStaticImageListener(mImageView, ImageUtils.profileImageResourceByGender(tag.getGender()),
+                                ImageUtils.profileImageResourceByGender(tag.getGender())));
             }
         }
 
-        final DatePicker earlierDatePicker = (DatePicker) dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
 
         String color = tag.getColor();
-        Button status = (Button) dialogView.findViewById(R.id.status);
-        if (status != null)
-
-        {
+        Button status = dialogView.findViewById(R.id.status);
+        if (status != null) {
             status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         }
 
-        final Button set = (Button) dialogView.findViewById(R.id.set);
+        final Button set = dialogView.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {
                                    @Override
                                    public void onClick(View view) {
@@ -146,7 +200,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
                                        calendar.set(Calendar.YEAR, year);
                                        calendar.set(Calendar.MONTH, month);
                                        calendar.set(Calendar.DAY_OF_MONTH, day);
-//
+                                       //
                                        DateTime dateTime = new DateTime(calendar.getTime());
                                        tag.setUpdatedVaccineDate(dateTime, true);
 
@@ -159,7 +213,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
         );
 
-        final Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setText(vaccinateToday.getText().toString().replace("vaccination", "service"));
 
 
@@ -178,7 +232,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
         );
 
-        final Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
+        Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("vaccination", "service"));
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
                                                 @Override
@@ -194,7 +248,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
         updateDateRanges(earlierDatePicker, set);
 
-        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,7 +261,7 @@ public class ServiceEditDialogFragment extends DialogFragment {
             chilView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
+                    CheckBox childSelect = view.findViewById(R.id.select);
                     if (childSelect != null) {
                         childSelect.toggle();
                     }
@@ -290,54 +344,6 @@ public class ServiceEditDialogFragment extends DialogFragment {
 
     private DateTime getMaxVaccineDate() {
         return VaccinatorUtils.getServiceExpiryDate(tag.getServiceType(), tag.getDob());
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            listener = (ServiceActionListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement ServiceActionListener");
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // without a handler, the window sizes itself correctly
-        // but the keyboard does not show up
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                Window window = null;
-                if (getDialog() != null) {
-                    window = getDialog().getWindow();
-                }
-
-                if (window == null) {
-                    return;
-                }
-
-                Point size = new Point();
-
-                Display display = window.getWindowManager().getDefaultDisplay();
-                display.getSize(size);
-
-                int width = size.x;
-
-                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
-
-                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-
-            }
-        });
     }
 
 }

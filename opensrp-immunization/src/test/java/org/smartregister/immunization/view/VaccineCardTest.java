@@ -1,6 +1,5 @@
 package org.smartregister.immunization.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -11,16 +10,27 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
+import org.smartregister.immunization.BuildConfig;
+import org.smartregister.immunization.ImmunizationLibrary;
+import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
+import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.view.mock.VaccineCardTestActivity;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.repository.Repository;
+import org.smartregister.service.UserService;
+import org.smartregister.util.AppProperties;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -28,25 +38,33 @@ import org.smartregister.immunization.view.mock.VaccineCardTestActivity;
 
 public class VaccineCardTest extends BaseUnitTest {
 
-    private VaccineCard view;
-
-    @Mock
-    private Context context;
-
-    private ActivityController<VaccineCardTestActivity> controller;
-
-    @InjectMocks
-    private VaccineCardTestActivity activity;
-
-    @Mock
-    private org.smartregister.Context context_;
     private final String magicDue = "due";
     private final String magicMR = "mr";
     private final String magicExpired = "expired";
+    private VaccineCard view;
+
+    private ActivityController<VaccineCardTestActivity> controller;
+    @InjectMocks
+    private VaccineCardTestActivity activity;
+    @Mock
+    private org.smartregister.Context context_;
+
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private UserService userService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
+
+        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+        Mockito.doReturn(userService).when(context_).userService();
+
+        Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
+        Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
+
         Intent intent = new Intent(RuntimeEnvironment.application, VaccineCardTestActivity.class);
         controller = Robolectric.buildActivity(VaccineCardTestActivity.class, intent);
         activity = controller.start().resume().get();
@@ -56,12 +74,25 @@ public class VaccineCardTest extends BaseUnitTest {
     }
 
     @Test
-    public void assertGetUndoBNotNull() throws Exception {
+    public void assertGetUndoBNotNull() {
         Assert.assertNotNull(view.getUndoB());
     }
 
     @Test
-    public void assertgetStateCallsUpdateStateReturnsWrapperState() throws Exception {
+    public void testConstructors() {
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application));
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+    }
+
+    @Test
+    public void assertgetStateCallsUpdateStateReturnsWrapperState() {
+        AppProperties appProperties = Mockito.mock(AppProperties.class);
+        Mockito.when(appProperties.isTrue(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW)).thenReturn(true);
+        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+
         Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
         wrapper.setSynced(true);
@@ -133,14 +164,86 @@ public class VaccineCardTest extends BaseUnitTest {
         wrapper.setVaccineDate(new DateTime());
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), State.DONE_CAN_BE_UNDONE);
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
     }
 
     @Test
-    public void assertConstructorsNotNull() throws Exception {
+    public void assertConstructorsNotNull() {
         Assert.assertNotNull(activity.getInstance());
-        Assert.assertNotNull(activity.getInstance1());
-        Assert.assertNotNull(activity.getInstance2());
-        Assert.assertNotNull(activity.getInstance3());
+        //Assert.assertNotNull(activity.getInstance1());
+        //Assert.assertNotNull(activity.getInstance2());
+        //Assert.assertNotNull(activity.getInstance3());
+    }
+
+    @Test
+    public void testHideVaccineOverdueVaccineCardColor() {
+        AppProperties appProperties = Mockito.mock(AppProperties.class);
+        Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
+        Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
+        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+
+        VaccineCard cardView = Mockito.spy(view);
+        cardView.setVaccineWrapper(wrapper);
+//        cardView.getState();
+
+        Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_white);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+        cardView.setVaccineWrapper(wrapper);
+
+        Mockito.verify(cardView, Mockito.times(2)).setBackgroundResource(R.drawable.vaccine_card_background_white);
+    }
+
+    @Test
+    public void testShowVaccineOverdueVaccineCardColor() {
+        ImmunizationLibrary immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
+        AppProperties appProperties = Mockito.mock(AppProperties.class);
+        Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+
+        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+
+        Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
+        VaccineWrapper wrapper = new VaccineWrapper();
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+
+        VaccineCard cardView = Mockito.spy(view);
+        cardView.setVaccineWrapper(wrapper);
+//        cardView.getState();
+
+        Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_red);
+
+        alert = new Alert("", "", "", AlertStatus.normal, "", "");
+        wrapper.setSynced(true);
+        wrapper.setStatus(magicDue);
+        wrapper.setAlert(alert);
+        wrapper.setName(magicMR);
+        wrapper.setVaccineDate(new DateTime());
+        cardView.setVaccineWrapper(wrapper);
+
+        Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_blue);
+
+        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
     }
 
     @After

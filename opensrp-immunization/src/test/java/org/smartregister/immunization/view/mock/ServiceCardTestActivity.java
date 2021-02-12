@@ -2,8 +2,10 @@ package org.smartregister.immunization.view.mock;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import org.robolectric.Robolectric;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.view.ServiceCard;
 
@@ -14,6 +16,7 @@ import org.smartregister.immunization.view.ServiceCard;
 public class ServiceCardTestActivity extends Activity {
 
     private ServiceCard view;
+    private AttributeSet attrs;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -22,22 +25,7 @@ public class ServiceCardTestActivity extends Activity {
         LinearLayout linearLayout;
         linearLayout = new LinearLayout(this);
         setContentView(linearLayout);
-    }
-
-    public ServiceCard getInstance() {
-        return (view == null) ? new ServiceCard(this) : view;
-    }
-
-    public ServiceCard getInstance2() {
-        return new ServiceCard(this, ViewAttributes.attrs);
-    }
-
-    public ServiceCard getInstance3() {
-        return new ServiceCard(this, ViewAttributes.attrs, 0);
-    }
-
-    public ServiceCard getInstance1() {
-        return new ServiceCard(this, ViewAttributes.attrs, 0, 0);
+        attrs = Robolectric.buildAttributeSet().build();
     }
 
     @Override
@@ -68,6 +56,22 @@ public class ServiceCardTestActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ServiceCard getInstance() {
+        return (view == null) ? new ServiceCard(this) : view;
+    }
+
+    public ServiceCard getInstance2() {
+        return new ServiceCard(this, attrs);
+    }
+
+    public ServiceCard getInstance3() {
+        return new ServiceCard(this, attrs, 0);
+    }
+
+    public ServiceCard getInstance1() {
+        return new ServiceCard(this, attrs, 0, 0);
     }
 
 }

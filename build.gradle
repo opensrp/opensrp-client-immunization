@@ -3,10 +3,19 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+        maven {
+            url "https://maven.google.com"
+        }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven{  url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+        classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'
+        classpath 'org.smartregister:gradle-jarjar-plugin:1.0.0-SNAPSHOT'
+        classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'
     }
 }
 
@@ -20,6 +29,7 @@ configure(allprojects) { project ->
             jcenter()
             mavenCentral()
             maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+            maven{  url "https://plugins.gradle.org/m2/" }
             mavenLocal()
         }
     }
@@ -31,24 +41,22 @@ subprojects {
 
     group = 'org.smartregister'
 
-    ext.androidToolsBuildGradle = '27.0.3'
-    ext.androidBuildToolsVersion = '27.0.3'
-    ext.androidMinSdkVersion = 16
-    ext.androidCompileSdkVersion = 27
-    ext.androidTargetSdkVersion = 27
+    ext.androidToolsBuildGradle = '4.0.1'
+    ext.androidBuildToolsVersion = '29.0.2'
+    ext.androidMinSdkVersion        = 18
+    ext.androidCompileSdkVersion    = 28
+    ext.androidTargetSdkVersion     = 29
 
-    ext.androidAnnotationsVersion = '3.0.1';
-    ext.androidAnnotationsAPIVersion = '3.0.1';
+    ext.androidAnnotationsVersion = '3.0.1'
+    ext.androidAnnotationsAPIVersion = '3.0.1'
 
     repositories {
         google()
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url "http://nexus.motechproject.org/content/repositories/drishti" }
-        maven { url "http://nexus.motechproject.org/content/repositories/snapshots" }
         maven { url "http://acra.googlecode.com/svn/repository/releases" }
-        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "https://repo.maven.apache.org/maven2" }
         maven { url "http://cloudant.github.io/cloudant-sync-eap/repository" }
         mavenLocal()
     }
@@ -65,6 +73,7 @@ subprojects {
 }
 
 apply plugin: 'java'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'build-dashboard'
 apply plugin: 'io.codearte.nexus-staging'
 

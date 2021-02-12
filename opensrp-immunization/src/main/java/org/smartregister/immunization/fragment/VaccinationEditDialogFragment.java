@@ -1,13 +1,14 @@
 package org.smartregister.immunization.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import androidx.fragment.app.DialogFragment;
+
+import android.util.Pair;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,8 +24,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.utils.NativeFormsProperties;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.domain.AlertStatus;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
@@ -33,6 +38,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -54,6 +60,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     private Calendar dcToday;
     private Integer defaultImageResourceID;
     private Integer defaultErrorImageResourceID;
+    private boolean isNumericDatePicker = Utils.isPropertyTrue(NativeFormsProperties.KEY.WIDGET_DATEPICKER_IS_NUMERIC);
 
     private VaccinationEditDialogFragment(
             Context context, Date dateOfBirth,
@@ -64,7 +71,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         this.issuedVaccines = issuedVaccines;
         this.tags = new ArrayList<>(tags);
         this.viewGroup = viewGroup;
-        this.disableConstraints = false;
+        disableConstraints = false;
     }
 
     private VaccinationEditDialogFragment(
@@ -107,7 +114,54 @@ public class VaccinationEditDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public void onStart() {
+        super.onStart();
+
+        // without a handler, the window sizes itself correctly
+        // but the keyboard does not show up
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Window window = null;
+                if (getDialog() != null) {
+                    window = getDialog().getWindow();
+                }
+
+                if (window == null) {
+                    return;
+                }
+
+                Point size = new Point();
+
+                Display display = window.getWindowManager().getDefaultDisplay();
+                display.getSize(size);
+
+                int width = size.x;
+
+                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
+
+                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
+                window.setGravity(Gravity.CENTER);
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (VaccinationActionListener) activity;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(activity.toString()
+                    + " must implement VaccinationActionListener");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (tags == null || tags.isEmpty()) {
@@ -115,72 +169,78 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
 
         ViewGroup dialogView = (ViewGroup) inflater.inflate(R.layout.vaccination_edit_dialog_view, container, false);
-        TextView nameView = (TextView) dialogView.findViewById(R.id.name);
+        dialogView.setFilterTouchesWhenObscured(true);
+        TextView nameView = dialogView.findViewById(R.id.name);
         nameView.setText(tags.get(0).getPatientName());
-        TextView numberView = (TextView) dialogView.findViewById(R.id.number);
+        TextView numberView = dialogView.findViewById(R.id.number);
         numberView.setText(tags.get(0).getPatientNumber());
-        TextView service_date = (TextView) dialogView.findViewById(R.id.service_date);
+        TextView service_date = dialogView.findViewById(R.id.service_date);
         service_date.setText("Service date: " + tags.get(0).getUpdatedVaccineDateAsString() + "");
-        final LinearLayout vaccinationNameLayout = (LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout);
+        final LinearLayout vaccinationNameLayout = dialogView.findViewById(R.id.vaccination_name_layout);
+
+
+        final Button vaccinateToday = dialogView.findViewById(R.id.vaccinate_today);
+        Button vaccinateEarlier = dialogView.findViewById(R.id.vaccinate_earlier);
 
         if (tags.size() == 1) {
             View vaccinationName = inflater.inflate(R.layout.vaccination_name_edit_dialog, null);
-            TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+            TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
             VaccineWrapper vaccineWrapper = tags.get(0);
             VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
             if (vaccine != null) {
-                vaccineView.setText(vaccine.display());
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccine.display()));
             } else {
-                vaccineView.setText(vaccineWrapper.getName());
+                vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
             }
-            ImageView select = (ImageView) vaccinationName.findViewById(R.id.imageView);
-//            select.setVisibility(View.GONE);
+            ImageView select = vaccinationName.findViewById(R.id.imageView);
+            //            select.setVisibility(View.GONE);
 
             vaccinationNameLayout.addView(vaccinationName);
+
         } else {
             for (VaccineWrapper vaccineWrapper : tags) {
 
                 View vaccinationName = inflater.inflate(R.layout.vaccination_name_edit_dialog, null);
-                TextView vaccineView = (TextView) vaccinationName.findViewById(R.id.vaccine);
+                TextView vaccineView = vaccinationName.findViewById(R.id.vaccine);
 
                 VaccineRepo.Vaccine vaccine = vaccineWrapper.getVaccine();
                 if (vaccineWrapper.getVaccine() != null) {
-                    vaccineView.setText(vaccine.display());
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccine.display()));
                 } else {
-                    vaccineView.setText(vaccineWrapper.getName());
+                    vaccineView.setText(VaccinatorUtils.getTranslatedVaccineName(getActivity(), vaccineWrapper.getName()));
                 }
 
                 vaccinationNameLayout.addView(vaccinationName);
             }
 
-            Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
-            vaccinateToday.setText(vaccinateToday.getText().toString().replace("Vaccination", "Vaccinations"));
-
-            Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
-            vaccinateEarlier.setText(vaccinateEarlier.getText().toString().replace("Vaccination", "Vaccinations"));
+            vaccinateToday.setText(R.string.vaccines_done_today);
+            vaccinateEarlier.setText(R.string.vaccines_done_earlier);
         }
 
         if (tags.get(0).getId() != null) {
-            ImageView mImageView = (ImageView) dialogView.findViewById(R.id.child_profilepic);
+            ImageView mImageView = dialogView.findViewById(R.id.child_profilepic);
             if (tags.get(0).getId() != null) {//image already in local storage most likey ):
                 //set profile image by passing the client id.If the image doesn't exist in the image repository then download and save locally
                 mImageView.setTag(R.id.entity_id, tags.get(0).getId());
-                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
-                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils.profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
-                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(), OpenSRPImageLoader.getStaticImageListener(mImageView, defaultImageResId, errorImageResId));
+                int defaultImageResId = getDefaultImageResourceID() == null ? ImageUtils
+                        .profileImageResourceByGender(tags.get(0).getGender()) : getDefaultImageResourceID();
+                int errorImageResId = getDefaultErrorImageResourceID() == null ? ImageUtils
+                        .profileImageResourceByGender(tags.get(0).getGender()) : getDefaultErrorImageResourceID();
+                DrishtiApplication.getCachedImageLoaderInstance().getImageByClientId(tags.get(0).getId(),
+                        OpenSRPImageLoader.getStaticImageListener(mImageView, defaultImageResId, errorImageResId));
             }
         }
 
-        final DatePicker earlierDatePicker = (DatePicker) dialogView.findViewById(R.id.earlier_date_picker);
+        final DatePicker earlierDatePicker = dialogView.findViewById(isNumericDatePicker ? R.id.earlier_date_picker_numeric : R.id.earlier_date_picker);
 
         String color = tags.get(0).getColor();
-        Button status = (Button) dialogView.findViewById(R.id.status);
+        Button status = dialogView.findViewById(R.id.status);
         if (status != null) {
             status.setBackgroundColor(StringUtils.isBlank(color) ? Color.WHITE : Color.parseColor(color));
         }
 
-        final Button set = (Button) dialogView.findViewById(R.id.set);
+        final Button set = dialogView.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,8 +254,8 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-//                calendar.set(year, month, day);
-//                calendar.setTimeZone(calendar.getTimeZone());
+                //                calendar.set(year, month, day);
+                //                calendar.setTimeZone(calendar.getTimeZone());
                 DateTime dateTime = new DateTime(calendar.getTime());
 
                 if (tags.size() == 1) {
@@ -209,9 +269,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 } else
                     for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
                         View chilView = vaccinationNameLayout.getChildAt(i);
-                        CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
+                        CheckBox selectChild = chilView.findViewById(R.id.select);
                         if (selectChild.isChecked()) {
-                            TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
+                            TextView childVaccineView = chilView.findViewById(R.id.vaccine);
                             String checkedName = childVaccineView.getText().toString();
                             VaccineWrapper tag = searchWrapperByName(checkedName);
                             if (tag != null) {
@@ -231,7 +291,6 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         });
 
-        final Button vaccinateToday = (Button) dialogView.findViewById(R.id.vaccinate_today);
         vaccinateToday.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,55 +300,55 @@ public class VaccinationEditDialogFragment extends DialogFragment {
 
                 DatePickerUtils.themeDatePicker(earlierDatePicker, new char[]{'d', 'm', 'y'});
 
-//                dismiss();
-//
-//                Calendar calendar = Calendar.getInstance();
-//                DateTime dateTime = new DateTime(calendar.getTime());
-//                if (tags.size() == 1) {
-//                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
-//                } else
-//                    for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
-//                        View chilView = vaccinationNameLayout.getChildAt(i);
-//                        CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
-//                        if (selectChild.isChecked()) {
-//                            TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
-//                            String checkedName = childVaccineView.getText().toString();
-//                            VaccineWrapper tag = searchWrapperByName(checkedName);
-//                            if (tag != null) {
-//                                tag.setUpdatedVaccineDate(dateTime, true);
-//                            }
-//                        }
-//                    }
-//
-//                listener.onVaccinateToday(tags, viewGroup);
+                //                dismiss();
+                //
+                //                Calendar calendar = Calendar.getInstance();
+                //                DateTime dateTime = new DateTime(calendar.getTime());
+                //                if (tags.size() == 1) {
+                //                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
+                //                } else
+                //                    for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
+                //                        View chilView = vaccinationNameLayout.getChildAt(i);
+                //                        CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
+                //                        if (selectChild.isChecked()) {
+                //                            TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
+                //                            String checkedName = childVaccineView.getText().toString();
+                //                            VaccineWrapper tag = searchWrapperByName(checkedName);
+                //                            if (tag != null) {
+                //                                tag.setUpdatedVaccineDate(dateTime, true);
+                //                            }
+                //                        }
+                //                    }
+                //
+                //                listener.onVaccinateToday(tags, viewGroup);
 
             }
         });
 
-        final Button vaccinateEarlier = (Button) dialogView.findViewById(R.id.vaccinate_earlier);
         vaccinateEarlier.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
                 if (tags.size() == 1) {
-//                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
+                    //                    tags.get(0).setUpdatedVaccineDate(dateTime, true);
                     listener.onUndoVaccination(tags.get(0), viewGroup);
-                } else
+                } else {
                     for (int i = 0; i < vaccinationNameLayout.getChildCount(); i++) {
                         View chilView = vaccinationNameLayout.getChildAt(i);
-                        CheckBox selectChild = (CheckBox) chilView.findViewById(R.id.select);
+                        CheckBox selectChild = chilView.findViewById(R.id.select);
                         if (selectChild.isChecked()) {
-                            TextView childVaccineView = (TextView) chilView.findViewById(R.id.vaccine);
+                            TextView childVaccineView = chilView.findViewById(R.id.vaccine);
                             String checkedName = childVaccineView.getText().toString();
                             VaccineWrapper tag = searchWrapperByName(checkedName);
                             listener.onUndoVaccination(tag, viewGroup);
                         }
                     }
-//                listener.onUndoVaccination(tags,viewGroup);
+                    //                listener.onUndoVaccination(tags,viewGroup);
+                }
             }
         });
 
-        Button cancel = (Button) dialogView.findViewById(R.id.cancel);
+        Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -302,7 +361,7 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             chilView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CheckBox childSelect = (CheckBox) view.findViewById(R.id.select);
+                    CheckBox childSelect = view.findViewById(R.id.select);
                     if (childSelect == null) {
                         return;
                     }
@@ -313,8 +372,24 @@ public class VaccinationEditDialogFragment extends DialogFragment {
 
         updateDateRanges(earlierDatePicker, set);
 
+        if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
+
+            vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
+        }
 
         return dialogView;
+    }
+
+    public Integer getDefaultImageResourceID() {
+        return defaultImageResourceID;
+    }
+
+    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
+        this.defaultImageResourceID = defaultImageResourceID;
+    }
+
+    public Integer getDefaultErrorImageResourceID() {
+        return defaultErrorImageResourceID;
     }
 
     private boolean validateVaccinationDate(VaccineWrapper vaccine, Date date) {
@@ -363,6 +438,25 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         return result;
     }
 
+    private VaccineWrapper searchWrapperByName(String name) {
+        if (tags == null || tags.isEmpty()) {
+            return null;
+        }
+
+        for (VaccineWrapper tag : tags) {
+            if (tag.getVaccine() != null) {
+                if (tag.getVaccine().display().equals(name)) {
+                    return tag;
+                }
+            } else {
+                if (tag.getName().equals(name)) {
+                    return tag;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * This method updates the allowed date ranges in the views
      *
@@ -393,17 +487,57 @@ public class VaccinationEditDialogFragment extends DialogFragment {
             }
         }
 
-        VaccineSchedule.standardiseCalendarDate(minDate);
-        VaccineSchedule.standardiseCalendarDate(maxDate);
-
-        if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
-            set.setVisibility(View.GONE);
-            datePicker.setMinDate(minDate.getTimeInMillis());
-            datePicker.setMaxDate(maxDate.getTimeInMillis());
-        } else {
-            set.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+        Pair<Calendar, Calendar> vaccineMinMaxDatePair = VaccinatorUtils.getVaccineMinimumAndMaximumDate(tags, issuedVaccines);
+        if (vaccineMinMaxDatePair.first != null && vaccineMinMaxDatePair.second != null) {
+            minDate = vaccineMinMaxDatePair.first;
+            maxDate = vaccineMinMaxDatePair.second;
         }
+
+        if (minDate != null && maxDate != null) {
+            VaccineSchedule.standardiseCalendarDate(minDate);
+            VaccineSchedule.standardiseCalendarDate(maxDate);
+
+            if (maxDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
+                set.setVisibility(View.GONE);
+                datePicker.setMinDate(minDate.getTimeInMillis());
+                datePicker.setMaxDate(maxDate.getTimeInMillis());
+            } else {
+                set.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private Date getMinVaccineDate(String vaccineName) {
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
+                vaccineName);
+        if (curVaccineSchedule == null) {
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
+        Date minDate = null;
+
+        if (curVaccineSchedule != null) {
+            minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
+        }
+
+        return minDate;
+    }
+
+    private Date getMaxVaccineDate(String vaccineName) {
+        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
+                vaccineName);
+        if (curVaccineSchedule == null) {
+            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
+                    vaccineName);
+        }
+        Date maxDate = null;
+
+        if (curVaccineSchedule != null) {
+            maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
+        }
+
+        return maxDate;
     }
 
     private Calendar updateMinVaccineDate(Calendar minDate_, String vaccineName) {
@@ -440,116 +574,6 @@ public class VaccinationEditDialogFragment extends DialogFragment {
         }
 
         return maxDate;
-    }
-
-    private Date getMinVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
-        if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
-        }
-        Date minDate = null;
-
-        if (curVaccineSchedule != null) {
-            minDate = curVaccineSchedule.getDueDate(issuedVaccines, dateOfBirth);
-        }
-
-        return minDate;
-    }
-
-    private Date getMaxVaccineDate(String vaccineName) {
-        VaccineSchedule curVaccineSchedule = VaccineSchedule.getVaccineSchedule("child",
-                vaccineName);
-        if (curVaccineSchedule == null) {
-            curVaccineSchedule = VaccineSchedule.getVaccineSchedule("woman",
-                    vaccineName);
-        }
-        Date maxDate = null;
-
-        if (curVaccineSchedule != null) {
-            maxDate = curVaccineSchedule.getExpiryDate(issuedVaccines, dateOfBirth);
-        }
-
-        return maxDate;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            listener = (VaccinationActionListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement VaccinationActionListener");
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // without a handler, the window sizes itself correctly
-        // but the keyboard does not show up
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                Window window = null;
-                if (getDialog() != null) {
-                    window = getDialog().getWindow();
-                }
-
-                if (window == null) {
-                    return;
-                }
-
-                Point size = new Point();
-
-                Display display = window.getWindowManager().getDefaultDisplay();
-                display.getSize(size);
-
-                int width = size.x;
-
-                double widthFactor = Utils.calculateDialogWidthFactor(getActivity());
-
-                window.setLayout((int) (width * widthFactor), FrameLayout.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-            }
-        });
-    }
-
-    private VaccineWrapper searchWrapperByName(String name) {
-        if (tags == null || tags.isEmpty()) {
-            return null;
-        }
-
-        for (VaccineWrapper tag : tags) {
-            if (tag.getVaccine() != null) {
-                if (tag.getVaccine().display().equals(name)) {
-                    return tag;
-                }
-            } else {
-                if (tag.getName().equals(name)) {
-                    return tag;
-                }
-            }
-        }
-        return null;
-    }
-
-    public Integer getDefaultImageResourceID() {
-        return defaultImageResourceID;
-    }
-
-    public void setDefaultImageResourceID(Integer defaultImageResourceID) {
-        this.defaultImageResourceID = defaultImageResourceID;
-    }
-
-    public Integer getDefaultErrorImageResourceID() {
-        return defaultErrorImageResourceID;
     }
 
     public void setDefaultErrorImageResourceID(Integer defaultErrorImageResourceID) {

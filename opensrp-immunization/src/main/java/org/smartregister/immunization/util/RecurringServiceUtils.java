@@ -21,11 +21,14 @@ import java.util.List;
 public class RecurringServiceUtils {
 
 
-    public static void updateServiceGroupViews(View view, final ArrayList<ServiceWrapper> wrappers, List<ServiceRecord> serviceRecordList, List<Alert> alertList) {
+    public static void updateServiceGroupViews(View view, ArrayList<ServiceWrapper> wrappers,
+                                               List<ServiceRecord> serviceRecordList, List<Alert> alertList) {
         updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, false);
     }
 
-    public static void updateServiceGroupViews(View view, final ArrayList<ServiceWrapper> wrappers, final List<ServiceRecord> serviceRecordList, final List<Alert> alertList, final boolean undo) {
+    public static void updateServiceGroupViews(View view, final ArrayList<ServiceWrapper> wrappers,
+                                               final List<ServiceRecord> serviceRecordList, final List<Alert> alertList,
+                                               final boolean undo) {
         if (view == null || wrappers == null || wrappers.isEmpty()) {
             return;
         }
@@ -35,27 +38,31 @@ public class RecurringServiceUtils {
             serviceGroup.setModalOpen(false);
 
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                if (undo) {
+                //if (undo) {
                     serviceGroup.setServiceRecordList(serviceRecordList);
+                    serviceGroup.getServiceCardAdapter().updateServiceRecordList(serviceRecordList);
                     serviceGroup.setAlertList(alertList);
+                    serviceGroup.getServiceCardAdapter().updateAlertList(alertList);
                     serviceGroup.updateAllWrapperStatus();
-                }
+                //}
                 serviceGroup.updateViews();
+
 
             } else {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (undo) {
+                        //if (undo) {
                             serviceGroup.setServiceRecordList(serviceRecordList);
                             serviceGroup.setAlertList(alertList);
                             serviceGroup.updateAllWrapperStatus();
-                        }
+                        //}
                         serviceGroup.updateViews();
                     }
                 });
             }
+
         } else if (view instanceof ServiceRowGroup) {
             final ServiceRowGroup serviceRowGroup = (ServiceRowGroup) view;
             serviceRowGroup.setModalOpen(false);
@@ -98,12 +105,14 @@ public class RecurringServiceUtils {
         return null;
     }
 
-    public static void saveService(ServiceWrapper tag, String baseEntityId, String providerId, String locationId) {
+    public static void saveService(ServiceWrapper tag, String baseEntityId, String providerId, String locationId,
+                                   String team, String teamId, String childLocationId) {
         if (tag.getUpdatedVaccineDate() == null) {
             return;
         }
 
-        RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+        RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance()
+                .recurringServiceRecordRepository();
 
         ServiceRecord serviceRecord = new ServiceRecord();
         if (tag.getDbKey() != null) {
@@ -119,9 +128,9 @@ public class RecurringServiceUtils {
             serviceRecord.setValue(tag.getValue());
             serviceRecord.setLocationId(locationId);
 
-            serviceRecord.setTeam("testTeam");
-            serviceRecord.setTeamId("testTeamId");
-            serviceRecord.setChildLocationId("testChildLocationId");
+            serviceRecord.setTeam(team);
+            serviceRecord.setTeamId(teamId);
+            serviceRecord.setChildLocationId(childLocationId);
         }
 
         recurringServiceRecordRepository.add(serviceRecord);

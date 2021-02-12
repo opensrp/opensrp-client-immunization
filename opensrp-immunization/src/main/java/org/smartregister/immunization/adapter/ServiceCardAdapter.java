@@ -43,9 +43,8 @@ import static org.smartregister.util.Utils.getValue;
 public class ServiceCardAdapter extends BaseAdapter {
     private static final String TAG = "ServiceCardAdapter";
     private final Context context;
-    private HashMap<String, ServiceCard> serviceCards;
     private final ServiceGroup serviceGroup;
-
+    private HashMap<String, ServiceCard> serviceCards;
     private List<ServiceRecord> serviceRecordList;
     private List<Alert> alertList;
     private Map<String, List<ServiceType>> serviceTypeMap;
@@ -60,6 +59,38 @@ public class ServiceCardAdapter extends BaseAdapter {
         this.alertList = alertList;
         this.serviceTypeMap = serviceTypeMap;
         serviceCards = new HashMap<>();
+    }
+
+    public void updateAll() {
+        if (serviceCards != null) {
+            // Update all vaccines
+            for (ServiceCard curCard : serviceCards.values()) {
+                if (curCard != null) curCard.updateState();
+            }
+        }
+
+        visibilityCheck();
+    }
+
+    public void visibilityCheck() {
+        // if all cards have been updated
+        if (getCount() == serviceCards.size()) {
+            if (atLeastOneVisibleCard()) {
+                serviceGroup.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        serviceGroup.setVisibility(View.VISIBLE);
+                    }
+                });
+            } else {
+                serviceGroup.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        serviceGroup.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -103,15 +134,15 @@ public class ServiceCardAdapter extends BaseAdapter {
 
     }
 
-    public void updateAll() {
+    public boolean atLeastOneVisibleCard() {
         if (serviceCards != null) {
-            // Update all vaccines
-            for (ServiceCard curCard : serviceCards.values()) {
-                if (curCard != null) curCard.updateState();
+            for (ServiceCard serviceCard : serviceCards.values()) {
+                if (serviceCard.getVisibility() == View.VISIBLE) {
+                    return true;
+                }
             }
         }
-
-        visibilityCheck();
+        return false;
     }
 
     public void updateChildsActiveStatus() {
@@ -130,46 +161,14 @@ public class ServiceCardAdapter extends BaseAdapter {
         this.isChildActive = isChildActive;
     }
 
-    public void visibilityCheck() {
-        // if all cards have been updated
-        if (getCount() == serviceCards.size()) {
-            if (atLeastOneVisibleCard()) {
-                serviceGroup.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        serviceGroup.setVisibility(View.VISIBLE);
-                    }
-                });
-            } else {
-                serviceGroup.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        serviceGroup.setVisibility(View.GONE);
-                    }
-                });
-            }
+    public void updateWrapperStatus(ArrayList<ServiceWrapper> tags, CommonPersonObjectClient childDetails) {
+        if (tags == null) {
+            return;
         }
-    }
 
-    public boolean atLeastOneVisibleCard() {
-        if (serviceCards != null) {
-            for (ServiceCard serviceCard : serviceCards.values()) {
-                if (serviceCard.getVisibility() == View.VISIBLE) {
-                    return true;
-                }
-            }
+        for (ServiceWrapper tag : tags) {
+            updateWrapperStatus(tag.getDefaultName(), tag, childDetails);
         }
-        return false;
-    }
-
-    public List<ServiceWrapper> allWrappers() {
-        List<ServiceWrapper> serviceWrappers = new ArrayList<>();
-        if (serviceCards != null) {
-            for (ServiceCard serviceCard : serviceCards.values()) {
-                serviceWrappers.add(serviceCard.getServiceWrapper());
-            }
-        }
-        return serviceWrappers;
     }
 
     public void updateWrapperStatus(String type, ServiceWrapper tag, CommonPersonObjectClient childDetails) {
@@ -178,9 +177,10 @@ public class ServiceCardAdapter extends BaseAdapter {
 
         List<ServiceRecord> serviceRecordList = new ArrayList<>();
         for (ServiceRecord serviceRecord : getServiceRecordList()) {
-            if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+            //if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
+            //if (serviceRecord.getName().equalsIgnoreCase(tag.getDefaultName())) {
                 serviceRecordList.add(serviceRecord);
-            }
+            //}
         }
 
         List<Alert> alertList = getAlertList();
@@ -188,7 +188,8 @@ public class ServiceCardAdapter extends BaseAdapter {
         Map<String, Date> receivedServices = VaccinatorUtils.receivedServices(serviceRecordList);
 
         String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
-        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
+        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices,
+                alertList);
 
 
         Map<String, Object> nv = null;
@@ -228,48 +229,6 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
     }
 
-    public void updateWrapperStatus(ArrayList<ServiceWrapper> tags, CommonPersonObjectClient childDetails) {
-        if (tags == null) {
-            return;
-        }
-
-        for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag, childDetails);
-        }
-    }
-
-    public void updateAllWrapperStatus(CommonPersonObjectClient childDetails) {
-
-        List<ServiceWrapper> tags = allWrappers();
-        if (tags == null) {
-            return;
-        }
-
-        for (ServiceWrapper tag : tags) {
-            updateWrapperStatus(tag.getType(), tag, childDetails);
-        }
-    }
-
-    public void updateWrapper(ServiceWrapper tag) {
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        if (!serviceRecordList.isEmpty()) {
-            for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (tag.getName().toLowerCase().contains(serviceRecord.getName().toLowerCase()) && serviceRecord.getDate() != null) {
-                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
-                    }
-                    tag.setDbKey(serviceRecord.getId());
-                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
-                }
-            }
-        }
-
-    }
-
     public Map<String, List<ServiceType>> getServiceTypeMap() {
         if (serviceTypeMap == null) {
             serviceTypeMap = new LinkedHashMap<>();
@@ -288,6 +247,50 @@ public class ServiceCardAdapter extends BaseAdapter {
         return alertList;
     }
 
+    public void updateAllWrapperStatus(CommonPersonObjectClient childDetails) {
+
+        List<ServiceWrapper> tags = allWrappers();
+        if (tags == null) {
+            return;
+        }
+
+        for (ServiceWrapper tag : tags) {
+            updateWrapperStatus(tag.getDefaultName(), tag, childDetails);
+        }
+    }
+
+    public List<ServiceWrapper> allWrappers() {
+        List<ServiceWrapper> serviceWrappers = new ArrayList<>();
+        if (serviceCards != null) {
+            for (ServiceCard serviceCard : serviceCards.values()) {
+                serviceWrappers.add(serviceCard.getServiceWrapper());
+            }
+        }
+        return serviceWrappers;
+    }
+
+    public void updateWrapper(ServiceWrapper tag) {
+        List<ServiceRecord> serviceRecordList = getServiceRecordList();
+
+        if (!serviceRecordList.isEmpty()) {
+            for (ServiceRecord serviceRecord : serviceRecordList) {
+                if (tag.getName().toLowerCase().contains(serviceRecord.getName().toLowerCase()) && serviceRecord
+                        .getDate() != null) {
+                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
+                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
+                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
+                    } else {
+                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
+                    }
+                    tag.setDbKey(serviceRecord.getId());
+                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus()
+                            .equals(VaccineRepository.TYPE_Synced));
+                }
+            }
+        }
+
+    }
+
     class ServiceCardTask extends AsyncTask<Void, Void, ServiceWrapper> {
 
         private ServiceCard serviceCard;
@@ -300,13 +303,6 @@ public class ServiceCardAdapter extends BaseAdapter {
             this.serviceCard = serviceCard;
             this.childDetails = childDetails;
             this.type = type;
-        }
-
-        @Override
-        protected void onPostExecute(ServiceWrapper serviceWrapper) {
-            serviceCard.setServiceWrapper(serviceWrapper);
-            visibilityCheck();
-            notifyDataSetChanged();
         }
 
         @Override
@@ -340,6 +336,20 @@ public class ServiceCardAdapter extends BaseAdapter {
 
             return serviceWrapper;
         }
+
+        @Override
+        protected void onPostExecute(ServiceWrapper serviceWrapper) {
+            serviceCard.setServiceWrapper(serviceWrapper);
+            visibilityCheck();
+            notifyDataSetChanged();
+        }
     }
 
+    public void updateServiceRecordList(List<ServiceRecord> serviceRecordList) {
+        this.serviceRecordList = serviceRecordList;
+    }
+
+    public void updateAlertList(List<Alert> alertList) {
+        this.alertList = alertList;
+    }
 }

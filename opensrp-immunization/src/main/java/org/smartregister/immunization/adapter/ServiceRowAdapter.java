@@ -41,10 +41,9 @@ import static org.smartregister.util.Utils.getValue;
 public class ServiceRowAdapter extends BaseAdapter {
     private static final String TAG = "ServiceRowAdapter";
     private final Context context;
-    private HashMap<String, ServiceRowCard> serviceRowCards;
     private final ServiceRowGroup serviceRowGroup;
     public boolean editmode;
-
+    private HashMap<String, ServiceRowCard> serviceRowCards;
     private List<ServiceType> serviceTypeList;
     private List<ServiceRecord> serviceRecordList;
     private List<Alert> alertList;
@@ -128,7 +127,8 @@ public class ServiceRowAdapter extends BaseAdapter {
         Map<String, Date> receivedServices = VaccinatorUtils.receivedServices(serviceRecordList);
 
         String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
-        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices, alertList);
+        List<Map<String, Object>> sch = generateScheduleList(serviceTypes, new DateTime(dobString), receivedServices,
+                alertList);
 
 
         for (Map<String, Object> m : sch) {
@@ -140,27 +140,6 @@ public class ServiceRowAdapter extends BaseAdapter {
                 tag.setVaccineDate((DateTime) m.get("date"));
             }
         }
-    }
-
-    public void updateWrapper(ServiceWrapper tag) {
-        List<ServiceRecord> serviceRecordList = getServiceRecordList();
-
-        if (!serviceRecordList.isEmpty()) {
-            for (ServiceRecord serviceRecord : serviceRecordList) {
-                if (tag.getName().toLowerCase().contains(serviceRecord.getName().toLowerCase()) && serviceRecord.getDate() != null) {
-                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
-                    }
-                    tag.setDbKey(serviceRecord.getId());
-                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
-                    tag.setCreatedAt(serviceRecord.getCreatedAt());
-                }
-            }
-        }
-
     }
 
     public List<ServiceType> getServiceTypes() {
@@ -175,6 +154,29 @@ public class ServiceRowAdapter extends BaseAdapter {
         return alertList;
     }
 
+    public void updateWrapper(ServiceWrapper tag) {
+        List<ServiceRecord> serviceRecordList = getServiceRecordList();
+
+        if (!serviceRecordList.isEmpty()) {
+            for (ServiceRecord serviceRecord : serviceRecordList) {
+                if (tag.getName().equalsIgnoreCase(serviceRecord.getName()) && serviceRecord
+                        .getDate() != null) {
+                    long diff = serviceRecord.getUpdatedAt() - serviceRecord.getDate().getTime();
+                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
+                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), false);
+                    } else {
+                        tag.setUpdatedVaccineDate(new DateTime(serviceRecord.getDate()), true);
+                    }
+                    tag.setDbKey(serviceRecord.getId());
+                    tag.setSynced(serviceRecord.getSyncStatus() != null && serviceRecord.getSyncStatus()
+                            .equals(VaccineRepository.TYPE_Synced));
+                    tag.setCreatedAt(serviceRecord.getCreatedAt());
+                }
+            }
+        }
+
+    }
+
     class ServiceRowTask extends AsyncTask<Void, Void, ServiceWrapper> {
 
         private CommonPersonObjectClient childDetails;
@@ -187,12 +189,6 @@ public class ServiceRowAdapter extends BaseAdapter {
             this.childDetails = childDetails;
             this.serviceType = serviceType;
             this.serviceRowCard = serviceRowCard;
-        }
-
-        @Override
-        protected void onPostExecute(ServiceWrapper serviceWrapper) {
-            serviceRowCard.setServiceWrapper(serviceWrapper);
-            notifyDataSetChanged();
         }
 
         @Override
@@ -225,6 +221,12 @@ public class ServiceRowAdapter extends BaseAdapter {
             updateWrapper(serviceWrapper);
 
             return serviceWrapper;
+        }
+
+        @Override
+        protected void onPostExecute(ServiceWrapper serviceWrapper) {
+            serviceRowCard.setServiceWrapper(serviceWrapper);
+            notifyDataSetChanged();
         }
     }
 

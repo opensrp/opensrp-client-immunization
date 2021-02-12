@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">opensrp-imunização </string>
+    <string name="action_settings">Definições</string>
+    <string name="problem_applying_vaccine_constraints">Problema na aplicação de vacinas com restrições </string>
+    <string name="immunizations">IMUNIZAÇÕES</string>
+    <string name="recurring">SERVIÇOS RECORRENTES</string>
+    <string name="done_today">Dada Hoje</string>
+    <string name="vaccine_done_today">Vacina Dada Hoje</string>
+    <string name="vaccine_done_earlier">Vacina Dada Anteriormente</string>
+    <string name="vaccines_done_today">Vacina Dada Hoje</string>
+    <string name="vaccines_done_earlier">Vacina Dada Anteriormente</string>
+    <string name="vaccine_name">Nome da Vacina</string>
+    <string name="vaccine_number">Número da Vacina</string>
+    <string name="vaccine">Vacina </string>
+    <string name="set">Conjunto</string>
+    <string name="undo_record_vaccination">Desfazer Registro de Vacinação?</string>
+    <string name="change_service_date">Alterar Data de Serviço</string>
+    <string name="birth">Nascimento</string>
+    <string name="yes_undo_vaccination">Sim Desfazer Vacinação</string>
+    <string name="no_go_back">Não, Volte</string>
+    <string name="service">Serviço</string>
+    <string name="units">Unidades</string>
+    <string name="edit">Editar</string>
+    <string name="undo">Desfazer</string>
+
+    <string name="record_all">Registrar Tudo</string>
+    <string name="record_">Registar%1$s</string>
+    <string name="record_due_">Registar %1$s- Vencimento %2$s</string>
+    <string name="mr_due_">%1$s - Limite %2$s</string>
+    <string name="due_">%1$s: Limite %2$s</string>
+    <string name="today">Hoje</string>
+
+    <!-- Recurring Services -->
+    <string name="recurring_services">Serviços Recorrentes</string>
+    <string name="given_today">%1$s Dado Hoje</string>
+    <string name="given_earlier">%1$s Dado Anteriormente</string>
+    <string name="itn_given">A criança recebeu um ITN?</string>
+    <string name="itn_date">Data em que o ITN  foi fornecido:</string>
+    <string name="itn_under_net">A criança dorme debaixo de uma rede? </string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="record_itn">Registro ITN Fornecido</string>
+    <string name="go_back">Volte</string>
+    <string name="undo_service">Desfazer serviço?</string>
+    <string name="yes_undo_service">Sim, Desfazer Serviço</string>
+    <string name="cannot_record_vaccine">Não é possível gravar %1$s</string>
+
+    <string name="activate_child_status_dialog_title">O estado desta criança é %1$s.  Faça %2$s ativo?</string>
+    <string name="activate_child_status_dialog_message">Tornar a criança ativa retomará as programações de serviço e permitirá que grave os serviços.</string>
+    <string name="make_active">Tornar ativo</string>
+
+    <!-- Immunization Names-->
+    <string name="bcg">BCG</string>
+    <string name="hepb">HepB</string>
+    <string name="opv_0">OPV 0</string>
+    <string name="opv_1">OPV 1</string>
+    <string name="pcv_1">PCV 1</string>
+    <string name="penta_1">Penta 1</string>
+    <string name="rota_1">Rota 1</string>
+    <string name="opv_2">OPV 2</string>
+    <string name="pcv_2">PCV 2</string>
+    <string name="penta_2">Penta 2</string>
+    <string name="rota_2">Rota 2</string>
+    <string name="opv_3">OPV 3</string>
+    <string name="ipv">IPV</string>
+    <string name="pcv_3">PCV 3</string>
+    <string name="penta_3">Penta 3</string>
+    <string name="meningococcal">Meningocócica</string>
+    <string name="yellow_fever">Febre Amarela</string>
+    <string name="mr_1">MR 1</string>
+    <string name="mr_2">MR 2</string>
+    <string name="vit_a_1">Vit A 6 Meses</string>
+    <string name="vit_a_2">Vit A 12 Meses</string>
+
+
+    <string name="at_birth">No nascimento</string>
+    <string name="_6_weeks">6 Semanas</string>
+    <string name="_10_weeks">10 Semanas</string>
+    <string name="_14_weeks">14 Semanas</string>
+    <string name="_9_months">9 Meses</string>
+    <string name="_18_months">18 Meses</string>
+
+    <string name="expired">Expirado</string>
+    <string name="expired_colon">Expirado: %1$s</string>
+    <string name="out_of_catchment">Fora da Captação</string>
+
+</resources>

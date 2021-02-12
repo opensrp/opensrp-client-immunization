@@ -1,0 +1,77 @@
+[
+  {
+    "name": "108 Months",
+    "id": "One_Hundred_Eight_Months",
+    "days_after_birth_due": 3285,
+    "vaccines": [
+      {
+        "name": "HPV 1",
+        "type": "HPV",
+        "openmrs_date": {
+          "parent_entity": "79505AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "79505AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 2
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "dob",
+              "offset": "+9y",
+              "window": "+10y"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+10y"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "114 Months",
+    "id": "One_Hundred_Fourteen_Months",
+    "days_after_birth_due": 3468,
+    "vaccines": [
+      {
+        "name": "HPV 2",
+        "type": "HPV",
+        "openmrs_date": {
+          "parent_entity": "79717AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "openmrs_calculate": {
+          "parent_entity": "79717AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "entity": "concept",
+          "entity_id": "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "calculation": 2
+        },
+        "schedule": {
+          "due": [
+            {
+              "reference": "prerequisite",
+              "prerequisite": "HPV 1",
+              "offset": "+180d",
+              "window": "+11y"
+            }
+          ],
+          "expiry": [
+            {
+              "reference": "dob",
+              "offset": "+11y"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -6,9 +6,6 @@ import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.Assert;
-
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,71 +33,47 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 /**
  * Created by onaio on 30/08/2017.
  */
-@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, VaccineCardShadow.class})
+@Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, VaccineCardShadow.class})
 public class VaccineCardAdapterTest extends BaseUnitTest {
 
-    @Mock
-    private Context context;
-
-    private VaccineCardAdapter vaccineCardAdapter;
-
-    private VaccineGroup view;
-
-    @Mock
-    private CommonPersonObjectClient commonPersonObjectClient;
-
+    private final int magicNumber = 231231;
+    private final String magicDate = "1985-07-24T00:00:00.000Z";
     @Mock
     protected View convertView;
-
     @Mock
     protected ViewGroup parentView;
-
-    private final int magicNumber = 231231;
+    @Mock
+    private Context context;
+    private VaccineCardAdapter vaccineCardAdapter;
+    private VaccineGroup view;
+    @Mock
+    private CommonPersonObjectClient commonPersonObjectClient;
     private CommonPersonObjectClient childdetails;
     private ArrayList<Vaccine> vaccinelist;
     private ArrayList<Alert> alertlist;
     private VaccineWrapper wrapper;
     private ArrayList<VaccineWrapper> wrappers;
-    private final String magicDate = "1985-07-24T00:00:00.000Z";
-
-    private List<Vaccine> vaccineList= new ArrayList<>();
+    private List<Vaccine> vaccineList = new ArrayList<>();
     private List<Alert> alertList = new ArrayList<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         view = new VaccineGroup(RuntimeEnvironment.application);
         setDataForTest(magicDate);
         vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void assertConstructorsCreateNonNullObjectsOnInstantiation() throws JSONException {
-        org.junit.Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
-    }
-
-    @Test
-    public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
-
-        org.junit.Assert.assertEquals(2, vaccineCardAdapter.getCount());
-
-        //should return null
-        junit.framework.Assert.assertNull(vaccineCardAdapter.getItem(0));
-
-        junit.framework.Assert.assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
-
-    }
-
-    @Test
-    public void assertGetViewReturnsVaccineCard() {
-        junit.framework.Assert.assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
-    }
-
-    public void setDataForTest(String dateTimeString) throws Exception {
-        wrappers = new ArrayList<VaccineWrapper>();
+    public void setDataForTest(String dateTimeString) {
+        wrappers = new ArrayList<>();
         wrapper = new VaccineWrapper();
         wrapper.setDbKey(0l);
         wrapper.setName(VaccineRepo.Vaccine.bcg2.display());
@@ -119,10 +92,11 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
         Type listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup>>() {
         }.getType();
-        List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+        List<org.smartregister.immunization.domain.jsonmapping.VaccineGroup> vaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.vaccines, listType);
         org.smartregister.immunization.domain.jsonmapping.VaccineGroup vaccineData = vaccines.get(0);
 
-        HashMap<String, String> detail = new HashMap<String, String>();
+        HashMap<String, String> detail = new HashMap<>();
         detail.put("dob", dateTimeString);
         detail.put("gender", "male");
         detail.put("zeir_id", "1");
@@ -131,19 +105,44 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         childdetails = new CommonPersonObjectClient("1", detail, "NME");
         childdetails.setColumnmaps(detail);
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.measles2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         Alert alert = new Alert("", "", "", AlertStatus.complete, "", "");
-        vaccinelist = new ArrayList<Vaccine>();
+        vaccinelist = new ArrayList<>();
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.bcg2.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
         vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l, VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        alertlist = new ArrayList<Alert>();
+        alertlist = new ArrayList<>();
         alertlist.add(alert);
         view.setData(vaccineData, childdetails, vaccinelist, alertlist, "child");
+    }
+
+    @Test
+    public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
+        assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
+    }
+
+    @Test
+    public void assertGetCountReturnsTheCorrectNumberOfItems() {
+
+        assertEquals(2, vaccineCardAdapter.getCount());
+
+        //should return null
+        assertNull(vaccineCardAdapter.getItem(0));
+
+        assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
+
+    }
+
+    @Test
+    public void assertGetViewReturnsVaccineCard() {
+        assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
     }
 
     @Test
@@ -158,8 +157,32 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
             vaccineCardAdapter.updateChildsActiveStatus();
             Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
         } catch (Exception e) {
-            Assert.fail();
+            fail();
         }
+    }
+
+    @Test
+    public void testGetDueVaccines() {
+        ArrayList<VaccineWrapper> dueVaccines = vaccineCardAdapter.getDueVaccines();
+        assertEquals(0, dueVaccines.size());
+    }
+
+    @Test
+    public void testGetAllVaccineWrappers() {
+        ArrayList<VaccineWrapper> vaccineWrappers = vaccineCardAdapter.getAllVaccineWrappers();
+        assertEquals(0, vaccineWrappers.size());
+    }
+
+    @Test
+    public void testGetVaccineList() {
+        List<Vaccine> vaccineList = vaccineCardAdapter.getVaccineList();
+        assertEquals(0, vaccineList.size());
+    }
+
+    @Test
+    public void testGetAlertList() {
+        List<Alert> alerts = vaccineCardAdapter.getAlertList();
+        assertEquals(0, alerts.size());
     }
 
 }

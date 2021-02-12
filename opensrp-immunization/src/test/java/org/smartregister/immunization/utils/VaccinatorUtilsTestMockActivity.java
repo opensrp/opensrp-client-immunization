@@ -1,7 +1,7 @@
 package org.smartregister.immunization.utils;
 
-import android.app.Activity;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by kaderchowdhury on 14/12/17.
  */
 
-public class VaccinatorUtilsTestMockActivity extends Activity implements VaccinationActionListener {
+public class VaccinatorUtilsTestMockActivity extends AppCompatActivity implements VaccinationActionListener {
     VaccinatorUtils utils;
 
     @Override
@@ -42,16 +42,16 @@ public class VaccinatorUtilsTestMockActivity extends Activity implements Vaccina
         wrapper.setVaccine(VaccineRepo.Vaccine.opv0);
         wrapper.setStatus("due");
         wrapper.setAlert(alert);
-        utils.addVaccineDetail(this, tableLayout, wrapper);
+        VaccinatorUtils.addVaccineDetail(this, tableLayout, wrapper);
 
         wrapper.setAlert(null);
-        utils.addVaccineDetail(this, tableLayout, wrapper);
+        VaccinatorUtils.addVaccineDetail(this, tableLayout, wrapper);
 
         wrapper.setStatus("done");
-        utils.addVaccineDetail(this, tableLayout, wrapper);
+        VaccinatorUtils.addVaccineDetail(this, tableLayout, wrapper);
 
         wrapper.setStatus("expired");
-        utils.addVaccineDetail(this, tableLayout, wrapper);
+        VaccinatorUtils.addVaccineDetail(this, tableLayout, wrapper);
 
         tableLayout.findViewById(R.id.undo).performClick();
         return tableLayout.getChildCount();
