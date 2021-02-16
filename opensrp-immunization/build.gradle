@@ -115,7 +115,7 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('org.smartregister:opensrp-client-core:4.2.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.2.4-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'jakarta.annotation', module: 'jakarta.annotation-api'
