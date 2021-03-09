@@ -25,26 +25,15 @@
     <string name="undo">إلغاء</string>
 
     <string name="record_all">تسجيل الكل</string>
-    <string name="record_">%1$s
-        تسجيل</string>
-    <string name="record_due_">
-   %2$s
-   تسجيل
-   - %1$s
-مستحق
-  </string>
+    <string name="record_">\u200E%1$s \u200Eتسجيل</string>
+    <string name="record_due_">\u200E%2$s
+\u200Eمستحق
+   \u200E- \u200F%1$s
+    \u200Eتسجيل</string>
 
-    <string name="mr_due_">
-    %2$s
-مستحق
-   - %1$s
-   </string>
+    <string name="mr_due_">\u200E%2$s \u200Eمستحق \u200E- \u200E%1$s</string>
 
-    <string name="due_">
-    %2$s
-مستحق
-   : %1$s
-   </string>
+    <string name="due_">\u200E%2$s \u200Eمستحق \u200E:%1$s</string>
     <string name="today">اليوم</string>
 
     <!-- Recurring Services -->
@@ -81,8 +70,9 @@
     <string name="_18_months">18 شهرا</string>
 
     <string name="expired">انقضت المدة</string>
-    <string name="expired_colon">%1$s
-        انقضت المدة:</string>
+    <string name="expired_colon">
+        \u200Eانقضت المدة
+        \u200E:%1$s</string>
 
     <string name="out_of_catchment">خارج المنطقة</string>
 </resources>
