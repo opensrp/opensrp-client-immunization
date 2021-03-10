@@ -48,4 +48,9 @@ public class IMConstants {
     public interface VaccineEvent {
         String PROGRAM_CLIENT_ID = "program_client_id";
     }
+
+    public interface KEY {
+        String GENDER = "gender";
+        String BASE_ENTITY_ID = "base_entity_id";
+    }
 }
