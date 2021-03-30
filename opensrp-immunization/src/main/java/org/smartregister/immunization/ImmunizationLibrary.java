@@ -50,7 +50,7 @@ public class ImmunizationLibrary {
 
     public static List<String> COMBINED_VACCINES = new ArrayList<>();
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
-    private Map<String, String> conditionalVaccinesMap = new HashMap<>();
+    private final Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private String currentConditionalVaccine;
     private boolean allowSyncImmediately = false;
     private List<VaccineRepo.Vaccine> skippableVaccines = new ArrayList<>();
@@ -64,7 +64,7 @@ public class ImmunizationLibrary {
         this.applicationVersion = applicationVersion;
         this.databaseVersion = databaseVersion;
         setCurrentConditionalVaccine(null);
-        setSkippableVaccines(Arrays.asList(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1}));
+        setSkippableVaccines(Arrays.asList(VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1));
     }
 
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
@@ -183,7 +183,7 @@ public class ImmunizationLibrary {
      * @param category the category the vaccines are for e.g. CHILD, WOMAN
      */
     public void setVaccines(VaccineRepo.Vaccine[] vaccines, String category) {
-        this.vaccineCacheMap.get(category).vaccines = vaccines;
+        vaccineCacheMap.get(category).vaccines = vaccines;
     }
 
     /**
@@ -192,7 +192,7 @@ public class ImmunizationLibrary {
      */
     public VaccineRepo.Vaccine[]
     getVaccines(String category) {
-        return this.vaccineCacheMap.get(category).vaccines;
+        return vaccineCacheMap.get(category).vaccines;
     }
 
     public boolean isAllowExpiredVaccineEntry() {
@@ -254,7 +254,7 @@ public class ImmunizationLibrary {
     /**
      * Set the Vaccines to skip from normal processing e.g. bcg2
      *
-     * @param skippableVaccines
+     * @param skippableVaccines vaccines to skip
      */
     public void setSkippableVaccines(List<VaccineRepo.Vaccine> skippableVaccines) {
         this.skippableVaccines = skippableVaccines;
