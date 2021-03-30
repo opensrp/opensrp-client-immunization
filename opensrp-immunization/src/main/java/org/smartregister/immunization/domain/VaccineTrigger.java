@@ -46,6 +46,8 @@ public class VaccineTrigger {
 
     public static VaccineTrigger init(String vaccineCategory, Due data) {
         if (data != null) {
+            //Vaccine Relaxation Logic
+            data.offset = Utils.updateRelaxationDays(data.offset);
 
             VaccineCondition curCondition = (data.condition != null) ?
                     VaccineCondition.init(vaccineCategory, data.condition) : null;
@@ -57,9 +59,6 @@ public class VaccineTrigger {
             } else if (data.reference.equalsIgnoreCase(Reference.PREREQUISITE.name())) {
                 VaccineRepo.Vaccine prerequisite = VaccineRepo.getVaccine(data.prerequisite, vaccineCategory);
                 if (prerequisite != null) {
-
-                    //Vaccine Relaxation Logic
-                    data.offset = Utils.updateRelaxationDays(data.offset);
                     return new VaccineTrigger(data.offset, data.window, prerequisite, curCondition);
                 }
             }
