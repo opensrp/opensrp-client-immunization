@@ -64,7 +64,7 @@ public class ImmunizationLibrary {
         this.applicationVersion = applicationVersion;
         this.databaseVersion = databaseVersion;
         setCurrentConditionalVaccine(null);
-        setSkippableVaccines(Arrays.asList(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1}));
+        setSkippableVaccines(Arrays.asList(VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1));
     }
 
     public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
@@ -183,7 +183,7 @@ public class ImmunizationLibrary {
      * @param category the category the vaccines are for e.g. CHILD, WOMAN
      */
     public void setVaccines(VaccineRepo.Vaccine[] vaccines, String category) {
-        this.vaccineCacheMap.get(category).vaccines = vaccines;
+        vaccineCacheMap.get(category).vaccines = vaccines;
     }
 
     /**
@@ -192,7 +192,7 @@ public class ImmunizationLibrary {
      */
     public VaccineRepo.Vaccine[]
     getVaccines(String category) {
-        return this.vaccineCacheMap.get(category).vaccines;
+        return vaccineCacheMap.get(category).vaccines;
     }
 
     public boolean isAllowExpiredVaccineEntry() {

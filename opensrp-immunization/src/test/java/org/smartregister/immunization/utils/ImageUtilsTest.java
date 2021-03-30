@@ -120,7 +120,7 @@ public class ImageUtilsTest extends BaseUnitTest {
         profileImage.setFilepath(imagePath);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(dummyCaseId))
                 .thenReturn(profileImage);
-        commonPersonObjectClient = new CommonPersonObjectClient(dummyCaseId, Collections.<String, String>emptyMap(),
+        commonPersonObjectClient = new CommonPersonObjectClient(dummyCaseId, Collections.emptyMap(),
                 "Test Name");
         commonPersonObjectClient.setCaseId(dummyCaseId);
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);

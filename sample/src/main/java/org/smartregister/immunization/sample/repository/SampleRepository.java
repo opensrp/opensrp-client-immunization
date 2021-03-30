@@ -32,7 +32,7 @@ public class SampleRepository extends Repository {
     private String password = "Sample_PASS";
 
     public SampleRepository(Context context, org.smartregister.Context openSRPContext) {
-        super(context, AllConstants.DATABASE_NAME, BuildConfig.DATABASE_VERSION, openSRPContext.getInstance().session(), null, openSRPContext.getInstance().sharedRepositoriesArray());
+        super(context, AllConstants.DATABASE_NAME, BuildConfig.DATABASE_VERSION, org.smartregister.Context.getInstance().session(), null, org.smartregister.Context.getInstance().sharedRepositoriesArray());
         this.context = context;
     }
 

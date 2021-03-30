@@ -179,7 +179,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
         Map<String, Object> jsonMap = new HashMap<>();
-        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        PowerMockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
@@ -222,7 +222,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Map<String, Object> jsonMap = new HashMap<>();
 
         List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
-        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        PowerMockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicOPV0), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicNULL), -1);
@@ -237,7 +237,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         Map<String, Object> jsonMap2 = new HashMap<>();
 
-        PowerMockito.when(immunizationLibrary.assetJsonToJava(jsonMap2, context, "special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
+        PowerMockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap2, context, "special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
 
         JSONAssert.assertEquals(VaccineData.special_vacines,
                 JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2),
@@ -601,7 +601,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        Mockito.doReturn(Arrays.asList(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.bcg2})).when(immunizationLibrary).getSkippableVaccines();
+        Mockito.doReturn(Arrays.asList(VaccineRepo.Vaccine.bcg2)).when(immunizationLibrary).getSkippableVaccines();
 
         Boolean result = VaccinatorUtils.isSkippableVaccine("BCG 2");
         Assert.assertNotNull(result);
