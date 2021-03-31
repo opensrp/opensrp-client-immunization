@@ -572,11 +572,11 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
-                affectedVaccines = VaccineSchedule.updateOfflineAlerts(childDetails.entityId(), dateTime, "child");
+                affectedVaccines = VaccineSchedule.updateOfflineAlertsAndReturnAffectedVaccineNames(childDetails.entityId(), dateTime, IMConstants.VACCINE_TYPE.CHILD);
             }
             vaccineList = vaccineRepository.findByEntityId(childDetails.entityId());
             alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(),
-                    VaccinateActionUtils.allAlertNames("child"));
+                    VaccinateActionUtils.allAlertNames(IMConstants.VACCINE_TYPE.CHILD));
 
             return pair;
         }
@@ -679,7 +679,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             String dobString = Utils.getValue(childDetails.getColumnmaps(), IMDatabaseConstants.Client.DOB, false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
-                VaccineSchedule.updateOfflineAlerts(childDetails.entityId(), dateTime, "child");
+                VaccineSchedule.updateOfflineAlertsOnly(childDetails.entityId(), dateTime, IMConstants.VACCINE_TYPE.CHILD);
                 ServiceSchedule.updateOfflineAlerts(childDetails.entityId(), dateTime);
             }
 
@@ -765,7 +765,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                     String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
                     if (!TextUtils.isEmpty(dobString)) {
                         DateTime dateTime = new DateTime(dobString);
-                        affectedVaccines = VaccineSchedule.updateOfflineAlerts(childDetails.entityId(), dateTime, "child");
+                        affectedVaccines = VaccineSchedule.updateOfflineAlertsAndReturnAffectedVaccineNames(childDetails.entityId(), dateTime, IMConstants.VACCINE_TYPE.CHILD);
                         vaccineList = vaccineRepository.findByEntityId(childDetails.entityId());
                         alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(),
                                 VaccinateActionUtils.allAlertNames("child"));
