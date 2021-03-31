@@ -7,12 +7,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
+import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
@@ -40,7 +42,6 @@ import java.util.List;
 @PrepareForTest({ImmunizationLibrary.class})
 public class VaccineScheduleTest extends BaseUnitTest {
 
-    private final String magicChild = "child";
     private final String magicOPV0 = "OPV 0";
     @Rule
     public PowerMockRule rule = new PowerMockRule();
@@ -80,9 +81,57 @@ public class VaccineScheduleTest extends BaseUnitTest {
                 .fromJson(VaccineData.special_vacines, listType);
         mockImmunizationLibrary();
 
-        VaccineSchedule.init(vaccines, specialVaccines, magicChild);
+        VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
 
-        Assert.assertNotNull(VaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), magicChild));
+        Assert.assertNotNull(VaccineSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime(), IMConstants.VACCINE_TYPE.CHILD));
+    }
+
+    @Test
+    public void assertUpdateOfflineAlertsAndReturnAffectedVaccineNamesReturnsAlert() {
+
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.special_vacines, listType);
+        mockImmunizationLibrary();
+
+        VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
+
+        Assert.assertNotNull(VaccineSchedule.updateOfflineAlertsAndReturnAffectedVaccineNames(VaccineTest.BASEENTITYID, new DateTime(), IMConstants.VACCINE_TYPE.CHILD));
+    }
+
+    @Test
+    public void assertUpdateOfflineAlertsOnlyInvokesAlertServiceCreateCorrectly() {
+
+        Type listType = new TypeToken<List<VaccineGroup>>() {
+        }.getType();
+        List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
+
+        listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
+        }.getType();
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
+                .fromJson(VaccineData.special_vacines, listType);
+        mockImmunizationLibrary();
+
+        VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
+
+        VaccineSchedule.updateOfflineAlertsOnly(VaccineTest.BASEENTITYID, new DateTime(), IMConstants.VACCINE_TYPE.CHILD);
+
+        ArgumentCaptor<List<Alert>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        Mockito.verify(alertService).create(listArgumentCaptor.capture());
+
+        List<Alert> capturedList = listArgumentCaptor.getValue();
+        Assert.assertNotNull(capturedList);
+        Assert.assertEquals(2, capturedList.size());
+        Assert.assertEquals(VaccineTest.BASEENTITYID, capturedList.get(0).caseId());
+        Assert.assertEquals(VaccineTest.BASEENTITYID, capturedList.get(1).caseId());
+        Assert.assertEquals("BCG", capturedList.get(0).scheduleName());
+        Assert.assertEquals("OPV 0", capturedList.get(1).scheduleName());
+
     }
 
     private void mockImmunizationLibrary() {
@@ -108,8 +157,8 @@ public class VaccineScheduleTest extends BaseUnitTest {
 
         mockImmunizationLibrary();
 
-        VaccineSchedule.init(vaccines, specialVaccines, magicChild);
-        Assert.assertNotNull(VaccineSchedule.getVaccineSchedule(magicChild, magicOPV0));
+        VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
+        Assert.assertNotNull(VaccineSchedule.getVaccineSchedule(IMConstants.VACCINE_TYPE.CHILD, magicOPV0));
         Assert.assertNull(VaccineSchedule.getVaccineSchedule("", ""));
         //vaccine condition test
         Condition object = new Condition();

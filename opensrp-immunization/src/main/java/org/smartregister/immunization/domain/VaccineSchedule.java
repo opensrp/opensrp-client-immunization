@@ -1,7 +1,6 @@
 package org.smartregister.immunization.domain;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -25,6 +24,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by Jason Rogena - jrogena@ona.io on 19/05/2017.
@@ -152,7 +153,7 @@ public class VaccineSchedule {
             return notInNew;
 
         } catch (Exception e) {
-            Log.e(VaccineSchedule.class.getName(), e.toString(), e);
+            Timber.e(VaccineSchedule.class.getName(), e.toString(), e);
             return new ArrayList<>();
         }
     }
@@ -232,7 +233,7 @@ public class VaccineSchedule {
 
         } catch (
                 Exception e) {
-            Log.e(VaccineSchedule.class.getName(), e.toString(), e);
+            Timber.e(VaccineSchedule.class.getName(), e.toString(), e);
         }
 
         return newAlerts;

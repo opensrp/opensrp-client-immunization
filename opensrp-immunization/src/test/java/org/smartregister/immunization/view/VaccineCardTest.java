@@ -20,7 +20,6 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
@@ -91,7 +90,7 @@ public class VaccineCardTest extends BaseUnitTest {
         AppProperties appProperties = Mockito.mock(AppProperties.class);
         Mockito.when(appProperties.isTrue(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW)).thenReturn(true);
         Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, 1, 1);
 
         Alert alert = new Alert("", "", "", AlertStatus.normal, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
@@ -182,7 +181,7 @@ public class VaccineCardTest extends BaseUnitTest {
         Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
         Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
         Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+        ImmunizationLibrary.init(context_, Mockito.mock(Repository.class), null, 1, 1);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
