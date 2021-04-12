@@ -115,14 +115,14 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('org.smartregister:opensrp-client-core:4.2.17-OPT-ALPHA-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.2.18-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'jakarta.annotation', module: 'jakarta.annotation-api'
         exclude group: 'com.ibm.fhir', module: 'fhir-model'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:2.0.7-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.14.8.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.google.code.gson', module: 'gson'
