@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.TestApplication;
 import org.smartregister.immunization.domain.ServiceType;
@@ -64,8 +63,7 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     @Test
     public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() {
         Mockito.when(recurringServiceTypeRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
-        ServiceType serviceType = PowerMockito.mock(ServiceType.class);
-        Mockito.when(serviceType.getId()).thenReturn(null);
+        ServiceType serviceType = Mockito.spy(new ServiceType());
         recurringServiceTypeRepository.add(serviceType, sqliteDatabase);
         Mockito.verify(sqliteDatabase, times(1))
                 .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class),

@@ -68,7 +68,7 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNullID() {
         Mockito.when(vaccineNameRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         VaccineName vaccineName = PowerMockito.mock(VaccineName.class);
-        Mockito.when(vaccineName.getId()).thenReturn(null);
+        Mockito.when(vaccineName.getId()).thenReturn(0l);
         vaccineNameRepository.add(vaccineName);
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class),
@@ -78,7 +78,7 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
     @Test
     public void verifyAddCallsDatabaseDatabaseMethod1TimesInCaseOfNonNullVaccineNotNullID() {
         Mockito.when(vaccineNameRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
-        VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
+        VaccineName vaccineName = new VaccineName(1l, "", "", "", "", "", "");
         vaccineNameRepository.add(vaccineName);
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .update(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(ContentValues.class),
