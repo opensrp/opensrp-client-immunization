@@ -55,7 +55,7 @@ public class VaccineSchedule {
         if (vaccineSchedules == null) {
             vaccineSchedules = new HashMap<>();
         }
-        vaccineSchedules.put(vaccineCategory, new HashMap<String, VaccineSchedule>());
+        vaccineSchedules.put(vaccineCategory, new HashMap<>());
 
         for (VaccineGroup vaccineGroup : vaccines) {
             for (org.smartregister.immunization.domain.jsonmapping.Vaccine vaccine : vaccineGroup.vaccines) {
