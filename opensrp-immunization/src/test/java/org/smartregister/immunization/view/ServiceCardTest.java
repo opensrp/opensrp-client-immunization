@@ -20,7 +20,6 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.BuildConfig;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceWrapper;
@@ -157,7 +156,7 @@ public class ServiceCardTest extends BaseUnitTest {
         Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
         Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(true);
         Mockito.when(openSRPContext.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(openSRPContext, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+        ImmunizationLibrary.init(openSRPContext, Mockito.mock(Repository.class), null, 1, 1);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
@@ -195,7 +194,7 @@ public class ServiceCardTest extends BaseUnitTest {
         Mockito.when(appProperties.hasProperty(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
         Mockito.when(appProperties.getPropertyBoolean(IMConstants.APP_PROPERTIES.HIDE_OVERDUE_VACCINE_STATUS)).thenReturn(false);
         Mockito.when(openSRPContext.getAppProperties()).thenReturn(appProperties);
-        ImmunizationLibrary.init(openSRPContext, Mockito.mock(Repository.class), null, BuildConfig.VERSION_CODE, 1);
+        ImmunizationLibrary.init(openSRPContext, Mockito.mock(Repository.class), null, 1, 1);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();

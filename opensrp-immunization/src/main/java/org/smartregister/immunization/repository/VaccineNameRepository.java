@@ -44,7 +44,7 @@ public class VaccineNameRepository extends BaseRepository {
 
 
         SQLiteDatabase database = getWritableDatabase();
-        if (vaccineName.getId() == null) {
+        if (vaccineName.getId() == null || vaccineName.getId() == 0l) {
             vaccineName.setId(database.insert(VACCINE_Names_TABLE_NAME, null, createValuesFor(vaccineName)));
         } else {
             //mark the vaccine as unsynced for processing as an updated event
