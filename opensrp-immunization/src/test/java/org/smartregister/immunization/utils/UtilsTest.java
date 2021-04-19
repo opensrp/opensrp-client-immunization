@@ -89,7 +89,7 @@ public class UtilsTest extends BaseUnitTest {
         PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_days_negative);
-        Assert.assertEquals("-4d", result);
+        Assert.assertEquals("-2d", result);
     }
 
     @Test
