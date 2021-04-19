@@ -56,7 +56,10 @@ public class Utils {
                     if (lastCharacter == 'd') {
                         String suffix = tokens[i].substring(tokens[i].length() - 1);
                         String mid = tokens[i].substring(0, tokens[i].length() - 1);
-                        tokens[i] = (Integer.parseInt(mid) - Integer.parseInt(relaxationsDays)) + suffix;
+                        int offsetMinusRelaxationDays = Integer.parseInt(mid) - Integer.parseInt(relaxationsDays);
+                        if (offsetMinusRelaxationDays > 0) { //Do not use relaxation days on vaccines due at birth (0d offset)
+                            tokens[i] = offsetMinusRelaxationDays + suffix;
+                        }
                         foundDay = true;
                     }
                 }
