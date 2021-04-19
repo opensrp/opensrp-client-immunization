@@ -595,7 +595,7 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         protected Void doInBackground(Void... params) {
             DateTime birthDateTime = Utils.dobToDateTime(childDetails);
             if (birthDateTime != null) {
-                VaccineSchedule.updateOfflineAlerts(childDetails.entityId(), birthDateTime, "child");
+                VaccineSchedule.updateOfflineAlertsOnly(childDetails.entityId(), birthDateTime, IMConstants.VACCINE_TYPE.CHILD);
             }
             return null;
         }

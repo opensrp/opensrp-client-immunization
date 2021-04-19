@@ -74,46 +74,37 @@ public class ServiceSchedule {
             List<ServiceRecord> issuedServices = recurringServiceRecordRepository.findByEntityId(baseEntityId);
             alertService.deleteOfflineAlerts(baseEntityId, alertArray);
 
-            List<Alert> existingAlerts = alertService.findByEntityIdAndAlertNames(baseEntityId, alertArray);
-
             for (ServiceType serviceType : serviceTypes) {
                 Alert curAlert = getOfflineAlert(serviceType, issuedServices, baseEntityId, dob);
 
                 if (curAlert == null) {
                     break;
                 } else {
-                    // Check if the current alert already exists for the entityId
+
                     boolean exists = false;
-                    for (Alert curExistingAlert : existingAlerts) {
-                        if (curExistingAlert.scheduleName().equalsIgnoreCase(curAlert.scheduleName())
-                                && curExistingAlert.caseId().equalsIgnoreCase(curAlert.caseId())) {
-                            exists = true;
-                            break;
-                        }
-                    }
 
                     // Check if service is already given
-                    if (!exists) {
-                        for (ServiceRecord serviceRecord : issuedServices) {
-                            if (curAlert.scheduleName().equalsIgnoreCase(serviceRecord.getName()) || curAlert.visitCode()
-                                    .equalsIgnoreCase(serviceRecord.getName())) {
-                                exists = true;
-                                break;
-                            }
+                    for (ServiceRecord serviceRecord : issuedServices) {
+                        if (curAlert.scheduleName().equalsIgnoreCase(serviceRecord.getName()) || curAlert.visitCode().equalsIgnoreCase(serviceRecord.getName())) {
+                            exists = true;
+                            break;
                         }
                     }
 
                     if (!exists && !AlertStatus.complete.equals(curAlert.status())) {
                         // Insert alert into table
                         newAlerts.add(curAlert);
-                        alertService.create(curAlert);
                     }
+
                 }
             }
+
+            alertService.create(newAlerts);
 
         } catch (Exception e) {
             Log.e(ServiceSchedule.class.getName(), e.toString(), e);
         }
+
 
     }
 
@@ -217,7 +208,6 @@ public class ServiceSchedule {
             return dateTime;
         }
     }
-
 
 
     public ServiceTrigger getDueTrigger() {

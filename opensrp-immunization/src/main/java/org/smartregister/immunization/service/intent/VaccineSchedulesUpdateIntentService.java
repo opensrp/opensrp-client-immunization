@@ -55,13 +55,13 @@ public class VaccineSchedulesUpdateIntentService extends IntentService {
         do {
             vaccinationClients = getClients(tableName, i);
 
-            for(VaccinationClient vaccinationClient : vaccinationClients) {
-                VaccineSchedule.updateOfflineAlerts(vaccinationClient.getBaseEntityId(), vaccinationClient.getBirthDateTime(), "child");
+            for (VaccinationClient vaccinationClient : vaccinationClients) {
+                VaccineSchedule.updateOfflineAlertsOnly(vaccinationClient.getBaseEntityId(), vaccinationClient.getBirthDateTime(), IMConstants.VACCINE_TYPE.CHILD);
                 ServiceSchedule.updateOfflineAlerts(vaccinationClient.getBaseEntityId(), vaccinationClient.getBirthDateTime());
             }
 
             i++;
-        } while(!vaccinationClients.isEmpty());
+        } while (!vaccinationClients.isEmpty());
 
         Timber.i("%s has finished running successfully", serviceName);
         sendLocalBroadcast(IMConstants.BroadcastAction.VaccineScheduleUpdate.SERVICE_FINISHED);
@@ -75,7 +75,7 @@ public class VaccineSchedulesUpdateIntentService extends IntentService {
                 .rawQuery(sql, new String[]{});
 
         ArrayList<VaccinationClient> vaccinationClients = new ArrayList<>();
-        for (HashMap<String, String> columnMaps: personClients) {
+        for (HashMap<String, String> columnMaps : personClients) {
             VaccinationClient vaccinationClient = new VaccinationClient();
             vaccinationClient.setBaseEntityId(columnMaps.get(IMDatabaseConstants.Client.ID));
             String dobString = columnMaps.get(IMDatabaseConstants.Client.DOB);
