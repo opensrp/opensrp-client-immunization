@@ -3,7 +3,6 @@ package org.smartregister.immunization.util;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +18,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by vkaruri on 29/03/2018.
@@ -55,7 +56,10 @@ public class Utils {
                     if (lastCharacter == 'd') {
                         String suffix = tokens[i].substring(tokens[i].length() - 1);
                         String mid = tokens[i].substring(0, tokens[i].length() - 1);
-                        tokens[i] = (Integer.valueOf(mid) - Integer.valueOf(relaxationsDays)) + suffix;
+                        int offsetMinusRelaxationDays = Integer.parseInt(mid) - Integer.parseInt(relaxationsDays);
+                        if (offsetMinusRelaxationDays >= 0) { //Do not use relaxation days on vaccines due at birth (0d offset)
+                            tokens[i] = offsetMinusRelaxationDays + suffix;
+                        }
                         foundDay = true;
                     }
                 }
@@ -70,16 +74,16 @@ public class Utils {
                 newOffset = (newOffset.charAt(0) != '-' && newOffset.charAt(0) != '+') ? '+' + newOffset : newOffset;
             }
         } catch (Exception e) {
-            Log.e(Utils.class.getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
         return newOffset;
     }
 
     @NonNull
     public static String getGroupName(VaccineRepo.Vaccine vaccine, String category) {
-        if (vaccine != null) {
-
-            String groupName = ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).reverseLookupGroupMap.get(VaccinatorUtils.cleanVaccineName(vaccine.display()).toLowerCase(Locale.ENGLISH));
+        VaccineCache vaccineCache = ImmunizationLibrary.getVaccineCacheMap().get(category);
+        if (vaccine != null && vaccineCache != null) {
+            String groupName = vaccineCache.reverseLookupGroupMap.get(VaccinatorUtils.cleanVaccineName(vaccine.display()).toLowerCase(Locale.ENGLISH));
             if (groupName != null) {
                 return groupName;
             }
@@ -90,15 +94,15 @@ public class Utils {
 
     public static void processVaccineCache(@NonNull android.content.Context context, String category) {
         try {
-            if (ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category) == null) {
-                ImmunizationLibrary.getInstance().getVaccineCacheMap().put(category, new VaccineCache());
+            if ( ImmunizationLibrary.getVaccineCacheMap().get(category) == null) {
+                ImmunizationLibrary.getVaccineCacheMap().put(category, new VaccineCache());
 
                 List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getSupportedVaccinesByCategory(context, category);
 
                 processVaccineCore(category, vaccinesJsonMapping);
             }
         } catch (Exception e) {
-            Log.e(Utils.class.getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
     }
 
@@ -109,12 +113,14 @@ public class Utils {
             }
 
             //Set vaccines Array
-            ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccines = ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccineRepo.toArray(new VaccineRepo.Vaccine[]{});//Reset globally
+            VaccineCache vaccineCache = ImmunizationLibrary.getVaccineCacheMap().get(category);
+            if (vaccineCache != null)
+                vaccineCache.vaccines = vaccineCache.vaccineRepo.toArray(new VaccineRepo.Vaccine[]{});//Reset globally
 
         } else {
             //Eject from map if no values found. Will allow reprocessing if invoked later
-            ImmunizationLibrary.getInstance().getVaccineCacheMap().remove(category);
-            Log.e(Utils.class.getCanonicalName(), "No such vaccine configuration file found for category");
+            ImmunizationLibrary.getVaccineCacheMap().remove(category);
+            Timber.e("No such vaccine configuration file found for category");
         }
     }
 
@@ -130,8 +136,8 @@ public class Utils {
                 category = fileName.substring(0, fileName.lastIndexOf('_'));
 
 
-                if (ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category) == null) {
-                    ImmunizationLibrary.getInstance().getVaccineCacheMap().put(category, new VaccineCache());
+                if ( ImmunizationLibrary.getVaccineCacheMap().get(category) == null) {
+                    ImmunizationLibrary.getVaccineCacheMap().put(category, new VaccineCache());
 
                     List<VaccineGroup> vaccinesJsonMapping = VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(context, VaccinatorUtils.vaccines_folder + File.separator + fileName);
 
@@ -142,7 +148,7 @@ public class Utils {
 
 
         } catch (Exception e) {
-            Log.e(Utils.class.getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
     }
 
@@ -172,35 +178,38 @@ public class Utils {
 
     private static void processVaccineGroupCore(VaccineGroup vaccineGroup, Vaccine vaccine, String category) {
         String vaccineName = VaccinatorUtils.cleanVaccineName(vaccine.getName());
+        VaccineCache vaccineCache = ImmunizationLibrary.getVaccineCacheMap().get(category);
 
-        if (vaccine.getVaccineSeparator() != null && vaccineName.contains(vaccine.getVaccineSeparator().trim())) {
+        if (vaccineName != null && vaccineCache != null) {
+            if (vaccine.getVaccineSeparator() != null && vaccineName.contains(vaccine.getVaccineSeparator().trim())) {
 
-            processCombinedVaccines(vaccine);
+                processCombinedVaccines(vaccine);
 
-            String[] individualVaccines = vaccineName.split(vaccine.getVaccineSeparator().trim());
+                String[] individualVaccines = vaccineName.split(vaccine.getVaccineSeparator().trim());
 
-            for (String individualVaccine : individualVaccines) {
-                vaccine.setName(individualVaccine);
-                processVaccineGroupCore(vaccineGroup, vaccine, category);
+                for (String individualVaccine : individualVaccines) {
+                    vaccine.setName(individualVaccine);
+                    processVaccineGroupCore(vaccineGroup, vaccine, category);
 
 
+                }
+
+            } else {
+
+                vaccineCache.reverseLookupGroupMap.put(vaccineName, vaccineGroup.name);
+
+                VaccineRepo.Vaccine repoVaccine = VaccineRepo.getVaccineEnumFromValue(vaccineName);
+
+                repoVaccine.setCategory(category);
+                repoVaccine.setExpiryDays(VaccinatorUtils.getExpiryDays(vaccine));
+                repoVaccine.setMilestoneGapDays(vaccineGroup.days_after_birth_due);
+                repoVaccine.setPrerequisite(VaccinatorUtils.getPrerequisiteVaccine(vaccine));
+                repoVaccine.setPrerequisiteGapDays(VaccinatorUtils.getPrerequisiteGapDays(vaccine));
+
+                vaccineCache.vaccineRepo.add(repoVaccine);
+
+                processDefaultVaccineGroupCount(repoVaccine, category);
             }
-
-        } else {
-
-            ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).reverseLookupGroupMap.put(vaccineName, vaccineGroup.name);
-
-            VaccineRepo.Vaccine repoVaccine = VaccineRepo.getVaccineEnumFromValue(vaccineName);
-
-            repoVaccine.setCategory(category);
-            repoVaccine.setExpiryDays(VaccinatorUtils.getExpiryDays(vaccine));
-            repoVaccine.setMilestoneGapDays(vaccineGroup.days_after_birth_due);
-            repoVaccine.setPrerequisite(VaccinatorUtils.getPrerequisiteVaccine(vaccine));
-            repoVaccine.setPrerequisiteGapDays(VaccinatorUtils.getPrerequisiteGapDays(vaccine));
-
-            ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).vaccineRepo.add(repoVaccine);
-
-            processDefaultVaccineGroupCount(repoVaccine, category);
         }
 
     }
@@ -209,18 +218,19 @@ public class Utils {
         String[] individualVaccines = vaccine.getName().split(vaccine.getVaccineSeparator().trim());
 
         for (String individualVaccine : individualVaccines) {
-            ImmunizationLibrary.getInstance().COMBINED_VACCINES.add(individualVaccine.trim());
-            ImmunizationLibrary.getInstance().COMBINED_VACCINES_MAP.put(individualVaccine.trim(), vaccine.getName().trim());
+            ImmunizationLibrary.COMBINED_VACCINES.add(individualVaccine.trim());
+            ImmunizationLibrary.COMBINED_VACCINES_MAP.put(individualVaccine.trim(), vaccine.getName().trim());
 
         }
     }
 
     private static void processDefaultVaccineGroupCount(VaccineRepo.Vaccine repoVaccine, String category) {
         String repoGroup = Utils.getGroupName(repoVaccine, category);
+        VaccineCache vaccineCache = ImmunizationLibrary.getVaccineCacheMap().get(category);
+        if (!TextUtils.isEmpty(repoGroup) && vaccineCache != null) {
 
-        if (!TextUtils.isEmpty(repoGroup)) {
 
-            GroupVaccineCount groupVaccineCount = ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).groupVaccineCountMap.get(repoGroup);
+            GroupVaccineCount groupVaccineCount = vaccineCache.groupVaccineCountMap.get(repoGroup);
             if (groupVaccineCount == null) {
                 groupVaccineCount = new GroupVaccineCount(0, 0);
             }
@@ -228,7 +238,7 @@ public class Utils {
             groupVaccineCount.setGiven(groupVaccineCount.getGiven() + 1);
             groupVaccineCount.setRemaining(groupVaccineCount.getRemaining() + 1);
 
-            ImmunizationLibrary.getInstance().getVaccineCacheMap().get(category).groupVaccineCountMap.put(repoGroup, groupVaccineCount);
+            vaccineCache.groupVaccineCountMap.put(repoGroup, groupVaccineCount);
         }
     }
 

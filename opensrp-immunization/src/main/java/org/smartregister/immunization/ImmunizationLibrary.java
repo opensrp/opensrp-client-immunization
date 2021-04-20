@@ -50,7 +50,7 @@ public class ImmunizationLibrary {
 
     public static List<String> COMBINED_VACCINES = new ArrayList<>();
     public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
-    private Map<String, String> conditionalVaccinesMap = new HashMap<>();
+    private final Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private String currentConditionalVaccine;
     private boolean allowSyncImmediately = false;
     private List<VaccineRepo.Vaccine> skippableVaccines = new ArrayList<>();
@@ -254,7 +254,7 @@ public class ImmunizationLibrary {
     /**
      * Set the Vaccines to skip from normal processing e.g. bcg2
      *
-     * @param skippableVaccines
+     * @param skippableVaccines vaccines to skip
      */
     public void setSkippableVaccines(List<VaccineRepo.Vaccine> skippableVaccines) {
         this.skippableVaccines = skippableVaccines;

@@ -89,7 +89,7 @@ public class UtilsTest extends BaseUnitTest {
         PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_days_negative);
-        Assert.assertEquals("-4d", result);
+        Assert.assertEquals("-2d", result);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class UtilsTest extends BaseUnitTest {
         PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(RuntimeEnvironment.application, "child")).thenReturn(vaccines);
 
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
-        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccineCacheMap()).thenReturn(vaccineCacheMap);
+        PowerMockito.when( ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
 
         Utils.processVaccineCache(RuntimeEnvironment.application, "child");
 
@@ -233,7 +233,7 @@ public class UtilsTest extends BaseUnitTest {
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
 
         PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccineCacheMap()).thenReturn(vaccineCacheMap);
+        PowerMockito.when( ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
 
         Utils.processVaccineCache(androidContext);
 
@@ -243,7 +243,7 @@ public class UtilsTest extends BaseUnitTest {
         //Vaccines
         Assert.assertNotNull(childVaccineCache);
         Assert.assertNotNull(childVaccineCache.vaccines);
-        Assert.assertTrue(childVaccineCache.vaccines.length == 2);
+        Assert.assertEquals(2, childVaccineCache.vaccines.length);
 
         Assert.assertEquals(VaccineRepo.Vaccine.hpv1, childVaccineCache.vaccines[0]);
         Assert.assertEquals(VaccineRepo.Vaccine.hpv2, childVaccineCache.vaccines[1]);
@@ -251,7 +251,7 @@ public class UtilsTest extends BaseUnitTest {
         //Reverse look up map
 
         Assert.assertNotNull(childVaccineCache.reverseLookupGroupMap);
-        Assert.assertTrue(childVaccineCache.reverseLookupGroupMap.size() == 2);
+        Assert.assertEquals(2, childVaccineCache.reverseLookupGroupMap.size());
 
         Assert.assertEquals("108 Months", childVaccineCache.reverseLookupGroupMap.get("hpv1"));
         Assert.assertEquals("114 Months", childVaccineCache.reverseLookupGroupMap.get("hpv2"));
@@ -265,7 +265,7 @@ public class UtilsTest extends BaseUnitTest {
 
         //Group vaccine count
         Assert.assertNotNull(childVaccineCache.groupVaccineCountMap);
-        Assert.assertTrue(childVaccineCache.groupVaccineCountMap.size() == 2);
+        Assert.assertEquals(2, childVaccineCache.groupVaccineCountMap.size());
         Assert.assertTrue(childVaccineCache.groupVaccineCountMap.containsKey("108 Months"));
         Assert.assertTrue(childVaccineCache.groupVaccineCountMap.containsKey("114 Months"));
 

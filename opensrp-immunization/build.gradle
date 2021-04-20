@@ -16,7 +16,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.6"
 }
 
 allprojects {
@@ -107,9 +107,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
 
 dependencies {
 
@@ -156,7 +153,10 @@ dependencies {
     testImplementation("org.powermock:powermock-classloading-xstream:$powerMockVersion")
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
-    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
@@ -175,9 +175,13 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
     sourceDirectories.setFrom(files([mainSrc]))
     classDirectories.setFrom(files([debugTree]))
-    executionData.setFrom(fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-    ]))
+    executionData.setFrom(
+            fileTree(dir: project.buildDir, includes: [
+                    'jacoco/testDebugUnitTest.exec',
+                    'outputs/code_coverage/debugAndroidTest/connected/*coverage.ec'
+            ]),
+            fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec'])
+    )
 }
 
 coveralls {
