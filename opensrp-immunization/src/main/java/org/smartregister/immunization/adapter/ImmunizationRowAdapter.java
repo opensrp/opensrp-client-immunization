@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -198,6 +199,16 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
 
+                if (m.get("status") != null
+                        && ((String) m.get("status")).equalsIgnoreCase("due")
+                        && vaccine.prerequisite() != null) {
+                    Date preReq = recievedVaccines.get(vaccine.prerequisite().display().toLowerCase(Locale.ENGLISH));
+                    if (preReq != null) {
+                        DateTime preReqDateTime = new DateTime(preReq);
+                        DateTime vaccineDate = preReqDateTime.plusDays(vaccine.prerequisiteGapDays());
+                        tag.setVaccineDate(vaccineDate);
+                    }
+                }
             }
         }
     }
