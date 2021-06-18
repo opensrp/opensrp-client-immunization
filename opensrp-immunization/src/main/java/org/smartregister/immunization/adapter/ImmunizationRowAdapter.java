@@ -199,16 +199,20 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
 
-                if (m.get("status") != null
-                        && ((String) m.get("status")).equalsIgnoreCase("due")
-                        && vaccine.prerequisite() != null) {
-                    Date preReq = recievedVaccines.get(vaccine.prerequisite().display().toLowerCase(Locale.ENGLISH));
-                    if (preReq != null) {
-                        DateTime preReqDateTime = new DateTime(preReq);
-                        DateTime vaccineDate = preReqDateTime.plusDays(vaccine.prerequisiteGapDays());
-                        tag.setVaccineDate(vaccineDate);
-                    }
-                }
+                updateVaccineDate(m, vaccine, tag, recievedVaccines);
+            }
+        }
+    }
+
+    protected void updateVaccineDate(Map<String, Object> m, VaccineRepo.Vaccine vaccine, VaccineWrapper tag, Map<String, Date> recievedVaccines) {
+        if (m.get("status") != null
+                && ((String) m.get("status")).equalsIgnoreCase("due")
+                && vaccine.prerequisite() != null) {
+            Date preReq = recievedVaccines.get(vaccine.prerequisite().display().toLowerCase(Locale.ENGLISH));
+            if (preReq != null) {
+                DateTime preReqDateTime = new DateTime(preReq);
+                DateTime vaccineDate = preReqDateTime.plusDays(vaccine.prerequisiteGapDays());
+                tag.setVaccineDate(vaccineDate);
             }
         }
     }

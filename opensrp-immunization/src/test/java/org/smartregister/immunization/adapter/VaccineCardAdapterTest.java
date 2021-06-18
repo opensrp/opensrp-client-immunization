@@ -6,9 +6,12 @@ import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -23,6 +26,7 @@ import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
 import org.smartregister.util.JsonFormUtils;
@@ -32,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -114,7 +119,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
                 VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
-        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display(), 0, new Date(),
+        vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineRepo.Vaccine.opv1.display().toLowerCase(), 0, new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineRepository.TYPE_Synced, VaccineTest.HIA2STATUS, 0l,
                 VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
         vaccinelist.add(vaccine);
@@ -183,6 +188,30 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     public void testGetAlertList() {
         List<Alert> alerts = vaccineCardAdapter.getAlertList();
         assertEquals(0, alerts.size());
+    }
+
+    @Test
+    public void testUpdateVaccineDate() {
+        VaccineCardAdapter mockAdapter = Mockito
+                .spy(new VaccineCardAdapter(context, view, "child", vaccinelist, alertlist));
+
+        VaccineWrapper vaccineWrapper = new VaccineWrapper();
+        vaccineWrapper.setDbKey(0l);
+        vaccineWrapper.setVaccine(VaccineRepo.Vaccine.opv2);
+        vaccineWrapper.setName(VaccineRepo.Vaccine.opv2.display());
+
+        VaccineRepo.Vaccine vaccine = VaccineRepo.Vaccine.opv2;
+        vaccine.setPrerequisite(VaccineRepo.Vaccine.opv1);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", "due");
+        map.put("vaccine", vaccine);
+
+        mockAdapter.updateVaccineDate(map, vaccine, vaccineWrapper, VaccinatorUtils.receivedVaccines(vaccinelist));
+
+        Assert.assertEquals(vaccineWrapper.getVaccineDate().dayOfMonth(), new DateTime().plusDays(28).dayOfMonth());
+        Assert.assertEquals(vaccineWrapper.getVaccineDate().monthOfYear(), new DateTime().plusDays(28).monthOfYear());
+        Assert.assertEquals(vaccineWrapper.getVaccineDate().year(), new DateTime().plusDays(28).year());
     }
 
 }
