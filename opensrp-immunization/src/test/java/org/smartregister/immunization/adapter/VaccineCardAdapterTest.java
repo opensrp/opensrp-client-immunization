@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
