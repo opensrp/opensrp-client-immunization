@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -193,6 +194,21 @@ public class VaccineCardAdapter extends BaseAdapter {
                 }
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
+
+                updateVaccineDate(m, vaccine, tag, receivedVaccines);
+            }
+        }
+    }
+
+    protected void updateVaccineDate(Map<String, Object> m, VaccineRepo.Vaccine vaccine, VaccineWrapper tag, Map<String, Date> receivedVaccines) {
+        if (m.get("status") != null
+                && ((String) m.get("status")).equalsIgnoreCase("due")
+                && vaccine.prerequisite() != null) {
+            Date preReq = receivedVaccines.get(vaccine.prerequisite().display().toLowerCase(Locale.ENGLISH));
+            if (preReq != null) {
+                DateTime preReqDateTime = new DateTime(preReq);
+                DateTime vaccineDate = preReqDateTime.plusDays(vaccine.prerequisiteGapDays());
+                tag.setVaccineDate(vaccineDate);
             }
         }
     }
@@ -218,11 +234,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                     }
 
                     long diff = vaccine.getUpdatedAt() - vaccine.getDate().getTime();
-                    if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {
-                        tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), false);
-                    } else {
-                        tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
-                    }
+                    tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), diff <= 0 || TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) <= 1);
                     tag.setDbKey(vaccine.getId());
                     tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus().equals(VaccineRepository.TYPE_Synced));
                     tag.setOutOfCatchment("1".equals(vaccine.getOutOfCatchment()));
