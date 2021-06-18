@@ -209,9 +209,9 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
         mockAdapter.updateVaccineDate(map, vaccine, vaccineWrapper, VaccinatorUtils.receivedVaccines(vaccinelist));
 
-        Assert.assertEquals(vaccineWrapper.getVaccineDate().dayOfMonth(), new DateTime().plusDays(28).dayOfMonth());
-        Assert.assertEquals(vaccineWrapper.getVaccineDate().monthOfYear(), new DateTime().plusDays(28).monthOfYear());
-        Assert.assertEquals(vaccineWrapper.getVaccineDate().year(), new DateTime().plusDays(28).year());
+        assertEquals(vaccineWrapper.getVaccineDate().dayOfMonth(), new DateTime().plusDays(28).dayOfMonth());
+        assertEquals(vaccineWrapper.getVaccineDate().monthOfYear(), new DateTime().plusDays(28).monthOfYear());
+        assertEquals(vaccineWrapper.getVaccineDate().year(), new DateTime().plusDays(28).year());
     }
 
 }
