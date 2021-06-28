@@ -20,7 +20,7 @@ public class VaccineTrigger {
     private final VaccineRepo.Vaccine prerequisite;
     private final VaccineCondition vaccineCondition;
 
-    public VaccineTrigger(String offset, String window, Reference reference) {
+    private VaccineTrigger(String offset, String window, Reference reference) {
         this.reference = reference;
         this.offset = offset;
         prerequisite = null;
@@ -28,7 +28,7 @@ public class VaccineTrigger {
         this.window = window;
     }
 
-    public VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite) {
+    private VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite) {
         reference = Reference.PREREQUISITE;
         this.offset = offset;
         this.prerequisite = prerequisite;
@@ -36,7 +36,7 @@ public class VaccineTrigger {
         vaccineCondition = null;
     }
 
-    public VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite, VaccineCondition vaccineCondition) {
+    private VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite, VaccineCondition vaccineCondition) {
         reference = Reference.PREREQUISITE;
         this.offset = offset;
         this.prerequisite = prerequisite;
@@ -44,6 +44,7 @@ public class VaccineTrigger {
         this.vaccineCondition = vaccineCondition;
     }
 
+    //This init method should be the only entry point
     public static VaccineTrigger init(String vaccineCategory, Due data) {
         if (data != null) {
             //Vaccine Relaxation Logic

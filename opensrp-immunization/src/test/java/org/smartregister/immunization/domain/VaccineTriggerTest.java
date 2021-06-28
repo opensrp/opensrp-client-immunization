@@ -10,11 +10,17 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.smartregister.Context;
+import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Due;
+import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.repository.Repository;
+import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Calendar;
@@ -34,6 +40,15 @@ public class VaccineTriggerTest extends BaseUnitTest {
     @Mock
     private ImmunizationLibrary immunizationLibrary;
 
+    @Mock
+    private VaccineRepository vaccineRepository;
+    @Mock
+    private Context context;
+    @Mock
+    private AlertService alertService;
+    @Mock
+    private AppProperties appProperties;
+
     public static final String CHILD = "child";
     public static final String stringdata1 = "{ \"reference\": \"dob\", \"offset\": \"+0d\"}";
     public static final String stringdata2 = "{\"reference\": \"prerequisite\", \"prerequisite\": \"OPV 1\", \"offset\": \"+28d\"}";
@@ -41,6 +56,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
     }
 
     @Test
@@ -77,8 +93,17 @@ public class VaccineTriggerTest extends BaseUnitTest {
         String notNull = vaccineTrigger.getWindow();
         Mockito.verify(vaccineTrigger, Mockito.times(1)).getWindow();
         Assert.assertNull(notNull);
-        vaccineTrigger = new VaccineTrigger("", "win", VaccineRepo.Vaccine.opv0);
+
+        Due due = new Due();
+        due.reference = "prerequisite";
+        due.prerequisite = "OPV 0";
+        due.offset = "";
+        due.window = "win";
+
+        vaccineTrigger = VaccineTrigger.init(CHILD, due);
         Assert.assertNotNull(vaccineTrigger.getWindow());
+        Assert.assertEquals("win",vaccineTrigger.getWindow());
+
     }
 
 }
