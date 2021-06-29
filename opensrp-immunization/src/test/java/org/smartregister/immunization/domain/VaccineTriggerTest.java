@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -104,4 +105,41 @@ public class VaccineTriggerTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testInitCreatesValidVaccineTriggerForExpiryConstructorParamWithLMP() {
+
+        Due expiry = new Due();
+        expiry.reference = "LMP";
+        expiry.offset = "+1y, +3m, -1d";
+
+        VaccineTrigger vaccineTrigger = VaccineTrigger.init(expiry);
+        Assert.assertNotNull(vaccineTrigger);
+
+        Assert.assertEquals("LMP", ReflectionHelpers.getField(vaccineTrigger, "reference").toString());
+        Assert.assertEquals("+1y, +3m, -1d", ReflectionHelpers.getField(vaccineTrigger, "offset"));
+
+    }
+
+    @Test
+    public void testInitCreatesValidVaccineTriggerForExpiryConstructorParamWithDOB() {
+
+        Due expiry = new Due();
+        expiry.reference = "DOB";
+        expiry.offset = "+2m,+2d";
+
+        VaccineTrigger vaccineTrigger = VaccineTrigger.init(expiry);
+        Assert.assertNotNull(vaccineTrigger);
+
+        Assert.assertEquals("DOB", ReflectionHelpers.getField(vaccineTrigger, "reference").toString());
+        Assert.assertEquals("+2m,+2d", ReflectionHelpers.getField(vaccineTrigger, "offset"));
+
+    }
+
+    @Test
+    public void testInitReturnsNullForNullExpiryConstructorParam() {
+        Due nullDueParam = null;
+        VaccineTrigger vaccineTrigger = VaccineTrigger.init(nullDueParam);
+        Assert.assertNull(vaccineTrigger);
+
+    }
 }
