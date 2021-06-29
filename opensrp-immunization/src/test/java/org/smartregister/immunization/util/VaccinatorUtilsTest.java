@@ -1,22 +1,55 @@
 package org.smartregister.immunization.util;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by ndegwamartin on 28/06/2021.
  */
 public class VaccinatorUtilsTest {
 
+    @Mock
+    private Context context;
+
+    @Mock
+    private AssetManager assetManager;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testGetVaccineFilesReturnsListOfFilesFromVaccinesFolder() throws IOException {
+
+        Mockito.doReturn(assetManager).when(context).getAssets();
+        Mockito.doReturn(new String[]{VaccinatorUtils.vaccines_file, VaccinatorUtils.special_vaccines_file, VaccinatorUtils.mother_vaccines_file}).when(assetManager).list(VaccinatorUtils.vaccines_folder);
+
+        List<String> resultList = VaccinatorUtils.getVaccineFiles(context);
+        Assert.assertNotNull(resultList);
+        Assert.assertEquals(VaccinatorUtils.vaccines_file, resultList.get(0));
+        Assert.assertEquals(VaccinatorUtils.special_vaccines_file, resultList.get(1));
+        Assert.assertEquals(VaccinatorUtils.mother_vaccines_file, resultList.get(2));
+
+        ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        Mockito.verify(assetManager).list(stringArgumentCaptor.capture());
+        String folderName = stringArgumentCaptor.getValue();
+        Assert.assertEquals(VaccinatorUtils.vaccines_folder, folderName);
+
     }
 
     @Test
