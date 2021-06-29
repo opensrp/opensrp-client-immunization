@@ -11,14 +11,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.jsonmapping.Due;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.IMConstants;
-import org.smartregister.repository.Repository;
 import org.smartregister.service.AlertService;
 import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
@@ -102,7 +100,7 @@ public class VaccineTriggerTest extends BaseUnitTest {
 
         vaccineTrigger = VaccineTrigger.init(CHILD, due);
         Assert.assertNotNull(vaccineTrigger.getWindow());
-        Assert.assertEquals("win",vaccineTrigger.getWindow());
+        Assert.assertEquals("win", vaccineTrigger.getWindow());
 
     }
 

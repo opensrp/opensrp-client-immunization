@@ -28,14 +28,6 @@ public class VaccineTrigger {
         this.window = window;
     }
 
-    private VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite) {
-        reference = Reference.PREREQUISITE;
-        this.offset = offset;
-        this.prerequisite = prerequisite;
-        this.window = window;
-        vaccineCondition = null;
-    }
-
     private VaccineTrigger(String offset, String window, VaccineRepo.Vaccine prerequisite, VaccineCondition vaccineCondition) {
         reference = Reference.PREREQUISITE;
         this.offset = offset;

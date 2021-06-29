@@ -1101,22 +1101,14 @@ public class VaccinatorUtils {
     }
 
     public static void processConfigCalendarOffset(Calendar calendar, String offset) {
-        int operator = 1;
+
         String[] offsetTokens = offset.split(",");
 
         for (int i = 0; i < offsetTokens.length; i++) {
-            Matcher m1 = getPrefixSymbolMatcher(offsetTokens[i]);
-            if (m1.find()) {
-                String operatorString = m1.group(1);
-
-                if ("-".equals(operatorString)) {
-                    operator = -1;
-                }
-            }
 
             Matcher m2 = getSuffixSymbolMatcher(offsetTokens[i]);
             if (m2.find()) {
-                int curValue = operator * Integer.parseInt(m2.group(1));
+                int curValue = getOperator(offsetTokens[i]) * Integer.parseInt(m2.group(1));
                 String fieldString = m2.group(2);
                 int field = Calendar.DATE;
                 if ("d".equals(fieldString)) {
@@ -1134,22 +1126,14 @@ public class VaccinatorUtils {
     }
 
     public static DateTime processConfigDateTimeOffset(DateTime afterOffset, String offset) {
-        int operator = 1;
+
         String[] offsetTokens = offset.split(",");
 
         for (int i = 0; i < offsetTokens.length; i++) {
-            Matcher m1 = getPrefixSymbolMatcher(offsetTokens[i]);
-            if (m1.find()) {
-                String operatorString = m1.group(1);
-
-                if ("-".equals(operatorString)) {
-                    operator = -1;
-                }
-            }
 
             Matcher m2 = getSuffixSymbolMatcher(offsetTokens[i]);
             if (m2.find()) {
-                int curValue = operator * Integer.parseInt(m2.group(1));
+                int curValue = getOperator(offsetTokens[i]) * Integer.parseInt(m2.group(1));
                 String fieldString = m2.group(2);
                 if ("d".endsWith(fieldString)) {
                     afterOffset = afterOffset.plusDays(curValue);
@@ -1167,23 +1151,14 @@ public class VaccinatorUtils {
 
     public static int processOffsetValueInDays(String offset) {
         if (offset == null) return -1;
-        int operator = 1;
         int days = 0;
         String[] offsetTokens = offset.split(",");
 
         for (int i = 0; i < offsetTokens.length; i++) {
-            Matcher m1 = getPrefixSymbolMatcher(offsetTokens[i]);
-            if (m1.find()) {
-                String operatorString = m1.group(1);
-
-                if ("-".equals(operatorString)) {
-                    operator = -1;
-                }
-            }
 
             Matcher m2 = getSuffixSymbolMatcher(offsetTokens[i]);
             if (m2.find()) {
-                int curValue = operator * Integer.parseInt(m2.group(1));
+                int curValue = getOperator(offsetTokens[i]) * Integer.parseInt(m2.group(1));
                 String fieldString = m2.group(2);
                 if ("d".endsWith(fieldString)) {
                     days += curValue;
@@ -1197,6 +1172,19 @@ public class VaccinatorUtils {
 
         return days;
 
+    }
+
+    private static int getOperator(String offsetToken) {
+        int operator = 1;
+        Matcher m1 = getPrefixSymbolMatcher(offsetToken);
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+        }
+        return operator;
     }
 
     private static Matcher getSuffixSymbolMatcher(String value) {

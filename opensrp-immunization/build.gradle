@@ -120,7 +120,7 @@ dependencies {
         exclude group: 'com.ibm.fhir', module: 'fhir-path'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.14.8.1-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.14.8.2-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.google.code.gson', module: 'gson'
