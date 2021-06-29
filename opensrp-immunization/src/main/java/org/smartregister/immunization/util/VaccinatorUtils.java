@@ -1102,65 +1102,47 @@ public class VaccinatorUtils {
 
     public static void processConfigCalendarOffset(Calendar calendar, String offset) {
 
-        Matcher m1 = getPrefixSymbolMatcher(offset);
-        if (m1.find()) {
-            String operatorString = m1.group(1);
-            String valueString = m1.group(2);
+        String[] offsetTokens = offset.split(",");
 
-            int operator = 1;
-            if ("-".equals(operatorString)) {
-                operator = -1;
-            }
+        for (int i = 0; i < offsetTokens.length; i++) {
 
-            String[] values = valueString.split(",");
-            for (int i = 0; i < values.length; i++) {
-                Matcher m2 = getSuffixSymbolMatcher(values[i]);
-
-                if (m2.find()) {
-                    int curValue = operator * Integer.parseInt(m2.group(1));
-                    String fieldString = m2.group(2);
-                    int field = Calendar.DATE;
-                    if ("d".equals(fieldString)) {
-                        field = Calendar.DATE;
-                    } else if ("m".equals(fieldString)) {
-                        field = Calendar.MONTH;
-                    } else if ("y".equals(fieldString)) {
-                        field = Calendar.YEAR;
-                    }
-
-                    calendar.add(field, curValue);
+            Matcher m2 = getSuffixSymbolMatcher(offsetTokens[i]);
+            if (m2.find()) {
+                int curValue = getOperator(offsetTokens[i]) * Integer.parseInt(m2.group(1));
+                String fieldString = m2.group(2);
+                int field = Calendar.DATE;
+                if ("d".equals(fieldString)) {
+                    field = Calendar.DATE;
+                } else if ("m".equals(fieldString)) {
+                    field = Calendar.MONTH;
+                } else if ("y".equals(fieldString)) {
+                    field = Calendar.YEAR;
                 }
+
+                calendar.add(field, curValue);
             }
         }
 
     }
 
     public static DateTime processConfigDateTimeOffset(DateTime afterOffset, String offset) {
-        Matcher m1 = getPrefixSymbolMatcher(offset);
-        if (m1.find()) {
-            String operatorString = m1.group(1);
-            String valueString = m1.group(2);
 
-            int operator = 1;
-            if ("-".equals(operatorString)) {
-                operator = -1;
-            }
+        String[] offsetTokens = offset.split(",");
 
-            String[] values = valueString.split(",");
-            for (int i = 0; i < values.length; i++) {
-                Matcher m2 = getSuffixSymbolMatcher(values[i]);
+        for (int i = 0; i < offsetTokens.length; i++) {
 
-                if (m2.find()) {
-                    int curValue = operator * Integer.parseInt(m2.group(1));
-                    String fieldString = m2.group(2);
-                    if ("d".endsWith(fieldString)) {
-                        afterOffset = afterOffset.plusDays(curValue);
-                    } else if ("m".equals(fieldString)) {
-                        afterOffset = afterOffset.plusMonths(curValue);
-                    } else if ("y".equals(fieldString)) {
-                        afterOffset = afterOffset.plusYears(curValue);
-                    }
+            Matcher m2 = getSuffixSymbolMatcher(offsetTokens[i]);
+            if (m2.find()) {
+                int curValue = getOperator(offsetTokens[i]) * Integer.parseInt(m2.group(1));
+                String fieldString = m2.group(2);
+                if ("d".endsWith(fieldString)) {
+                    afterOffset = afterOffset.plusDays(curValue);
+                } else if ("m".equals(fieldString)) {
+                    afterOffset = afterOffset.plusMonths(curValue);
+                } else if ("y".equals(fieldString)) {
+                    afterOffset = afterOffset.plusYears(curValue);
                 }
+
             }
         }
         return afterOffset;
@@ -1169,36 +1151,40 @@ public class VaccinatorUtils {
 
     public static int processOffsetValueInDays(String offset) {
         if (offset == null) return -1;
-        Matcher m1 = getPrefixSymbolMatcher(offset);
         int days = 0;
-        if (m1.find()) {
-            String operatorString = m1.group(1);
-            String valueString = m1.group(2);
+        String[] offsetTokens = offset.split(",");
 
-            int operator = 1;
-            if ("-".equals(operatorString)) {
-                operator = -1;
-            }
+        for (int i = 0; i < offsetTokens.length; i++) {
 
-            String[] values = valueString.split(",");
-            for (int i = 0; i < values.length; i++) {
-                Matcher m2 = getSuffixSymbolMatcher(values[i]);
-
-                if (m2.find()) {
-                    int curValue = operator * Integer.parseInt(m2.group(1));
-                    String fieldString = m2.group(2);
-                    if ("d".endsWith(fieldString)) {
-                        days += curValue;
-                    } else if ("m".equals(fieldString)) {
-                        days += (int) Math.round(30.44 * curValue);
-                    } else if ("y".equals(fieldString)) {
-                        days += 366 * curValue;
-                    }
+            Matcher m2 = getSuffixSymbolMatcher(offsetTokens[i]);
+            if (m2.find()) {
+                int curValue = getOperator(offsetTokens[i]) * Integer.parseInt(m2.group(1));
+                String fieldString = m2.group(2);
+                if ("d".endsWith(fieldString)) {
+                    days += curValue;
+                } else if ("m".equals(fieldString)) {
+                    days += (int) Math.round(30.44 * curValue);
+                } else if ("y".equals(fieldString)) {
+                    days += 366 * curValue;
                 }
             }
         }
+
         return days;
 
+    }
+
+    private static int getOperator(String offsetToken) {
+        int operator = 1;
+        Matcher m1 = getPrefixSymbolMatcher(offsetToken);
+        if (m1.find()) {
+            String operatorString = m1.group(1);
+
+            if ("-".equals(operatorString)) {
+                operator = -1;
+            }
+        }
+        return operator;
     }
 
     private static Matcher getSuffixSymbolMatcher(String value) {
