@@ -26,6 +26,7 @@ public class Vaccine {
     private String formSubmissionId;
     private Integer isVoided;
     private Integer outOfCatchment;
+    private Integer outreach;
     private Date createdAt;
 
     public Vaccine() {
@@ -75,7 +76,7 @@ public class Vaccine {
     public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
             calculation, Date date, String anmId, String locationId, String syncStatus, String
                            hia2Status, Long updatedAt, String eventId, String formSubmissionId, Integer
-                           outOfCatchment, Date createdAt, Integer isVoided) {
+                           outOfCatchment, Date createdAt, Integer isVoided,Integer outreach) {
         this.id = id;
         this.baseEntityId = baseEntityId;
         this.programClientId = programClientId;
@@ -92,6 +93,7 @@ public class Vaccine {
         this.outOfCatchment = outOfCatchment;
         this.createdAt = createdAt;
         this.isVoided = isVoided;
+        this.outreach = outreach;
     }
 
     public Long getId() {
@@ -253,5 +255,13 @@ public class Vaccine {
 
     public void setChildLocationId(String childLocationId) {
         this.childLocationId = childLocationId;
+    }
+
+    public Integer getOutreach() {
+        return outreach;
+    }
+
+    public void setOutreach(Integer outreach) {
+        this.outreach = outreach;
     }
 }
