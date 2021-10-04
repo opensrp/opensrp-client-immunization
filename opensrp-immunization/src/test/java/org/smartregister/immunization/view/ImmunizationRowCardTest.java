@@ -63,7 +63,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0,
                 new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
-                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1);
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1,1);
         Event event = new Event();
         event.setEventId("1");
         event.setDateCreated(new DateTime());

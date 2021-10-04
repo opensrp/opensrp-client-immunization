@@ -34,6 +34,25 @@ public class Vaccine {
 
     public Vaccine(Long id, String baseEntityId, String name, Integer calculation, Date date,
                    String anmId, String locationId, String syncStatus, String hia2Status, Long
+                           updatedAt, String eventId, String formSubmissionId) {
+        this.id = id;
+        this.baseEntityId = baseEntityId;
+        programClientId = null;
+        this.name = name;
+        this.calculation = calculation;
+        this.date = date;
+        this.anmId = anmId;
+        this.locationId = locationId;
+        this.syncStatus = syncStatus;
+        this.hia2Status = hia2Status;
+        this.updatedAt = updatedAt;
+        this.eventId = eventId;
+        this.formSubmissionId = formSubmissionId;
+       
+    }
+
+    public Vaccine(Long id, String baseEntityId, String name, Integer calculation, Date date,
+                   String anmId, String locationId, String syncStatus, String hia2Status, Long
                            updatedAt, String eventId, String formSubmissionId, Integer
                            outOfCatchment) {
         this.id = id;
@@ -55,7 +74,7 @@ public class Vaccine {
     public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
             calculation, Date date, String anmId, String locationId, String syncStatus, String
                            hia2Status, Long updatedAt, String eventId, String formSubmissionId, Integer
-                           outOfCatchment, Date createdAt) {
+                           outOfCatchment, Date createdAt, Integer isVoided) {
         this.id = id;
         this.baseEntityId = baseEntityId;
         this.programClientId = programClientId;
@@ -71,7 +90,10 @@ public class Vaccine {
         this.formSubmissionId = formSubmissionId;
         this.outOfCatchment = outOfCatchment;
         this.createdAt = createdAt;
+        this.isVoided = isVoided;
+        
     }
+   
 
     public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
             calculation, Date date, String anmId, String locationId, String syncStatus, String
