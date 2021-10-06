@@ -35,7 +35,12 @@ public class VaccineTest extends BaseUnitTest {
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         junit.framework.Assert.assertNotNull(new Vaccine());
         junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
+                ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID));
+        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0));
+        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
+                ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1));
+
         junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1,1));
     }
