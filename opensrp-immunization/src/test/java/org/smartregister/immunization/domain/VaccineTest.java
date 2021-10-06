@@ -1,5 +1,6 @@
 package org.smartregister.immunization.domain;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
@@ -119,6 +120,8 @@ public class VaccineTest extends BaseUnitTest {
         vaccine.setOutOfCatchment(1);
         junit.framework.Assert.assertEquals(1, vaccine.getOutOfCatchment().intValue());
 
+        vaccine.setOutreach(1);
+        Assert.assertEquals(1,vaccine.getOutreach().intValue());
         vaccine.setProgramClientId(PROGRAMCLIENTID);
         junit.framework.Assert.assertEquals(PROGRAMCLIENTID, vaccine.getProgramClientId());
     }
