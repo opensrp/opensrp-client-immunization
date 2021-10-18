@@ -42,10 +42,11 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATED_AT_COLUMN = "updated_at";
     public static final String OUT_OF_AREA = "out_of_area";
     public static final String IS_VOIDED = "is_voided";
+    public static final String OUTREACH = "outreach";
     public static final String CREATED_AT = "created_at";
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, IS_VOIDED, CREATED_AT};
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, IS_VOIDED, CREATED_AT,OUTREACH};
     public static final String UPDATE_TABLE_ADD_EVENT_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + EVENT_ID + " VARCHAR;";
     public static final String EVENT_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + EVENT_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + EVENT_ID + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_FORMSUBMISSION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + FORMSUBMISSION_ID + " VARCHAR;";
@@ -54,6 +55,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_IS_VOIDED_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + IS_VOIDED + " INTEGER;";
     public static final String UPDATE_TABLE_ADD_OUT_OF_AREA_COL_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + OUT_OF_AREA + "_index ON " + VACCINE_TABLE_NAME + "(" + OUT_OF_AREA + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_IS_VOIDED_COL_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + IS_VOIDED + "_index ON " + VACCINE_TABLE_NAME + "(" + IS_VOIDED + " COLLATE NOCASE);";
+    public static final String UPDATE_TABLE_ADD_OUTREACH_COL_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + OUTREACH + "_index ON " + VACCINE_TABLE_NAME + "(" + OUTREACH + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_HIA2_STATUS_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + HIA2_STATUS + " VARCHAR;";
     public static final String ALTER_ADD_CREATED_AT_COLUMN = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CREATED_AT + " DATETIME NULL ";
     public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
@@ -186,6 +188,7 @@ public class VaccineRepository extends BaseRepository {
         values.put(FORMSUBMISSION_ID, vaccine.getFormSubmissionId());
         values.put(OUT_OF_AREA, vaccine.getOutOfCatchment());
         values.put(IS_VOIDED, vaccine.getIsVoided());
+        values.put(OUTREACH, vaccine.getOutreach());
         values.put(CREATED_AT,
                 vaccine.getCreatedAt() != null ? EventClientRepository.dateFormat.format(vaccine.getCreatedAt()) : null);
         return values;
@@ -276,7 +279,8 @@ public class VaccineRepository extends BaseRepository {
                             cursor.getString(cursor.getColumnIndex(FORMSUBMISSION_ID)),
                             cursor.getInt(cursor.getColumnIndex(OUT_OF_AREA)),
                             createdAt,
-                            cursor.getInt(cursor.getColumnIndex(IS_VOIDED))
+                            cursor.getInt(cursor.getColumnIndex(IS_VOIDED)),
+                            cursor.getInt(cursor.getColumnIndex(OUTREACH))
                     );
 
                     vaccine.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));

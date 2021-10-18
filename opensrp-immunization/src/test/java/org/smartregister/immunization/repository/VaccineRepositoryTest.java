@@ -187,11 +187,12 @@ public class VaccineRepositoryTest extends BaseUnitTest {
                 VaccineRepository.TEAM,
                 VaccineRepository.TEAM_ID,
                 VaccineRepository.CHILD_LOCATION_ID,
-                VaccineRepository.IS_VOIDED
+                VaccineRepository.IS_VOIDED,
+                VaccineRepository.OUTREACH
         };
 
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1,magicTime,"","","", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1,magicTime,"","","", 1,1});
 
         List<Vaccine> vaccines = vaccineRepository.readAllVaccines(cursor);
         Assert.assertFalse(vaccines.isEmpty());

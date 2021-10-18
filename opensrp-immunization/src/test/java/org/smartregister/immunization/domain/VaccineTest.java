@@ -1,5 +1,6 @@
 package org.smartregister.immunization.domain;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
@@ -34,9 +35,14 @@ public class VaccineTest extends BaseUnitTest {
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
         junit.framework.Assert.assertNotNull(new Vaccine());
         junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
+                ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID));
+        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0));
         junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1));
+
+        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
+                ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1,1));
     }
 
     @Test
@@ -119,6 +125,8 @@ public class VaccineTest extends BaseUnitTest {
         vaccine.setOutOfCatchment(1);
         junit.framework.Assert.assertEquals(1, vaccine.getOutOfCatchment().intValue());
 
+        vaccine.setOutreach(1);
+        Assert.assertEquals(1,vaccine.getOutreach().intValue());
         vaccine.setProgramClientId(PROGRAMCLIENTID);
         junit.framework.Assert.assertEquals(PROGRAMCLIENTID, vaccine.getProgramClientId());
     }
