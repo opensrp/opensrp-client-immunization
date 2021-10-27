@@ -8,6 +8,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -167,7 +168,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void testReadAllReturnsListOfVaccines(){
+    public void testReadAllReturnsListOfVaccines() {
         String[] columns = new String[]{
                 VaccineRepository.ID_COLUMN,
                 VaccineRepository.BASE_ENTITY_ID,
@@ -192,7 +193,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         };
 
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1,magicTime,"","","", 1,1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1, magicTime, "", "", "", 1, 1});
 
         List<Vaccine> vaccines = vaccineRepository.readAllVaccines(cursor);
         Assert.assertFalse(vaccines.isEmpty());
@@ -331,7 +332,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     public void deleteVaccineByBaseEntityIdAndName() {
         VaccineRepository vaccineRepositoryspy = Mockito.spy(vaccineRepository);
         Mockito.when(vaccineRepositoryspy.getWritableDatabase()).thenReturn(sqliteDatabase);
-        vaccineRepositoryspy.deleteVaccine("baseEntityID","opv_1");
+        vaccineRepositoryspy.deleteVaccine("baseEntityID", "opv_1");
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .delete(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(),
                         org.mockito.ArgumentMatchers.any(String[].class));
@@ -362,4 +363,29 @@ public class VaccineRepositoryTest extends BaseUnitTest {
                         org.mockito.ArgumentMatchers.eq(new String[]{"5"}));
     }
 
+    @Test
+    public void testFindByBaseEntityIdAndVaccineName() {
+        String[] columns = new String[]{
+                VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID,
+                VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID,
+                VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS,
+                VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA
+        };
+        MatrixCursor cursor = new MatrixCursor(columns);
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+
+        Mockito.when(
+                sqliteDatabase.query(
+                        ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class), ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
+                        ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull()
+                )
+        ).thenReturn(cursor);
+        Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+
+        vaccineRepository.findByBaseEntityIdAndVaccineName("base-entity-id", "vaccine-name");
+
+        Mockito.verify(sqliteDatabase, Mockito.times(1))
+                .query(ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class), ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
+                        ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull());
+    }
 }
