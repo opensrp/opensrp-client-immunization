@@ -61,6 +61,8 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
+    public static final String UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL = "ALTER TABLE "+ VACCINE_TABLE_NAME + " ADD COLUMN "+ OUTREACH + " INTEGER DEFAULT 0;";
+    public static final String UPDATE_OUTREACH_QUERRY = "UPDATE "+ VACCINE_TABLE_NAME+" SET " + OUTREACH + " = 1 WHERE location_id != ?;";
     private static final String TAG = VaccineRepository.class.getCanonicalName();
     private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR, updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";

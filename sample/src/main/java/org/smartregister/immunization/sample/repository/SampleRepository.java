@@ -14,8 +14,10 @@ import org.smartregister.immunization.repository.VaccineNameRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.sample.BuildConfig;
+import org.smartregister.immunization.sample.application.SampleApplication;
 import org.smartregister.immunization.util.IMDatabaseUtils;
 import org.smartregister.repository.AlertRepository;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 
@@ -83,6 +85,8 @@ public class SampleRepository extends Repository {
                 case 5:
                     upgradeToVersion5(db);
                     break;
+                case 6:
+                    upgradeToVersion6(db);
                 default:
                     break;
             }
@@ -196,6 +200,19 @@ public class SampleRepository extends Repository {
             db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL);
         } catch (Exception e) {
             Log.e(TAG, "upgradeToVersion5 " + Log.getStackTraceString(e));
+        }
+    }
+
+    private void upgradeToVersion6(SQLiteDatabase db)
+    {
+        try{
+            AllSharedPreferences sharedPreferences = SampleApplication.getInstance().context().userService()
+                    .getAllSharedPreferences();
+            db.execSQL(VaccineRepository.UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL);
+            db.execSQL(VaccineRepository.UPDATE_OUTREACH_QUERRY, new String[]{sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchPioneerUser())});
+
+        } catch (Exception e) {
+            Log.e(TAG,"upgradeToVersion6" + Log.getStackTraceString(e));
         }
     }
 
