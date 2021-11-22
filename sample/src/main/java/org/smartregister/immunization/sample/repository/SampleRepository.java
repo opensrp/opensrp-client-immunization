@@ -21,6 +21,8 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 
+import timber.log.Timber;
+
 /**
  * Created by keyman on 01/08/2017.
  */
@@ -212,7 +214,7 @@ public class SampleRepository extends Repository {
             db.execSQL(VaccineRepository.UPDATE_OUTREACH_QUERRY, new String[]{sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchPioneerUser())});
 
         } catch (Exception e) {
-            Log.e(TAG,"upgradeToVersion6" + Log.getStackTraceString(e));
+            Timber.e(TAG,"upgradeToVersion6" + Log.getStackTraceString(e));
         }
     }
 
