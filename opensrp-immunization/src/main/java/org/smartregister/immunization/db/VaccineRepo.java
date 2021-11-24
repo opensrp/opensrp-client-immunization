@@ -59,6 +59,7 @@ public class VaccineRepo {
         //Child vaccines
         bcg("BCG", null, 366, 0, 0, "child"),
         HepB("HepB", null, 366, 0, 0, "child"),
+        vha("VHA", null, 366, 0, 0, "child"),
         opv0("OPV 0", null, 13, 0, 0, "child"),
         opv1("OPV 1", null, 1768, 42, 0, "child"),
         penta1("PENTA 1", null, 1768, 42, 0, "child"),
