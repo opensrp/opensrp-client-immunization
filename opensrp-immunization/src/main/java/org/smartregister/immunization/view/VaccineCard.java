@@ -220,7 +220,7 @@ public class VaccineCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                nameTV.setText(getVaccineName() + " - " + DATE_FORMAT.format(getDateDone()));
+                nameTV.setText(String.format(context.getString(R.string.vaccine_done_cannot_be_undone), getVaccineName(), DATE_FORMAT.format(getDateDone())));
                 statusIV.setImageDrawable(vaccineWrapper.isOutOfCatchment() ? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange) : ContextCompat.getDrawable(context, R.drawable.ic_action_check));
 
                 break;

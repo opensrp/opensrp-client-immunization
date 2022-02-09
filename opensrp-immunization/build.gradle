@@ -112,7 +112,7 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('org.smartregister:opensrp-client-core:4.2.18-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.3.26-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'jakarta.annotation', module: 'jakarta.annotation-api'
@@ -159,6 +159,7 @@ dependencies {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {

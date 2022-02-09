@@ -35,6 +35,7 @@
 
     <string name="due_">\u200E%2$s \u200Eمستحق \u200E:%1$s</string>
     <string name="today">اليوم</string>
+    <string name="vaccine_done_cannot_be_undone">%2$s - %1$s</string>
 
     <!-- Recurring Services -->
     <string name="recurring_services">خدمات متكررة</string>
