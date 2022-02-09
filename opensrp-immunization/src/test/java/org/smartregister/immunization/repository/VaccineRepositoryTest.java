@@ -35,8 +35,11 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     public static final String FORMSUBMISSIONID = "formsubmissionID";
     private final int magic10 = 10;
     private final long magicTime = 1509347804l;
-    private final String magicName = "NAME";
+    private final String magicDate = "2017-10-20 12:30:40";
+    private final String magicName = "BCG";
     private final String magicTS = "TS";
+    private final String team = "A-Team";
+    private final String teamId = "A-Team-ID";
     @Mock
     public SQLiteDatabase sqliteDatabase;
     @InjectMocks
@@ -364,15 +367,17 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void testFindByBaseEntityIdAndVaccineName() {
+    public void testFindByBaseEntityIdAndVaccineNameInvokesDBQueryAndReturnsCorrectVaccine() {
         String[] columns = new String[]{
                 VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID,
                 VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID,
                 VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS,
-                VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA
+                VaccineRepository.CREATED_AT, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID,
+                VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA, VaccineRepository.IS_VOIDED, VaccineRepository.OUTREACH,
+                VaccineRepository.TEAM, VaccineRepository.TEAM_ID, VaccineRepository.CHILD_LOCATION_ID
         };
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", magicDate, 1l, "", "", 1, 0, 0, team, teamId, ""});
 
         Mockito.when(
                 sqliteDatabase.query(
@@ -382,10 +387,43 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         ).thenReturn(cursor);
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
 
-        vaccineRepository.findByBaseEntityIdAndVaccineName("base-entity-id", "vaccine-name");
+        Vaccine vaccine = vaccineRepository.findByBaseEntityIdAndVaccineName("base-entity-id", "vaccine-name");
 
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .query(ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class), ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
                         ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull());
+
+        Assert.assertNotNull(vaccine);
+        Assert.assertEquals(magicName, vaccine.getName());
+        Assert.assertEquals(team, vaccine.getTeam());
+        Assert.assertEquals(teamId, vaccine.getTeamId());
+        Assert.assertEquals(1, vaccine.getOutOfCatchment().intValue());
+        Assert.assertEquals(0, vaccine.getIsVoided().intValue());
+        Assert.assertEquals(0, vaccine.getOutreach().intValue());
+    }
+
+    @Test
+    public void testFindByBaseEntityIdAndVaccineNameReturnsNullVaccineWhenExceptionThrown() {
+        String[] columns = new String[]{
+                VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID,
+                VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID,
+                VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS,
+                VaccineRepository.CREATED_AT, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID,
+                VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA, VaccineRepository.IS_VOIDED, VaccineRepository.OUTREACH,
+                VaccineRepository.TEAM, VaccineRepository.TEAM_ID, VaccineRepository.CHILD_LOCATION_ID
+        };
+        MatrixCursor cursor = new MatrixCursor(columns);
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", magicDate, 1l, "", "", 1, 0, 0, team, teamId, ""});
+
+        Mockito.when(
+                sqliteDatabase.query(
+                        ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class), ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
+                        ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull()
+                )
+        ).thenThrow(new RuntimeException());
+
+        Vaccine vaccine = vaccineRepository.findByBaseEntityIdAndVaccineName("base-entity-id", "vaccine-name");
+
+        Assert.assertNull(vaccine);
     }
 }
