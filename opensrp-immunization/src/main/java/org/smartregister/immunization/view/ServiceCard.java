@@ -24,6 +24,7 @@ import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by keyman on 21/02/2017.
@@ -187,7 +188,7 @@ public class ServiceCard extends LinearLayout {
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setText(String.format(context.getString(R.string.record_), getServiceName()));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.record_), getServiceName()));
                 break;
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -201,7 +202,7 @@ public class ServiceCard extends LinearLayout {
                     dateFormatToUse = DATE_FORMAT;
                 }
 
-                nameTV.setText(getServiceName() + " - " + dateFormatToUse.format(getDateDone()));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.vaccine_done_can_be_undone), getServiceName(), dateFormatToUse.format(getDateDone())));
                 break;
             case DONE_CAN_NOT_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -209,7 +210,7 @@ public class ServiceCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                nameTV.setText(getServiceName() + " - " + DATE_FORMAT.format(getDateDone()));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.vaccine_done_cannot_be_undone), getServiceName(), DATE_FORMAT.format(getDateDone())));
                 break;
             case OVERDUE:
                 if (ImmunizationLibrary.getInstance().hideOverdueVaccineStatus()) {
@@ -224,10 +225,9 @@ public class ServiceCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 String serviceName = getServiceName();
                 if (getDateDue() != null) {
-                    nameTV.setText(String.format(context.getString(R.string.record_due_),
-                            serviceName, DATE_FORMAT.format(getDateDue())));
+                    nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.record_due_), serviceName, DATE_FORMAT.format(getDateDue())));
                 } else {
-                    nameTV.setText(String.format(context.getString(R.string.record_), serviceName));
+                    nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.record_), serviceName));
                 }
                 break;
             case EXPIRED:
