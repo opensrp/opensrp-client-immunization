@@ -193,7 +193,7 @@ public class VaccineCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 String vaccineName = getVaccineName();
-                nameTV.setText(String.format(context.getString(R.string.record_), vaccineName));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.record_), vaccineName));
                 if (vaccineName.toLowerCase().contains("measles") || vaccineName.toLowerCase().contains("mr")) {
                     nameTV.setText(vaccineName);
                 }
@@ -210,7 +210,7 @@ public class VaccineCard extends LinearLayout {
                     dateFormatToUse = DATE_FORMAT;
                 }
 
-                nameTV.setText(getVaccineName() + " - " + dateFormatToUse.format(getDateDone()));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.vaccine_done_can_be_undone), getVaccineName(), dateFormatToUse.format(getDateDone())));
                 statusIV.setImageDrawable(vaccineWrapper.isOutOfCatchment() ? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange) : ContextCompat.getDrawable(context, R.drawable.ic_action_check));
 
                 break;
@@ -220,7 +220,7 @@ public class VaccineCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                nameTV.setText(String.format(context.getString(R.string.vaccine_done_cannot_be_undone), getVaccineName(), DATE_FORMAT.format(getDateDone())));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.vaccine_done_cannot_be_undone), getVaccineName(), DATE_FORMAT.format(getDateDone())));
                 statusIV.setImageDrawable(vaccineWrapper.isOutOfCatchment() ? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange) : ContextCompat.getDrawable(context, R.drawable.ic_action_check));
 
                 break;
@@ -236,11 +236,9 @@ public class VaccineCard extends LinearLayout {
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 String vName = getVaccineName();
-                nameTV.setText(String.format(context.getString(R.string.record_due_),
-                        vName, DATE_FORMAT.format(getDateDue())));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.record_due_), vName, DATE_FORMAT.format(getDateDue())));
                 if (vName.toLowerCase().contains("measles") || vName.toLowerCase().contains("mr")) {
-                    nameTV.setText(String.format(context.getString(R.string.mr_due_),
-                            vName, DATE_FORMAT.format(getDateDue())));
+                    nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.mr_due_), vName, DATE_FORMAT.format(getDateDue())));
                 }
                 break;
             case EXPIRED:
@@ -255,7 +253,7 @@ public class VaccineCard extends LinearLayout {
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
-                nameTV.setText(context.getResources().getString(R.string.expired_colon, getVaccineName()));
+                nameTV.setText(String.format(Locale.getDefault(), context.getString(R.string.expired_colon), getVaccineName()));
                 break;
             default:
                 break;
