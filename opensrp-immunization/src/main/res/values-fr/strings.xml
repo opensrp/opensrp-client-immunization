@@ -30,6 +30,7 @@
     <string name="mr_due_">%1$s - dû %2$s</string>
     <string name="due_">%1$s: dû %2$s</string>
     <string name="today">Aujourd\'hui</string>
+    <string name="vaccine_done_can_be_undone">%1$s - %2$s</string>
     <string name="vaccine_done_cannot_be_undone">%1$s - %2$s</string>
 
     <!-- Recurring Services -->
