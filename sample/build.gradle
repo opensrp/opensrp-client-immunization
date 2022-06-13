@@ -47,7 +47,7 @@ android {
         }
 
         debug {
-            buildConfigField "int", "DATABASE_VERSION", '6'
+            buildConfigField "int", "DATABASE_VERSION", '7'
         }
     }
 

@@ -89,6 +89,8 @@ public class SampleRepository extends Repository {
                     break;
                 case 6:
                     upgradeToVersion6(db);
+                case 7:
+                    upgradeToVersion7(db);
                 default:
                     break;
             }
@@ -217,5 +219,16 @@ public class SampleRepository extends Repository {
             Timber.e(TAG,"upgradeToVersion6" + Log.getStackTraceString(e));
         }
     }
+
+    private void upgradeToVersion7(SQLiteDatabase db) {
+        try {
+            db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_GIVEN_BY_DEFAULT_ANM_COL);
+            db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_GIVEN_BY_DEFAULT_ANM_COL_INDEX);
+
+        } catch (Exception e) {
+            Log.e(TAG, "upgradeToVersion7 " + Log.getStackTraceString(e));
+        }
+    }
+
 
 }
