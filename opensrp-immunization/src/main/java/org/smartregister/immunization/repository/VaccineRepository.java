@@ -304,7 +304,7 @@ public class VaccineRepository extends BaseRepository {
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         } finally {
             cursor.close();
         }
