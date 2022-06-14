@@ -3,6 +3,8 @@ package org.smartregister.immunization.view;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
@@ -69,7 +70,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowGroupTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
@@ -117,7 +118,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
         ServiceRowAdapter adapter = view.getServiceRowAdapter();
 
-        ServiceRowCard serviceRowCard = new ServiceRowCard(RuntimeEnvironment.application);
+        ServiceRowCard serviceRowCard = new ServiceRowCard(ApplicationProvider.getApplicationContext());
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         serviceRowCard.setServiceWrapper(wrapper);
@@ -261,7 +262,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
         ServiceRowAdapter adapter = view.getServiceRowAdapter();
 
-        ServiceRowCard serviceRowCard = new ServiceRowCard(RuntimeEnvironment.application, true);
+        ServiceRowCard serviceRowCard = new ServiceRowCard(ApplicationProvider.getApplicationContext(), true);
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         serviceRowCard.setServiceWrapper(wrapper);

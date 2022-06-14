@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -11,7 +13,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -71,9 +72,9 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        view = new ServiceGroup(RuntimeEnvironment.application);
+        view = new ServiceGroup(ApplicationProvider.getApplicationContext());
         setDataForTest(magicDate);
-        serviceCardAdapter = new ServiceCardAdapter(RuntimeEnvironment.application, view, serviceTypeList, serviceRecordList,
+        serviceCardAdapter = new ServiceCardAdapter(ApplicationProvider.getApplicationContext(), view, serviceTypeList, serviceRecordList,
                 alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }

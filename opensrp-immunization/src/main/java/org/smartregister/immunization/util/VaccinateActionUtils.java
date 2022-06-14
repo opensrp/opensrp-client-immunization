@@ -1,5 +1,14 @@
 package org.smartregister.immunization.util;
 
+import static org.smartregister.AllConstants.ENTITY_ID_PARAM;
+import static org.smartregister.AllConstants.FORM_NAME_PARAM;
+import static org.smartregister.AllConstants.INSTANCE_ID_PARAM;
+import static org.smartregister.AllConstants.SYNC_STATUS;
+import static org.smartregister.AllConstants.VERSION_PARAM;
+import static org.smartregister.domain.SyncStatus.PENDING;
+import static org.smartregister.util.EasyMap.create;
+import static org.smartregister.util.Utils.convertDateFormat;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -20,12 +29,9 @@ import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
-import org.smartregister.commonregistry.AllCommonsRepository;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.domain.form.FormSubmission;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -36,7 +42,6 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.service.AlertService;
-import org.smartregister.service.ZiggyService;
 import org.smartregister.util.FormUtils;
 
 import java.util.ArrayList;
@@ -47,15 +52,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import static org.smartregister.AllConstants.ENTITY_ID_PARAM;
-import static org.smartregister.AllConstants.FORM_NAME_PARAM;
-import static org.smartregister.AllConstants.INSTANCE_ID_PARAM;
-import static org.smartregister.AllConstants.SYNC_STATUS;
-import static org.smartregister.AllConstants.VERSION_PARAM;
-import static org.smartregister.domain.SyncStatus.PENDING;
-import static org.smartregister.util.EasyMap.create;
-import static org.smartregister.util.Utils.convertDateFormat;
 
 /**
  * Created by keyman on 17/11/2016.
@@ -156,60 +152,24 @@ public class VaccinateActionUtils {
         v.setText(tag.getFormattedVaccineDate());
 
         if ("due".equalsIgnoreCase(tag.getStatus())) {
-            tableRow.setOnClickListener(new TableRow.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                    Fragment prev =
-                            ((FragmentActivity) context).getSupportFragmentManager()
-                                    .findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
-                    if (prev != null) {
-                        ft.remove(prev);
-                    }
-                    ft.addToBackStack(null);
-                    ArrayList<VaccineWrapper> list = new ArrayList<VaccineWrapper>();
-                    list.add(tag);
-                    VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment
-                            .newInstance(null, null, list);
-                    vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
-
+            tableRow.setOnClickListener(view -> {
+                FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+                Fragment prev =
+                        ((FragmentActivity) context).getSupportFragmentManager()
+                                .findFragmentByTag(VaccinationDialogFragment.DIALOG_TAG);
+                if (prev != null) {
+                    ft.remove(prev);
                 }
+                ft.addToBackStack(null);
+                ArrayList<VaccineWrapper> list = new ArrayList<VaccineWrapper>();
+                list.add(tag);
+                VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment
+                        .newInstance(null, null, list);
+                vaccinationDialogFragment.show(ft, VaccinationDialogFragment.DIALOG_TAG);
+
             });
         }
 
-    }
-
-    public static void saveFormSubmission(Context appContext, String formSubmission, String id, String formName,
-                                          JSONObject fieldOverrides) {
-
-        Log.v("fieldoverride", fieldOverrides.toString());
-
-        // save the form
-        try {
-            FormUtils formUtils = FormUtils.getInstance(appContext);
-            FormSubmission submission = formUtils
-                    .generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
-
-            org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
-            ZiggyService ziggyService = context.ziggyService();
-            ziggyService.saveForm(getParams(submission), submission.instance());
-
-            // Update Fts Tables
-            CommonFtsObject commonFtsObject = context.commonFtsObject();
-            if (commonFtsObject != null) {
-                String[] ftsTables = commonFtsObject.getTables();
-                for (String ftsTable : ftsTables) {
-                    AllCommonsRepository allCommonsRepository = context.allCommonsRepositoryobjects(ftsTable);
-                    boolean updated = allCommonsRepository.updateSearch(submission.entityId());
-                    if (updated) {
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
-            e.printStackTrace();
-        }
     }
 
     private static String getParams(FormSubmission submission) {

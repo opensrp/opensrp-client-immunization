@@ -2,6 +2,8 @@ package org.smartregister.immunization.view;
 
 import android.widget.Button;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -15,7 +17,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
@@ -41,7 +42,7 @@ import java.util.Date;
 
 @PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
     private final String magicDue = "due";
@@ -57,13 +58,13 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new ImmunizationRowCard(RuntimeEnvironment.application);
+        view = new ImmunizationRowCard(ApplicationProvider.getApplicationContext());
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0,
                 new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
-                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1,1);
+                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1, 1);
         Event event = new Event();
         event.setEventId("1");
         event.setDateCreated(new DateTime());
@@ -78,18 +79,18 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         PowerMockito.when(vaccineRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(vaccine);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
         PowerMockito.when(eventClientRepository
-                .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
+                        .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
                 .thenReturn(event);
     }
 
     @Test
     public void testConstructors() {
 
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, true));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext()));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), true));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0, 0));
 
     }
 

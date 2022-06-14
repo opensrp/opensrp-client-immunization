@@ -2,6 +2,8 @@ package org.smartregister.immunization.utils;
 
 import android.os.Build;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
@@ -12,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -46,7 +47,7 @@ public class VaccinatorUtilsRobolectricTest {
         Mockito.doReturn(jsonMap).when(immunizationLibrary).getVaccinesConfigJsonMap();
 
         // Mock calls to AssetHandler.readFileFromAssetsFolder(String filename, Context context)
-        List<Vaccine> specialVaccines = VaccinatorUtils.getVaccineFromVaccineConfigFile(RuntimeEnvironment.application, "special_vaccines.json");
+        List<Vaccine> specialVaccines = VaccinatorUtils.getVaccineFromVaccineConfigFile(ApplicationProvider.getApplicationContext(), "special_vaccines.json");
 
         Assert.assertEquals(1, specialVaccines.size());
 
@@ -61,7 +62,7 @@ public class VaccinatorUtilsRobolectricTest {
         Type listType = new TypeToken<List<Vaccine>>() {}.getType();
 
         Map<String, Object> jsonMap = new HashMap<>();
-        List<Vaccine> specialVaccinesList = AssetHandler.assetJsonToJava(jsonMap, RuntimeEnvironment.application, "special_vaccines.json", classType,listType);
+        List<Vaccine> specialVaccinesList = AssetHandler.assetJsonToJava(jsonMap, ApplicationProvider.getApplicationContext(), "special_vaccines.json", classType,listType);
 
         Assert.assertEquals(1, specialVaccinesList.size());
     }

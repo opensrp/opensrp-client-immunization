@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
@@ -17,7 +19,6 @@ import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
@@ -53,7 +54,7 @@ import java.util.List;
  */
 @PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -88,7 +89,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, ImmunizationRowGroupTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ImmunizationRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ImmunizationRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
@@ -224,7 +225,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
         ImmunizationRowAdapter adapter = view.getVaccineCardAdapter();
 
-        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(RuntimeEnvironment.application);
+        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(ApplicationProvider.getApplicationContext());
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         wrapper.setVaccineDate(DateTime.now());
@@ -326,7 +327,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
         ImmunizationRowAdapter adapter = view.getVaccineCardAdapter();
 
-        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(RuntimeEnvironment.application, true);
+        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), true);
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         wrapper.setVaccineDate(DateTime.now());
@@ -410,14 +411,14 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     public void asertConstructorsNotNull() {
 
         Assert.assertNotNull(activity.getInstance());
-      
-        ImmunizationRowGroup instance1 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs);
+
+        ImmunizationRowGroup instance1 = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), attrs);
         Assert.assertNotNull(instance1);
 
-        ImmunizationRowGroup instance2 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0);
+        ImmunizationRowGroup instance2 = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), attrs, 0);
         Assert.assertNotNull(instance2);
 
-        ImmunizationRowGroup instance3 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0, 0);
+        ImmunizationRowGroup instance3 = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), attrs, 0, 0);
         Assert.assertNotNull(instance3);
     }
 

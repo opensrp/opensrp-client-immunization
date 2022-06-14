@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.After;
@@ -20,7 +22,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
@@ -53,7 +54,7 @@ import java.util.Date;
 
 @PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
 
     private final String magicOne = "1";
@@ -92,7 +93,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
         Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
         Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
 
-        Intent intent = new Intent(RuntimeEnvironment.application, ServiceRowCardTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceRowCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowCardTestActivity.class, intent);
         activity = controller.start().resume().get();
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
@@ -125,10 +126,10 @@ public class ServiceRowCardTest extends BaseUnitTest {
                 .thenReturn(serviceRecord);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
         PowerMockito.when(eventClientRepository
-                .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
+                        .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
                 .thenReturn(event);
         //        controller.setup();
-        view = new ServiceRowCard(RuntimeEnvironment.application);
+        view = new ServiceRowCard(ApplicationProvider.getApplicationContext());
         //        view = activity.getInstance();
     }
 

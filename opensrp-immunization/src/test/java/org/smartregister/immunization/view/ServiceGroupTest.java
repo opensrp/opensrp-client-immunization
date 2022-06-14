@@ -3,6 +3,8 @@ package org.smartregister.immunization.view;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
@@ -71,7 +72,7 @@ public class ServiceGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, ServiceGroupTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
@@ -116,7 +117,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
         ServiceCardAdapter adapter = view.getServiceCardAdapter();
 
-        ServiceCard serviceCard = new ServiceCard(RuntimeEnvironment.application);
+        ServiceCard serviceCard = new ServiceCard(ApplicationProvider.getApplicationContext());
         wrapper = new ServiceWrapper();
         wrapper.setDefaultName(ServiceWrapperTest.DEFAULTNAME);
         serviceCard.setServiceWrapper(wrapper);

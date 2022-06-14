@@ -2,6 +2,8 @@ package org.smartregister.immunization.fragment;
 
 import android.os.Bundle;
 import androidx.fragment.app.FragmentActivity;
+import androidx.test.core.app.ApplicationProvider;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.R;
 
@@ -65,7 +66,7 @@ public class ActivateChildStatusDialogFragmentTest extends BaseUnitTest {
 
         Mockito.doReturn(activity).when(activateChildStatusDialogFragment).getActivity();
 
-        Mockito.doReturn(RuntimeEnvironment.application.getResources().getString(R.string.activate_child_status_dialog_title)).when(activity).getString(R.string.activate_child_status_dialog_title);
+        Mockito.doReturn(ApplicationProvider.getApplicationContext().getResources().getString(R.string.activate_child_status_dialog_title)).when(activity).getString(R.string.activate_child_status_dialog_title);
 
         Mockito.doReturn(layoutInflater).when(activity).getLayoutInflater();
         Mockito.doReturn(view).when(layoutInflater).inflate(R.layout.dialog_fragment_activate_child_status, viewGroup, false);

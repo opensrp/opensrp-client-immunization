@@ -2,6 +2,8 @@ package org.smartregister.immunization.view;
 
 import android.util.AttributeSet;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.After;
@@ -11,7 +13,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -61,7 +62,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new VaccineGroup(RuntimeEnvironment.application);
+        view = new VaccineGroup(ApplicationProvider.getApplicationContext());
 
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
         view.setImmunizationLibraryInstance(immunizationLibrary);
@@ -69,10 +70,10 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void testConstructors() {
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext()));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0, 0));
     }
 
     @Test
@@ -199,7 +200,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
         VaccineCardAdapter adapter = view.getVaccineCardAdapter();
 
-        VaccineCard vaccineCard = new VaccineCard(RuntimeEnvironment.application);
+        VaccineCard vaccineCard = new VaccineCard(ApplicationProvider.getApplicationContext());
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         vaccineCard.setVaccineWrapper(wrapper);
@@ -309,10 +310,10 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Test
     public void assertConstructorsNotNull() {
         AttributeSet attrs = Robolectric.buildAttributeSet().build();
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
-        //Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs));
-        //Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
-        //Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext()));
+        //Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), ViewAttributes.attrs));
+        //Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), ViewAttributes.attrs, 0));
+        //Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), ViewAttributes.attrs, 0, 0));
     }
 
     @After

@@ -3,6 +3,8 @@ package org.smartregister.immunization.utils;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
@@ -19,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.AllConstants;
 import org.smartregister.Context;
@@ -150,8 +151,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         String tag = "TAG";
         String wrong_tag = "WRONG TAG";
         Set<TableLayout> tables = new HashSet<>();
-        TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
-        TableRow row = new TableRow(RuntimeEnvironment.application);
+        TableLayout tableLayout = new TableLayout(ApplicationProvider.getApplicationContext());
+        TableRow row = new TableRow(ApplicationProvider.getApplicationContext());
         row.setTag(tag);
         tableLayout.addView(row);
         tables.add(tableLayout);

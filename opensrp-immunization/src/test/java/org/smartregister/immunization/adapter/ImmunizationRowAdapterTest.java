@@ -2,6 +2,8 @@ package org.smartregister.immunization.adapter;
 
 import android.content.Context;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
@@ -14,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -46,7 +47,7 @@ import java.util.Map;
  */
 @PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*","javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -65,7 +66,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new ImmunizationRowGroup(RuntimeEnvironment.application, false);
+        view = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), false);
         setDataForTest(magicDate);
     }
 
@@ -148,7 +149,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertGetViewReturnsVaccineGroup() {
-        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view,
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(ApplicationProvider.getApplicationContext(), view,
                 true, vaccinelist, alertlist);
 
         Assert.assertNotNull(immunizationRowAdapter.getView(0, null, null));

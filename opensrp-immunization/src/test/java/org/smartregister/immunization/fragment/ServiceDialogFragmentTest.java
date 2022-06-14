@@ -2,6 +2,8 @@ package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
 import androidx.fragment.app.Fragment;
+import androidx.test.core.app.ApplicationProvider;
+
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -13,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
@@ -98,7 +99,7 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertOnCreateViewTestSetsUpTheActivity() {
         destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, ServiceDialogFragmentTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(ServiceDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();

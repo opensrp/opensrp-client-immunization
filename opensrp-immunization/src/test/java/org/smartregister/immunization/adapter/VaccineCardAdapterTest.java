@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -42,6 +41,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import androidx.test.core.app.ApplicationProvider;
+
 /**
  * Created by onaio on 30/08/2017.
  */
@@ -70,9 +71,9 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        view = new VaccineGroup(RuntimeEnvironment.application);
+        view = new VaccineGroup(ApplicationProvider.getApplicationContext());
         setDataForTest(magicDate);
-        vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList);
+        vaccineCardAdapter = new VaccineCardAdapter(ApplicationProvider.getApplicationContext(), view, "child", vaccineList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 

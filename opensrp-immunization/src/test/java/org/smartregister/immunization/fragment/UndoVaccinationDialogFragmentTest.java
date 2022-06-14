@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
+import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -13,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.BaseUnitTest;
@@ -87,7 +87,7 @@ public class UndoVaccinationDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertOnCreateViewTestSetsUpTheActivity() {
         destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, UndoVaccinationDialogFragmentTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), UndoVaccinationDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(UndoVaccinationDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();

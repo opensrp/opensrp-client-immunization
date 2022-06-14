@@ -1,5 +1,7 @@
 package org.smartregister.immunization.utils;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
@@ -12,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -149,12 +150,12 @@ public class UtilsTest extends BaseUnitTest {
         PowerMockito.when(VaccinatorUtils.getSpecialVaccines(androidContext)).thenReturn(specialVaccines);
 
         PowerMockito.spy(VaccinatorUtils.class);
-        PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(RuntimeEnvironment.application, "child")).thenReturn(vaccines);
+        PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(ApplicationProvider.getApplicationContext(), "child")).thenReturn(vaccines);
 
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
         PowerMockito.when( ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
 
-        Utils.processVaccineCache(RuntimeEnvironment.application, "child");
+        Utils.processVaccineCache(ApplicationProvider.getApplicationContext(), "child");
 
         VaccineCache childVaccineCache = vaccineCacheMap.get("child");
 

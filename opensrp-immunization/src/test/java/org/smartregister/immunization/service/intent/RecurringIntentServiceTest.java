@@ -3,6 +3,8 @@ package org.smartregister.immunization.service.intent;
 import android.app.Application;
 import android.content.Intent;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +18,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest ({ImmunizationLibrary.class})
+@PrepareForTest({ImmunizationLibrary.class})
 public class RecurringIntentServiceTest extends BaseUnitTest {
     @Rule
     public PowerMockRule rule = new PowerMockRule();
@@ -64,7 +65,7 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Test
     public void onHandleIntentTest() {
-        Application application = RuntimeEnvironment.application;
+        Application application = ApplicationProvider.getApplicationContext();
         Intent intent = new Intent(application, RecurringIntentService.class);
         //List<ServiceRecord> spyServiceRecordList = Mockito.spy(serviceRecordList);
 
