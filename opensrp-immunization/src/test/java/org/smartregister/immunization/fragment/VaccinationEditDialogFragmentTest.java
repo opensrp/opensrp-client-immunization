@@ -1,21 +1,18 @@
 package org.smartregister.immunization.fragment;
 
-import androidx.fragment.app.Fragment;
 import android.util.Log;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
@@ -48,7 +45,6 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationEditDialogFragmentTestActivity> controller;
@@ -64,9 +60,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private Context context;
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
     @Mock
     private AppProperties properties;
 
@@ -78,7 +71,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
 
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(context_).userService();
@@ -90,9 +82,9 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         CoreLibrary.init(context_);
         Mockito.doReturn(properties).when(context_).getAppProperties();
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
 
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);

@@ -3,14 +3,9 @@ package org.smartregister.immunization.domain;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -25,11 +20,7 @@ import java.util.List;
 /**
  * Created by real on 24/10/17.
  */
-@PrepareForTest({ImmunizationLibrary.class})
 public class ServiceScheduleTest extends BaseUnitTest {
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     @Mock
     private ImmunizationLibrary immunizationLibrary;
@@ -45,11 +36,6 @@ public class ServiceScheduleTest extends BaseUnitTest {
 
     @Mock
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
-
-    @Before
-    public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void assertUpdateOfflineAlertsReturnsAlertFromGetOflineAlerts() {
@@ -76,16 +62,16 @@ public class ServiceScheduleTest extends BaseUnitTest {
         List<ServiceType> serviceTypeList = new ArrayList<ServiceType>();
         serviceTypeList.add(serviceType);
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository())
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository())
                 .thenReturn(recurringServiceTypeRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository())
+        Mockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository())
                 .thenReturn(recurringServiceRecordRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository().fetchTypes()).thenReturn(types);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository()
+        Mockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository().fetchTypes()).thenReturn(types);
+        Mockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
+        Mockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository()
                 .findByType(Mockito.any(String.class))).thenReturn(serviceTypeList);
 
         ServiceSchedule.updateOfflineAlerts(VaccineTest.BASEENTITYID, new DateTime());

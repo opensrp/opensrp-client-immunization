@@ -14,10 +14,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.smartregister.Context;
@@ -68,8 +66,7 @@ import static org.mockito.ArgumentMatchers.eq;
 /**
  * Created by onaio on 29/08/2017.
  */
-
-@PrepareForTest({ImmunizationLibrary.class, Utils.class, AssetHandler.class})
+ 
 public class VaccinatorUtilsTest extends BaseUnitTest {
 
     private final int magicColor = 255;
@@ -80,8 +77,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     private final int RESOURCE_ID = 123456;
     private final String UNTRANSLATED_GROUP_NAME = "6 weeks";
     private final String TRANSLATED_GROUP_NAME = "6 weeks";
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+
     @Mock
     private ImmunizationLibrary immunizationLibrary;
     @Mock
@@ -91,18 +87,12 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Mock
     private Resources resources;
 
-    @Before
-    public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     public void verifygetwastedcallssqlmethodonce() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito
-                .when(ImmunizationLibrary.getInstance().context().commonrepository(ArgumentMatchers.anyString()))
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().context().commonrepository(ArgumentMatchers.anyString()))
                 .thenReturn(commonRepository);
         VaccinatorUtils.getWasted("", "", "");
         VaccinatorUtils.getWasted("", "", "", "");
@@ -112,11 +102,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Test
     public void verifyGetUsedcallssqlmethodonce() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito
-                .when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(commonRepository);
         VaccinatorUtils.getUsed("", "", "", "", "");
         Mockito.verify(commonRepository, Mockito.times(1))
@@ -126,18 +115,17 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void assertVaccinatorUtilsTest() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito
-                .when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().context().commonrepository(org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(commonRepository);
 
         android.content.Context ctx = Mockito.mock(android.content.Context.class);
         Resources resources = Mockito.mock(Resources.class);
-        PowerMockito.when(ctx.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(magicColor);
+        Mockito.when(ctx.getResources()).thenReturn(resources);
+        Mockito.when(resources.getColor(org.mockito.ArgumentMatchers.anyInt())).thenReturn(magicColor);
 
         //get file name with prefix
         Assert.assertEquals(VaccinatorUtils.getFileName("vaccines.json", "tz"), "tz_vaccines.json");
@@ -160,17 +148,17 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Assert.assertNotNull(new VaccinateActionUtils());
         Assert.assertNotNull(new VaccinatorUtils());
         Assert.assertEquals(IMConstants.VACCINE_SYNC_TIME, BuildConfig.VACCINE_SYNC_TIME);
-        //        VaccinatorUtils powerspy = PowerMockito.spy(vaccinatorUtils);
-        //        PowerMockito.doReturn(new HashMap<String, Object>()).when(VaccinatorUtils.class, "createVaccineMap", mock(String.class), mock(Alert.class), mock(DateTime.class), mock(ServiceType.class));
+        //        VaccinatorUtils powerspy = Mockito.spy(vaccinatorUtils);
+        //        Mockito.doReturn(new HashMap<String, Object>()).when(VaccinatorUtils.class, "createVaccineMap", mock(String.class), mock(Alert.class), mock(DateTime.class), mock(ServiceType.class));
     }
 
     @Test
     public void assertGetVaccineDisplayNameTestReturnsDisplayName() {
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.mockStatic(ImmunizationLibrary.class);
 
-        PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
@@ -179,7 +167,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
 
         Map<String, Object> jsonMap = new HashMap<>();
-        PowerMockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        Mockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, "Birth"));
         Assert.assertNotNull(VaccinatorUtils.getVaccineDisplayName(context, magicOPV0));
@@ -209,11 +197,11 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void assertGetVaccineCalculationTestReturnsCalculation() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.mockStatic(Utils.class);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.mockStatic(Utils.class);
 
-        PowerMockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getLocale()).thenReturn(new Locale("en"));
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
@@ -222,7 +210,7 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
         Map<String, Object> jsonMap = new HashMap<>();
 
         List<VaccineGroup> vaccineGroups = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
-        PowerMockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
+        Mockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap, context, "vaccines.json", clazz, listType)).thenReturn(vaccineGroups);
 
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicOPV0), 0);
         Assert.assertEquals(VaccinatorUtils.getVaccineCalculation(context, magicNULL), -1);
@@ -237,13 +225,13 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
         Map<String, Object> jsonMap2 = new HashMap<>();
 
-        PowerMockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap2, context, "special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
+        Mockito.when(ImmunizationLibrary.assetJsonToJava(jsonMap2, context, "special_vaccines.json", clazz2, listType2)).thenReturn(specialVaccines);
 
         JSONAssert.assertEquals(VaccineData.special_vacines,
                 JsonFormUtils.gson.toJson(VaccinatorUtils.getSpecialVaccines(context), listType2),
                 JSONCompareMode.NON_EXTENSIBLE);
         //readrecurringservices
-        PowerMockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class),
+        Mockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(android.content.Context.class),
                 org.mockito.ArgumentMatchers.anyString())).thenReturn(ServiceData.recurringservice);
         Assert.assertEquals(VaccinatorUtils.getSupportedRecurringServices(context), ServiceData.recurringservice);
     }
@@ -252,10 +240,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void testTranslateNameInvokesCorrectApiMethods() {
 
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(context.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getString(RESOURCE_ID)).thenReturn(TRANSLATED);
-        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(RESOURCE_ID);
+        Mockito.mockStatic(Utils.class);
+        Mockito.when(context.getResources()).thenReturn(resources);
+        Mockito.when(resources.getString(RESOURCE_ID)).thenReturn(TRANSLATED);
+        Mockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(RESOURCE_ID);
 
         String translated = VaccinatorUtils.translate(context, UNTRANSLATED);
 
@@ -266,10 +254,10 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void testGetTranslatedVaccineName() {
 
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(context.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getString(123)).thenReturn(TRANSLATED);
-        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(123);
+        Mockito.mockStatic(Utils.class);
+        Mockito.when(context.getResources()).thenReturn(resources);
+        Mockito.when(resources.getString(123)).thenReturn(TRANSLATED);
+        Mockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(123);
 
         String translated = VaccinatorUtils.getTranslatedVaccineName(context, UNTRANSLATED);
         Assert.assertEquals(TRANSLATED, translated);
@@ -284,9 +272,9 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     public void testGetTranslatedGroupName() {
 
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(Utils.class);
-        PowerMockito.when(context.getResources()).thenReturn(resources);
-        PowerMockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(RESOURCE_ID);
+        Mockito.mockStatic(Utils.class);
+        Mockito.when(context.getResources()).thenReturn(resources);
+        Mockito.when(resources.getIdentifier(UNTRANSLATED, "string", context.getPackageName())).thenReturn(RESOURCE_ID);
 
         //Test Group names
         String translated = VaccinatorUtils.translate(context, UNTRANSLATED_GROUP_NAME);
@@ -599,8 +587,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void testIsSkippableVaccineReturnsTrueForSkippableVaccines() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         Mockito.doReturn(Arrays.asList(VaccineRepo.Vaccine.bcg2)).when(immunizationLibrary).getSkippableVaccines();
 
         Boolean result = VaccinatorUtils.isSkippableVaccine("BCG 2");
@@ -611,8 +599,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
     @Test
     public void testIsSkippableVaccineReturnsFalseForNonSkippableVaccines() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Boolean result = VaccinatorUtils.isSkippableVaccine("OPV 1");
         Assert.assertNotNull(result);
@@ -621,8 +609,8 @@ public class VaccinatorUtilsTest extends BaseUnitTest {
 
     @Test
     public void testReadProviderDetails() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Mockito.doReturn(context).when(immunizationLibrary).context();
 

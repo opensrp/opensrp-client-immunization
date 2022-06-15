@@ -57,7 +57,6 @@ public class ServiceCardTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceCardTestActivity.class, intent);
         activity = controller.start().resume().get();

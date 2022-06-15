@@ -61,7 +61,6 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
         view = new VaccineGroup(ApplicationProvider.getApplicationContext());
 
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
@@ -184,8 +183,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         view.updateViews(wrappers);
 
         // Record All
-        VaccineGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito
-                .mock(VaccineGroup.OnRecordAllClickListener.class);
+        VaccineGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(VaccineGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
@@ -193,8 +191,7 @@ public class VaccineGroupTest extends BaseUnitTest {
                 org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
-        VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
-                .mock(VaccineGroup.OnVaccineClickedListener.class);
+        VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(VaccineGroup.OnVaccineClickedListener.class);
         view.setOnVaccineClickedListener(onVaccineClickListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
@@ -242,8 +239,7 @@ public class VaccineGroupTest extends BaseUnitTest {
         Mockito.verify(onVaccineClickListener, Mockito.times(3)).onClick(view, wrapper);
 
         // UNDO
-        VaccineGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito
-                .mock(VaccineGroup.OnVaccineUndoClickListener.class);
+        VaccineGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(VaccineGroup.OnVaccineUndoClickListener.class);
         view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
 
         vaccineCard.setState(State.DONE_CAN_NOT_BE_UNDONE);

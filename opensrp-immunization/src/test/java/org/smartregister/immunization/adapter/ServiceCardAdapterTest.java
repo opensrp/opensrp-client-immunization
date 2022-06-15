@@ -76,7 +76,6 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         setDataForTest(magicDate);
         serviceCardAdapter = new ServiceCardAdapter(ApplicationProvider.getApplicationContext(), view, serviceTypeList, serviceRecordList,
                 alertList);
-        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     public void setDataForTest(String dateTimeString) {

@@ -1,15 +1,9 @@
 package org.smartregister.immunization.domain;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
@@ -30,15 +24,13 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccineTriggerTest extends BaseUnitTest {
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
+    public static final String CHILD = "child";
+    public static final String stringdata1 = "{ \"reference\": \"dob\", \"offset\": \"+0d\"}";
+    public static final String stringdata2 = "{\"reference\": \"prerequisite\", \"prerequisite\": \"OPV 1\", \"offset\": \"+28d\"}";
     @Mock
     private ImmunizationLibrary immunizationLibrary;
-
     @Mock
     private VaccineRepository vaccineRepository;
     @Mock
@@ -48,25 +40,15 @@ public class VaccineTriggerTest extends BaseUnitTest {
     @Mock
     private AppProperties appProperties;
 
-    public static final String CHILD = "child";
-    public static final String stringdata1 = "{ \"reference\": \"dob\", \"offset\": \"+0d\"}";
-    public static final String stringdata2 = "{\"reference\": \"prerequisite\", \"prerequisite\": \"OPV 1\", \"offset\": \"+28d\"}";
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
-    }
-
     @Test
     public void assertInitReturnsNonNullTriggers() {
         Due data1 = JsonFormUtils.gson.fromJson(stringdata1, Due.class);
         Due data2 = JsonFormUtils.gson.fromJson(stringdata2, Due.class);
         Assert.assertNotNull(VaccineTrigger.init(CHILD, data1));
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.opv0, VaccineRepo.Vaccine.opv1, VaccineRepo.Vaccine.bcg});
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(new VaccineRepo.Vaccine[]{VaccineRepo.Vaccine.opv0, VaccineRepo.Vaccine.opv1, VaccineRepo.Vaccine.bcg});
         VaccineTrigger vaccineTrigger = VaccineTrigger.init(CHILD, data2);
         Assert.assertNotNull(vaccineTrigger);
     }

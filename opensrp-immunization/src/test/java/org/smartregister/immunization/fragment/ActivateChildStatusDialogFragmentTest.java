@@ -45,10 +45,6 @@ public class ActivateChildStatusDialogFragmentTest extends BaseUnitTest {
     @Mock
     private Button button;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void newInstanceShouldCreateNonNullInstance() {

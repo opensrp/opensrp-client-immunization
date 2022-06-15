@@ -74,7 +74,6 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         view = new VaccineGroup(ApplicationProvider.getApplicationContext());
         setDataForTest(magicDate);
         vaccineCardAdapter = new VaccineCardAdapter(ApplicationProvider.getApplicationContext(), view, "child", vaccineList, alertList);
-        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -192,8 +191,7 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void testUpdateVaccineDate() {
-        VaccineCardAdapter mockAdapter = Mockito
-                .spy(new VaccineCardAdapter(context, view, "child", vaccinelist, alertlist));
+        VaccineCardAdapter mockAdapter = Mockito.spy(new VaccineCardAdapter(context, view, "child", vaccinelist, alertlist));
 
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setDbKey(0l);

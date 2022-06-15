@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.util.ReflectionHelpers;
@@ -57,7 +56,6 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
 
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(context_).userService();
@@ -217,7 +215,7 @@ public class VaccineCardTest extends BaseUnitTest {
 
         ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
 
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();

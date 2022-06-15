@@ -28,10 +28,6 @@ public class VaccinatorUtilsTest {
     @Mock
     private AssetManager assetManager;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void testGetVaccineFilesReturnsListOfFilesFromVaccinesFolder() throws IOException {

@@ -5,15 +5,9 @@ import androidx.test.core.app.ApplicationProvider;
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -30,26 +24,16 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Created by ndegwamartin on 2019-07-23.
  */
-@PrepareForTest({ImmunizationLibrary.class, VaccinatorUtils.class})
 public class UtilsTest extends BaseUnitTest {
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-    @Mock
-    private AppProperties properties;
-
-    @Mock
-    private android.content.Context androidContext;
 
     private static String OFFSET_days = "+2d";
     private static String OFFSET_days_negative = "-2d";
@@ -57,11 +41,12 @@ public class UtilsTest extends BaseUnitTest {
     private static String OFFSET_months = "+6m";
     private static String OFFSET_years = "-5y";
     private static String RELAXATION_DAYS = "2";
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+    @Mock
+    private AppProperties properties;
+    @Mock
+    private android.content.Context androidContext;
 
     @Test
     public void testUpdateRelaxationDaysGivesCorrectOffsetForDaysDefault() {
@@ -72,10 +57,10 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testUpdateRelaxationDaysGivesCorrectOffsetForDays() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
-        PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
+        Mockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_days);
         Assert.assertEquals("+0d", result);
@@ -84,10 +69,10 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testUpdateRelaxationDaysGivesCorrectOffsetForDaysNegative() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
-        PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
+        Mockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_days_negative);
         Assert.assertEquals("-2d", result);
@@ -96,10 +81,10 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testUpdateRelaxationDaysGivesCorrectOffsetForMonths() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
-        PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
+        Mockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_months);
         Assert.assertEquals("+6m,-2d", result);
@@ -108,10 +93,10 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testUpdateRelaxationDaysGivesCorrectOffsetForYears() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
-        PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
+        Mockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_years);
         Assert.assertEquals("-5y,-2d", result);
@@ -120,10 +105,10 @@ public class UtilsTest extends BaseUnitTest {
     @Test
     public void testUpdateRelaxationDaysGivesCorrectOffsetForMonthsDays() {
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
-        PowerMockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.getProperties()).thenReturn(properties);
+        Mockito.when(properties.getProperty(IMConstants.APP_PROPERTIES.VACCINE_RELAXATION_DAYS)).thenReturn(RELAXATION_DAYS);
 
         String result = Utils.updateRelaxationDays(OFFSET_month_days);
         Assert.assertEquals("+4m,1d", result);
@@ -139,21 +124,21 @@ public class UtilsTest extends BaseUnitTest {
         List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
         List<Vaccine> specialVaccines = JsonFormUtils.gson.fromJson(VaccineData.special_vacines, vaccineListType);
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
 
         Context context = Mockito.mock(Context.class);
         android.content.Context androidContext = Mockito.mock(android.content.Context.class);
 
         Mockito.doReturn(context).when(immunizationLibrary).context();
         Mockito.doReturn(androidContext).when(context).applicationContext();
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(androidContext)).thenReturn(specialVaccines);
+        Mockito.when(VaccinatorUtils.getSpecialVaccines(androidContext)).thenReturn(specialVaccines);
 
-        PowerMockito.spy(VaccinatorUtils.class);
-        PowerMockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(ApplicationProvider.getApplicationContext(), "child")).thenReturn(vaccines);
+        Mockito.spy(VaccinatorUtils.class);
+        Mockito.when(VaccinatorUtils.getSupportedVaccinesByCategory(ApplicationProvider.getApplicationContext(), "child")).thenReturn(vaccines);
 
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
-        PowerMockito.when( ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
+        Mockito.when(ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
 
         Utils.processVaccineCache(ApplicationProvider.getApplicationContext(), "child");
 
@@ -224,17 +209,17 @@ public class UtilsTest extends BaseUnitTest {
         Context context = Mockito.mock(Context.class);
         Mockito.doReturn(context).when(immunizationLibrary).context();
 
-        PowerMockito.mockStatic(VaccinatorUtils.class);
-        PowerMockito.when(VaccinatorUtils.cleanVaccineName("HPV 1")).thenReturn("hpv1");
-        PowerMockito.when(VaccinatorUtils.cleanVaccineName("HPV 2")).thenReturn("hpv2");
+        Mockito.mockStatic(VaccinatorUtils.class);
+        Mockito.when(VaccinatorUtils.cleanVaccineName("HPV 1")).thenReturn("hpv1");
+        Mockito.when(VaccinatorUtils.cleanVaccineName("HPV 2")).thenReturn("hpv2");
 
-        PowerMockito.when(VaccinatorUtils.getVaccineFiles(androidContext)).thenReturn(Arrays.asList(new String[]{"girls_over_5_vaccines.json"}));
-        PowerMockito.when(VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(androidContext, "vaccines/girls_over_5_vaccines.json")).thenReturn(vaccines);
+        Mockito.when(VaccinatorUtils.getVaccineFiles(androidContext)).thenReturn(Arrays.asList(new String[]{"girls_over_5_vaccines.json"}));
+        Mockito.when(VaccinatorUtils.getVaccineGroupsFromVaccineConfigFile(androidContext, "vaccines/girls_over_5_vaccines.json")).thenReturn(vaccines);
 
         Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when( ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getVaccineCacheMap()).thenReturn(vaccineCacheMap);
 
         Utils.processVaccineCache(androidContext);
 

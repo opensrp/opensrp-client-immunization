@@ -43,7 +43,6 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
 
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
@@ -69,7 +68,7 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
         VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
         vaccineNameRepository.add(vaccineName);
         Mockito.verify(sqliteDatabase, Mockito.times(1))
-                .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class),
+                .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(),
                         org.mockito.ArgumentMatchers.any(ContentValues.class));
     }
 

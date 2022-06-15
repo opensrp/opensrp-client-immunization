@@ -1,16 +1,17 @@
 package org.smartregister.immunization;
 
 import android.os.Build;
-import androidx.annotation.NonNull;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.smartregister.Context;
+import org.smartregister.CoreLibrary;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.repository.VaccineRepository;
@@ -22,12 +23,8 @@ import org.smartregister.util.AppProperties;
  * Created by onaio on 29/08/2017.
  */
 
-@RunWith(PowerMockRunner.class)
-@PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.P)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*"
-        , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
-        , "org.xmlpull.v1.*", "org.smartregister.immunization.view.ExpandableHeightGridView"})
+@RunWith(RobolectricTestRunner.class)
+@Config(shadows = {FontTextViewShadow.class,}, application = TestApplication.class, sdk = Build.VERSION_CODES.S)
 public abstract class BaseUnitTest {
     public final static String BASEENTITYID = "baseEntityId";
     public final static String LOCATIONID = "locationID";
@@ -39,19 +36,45 @@ public abstract class BaseUnitTest {
     public static final String ANMID = "anmId";
     public static final String FORMSUBMISSIONID = "formSubmissionId";
     public static final String VALUE = "value";
+    @Mock
+    protected ImmunizationLibrary immunizationLibrary;
+    @Mock
+    protected VaccineRepository vaccineRepository;
+    @Mock
+    protected Context context;
+    @Mock
+    protected AlertService alertService;
+    @Mock
+    protected AppProperties appProperties;
+    private AutoCloseable autoCloseable;
 
+    @Before
+    public void setUpSuper() {
+        try {
+            autoCloseable = MockitoAnnotations.openMocks(this);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
-    public void mockImmunizationLibrary(@NonNull ImmunizationLibrary immunizationLibrary, @NonNull Context context, @NonNull VaccineRepository vaccineRepository, @NonNull AlertService alertService, @NonNull AppProperties appProperties) {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
+        Mockito.doReturn(context).when(immunizationLibrary).context();
+        Mockito.doReturn(vaccineRepository).when(immunizationLibrary).vaccineRepository();
+        Mockito.doReturn(null).when(vaccineRepository).findByEntityId(org.mockito.ArgumentMatchers.anyString());
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
+        Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.WOMAN);
+        Mockito.doReturn(alertService).when(context).alertService();
+        Mockito.doReturn(appProperties).when(immunizationLibrary).getProperties();
+    }
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(VaccineRepo.Vaccine.values());
-        PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.WOMAN)).thenReturn(VaccineRepo.Vaccine.values());
-
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
-        PowerMockito.when(ImmunizationLibrary.getInstance().getProperties()).thenReturn(appProperties);
+    @After
+    public void tearDownSuper() throws Exception {
+        if (autoCloseable != null)
+            autoCloseable.close();
+        Context.destroyInstance();
+        CoreLibrary.destroyInstance();
+        try {
+            Mockito.validateMockitoUsage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -13,14 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.AllConstants;
 import org.smartregister.Context;
@@ -59,7 +54,6 @@ import java.util.Set;
  * Created by real on 31/10/17.
  */
 
-@PrepareForTest({FormUtils.class, VaccinatorUtils.class, ImmunizationLibrary.class})
 public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     public static final String WOMAN = "woman";
@@ -71,9 +65,6 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
     private final String magicID = "uselessentityID";
     private final int magic2 = 2;
     private final int magic12 = 12;
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
     @Mock
     private VaccinateActionUtils vaccinateActionUtils;
     @Mock
@@ -92,21 +83,18 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         Assert.assertNotNull(vaccinateActionUtils);
-
-        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
     }
 
     @Test
     public void assertFormDataTestWithTestData() throws Exception {
         android.content.Context context = Mockito.mock(android.content.Context.class);
-        PowerMockito.mockStatic(FormUtils.class);
+        Mockito.mockStatic(FormUtils.class);
         Assert.assertNull(VaccinateActionUtils.formData(context, "", "", ""));
-        PowerMockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+        Mockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(formUtils);
-        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(),
+        Mockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(),
                 org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(magicData);
         Assert.assertEquals(VaccinateActionUtils.formData(context, "", "", ""), magicData);
 
@@ -238,20 +226,17 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
         List<VaccineGroup> vaccines = JsonFormUtils.gson.fromJson(VaccineData.vaccines, listType);
-        PowerMockito.mockStatic(VaccinatorUtils.class);
+        Mockito.mockStatic(VaccinatorUtils.class);
 
         listType = new TypeToken<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>>() {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
-
-        PowerMockito
-                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+        Mockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(specialVaccines);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
-        PowerMockito
-                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+        Mockito.when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(null);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 

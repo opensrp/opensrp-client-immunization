@@ -14,16 +14,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
-import org.smartregister.immunization.ImmunizationLibrary;
-import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
@@ -45,9 +40,6 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class})
-@Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*","javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -65,7 +57,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
         view = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), false);
         setDataForTest(magicDate);
     }
@@ -158,8 +149,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertVaccineRemovedWithNullStatus() {
-        ImmunizationRowAdapter mockAdapter = Mockito
-                .spy(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
+        ImmunizationRowAdapter mockAdapter = Mockito.spy(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
 
         ReflectionHelpers.callInstanceMethod(mockAdapter, "removeVaccine",
                 ReflectionHelpers.ClassParameter.from(String.class, "OPV 0"));
@@ -170,8 +160,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void testUpdateVaccineDate() {
-        ImmunizationRowAdapter mockAdapter = Mockito
-                .spy(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
+        ImmunizationRowAdapter mockAdapter = Mockito.spy(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
 
         VaccineWrapper vaccineWrapper = new VaccineWrapper();
         vaccineWrapper.setDbKey(0l);

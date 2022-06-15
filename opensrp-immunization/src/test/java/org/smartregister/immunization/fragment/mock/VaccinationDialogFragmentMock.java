@@ -94,14 +94,12 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
         ViewGroup dialogViewMock = (ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false);
         ViewGroup dialogView = Mockito.spy((ViewGroup) inflater.inflate(R.layout.vaccination_dialog_view, container, false));
         Mockito.doReturn(dialogView).when(this.inflater).inflate(R.layout.vaccination_dialog_view, container, false);
-        LinearLayout vaccinationNameLayout = Mockito
-                .spy((LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout));
+        LinearLayout vaccinationNameLayout = Mockito.spy((LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout));
         Mockito.doReturn(vaccinationNameLayout).when(dialogView).findViewById(R.id.vaccination_name_layout);
 
         LinearLayout vaccineName = Mockito.spy(new LinearLayout(ApplicationProvider.getApplicationContext()));
         CheckBoxMock checkBox = Mockito.mock(CheckBoxMock.class);
-        RadioButtonMock radioButton = Mockito
-                .mock(RadioButtonMock.class);//new RadioButtonMock(ApplicationProvider.getApplicationContext());
+        RadioButtonMock radioButton = Mockito.mock(RadioButtonMock.class);//new RadioButtonMock(ApplicationProvider.getApplicationContext());
         TextView textView = new TextView(ApplicationProvider.getApplicationContext());
         Mockito.doReturn(vaccineName).when(this.inflater).inflate(R.layout.vaccination_name, null);
         Mockito.doReturn(radioButton).when(vaccineName).findViewById(R.id.radio);

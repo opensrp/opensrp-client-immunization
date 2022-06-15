@@ -69,7 +69,6 @@ public class ServiceRowGroupTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
@@ -111,8 +110,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         setDataForTest(magicDate);
         view.updateViews();
 
-        ServiceRowGroup.OnServiceClickedListener onServiceClickedListener = Mockito
-                .mock(ServiceRowGroup.OnServiceClickedListener.class);
+        ServiceRowGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceRowGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
@@ -156,8 +154,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         Mockito.verify(onServiceClickedListener, Mockito.times(2)).onClick(view, wrapper);
 
         // UNDO never called since isEditmode is false and isStatusForMoreThanThreeMonths is true
-        ServiceRowGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito
-                .mock(ServiceRowGroup.OnServiceUndoClickListener.class);
+        ServiceRowGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceRowGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
 
         serviceRowCard.setState(State.DUE);
@@ -255,8 +252,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         setDataForTest(simpleDateFormat.format(date));
         view.updateViews();
 
-        ServiceRowGroup.OnServiceClickedListener onServiceClickedListener = Mockito
-                .mock(ServiceRowGroup.OnServiceClickedListener.class);
+        ServiceRowGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceRowGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
@@ -268,8 +264,7 @@ public class ServiceRowGroupTest extends BaseUnitTest {
         serviceRowCard.setServiceWrapper(wrapper);
 
         // UNDO
-        ServiceRowGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito
-                .mock(ServiceRowGroup.OnServiceUndoClickListener.class);
+        ServiceRowGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceRowGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
 
         serviceRowCard.setState(State.DUE);

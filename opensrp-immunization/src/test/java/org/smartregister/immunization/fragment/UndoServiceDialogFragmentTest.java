@@ -45,7 +45,6 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
     @Before
     public void setUp() {
 
-        org.mockito.MockitoAnnotations.initMocks(this);
 
         Mockito.doReturn(properties).when(context_).getAppProperties();
 

@@ -55,12 +55,10 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
-        org.junit.Assert.assertNotNull(vaccineRepository);
+        vaccineRepository = Mockito.spy(vaccineRepository);
     }
 
     public SQLiteDatabase getMockDatabase() {
@@ -70,43 +68,48 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     @Test
     public void assertAddHyphenTest() {
         String testString = VaccineRepository.addHyphen("");
-        org.junit.Assert.assertNotNull(testString);
-        org.junit.Assert.assertTrue(testString.isEmpty());
+        Assert.assertNotNull(testString);
+        Assert.assertTrue(testString.isEmpty());
         String testString2 = VaccineRepository.addHyphen("test string");
-        org.junit.Assert.assertNotNull(testString2);
-        org.junit.Assert.assertTrue(testString2.contains("_"));
+        Assert.assertNotNull(testString2);
+        Assert.assertTrue(testString2.contains("_"));
     }
 
     @Test
     public void assertRemoveHyphenTest() {
         String testString = VaccineRepository.removeHyphen("");
-        org.junit.Assert.assertNotNull(testString);
-        org.junit.Assert.assertTrue(testString.isEmpty());
+        Assert.assertNotNull(testString);
+        Assert.assertTrue(testString.isEmpty());
         String testString2 = VaccineRepository.removeHyphen("test_string");
-        org.junit.Assert.assertNotNull(testString2);
+        Assert.assertNotNull(testString2);
         Assert.assertFalse(testString2.contains("-"));
     }
 
     @Test
-    public void assertFindUnSyncedBeforeTimeTest() {
+    public void assertFindUnSyncedBeforeTimeTestRunsDBQueryWithCorrectParams() {
         String[] columns = new String[]{VaccineRepository.ID_COLUMN, VaccineRepository.BASE_ENTITY_ID, VaccineRepository.PROGRAM_CLIENT_ID, VaccineRepository.NAME, VaccineRepository.CALCULATION, VaccineRepository.DATE, VaccineRepository.ANMID, VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID, VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1});
-        org.junit.Assert.assertNotNull(vaccineRepository.findUnSyncedBeforeTime(magic10));
-        Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
+        Mockito.doReturn(sqliteDatabase).when(vaccineRepository).getReadableDatabase();
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
-        org.junit.Assert.assertNotNull(vaccineRepository.findUnSyncedBeforeTime(magic10));
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull())).thenReturn(cursor);
+
+        vaccineRepository.findUnSyncedBeforeTime(magic10);
+
+        Mockito.verify(sqliteDatabase).query(ArgumentMatchers.eq(VaccineRepository.VACCINE_TABLE_NAME), ArgumentMatchers.eq(VaccineRepository.VACCINE_TABLE_COLUMNS),
+                ArgumentMatchers.eq(VaccineRepository.UPDATED_AT_COLUMN + " < ? AND " + VaccineRepository.SYNC_STATUS + " = ? "), ArgumentMatchers.any(String[].class),
+                ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull());
+
     }
 
     @Test
     public void assertConstructorTest() {
         VaccineRepository vaccineRepository = new VaccineRepository(commonFtsObject, alertService);
-        org.junit.Assert.assertNotNull(vaccineRepository);
+        Assert.assertNotNull(vaccineRepository);
     }
 
     @Test
@@ -153,7 +156,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.when(vaccineRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.add(new Vaccine());
         Mockito.verify(sqliteDatabase, Mockito.times(2))
-                .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class),
+                .insert(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(),
                         org.mockito.ArgumentMatchers.any(ContentValues.class));
         Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0,
                 new Date(),
@@ -229,17 +232,17 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull())).thenReturn(cursor);
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.findByEntityId(ENTITYID);
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class));
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull());
     }
 
     @Test
@@ -251,17 +254,17 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull())).thenReturn(cursor);
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.findLatestTwentyFourHoursByEntityId(ENTITYID);
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class));
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull());
     }
 
     @Test
@@ -274,17 +277,17 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.when(sqliteDatabase
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class))).thenReturn(cursor);
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull())).thenReturn(cursor);
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.find(1l);
         Mockito.verify(sqliteDatabase, Mockito.times(1))
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.isNull(String.class));
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.isNull());
 
 
     }
@@ -299,10 +302,10 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         vaccine.setFormSubmissionId(FORMSUBMISSIONID);
         vaccine.setEventId(EVENTID);
         Mockito.when(sqliteDatabase
-                .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class)))
+                        .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
+                                org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
+                                org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                                org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull()))
                 .thenReturn(cursor);
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         vaccineRepository.findUnique(null, vaccine);
@@ -311,8 +314,8 @@ public class VaccineRepositoryTest extends BaseUnitTest {
         Mockito.verify(sqliteDatabase, Mockito.times(2))
                 .query(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
                         org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(String[].class),
-                        org.mockito.ArgumentMatchers.isNull(String.class), org.mockito.ArgumentMatchers.isNull(String.class),
-                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull(String.class));
+                        org.mockito.ArgumentMatchers.isNull(), org.mockito.ArgumentMatchers.isNull(),
+                        org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull());
     }
 
     @Test
@@ -346,7 +349,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
 
         Mockito.when(vaccineRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         List<Vaccine> list = vaccineRepository.findWithNullHia2Status();
-        org.junit.Assert.assertNotNull(list);
+        Assert.assertNotNull(list);
     }
 
     @Test

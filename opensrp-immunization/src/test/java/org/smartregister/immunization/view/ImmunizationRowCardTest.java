@@ -8,13 +8,8 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.annotation.Config;
@@ -40,24 +35,20 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
     private final String magicDue = "due";
     private final String magicMR = "mr";
     private final String magicMeasles = "measles";
     private final String magicExpired = "expired";
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+
     private ImmunizationRowCard view;
 
     private ImmunizationLibrary immunizationLibrary;
 
     @Before
     public void setUp() throws Exception {
-        org.mockito.MockitoAnnotations.initMocks(this);
         view = new ImmunizationRowCard(ApplicationProvider.getApplicationContext());
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
@@ -69,16 +60,16 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
         event.setEventId("1");
         event.setDateCreated(new DateTime());
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.mockStatic(ImmunizationLibrary.class);
         immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
         ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
                 Mockito.mock(CommonFtsObject.class), 0, 0);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
-        PowerMockito.when(vaccineRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(vaccine);
-        PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
+        Mockito.when(vaccineRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(vaccine);
+        Mockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
+        Mockito.when(eventClientRepository
                         .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
                 .thenReturn(event);
     }
@@ -172,7 +163,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
     @Test
     public void testHideVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
@@ -204,7 +195,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
     @Test
     public void testShowVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();

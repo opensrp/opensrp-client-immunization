@@ -23,7 +23,6 @@ public class ImmunizationLibraryTest extends BaseUnitTest {
         Mockito.doReturn(properties).when(context).getAppProperties();
         CommonFtsObject commonFtsObject = Mockito.mock(CommonFtsObject.class);
         ImmunizationLibrary.init(context, repository, commonFtsObject, 0, 0);
-        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     @Test

@@ -1,19 +1,12 @@
 package org.smartregister.immunization.db;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.smartregister.Context;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
-import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.service.AlertService;
-import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
 
@@ -21,30 +14,9 @@ import java.util.ArrayList;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccineRepoTest extends BaseUnitTest {
     public static final String WOMAN = "woman";
     public static final String CHILD = "child";
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-    @Mock
-    private ImmunizationLibrary immunizationLibrary;
-    @Mock
-    private VaccineRepository vaccineRepository;
-    @Mock
-    private Context context;
-    @Mock
-    private AlertService alertService;
-    @Mock
-    private AppProperties appProperties;
-
-    @Before
-    public void setUp() {
-
-        MockitoAnnotations.initMocks(this);
-        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
-    }
 
     @Test
     public void assertGetVaccinesWillReturnAccordingToCategoryWoman() {
@@ -54,12 +26,20 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.tt3);
         vaccines.add(VaccineRepo.Vaccine.tt4);
         vaccines.add(VaccineRepo.Vaccine.tt5);
-        Assert.assertEquals(vaccines, VaccineRepo.getVaccines(WOMAN));
-        Assert.assertEquals(vaccines.get(0), VaccineRepo.getVaccine("TT 1", WOMAN));
-        Assert.assertEquals(vaccines.get(1), VaccineRepo.getVaccine("TT 2", WOMAN));
-        Assert.assertEquals(vaccines.get(2), VaccineRepo.getVaccine("TT 3", WOMAN));
-        Assert.assertEquals(vaccines.get(3), VaccineRepo.getVaccine("TT 4", WOMAN));
-        Assert.assertEquals(vaccines.get(4), VaccineRepo.getVaccine("TT 5", WOMAN));
+
+        try (MockedStatic<ImmunizationLibrary> immunizationLibraryMockedStatic = Mockito.mockStatic(ImmunizationLibrary.class)) {
+
+            immunizationLibraryMockedStatic.when(ImmunizationLibrary::getInstance).thenReturn(immunizationLibrary);
+
+            Assert.assertEquals(vaccines, VaccineRepo.getVaccines(WOMAN));
+
+            Assert.assertEquals(vaccines.get(0), VaccineRepo.getVaccine("TT 1", WOMAN));
+            Assert.assertEquals(vaccines.get(1), VaccineRepo.getVaccine("TT 2", WOMAN));
+            Assert.assertEquals(vaccines.get(2), VaccineRepo.getVaccine("TT 3", WOMAN));
+            Assert.assertEquals(vaccines.get(3), VaccineRepo.getVaccine("TT 4", WOMAN));
+            Assert.assertEquals(vaccines.get(4), VaccineRepo.getVaccine("TT 5", WOMAN));
+
+        }
     }
 
     @Test
@@ -113,7 +93,15 @@ public class VaccineRepoTest extends BaseUnitTest {
         vaccines.add(VaccineRepo.Vaccine.dtp4);
         vaccines.add(VaccineRepo.Vaccine.hpv1);
         vaccines.add(VaccineRepo.Vaccine.hpv2);
-        Assert.assertEquals(vaccines, VaccineRepo.getVaccines(CHILD));
+
+        try (MockedStatic<ImmunizationLibrary> immunizationLibraryMockedStatic = Mockito.mockStatic(ImmunizationLibrary.class)) {
+
+            immunizationLibraryMockedStatic.when(ImmunizationLibrary::getInstance).thenReturn(immunizationLibrary);
+            Assert.assertEquals(vaccines, VaccineRepo.getVaccines(CHILD));
+
+        }
+
+
     }
 
     @Test

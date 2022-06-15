@@ -16,8 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
@@ -52,9 +50,7 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -88,7 +84,6 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ImmunizationRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ImmunizationRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
@@ -209,8 +204,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         view.updateViews(wrappers);
 
         // Record All
-        ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito
-                .mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
+        ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
@@ -218,8 +212,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
                 org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
-        ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
-                .mock(ImmunizationRowGroup.OnVaccineClickedListener.class);
+        ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineClickedListener.class);
         view.setOnVaccineClickedListener(onVaccineClickListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
@@ -264,8 +257,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         Mockito.verify(onVaccineClickListener, Mockito.times(2)).onClick(view, wrapper);
 
         // UNDO never called since isEditmode is false and isStatusForMoreThanThreeMonths is true
-        ImmunizationRowGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito
-                .mock(ImmunizationRowGroup.OnVaccineUndoClickListener.class);
+        ImmunizationRowGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineUndoClickListener.class);
         view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
 
         immunizationRowCard.setState(State.DUE);
@@ -311,8 +303,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         view.updateViews(wrappers);
 
         // Record All
-        ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito
-                .mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
+        ImmunizationRowGroup.OnRecordAllClickListener onRecordAllClickListener = Mockito.mock(ImmunizationRowGroup.OnRecordAllClickListener.class);
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
@@ -320,8 +311,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
                 org.mockito.ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
-        ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
-                .mock(ImmunizationRowGroup.OnVaccineClickedListener.class);
+        ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineClickedListener.class);
         view.setOnVaccineClickedListener(onVaccineClickListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
@@ -333,8 +323,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         wrapper.setVaccineDate(DateTime.now());
         immunizationRowCard.setVaccineWrapper(wrapper);
 
-        ImmunizationRowGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito
-                .mock(ImmunizationRowGroup.OnVaccineUndoClickListener.class);
+        ImmunizationRowGroup.OnVaccineUndoClickListener onVaccineUndoClickListener = Mockito.mock(ImmunizationRowGroup.OnVaccineUndoClickListener.class);
         view.setOnVaccineUndoClickListener(onVaccineUndoClickListener);
 
         immunizationRowCard.setState(State.DUE);

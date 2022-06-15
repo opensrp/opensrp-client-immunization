@@ -10,16 +10,10 @@ import androidx.test.core.app.ApplicationProvider;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -45,10 +39,8 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class, VaccinatorUtils.class})
 public class VaccineIntentServiceTest extends BaseUnitTest {
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+
 
     @Mock
     private ImmunizationLibrary immunizationLibrary;
@@ -65,10 +57,6 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
     @Mock
     private List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialJsonMappingVaccines;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
@@ -83,17 +71,17 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
         VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
         Assert.assertNotNull(vaccineIntentService);
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.mockStatic(VaccinatorUtils.class);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.mockStatic(VaccinatorUtils.class);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         Assert.assertNotNull(immunizationLibrary);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
+        Mockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
         Assert.assertNotNull(vaccineRepository);
 
-        PowerMockito.when(VaccinatorUtils.getSupportedVaccines(any(Context.class))).thenReturn(availableVaccines);
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(any(Context.class))).thenReturn(specialJsonMappingVaccines);
+        Mockito.when(VaccinatorUtils.getSupportedVaccines(any(Context.class))).thenReturn(availableVaccines);
+        Mockito.when(VaccinatorUtils.getSpecialVaccines(any(Context.class))).thenReturn(specialJsonMappingVaccines);
         Assert.assertNotNull(availableVaccines);
         Assert.assertNotNull(specialJsonMappingVaccines);
 

@@ -71,7 +71,6 @@ public class ServiceGroupTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceGroupTestActivity.class);
         controller = Robolectric.buildActivity(ServiceGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
@@ -110,8 +109,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         setDataForTest(magicDate);
         view.updateViews();
 
-        ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito
-                .mock(ServiceGroup.OnServiceClickedListener.class);
+        ServiceGroup.OnServiceClickedListener onServiceClickedListener = Mockito.mock(ServiceGroup.OnServiceClickedListener.class);
         view.setOnServiceClickedListener(onServiceClickedListener);
 
         ExpandableHeightGridView expandableHeightGridView = view.getServicesGV();
@@ -155,8 +153,7 @@ public class ServiceGroupTest extends BaseUnitTest {
         Mockito.verify(onServiceClickedListener, Mockito.times(2)).onClick(view, wrapper);
 
         // UNDO
-        ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito
-                .mock(ServiceGroup.OnServiceUndoClickListener.class);
+        ServiceGroup.OnServiceUndoClickListener onServiceUndoClickListener = Mockito.mock(ServiceGroup.OnServiceUndoClickListener.class);
         view.setOnServiceUndoClickListener(onServiceUndoClickListener);
 
         serviceCard.setState(State.DONE_CAN_NOT_BE_UNDONE);

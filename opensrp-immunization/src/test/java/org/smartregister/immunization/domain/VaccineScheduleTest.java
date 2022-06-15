@@ -5,14 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
@@ -39,12 +36,10 @@ import java.util.List;
 /**
  * Created by real on 23/10/17.
  */
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccineScheduleTest extends BaseUnitTest {
 
     private final String magicOPV0 = "OPV 0";
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+
     @Mock
     private ImmunizationLibrary immunizationLibrary;
     @Mock
@@ -59,7 +54,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     private Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, magicOPV0, 0,
             new Date(),
             VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
-            VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(),1);
+            VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1);
 
     @Before
     public void setUp() {
@@ -79,7 +74,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
-        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
 
@@ -97,7 +91,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
-        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
 
@@ -115,7 +108,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         }.getType();
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
-        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
 
@@ -132,10 +124,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         Assert.assertEquals("BCG", capturedList.get(0).scheduleName());
         Assert.assertEquals("OPV 0", capturedList.get(1).scheduleName());
 
-    }
-
-    private void mockImmunizationLibrary() {
-        mockImmunizationLibrary(immunizationLibrary, context, vaccineRepository, alertService, appProperties);
     }
 
     @Test
@@ -155,7 +143,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
 
-        mockImmunizationLibrary();
 
         VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
         Assert.assertNotNull(VaccineSchedule.getVaccineSchedule(IMConstants.VACCINE_TYPE.CHILD, magicOPV0));
@@ -196,7 +183,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
         List<org.smartregister.immunization.domain.jsonmapping.Vaccine> specialVaccines = JsonFormUtils.gson
                 .fromJson(VaccineData.special_vacines, listType);
 
-        mockImmunizationLibrary();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 

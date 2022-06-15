@@ -61,7 +61,6 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         setDataForTest(magicDate);
         serviceRowAdapter = new ServiceRowAdapter(ApplicationProvider.getApplicationContext(), view, true, serviceTypeList,
                 serviceRecordList, alertList);
-        org.mockito.MockitoAnnotations.initMocks(this);
     }
 
     public void setDataForTest(String dateTimeString) {

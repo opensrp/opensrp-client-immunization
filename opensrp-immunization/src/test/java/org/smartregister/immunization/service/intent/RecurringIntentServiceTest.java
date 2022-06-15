@@ -7,16 +7,10 @@ import androidx.test.core.app.ApplicationProvider;
 
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -33,10 +27,7 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class})
 public class RecurringIntentServiceTest extends BaseUnitTest {
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     @Mock
     private ImmunizationLibrary immunizationLibrary;
@@ -58,10 +49,6 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
         Assert.assertNotNull(new RecurringIntentService());
     }
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void onHandleIntentTest() {
@@ -70,16 +57,16 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
         //List<ServiceRecord> spyServiceRecordList = Mockito.spy(serviceRecordList);
 
         RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.mockStatic(ImmunizationLibrary.class);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         Assert.assertNotNull(immunizationLibrary);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository())
+        Mockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository())
                 .thenReturn(recurringServiceTypeRepository);
         Assert.assertNotNull(recurringServiceTypeRepository);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository())
+        Mockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository())
                 .thenReturn(recurringServiceRecordRepository);
         Assert.assertNotNull(recurringServiceRecordRepository);
         ServiceRecord serviceRecord = new ServiceRecord(0L, BASEENTITYID, 0L, VALUE, new Date(), ANMID, LOCATIONID, SYNCED,

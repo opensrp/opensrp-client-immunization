@@ -2,14 +2,9 @@ package org.smartregister.immunization.utils;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Photo;
@@ -28,11 +23,7 @@ import java.util.Map;
  * Created by onaio on 29/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 public class ImageUtilsTest extends BaseUnitTest {
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
@@ -45,11 +36,6 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Mock
     private ImageRepository imageRepository;
-
-    @Before
-    public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void assertProfileImageResourceByGenderWithEmptyStringParameterReturnsDefaultResource() {
@@ -97,11 +83,11 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertProfilePhotoByClientReturnsDefaultInfantBoyPhoto() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
+        Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         Mockito.doReturn("test-base-entity-id").when(commonPersonObjectClient).entityId();
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
         org.junit.Assert.assertNotNull(photo);
@@ -110,15 +96,15 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertProfilePhotoByClientReturnsCorrectPhotoFilePathForCorrespondingClient() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
         ProfileImage profileImage = new ProfileImage();
         String imagePath = "/dummy/test/path/image.png";
         String dummyCaseId = "4400";
         profileImage.setFilepath(imagePath);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(dummyCaseId))
+        Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(dummyCaseId))
                 .thenReturn(profileImage);
         commonPersonObjectClient = new CommonPersonObjectClient(dummyCaseId, Collections.emptyMap(),
                 "Test Name");
@@ -131,11 +117,11 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertProfilePhotoByClientReturnsGirlPhotoForFemaleGender() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        Mockito.mockStatic(ImmunizationLibrary.class);
+        Mockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
+        Mockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository()).thenReturn(imageRepository);
+        Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
 
         Map<String, String> childDetails = ImmutableMap.of(IMConstants.KEY.GENDER, "female");
 

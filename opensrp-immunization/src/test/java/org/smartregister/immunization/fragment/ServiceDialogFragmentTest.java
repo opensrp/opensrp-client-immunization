@@ -56,7 +56,6 @@ public class ServiceDialogFragmentTest extends BaseUnitTest {
     @Before
     public void setUp() {
 
-        org.mockito.MockitoAnnotations.initMocks(this);
 
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(context_).userService();
