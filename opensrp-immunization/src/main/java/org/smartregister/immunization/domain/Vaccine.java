@@ -28,6 +28,7 @@ public class Vaccine {
     private Integer outOfCatchment;
     private Integer outreach;
     private Date createdAt;
+    private Integer givenByDefaultANM;
 
     public Vaccine() {
     }
@@ -116,6 +117,30 @@ public class Vaccine {
         this.createdAt = createdAt;
         this.isVoided = isVoided;
         this.outreach = outreach;
+    }
+
+    public Vaccine(Long id, String baseEntityId, String programClientId, String name, Integer
+            calculation, Date date, String anmId, String locationId, String syncStatus, String
+                           hia2Status, Long updatedAt, String eventId, String formSubmissionId, Integer
+                           outOfCatchment, Date createdAt, Integer isVoided,Integer outreach, Integer givenByDEfaultANM) {
+        this.id = id;
+        this.baseEntityId = baseEntityId;
+        this.programClientId = programClientId;
+        this.name = name;
+        this.calculation = calculation;
+        this.date = date;
+        this.anmId = anmId;
+        this.locationId = locationId;
+        this.syncStatus = syncStatus;
+        this.hia2Status = hia2Status;
+        this.updatedAt = updatedAt;
+        this.eventId = eventId;
+        this.formSubmissionId = formSubmissionId;
+        this.outOfCatchment = outOfCatchment;
+        this.createdAt = createdAt;
+        this.isVoided = isVoided;
+        this.outreach = outreach;
+        this.givenByDefaultANM = givenByDEfaultANM;
     }
 
     public Long getId() {
@@ -285,5 +310,13 @@ public class Vaccine {
 
     public void setOutreach(Integer outreach) {
         this.outreach = outreach;
+    }
+
+    public Integer getGivenByDefaultANM() {
+        return givenByDefaultANM;
+    }
+
+    public void setGivenByDefaultANM(Integer givenByDEfaultANM) {
+        this.givenByDefaultANM = givenByDEfaultANM;
     }
 }

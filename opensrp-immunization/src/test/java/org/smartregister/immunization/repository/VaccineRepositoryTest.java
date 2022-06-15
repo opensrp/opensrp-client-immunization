@@ -192,11 +192,12 @@ public class VaccineRepositoryTest extends BaseUnitTest {
                 VaccineRepository.TEAM_ID,
                 VaccineRepository.CHILD_LOCATION_ID,
                 VaccineRepository.IS_VOIDED,
-                VaccineRepository.OUTREACH
+                VaccineRepository.OUTREACH,
+                VaccineRepository.GIVEN_BY_DEFAULT_ANM
         };
 
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1, magicTime, "", "", "", 1, 1});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", 1l, "", "", 1, magicTime, "", "", "", 1, 1, 0});
 
         List<Vaccine> vaccines = vaccineRepository.readAllVaccines(cursor);
         Assert.assertFalse(vaccines.isEmpty());
@@ -374,10 +375,10 @@ public class VaccineRepositoryTest extends BaseUnitTest {
                 VaccineRepository.LOCATION_ID, VaccineRepository.SYNC_STATUS, VaccineRepository.HIA2_STATUS,
                 VaccineRepository.CREATED_AT, VaccineRepository.UPDATED_AT_COLUMN, VaccineRepository.EVENT_ID,
                 VaccineRepository.FORMSUBMISSION_ID, VaccineRepository.OUT_OF_AREA, VaccineRepository.IS_VOIDED, VaccineRepository.OUTREACH,
-                VaccineRepository.TEAM, VaccineRepository.TEAM_ID, VaccineRepository.CHILD_LOCATION_ID
+                VaccineRepository.TEAM, VaccineRepository.TEAM_ID, VaccineRepository.CHILD_LOCATION_ID, VaccineRepository.GIVEN_BY_DEFAULT_ANM
         };
         MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", magicDate, 1l, "", "", 1, 0, 0, team, teamId, ""});
+        cursor.addRow(new Object[]{1l, "", "", magicName, magic10, magicTime, "", "", "", "", magicDate, 1l, "", "", 1, 0, 0, team, teamId, "", 0});
 
         Mockito.when(
                 sqliteDatabase.query(
