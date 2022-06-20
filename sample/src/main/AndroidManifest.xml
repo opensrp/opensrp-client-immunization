@@ -26,6 +26,11 @@
 
         <service android:name="org.smartregister.immunization.service.intent.VaccineIntentService" />
         <service android:name="org.smartregister.immunization.service.intent.RecurringIntentService" />
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+
     </application>
 
 </manifest>

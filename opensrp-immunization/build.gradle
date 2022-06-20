@@ -107,13 +107,19 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+configurations {
+    androidTestImplementation {
+        exclude group: 'com.google.firebase', module: 'firebase-perf'
+        exclude group: 'com.google.firebase', module: 'firebase-crashlytics'
+    }
+}
 
 dependencies {
 
     implementation 'androidx.test:core:1.4.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('org.smartregister:opensrp-client-core:6.0.0-BETA-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:6.0.0-ALPHA-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'jakarta.annotation', module: 'jakarta.annotation-api'
