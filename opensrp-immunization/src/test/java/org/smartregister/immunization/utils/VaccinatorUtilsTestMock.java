@@ -25,8 +25,7 @@ public class VaccinatorUtilsTestMock extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), VaccinatorUtilsTestMockActivity.class);
+                Intent intent = new Intent(ApplicationProvider.getApplicationContext(), VaccinatorUtilsTestMockActivity.class);
         controller = Robolectric.buildActivity(VaccinatorUtilsTestMockActivity.class, intent);
         activity = controller.get();
         controller.setup();

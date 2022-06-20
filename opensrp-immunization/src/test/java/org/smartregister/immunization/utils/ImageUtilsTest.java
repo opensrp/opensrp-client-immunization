@@ -2,6 +2,7 @@ package org.smartregister.immunization.utils;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -39,17 +40,17 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertProfileImageResourceByGenderWithEmptyStringParameterReturnsDefaultResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(""), R.drawable.child_boy_infant);
+        Assert.assertEquals(ImageUtils.profileImageResourceByGender(""), R.drawable.child_boy_infant);
     }
 
     @Test
     public void assertProfileImageResourceByGenderWithMaleParameterReturnsMaleResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender("male"), R.drawable.child_boy_infant);
+        Assert.assertEquals(ImageUtils.profileImageResourceByGender("male"), R.drawable.child_boy_infant);
     }
 
     @Test
     public void assertProfileImageResourceByGenderWithFemaleParameterReturnsFemaleResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender("female"), R.drawable.child_girl_infant);
+        Assert.assertEquals(ImageUtils.profileImageResourceByGender("female"), R.drawable.child_girl_infant);
     }
 
     @Test
@@ -60,25 +61,25 @@ public class ImageUtilsTest extends BaseUnitTest {
 
     @Test
     public void assertProfileImageResourceByGenderObjectWithMaleGenderParameterReturnsMaleResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.MALE),
+        Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.MALE),
                 R.drawable.child_boy_infant);
     }
 
     @Test
     public void assertProfileImageResourceByGenderWithFemaleObjectReturnsFemaleResource() {
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.FEMALE),
+        Assert.assertEquals(ImageUtils.profileImageResourceByGender(org.opensrp.api.constants.Gender.FEMALE),
                 R.drawable.child_girl_infant);
     }
 
     @Test
     public void assertProfileImageResourceByGenderWithNullObjectParameterReturnsTransgenderResource() {
         org.opensrp.api.constants.Gender gender = null;
-        org.junit.Assert.assertEquals(ImageUtils.profileImageResourceByGender(gender), R.drawable.child_transgender_inflant);
+        Assert.assertEquals(ImageUtils.profileImageResourceByGender(gender), R.drawable.child_transgender_inflant);
     }
 
     @Test
     public void assertImageUtilsClassConstructorReturnsNonNullObjectOnInstantiation() {
-        org.junit.Assert.assertNotNull(new ImageUtils());
+        Assert.assertNotNull(new ImageUtils());
     }
 
     @Test
@@ -90,8 +91,8 @@ public class ImageUtilsTest extends BaseUnitTest {
         Mockito.when(ImmunizationLibrary.getInstance().context().imageRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
         Mockito.doReturn("test-base-entity-id").when(commonPersonObjectClient).entityId();
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
-        org.junit.Assert.assertNotNull(photo);
-        org.junit.Assert.assertEquals(photo.getResourceId(), R.drawable.child_boy_infant);
+        Assert.assertNotNull(photo);
+        Assert.assertEquals(photo.getResourceId(), R.drawable.child_boy_infant);
     }
 
     @Test
@@ -110,8 +111,8 @@ public class ImageUtilsTest extends BaseUnitTest {
                 "Test Name");
         commonPersonObjectClient.setCaseId(dummyCaseId);
         Photo photo = ImageUtils.profilePhotoByClient(commonPersonObjectClient);
-        org.junit.Assert.assertNotNull(photo);
-        org.junit.Assert.assertEquals(imagePath, photo.getFilePath());
+        Assert.assertNotNull(photo);
+        Assert.assertEquals(imagePath, photo.getFilePath());
     }
 
 
@@ -126,8 +127,8 @@ public class ImageUtilsTest extends BaseUnitTest {
         Map<String, String> childDetails = ImmutableMap.of(IMConstants.KEY.GENDER, "female");
 
         Photo photo = ImageUtils.profilePhotoByClient(childDetails);
-        org.junit.Assert.assertNotNull(photo);
-        org.junit.Assert.assertEquals(photo.getResourceId(), R.drawable.child_girl_infant);
+        Assert.assertNotNull(photo);
+        Assert.assertEquals(photo.getResourceId(), R.drawable.child_girl_infant);
     }
 
 }

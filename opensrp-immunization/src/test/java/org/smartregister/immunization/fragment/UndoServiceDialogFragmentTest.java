@@ -74,7 +74,7 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
 
     @Test
     public void assertThatCallToNewInstanceCreatesAFragment() {
-        junit.framework.Assert.assertNotNull(UndoServiceDialogFragment.newInstance(new ServiceWrapper()));
+        Assert.assertNotNull(UndoServiceDialogFragment.newInstance(new ServiceWrapper()));
     }
 
     @Test

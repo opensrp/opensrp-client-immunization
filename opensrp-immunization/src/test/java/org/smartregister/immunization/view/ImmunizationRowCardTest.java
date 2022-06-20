@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
+import org.robolectric.util.ReflectionHelpers;
 import org.robolectric.Robolectric;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonFtsObject;
@@ -175,7 +175,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
         ImmunizationRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setVaccineWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -207,7 +207,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
         ImmunizationRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setVaccineWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_red);

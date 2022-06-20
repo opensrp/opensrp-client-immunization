@@ -59,8 +59,6 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(context_).userService();
 
@@ -111,7 +109,7 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
         controller = Robolectric.buildActivity(FragmentUtilActivityUsingServiceActionListener.class, intent);
         activity = controller.get();
         controller.setup();
-        junit.framework.Assert.assertNotNull(activity);
+        Assert.assertNotNull(activity);
     }
 
     @Test

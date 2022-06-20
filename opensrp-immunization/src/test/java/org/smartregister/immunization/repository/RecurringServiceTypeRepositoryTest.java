@@ -2,7 +2,7 @@ package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -44,13 +44,13 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
-        org.junit.Assert.assertNotNull(recurringServiceTypeRepository);
+        Assert.assertNotNull(recurringServiceTypeRepository);
     }
 
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
         RecurringServiceTypeRepository vaccineNameRepository = new RecurringServiceTypeRepository();
-        org.junit.Assert.assertNotNull(vaccineNameRepository);
+        Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
@@ -233,15 +233,15 @@ public class RecurringServiceTypeRepositoryTest extends BaseUnitTest {
     @Test
     public void assertAddHyphenMethodWithBlankParamReturnsBlankString() {
         String testString = RecurringServiceTypeRepository.addHyphen("");
-        org.junit.Assert.assertNotNull(testString);
-        org.junit.Assert.assertTrue(testString.isEmpty());
+        Assert.assertNotNull(testString);
+        Assert.assertTrue(testString.isEmpty());
     }
 
     @Test
     public void assertRemoveHyphenMethodWithBlankParamReturnsBlankString() {
         String testString = RecurringServiceTypeRepository.removeHyphen("");
-        org.junit.Assert.assertNotNull(testString);
-        org.junit.Assert.assertTrue(testString.isEmpty());
+        Assert.assertNotNull(testString);
+        Assert.assertTrue(testString.isEmpty());
     }
 
     @Test

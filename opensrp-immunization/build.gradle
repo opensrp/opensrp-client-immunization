@@ -142,7 +142,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
 
-    def robolectricVersion = '4.8.1'
+    def robolectricVersion = '4.4'
     testImplementation("org.robolectric:robolectric:$robolectricVersion") {
         exclude group: 'com.google.auto.service', module: 'auto-service'
         exclude group: 'com.android.support'
@@ -160,11 +160,11 @@ dependencies {
     }
 
     // PowerMock
-    def powerMockVersion = '2.0.9'
+    def powerMockVersion = '2.0.7'
     testImplementation "org.powermock:powermock-core:$powerMockVersion"
 
     //Mockito
-    def mockitoVersion = '4.6.1'
+    def mockitoVersion = '3.12.4'
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
     testImplementation("org.mockito:mockito-inline:$mockitoVersion")
     testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'

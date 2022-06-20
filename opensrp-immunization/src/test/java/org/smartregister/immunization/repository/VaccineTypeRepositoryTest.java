@@ -2,7 +2,7 @@ package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
@@ -51,7 +51,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
-        org.junit.Assert.assertNotNull(vaccineTypeRepository);
+        Assert.assertNotNull(vaccineTypeRepository);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
         VaccineTypeRepository vaccineRepository = new VaccineTypeRepository(commonFtsObject, alertService);
-        org.junit.Assert.assertNotNull(vaccineRepository);
+        Assert.assertNotNull(vaccineRepository);
     }
 
     @Test

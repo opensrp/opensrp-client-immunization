@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.util.ReflectionHelpers;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -36,9 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -129,24 +128,24 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
-        assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
+        Assert.assertNotNull(new VaccineCardAdapter(context, view, "", vaccineList, alertList));
     }
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() {
 
-        assertEquals(2, vaccineCardAdapter.getCount());
+        Assert.assertEquals(2, vaccineCardAdapter.getCount());
 
         //should return null
-        assertNull(vaccineCardAdapter.getItem(0));
+        Assert.assertNull(vaccineCardAdapter.getItem(0));
 
-        assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
+        Assert.assertEquals(vaccineCardAdapter.getItemId(0), magicNumber);
 
     }
 
     @Test
     public void assertGetViewReturnsVaccineCard() {
-        assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
+        Assert.assertEquals(vaccineCardAdapter.getView(0, null, null) != null, true);
     }
 
     @Test
@@ -155,11 +154,11 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
         HashMap<String, VaccineCard> vaccineCards = Whitebox.getInternalState(vaccineCardAdapter, "vaccineCards");
         HashMap<String, VaccineCard> nullVaccineCards = null;
 
-        Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", nullVaccineCards);
+        ReflectionHelpers.setField(vaccineCardAdapter, "vaccineCards", nullVaccineCards);
 
         try {
             vaccineCardAdapter.updateChildsActiveStatus();
-            Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
+            ReflectionHelpers.setField(vaccineCardAdapter, "vaccineCards", vaccineCards);
         } catch (Exception e) {
             fail();
         }
@@ -168,25 +167,25 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     @Test
     public void testGetDueVaccines() {
         ArrayList<VaccineWrapper> dueVaccines = vaccineCardAdapter.getDueVaccines();
-        assertEquals(0, dueVaccines.size());
+        Assert.assertEquals(0, dueVaccines.size());
     }
 
     @Test
     public void testGetAllVaccineWrappers() {
         ArrayList<VaccineWrapper> vaccineWrappers = vaccineCardAdapter.getAllVaccineWrappers();
-        assertEquals(0, vaccineWrappers.size());
+        Assert.assertEquals(0, vaccineWrappers.size());
     }
 
     @Test
     public void testGetVaccineList() {
         List<Vaccine> vaccineList = vaccineCardAdapter.getVaccineList();
-        assertEquals(0, vaccineList.size());
+        Assert.assertEquals(0, vaccineList.size());
     }
 
     @Test
     public void testGetAlertList() {
         List<Alert> alerts = vaccineCardAdapter.getAlertList();
-        assertEquals(0, alerts.size());
+        Assert.assertEquals(0, alerts.size());
     }
 
     @Test
@@ -207,9 +206,9 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
         mockAdapter.updateVaccineDate(map, vaccine, vaccineWrapper, VaccinatorUtils.receivedVaccines(vaccinelist));
 
-        assertEquals(vaccineWrapper.getVaccineDate().dayOfMonth(), new DateTime().plusDays(28).dayOfMonth());
-        assertEquals(vaccineWrapper.getVaccineDate().monthOfYear(), new DateTime().plusDays(28).monthOfYear());
-        assertEquals(vaccineWrapper.getVaccineDate().year(), new DateTime().plusDays(28).year());
+        Assert.assertEquals(vaccineWrapper.getVaccineDate().dayOfMonth(), new DateTime().plusDays(28).dayOfMonth());
+        Assert.assertEquals(vaccineWrapper.getVaccineDate().monthOfYear(), new DateTime().plusDays(28).monthOfYear());
+        Assert.assertEquals(vaccineWrapper.getVaccineDate().year(), new DateTime().plusDays(28).year());
     }
 
 }

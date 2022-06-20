@@ -2,6 +2,7 @@ package org.smartregister.immunization.utils;
 
 import android.content.Context;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -38,8 +39,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        org.junit.Assert.assertNotNull(imDatabaseUtils);
+                Assert.assertNotNull(imDatabaseUtils);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         Mockito.mockStatic(VaccinatorUtils.class);
         Mockito.when(VaccinatorUtils.getSupportedRecurringServices(context)).thenReturn(ServiceData.recurringservice);
         IMDatabaseUtils.populateRecurringServices(context, null, recurringServiceTypeRepository);
-        org.junit.Assert.assertNotNull(imDatabaseUtils);
+        Assert.assertNotNull(imDatabaseUtils);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class IMDatabaseUtilsTest extends BaseUnitTest {
         Mockito.when(Utils.readAssetContents(org.mockito.ArgumentMatchers.any(Context.class),
                 org.mockito.ArgumentMatchers.any(String.class))).thenReturn(VaccineData.vaccine_type);
         IMDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, null);
-        org.junit.Assert.assertNotNull(imDatabaseUtils);
+        Assert.assertNotNull(imDatabaseUtils);
     }
 
 }

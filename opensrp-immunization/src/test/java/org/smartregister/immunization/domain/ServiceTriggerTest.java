@@ -2,6 +2,7 @@ package org.smartregister.immunization.domain;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
@@ -23,10 +24,10 @@ public class ServiceTriggerTest extends BaseUnitTest {
         JSONObject data1 = new JSONObject(stringdata1);
         JSONObject data2 = new JSONObject(stringdata2);
         JSONObject data3 = new JSONObject(stringdata3);
-        junit.framework.Assert.assertNotNull(ServiceTrigger.init(data1));
-        junit.framework.Assert.assertNotNull(ServiceTrigger.init(data2));
-        junit.framework.Assert.assertNotNull(ServiceTrigger.init(data3));
-        junit.framework.Assert.assertNull(ServiceTrigger.init(null));
+        Assert.assertNotNull(ServiceTrigger.init(data1));
+        Assert.assertNotNull(ServiceTrigger.init(data2));
+        Assert.assertNotNull(ServiceTrigger.init(data3));
+        Assert.assertNull(ServiceTrigger.init(null));
     }
 
     @Test
@@ -40,11 +41,11 @@ public class ServiceTriggerTest extends BaseUnitTest {
         prerequisites.add("Vit A IFC 2");
         prerequisites.add("dob");
 
-        junit.framework.Assert.assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(), condition);
-        junit.framework.Assert.assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(), prerequisites);
-        junit.framework.Assert.assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger.Reference.MULTIPLE);
-        junit.framework.Assert.assertEquals(ServiceTrigger.init(data1).getOffset(), "+0d");
-        junit.framework.Assert.assertEquals(ServiceTrigger.init(data3).getPrerequisite(), "Vit A 2");
+        Assert.assertEquals(ServiceTrigger.init(data2).getMultiple().getCondition(), condition);
+        Assert.assertEquals(ServiceTrigger.init(data2).getMultiple().getPrerequisites(), prerequisites);
+        Assert.assertEquals(ServiceTrigger.init(data2).getReference(), ServiceTrigger.Reference.MULTIPLE);
+        Assert.assertEquals(ServiceTrigger.init(data1).getOffset(), "+0d");
+        Assert.assertEquals(ServiceTrigger.init(data3).getPrerequisite(), "Vit A 2");
 
     }
 

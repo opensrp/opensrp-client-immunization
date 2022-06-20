@@ -1,6 +1,7 @@
 package org.smartregister.immunization.utils;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -24,46 +25,46 @@ public class VaccinateFormSubmissionWrapperTest extends BaseUnitTest {
 
     @Test
     public void assertConstructorInitializationTest() {
-        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper);
+        Assert.assertNotNull(vaccineFormSubmisionWrapper);
     }
 
     @Test
     public void assertGetOvveridesReturnsFormOverieds() {
-        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.getOverrides());
+        Assert.assertNotNull(vaccineFormSubmisionWrapper.getOverrides());
     }
 
     @Test
     public void assertGetFormNameReturnsFormName() {
-        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.getFormName());
+        Assert.assertNotNull(vaccineFormSubmisionWrapper.getFormName());
     }
 
     @Test
     public void assertUpdateFormSumissionReturnsFormSubmission() {
-        org.junit.Assert.assertNull(vaccineFormSubmisionWrapper.updateFormSubmission());
+        Assert.assertNull(vaccineFormSubmisionWrapper.updateFormSubmission());
     }
 
     @Test
     public void assertMapReturnsWrappersMap() {
-        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.map());
+        Assert.assertNotNull(vaccineFormSubmisionWrapper.map());
     }
 
     @Test
     public void assertGetEntityIdReturnsEntityId() {
-        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.getEntityId());
+        Assert.assertNotNull(vaccineFormSubmisionWrapper.getEntityId());
     }
 
     @Test
     public void assertUpdatesReturnsWrapperUpdateCount() {
-        org.junit.Assert.assertNotNull(vaccineFormSubmisionWrapper.updates());
+        Assert.assertNotNull(vaccineFormSubmisionWrapper.updates());
     }
 
     @Test
     public void assertUpdateWrappeCountrAfterAdingRemovingWapper() throws Exception {
         vaccineFormSubmisionWrapper.add(wrapper);
         vaccineFormSubmisionWrapper.remove(wrapper);
-        org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 0);
+        Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 0);
         vaccineFormSubmisionWrapper.add(wrapper);
-        org.junit.Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 1);
+        Assert.assertEquals(vaccineFormSubmisionWrapper.updates(), 1);
     }
 
     @Before

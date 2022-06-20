@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
+import org.robolectric.util.ReflectionHelpers;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
@@ -225,7 +225,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         ServiceRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setServiceWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -258,7 +258,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         ServiceRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setServiceWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_red);

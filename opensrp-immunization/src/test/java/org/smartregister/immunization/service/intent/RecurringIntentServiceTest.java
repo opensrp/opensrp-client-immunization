@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -84,9 +85,9 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
         Assert.assertNotNull(serviceType);
 
         Assert.assertNotNull(recurringIntentService);
-        Whitebox.setInternalState(recurringIntentService, "recurringServiceRecordRepository",
+        ReflectionHelpers.setField(recurringIntentService, "recurringServiceRecordRepository",
                 recurringServiceRecordRepository);
-        Whitebox.setInternalState(recurringIntentService, "recurringServiceTypeRepository",
+        ReflectionHelpers.setField(recurringIntentService, "recurringServiceTypeRepository",
                 recurringServiceTypeRepository);
         recurringIntentService.onHandleIntent(intent);
     }

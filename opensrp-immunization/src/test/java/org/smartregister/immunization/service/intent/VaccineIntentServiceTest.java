@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
@@ -93,7 +94,7 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
         vaccineList.add(vaccine);
         Assert.assertNotNull(vaccineList);
 
-        Whitebox.setInternalState(vaccineIntentService, "vaccineRepository",
+        ReflectionHelpers.setField(vaccineIntentService, "vaccineRepository",
                 vaccineRepository);
         vaccineIntentService.onHandleIntent(intent);
     }

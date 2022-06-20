@@ -1,6 +1,7 @@
 package org.smartregister.immunization.domain;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smartregister.domain.Alert;
@@ -28,7 +29,7 @@ public class VaccineWrapperTest extends BaseUnitTest {
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        junit.framework.Assert.assertNotNull(new VaccineWrapper());
+        Assert.assertNotNull(new VaccineWrapper());
     }
 
     @Test
@@ -37,68 +38,68 @@ public class VaccineWrapperTest extends BaseUnitTest {
         DateTime datetime = new DateTime();
 
         vaccineWrapper.setId(ID);
-        junit.framework.Assert.assertEquals(ID, vaccineWrapper.getId());
+        Assert.assertEquals(ID, vaccineWrapper.getId());
 
         vaccineWrapper.setDbKey(0l);
-        junit.framework.Assert.assertEquals(0l, vaccineWrapper.getDbKey().longValue());
+        Assert.assertEquals(0l, vaccineWrapper.getDbKey().longValue());
 
         vaccineWrapper.setStatus(STATUS);
-        junit.framework.Assert.assertEquals(STATUS, vaccineWrapper.getStatus());
+        Assert.assertEquals(STATUS, vaccineWrapper.getStatus());
 
         vaccineWrapper.setVaccine(VaccineRepo.Vaccine.bcg);
-        junit.framework.Assert.assertEquals(VaccineRepo.Vaccine.bcg, vaccineWrapper.getVaccine());
+        Assert.assertEquals(VaccineRepo.Vaccine.bcg, vaccineWrapper.getVaccine());
 
 
         vaccineWrapper.setVaccineDate(datetime);
-        junit.framework.Assert.assertEquals(datetime, vaccineWrapper.getVaccineDate());
+        Assert.assertEquals(datetime, vaccineWrapper.getVaccineDate());
 
         Alert alert = Mockito.mock(Alert.class);
         vaccineWrapper.setAlert(alert);
-        junit.framework.Assert.assertEquals(alert, vaccineWrapper.getAlert());
+        Assert.assertEquals(alert, vaccineWrapper.getAlert());
 
         vaccineWrapper.setName(NAME);
-        junit.framework.Assert.assertEquals(NAME, vaccineWrapper.getName());
+        Assert.assertEquals(NAME, vaccineWrapper.getName());
 
         vaccineWrapper.setPreviousVaccine(ID);
-        junit.framework.Assert.assertEquals(ID, vaccineWrapper.getPreviousVaccineId());
+        Assert.assertEquals(ID, vaccineWrapper.getPreviousVaccineId());
 
         vaccineWrapper.setCompact(true);
-        junit.framework.Assert.assertEquals(true, vaccineWrapper.isCompact());
+        Assert.assertEquals(true, vaccineWrapper.isCompact());
 
         vaccineWrapper.setColor(COLOR);
-        junit.framework.Assert.assertEquals(COLOR, vaccineWrapper.getColor());
+        Assert.assertEquals(COLOR, vaccineWrapper.getColor());
 
         vaccineWrapper.setFormattedVaccineDate(DD_MM_YYYY);
-        junit.framework.Assert.assertEquals(DD_MM_YYYY, vaccineWrapper.getFormattedVaccineDate());
+        Assert.assertEquals(DD_MM_YYYY, vaccineWrapper.getFormattedVaccineDate());
 
         vaccineWrapper.setExistingAge(AGE);
-        junit.framework.Assert.assertEquals(AGE, vaccineWrapper.getExistingAge());
+        Assert.assertEquals(AGE, vaccineWrapper.getExistingAge());
 
         vaccineWrapper.setPatientName(PATIENTNAME);
-        junit.framework.Assert.assertEquals(PATIENTNAME, vaccineWrapper.getPatientName());
+        Assert.assertEquals(PATIENTNAME, vaccineWrapper.getPatientName());
 
         vaccineWrapper.setUpdatedVaccineDate(datetime, true);
-        junit.framework.Assert.assertEquals(datetime, vaccineWrapper.getVaccineDate());
-        junit.framework.Assert.assertEquals(datetime, vaccineWrapper.getUpdatedVaccineDate());
-        junit.framework.Assert.assertEquals(true, vaccineWrapper.isToday());
-        junit.framework.Assert.assertEquals(datetime.toString(YYYY_MM_DD), vaccineWrapper.getUpdatedVaccineDateAsString());
-        junit.framework.Assert.assertEquals(datetime.toString(YYYY_MM_DD), vaccineWrapper.getVaccineDateAsString());
+        Assert.assertEquals(datetime, vaccineWrapper.getVaccineDate());
+        Assert.assertEquals(datetime, vaccineWrapper.getUpdatedVaccineDate());
+        Assert.assertEquals(true, vaccineWrapper.isToday());
+        Assert.assertEquals(datetime.toString(YYYY_MM_DD), vaccineWrapper.getUpdatedVaccineDateAsString());
+        Assert.assertEquals(datetime.toString(YYYY_MM_DD), vaccineWrapper.getVaccineDateAsString());
 
         vaccineWrapper.setPatientNumber(NUMBER);
-        junit.framework.Assert.assertEquals(NUMBER, vaccineWrapper.getPatientNumber());
+        Assert.assertEquals(NUMBER, vaccineWrapper.getPatientNumber());
 
         Photo photo = Mockito.mock(Photo.class);
         vaccineWrapper.setPhoto(photo);
-        junit.framework.Assert.assertEquals(photo, vaccineWrapper.getPhoto());
+        Assert.assertEquals(photo, vaccineWrapper.getPhoto());
 
         vaccineWrapper.setGender(GENDER);
-        junit.framework.Assert.assertEquals(GENDER, vaccineWrapper.getGender());
+        Assert.assertEquals(GENDER, vaccineWrapper.getGender());
 
         vaccineWrapper.setDefaultName(DEFAULTNAME);
-        junit.framework.Assert.assertEquals(DEFAULTNAME, vaccineWrapper.getDefaultName());
+        Assert.assertEquals(DEFAULTNAME, vaccineWrapper.getDefaultName());
 
         vaccineWrapper.setSynced(true);
-        junit.framework.Assert.assertEquals(true, vaccineWrapper.isSynced());
+        Assert.assertEquals(true, vaccineWrapper.isSynced());
 
     }
 

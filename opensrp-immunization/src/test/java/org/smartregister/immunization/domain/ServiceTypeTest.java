@@ -1,9 +1,8 @@
 package org.smartregister.immunization.domain;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -57,21 +56,21 @@ public class ServiceTypeTest extends BaseUnitTest {
                 .withMilestoneOffset(milestoneOffset)
                 .withUpdatedAt(updatedAt).build();
 
-        assertEquals(serviceType.getId(), id);
-        assertEquals(serviceType.getType(), type);
-        assertEquals(serviceType.getName(), name);
-        assertEquals(serviceType.getServiceGroup(), serviceGroup);
-        assertEquals(serviceType.getServiceNameEntity(), serviceNameEntity);
-        assertEquals(serviceType.getServiceNameEntityId(), serviceNameEntityId);
-        assertEquals(serviceType.getDateEntity(), dateEntity);
-        assertEquals(serviceType.getDateEntityId(), dateEntityId);
-        assertEquals(serviceType.getUnits(), units);
-        assertEquals(serviceType.getServiceLogic(), serviceLogic);
-        assertEquals(serviceType.getPrerequisite(), prerequisite);
-        assertEquals(serviceType.getPreOffset(), preOffset);
-        assertEquals(serviceType.getExpiryOffset(), expiryOffset);
-        assertEquals(serviceType.getMilestoneOffset(), milestoneOffset);
-        assertEquals(serviceType.getUpdatedAt(), updatedAt);
+        Assert.assertEquals(serviceType.getId(), id);
+        Assert.assertEquals(serviceType.getType(), type);
+        Assert.assertEquals(serviceType.getName(), name);
+        Assert.assertEquals(serviceType.getServiceGroup(), serviceGroup);
+        Assert.assertEquals(serviceType.getServiceNameEntity(), serviceNameEntity);
+        Assert.assertEquals(serviceType.getServiceNameEntityId(), serviceNameEntityId);
+        Assert.assertEquals(serviceType.getDateEntity(), dateEntity);
+        Assert.assertEquals(serviceType.getDateEntityId(), dateEntityId);
+        Assert.assertEquals(serviceType.getUnits(), units);
+        Assert.assertEquals(serviceType.getServiceLogic(), serviceLogic);
+        Assert.assertEquals(serviceType.getPrerequisite(), prerequisite);
+        Assert.assertEquals(serviceType.getPreOffset(), preOffset);
+        Assert.assertEquals(serviceType.getExpiryOffset(), expiryOffset);
+        Assert.assertEquals(serviceType.getMilestoneOffset(), milestoneOffset);
+        Assert.assertEquals(serviceType.getUpdatedAt(), updatedAt);
     }
 
     @Test
@@ -79,45 +78,45 @@ public class ServiceTypeTest extends BaseUnitTest {
         ServiceType serviceType = new ServiceType();
 
         serviceType.setId(0l);
-        junit.framework.Assert.assertEquals(0l, serviceType.getId().longValue());
+        Assert.assertEquals(0l, serviceType.getId().longValue());
 
         serviceType.setType(TYPE);
-        junit.framework.Assert.assertEquals(TYPE, serviceType.getType());
+        Assert.assertEquals(TYPE, serviceType.getType());
 
         serviceType.setName(NAME);
-        junit.framework.Assert.assertEquals(NAME, serviceType.getName());
+        Assert.assertEquals(NAME, serviceType.getName());
 
         serviceType.setServiceNameEntity(SERVICENAMEENTITY);
-        junit.framework.Assert.assertEquals(SERVICENAMEENTITY, serviceType.getServiceNameEntity());
+        Assert.assertEquals(SERVICENAMEENTITY, serviceType.getServiceNameEntity());
 
         serviceType.setServiceNameEntityId(SERVICENAMEENTITYID);
-        junit.framework.Assert.assertEquals(SERVICENAMEENTITYID, serviceType.getServiceNameEntityId());
+        Assert.assertEquals(SERVICENAMEENTITYID, serviceType.getServiceNameEntityId());
 
         serviceType.setDateEntity(DATEENTITY);
-        junit.framework.Assert.assertEquals(DATEENTITY, serviceType.getDateEntity());
+        Assert.assertEquals(DATEENTITY, serviceType.getDateEntity());
 
         serviceType.setDateEntityId(DATEENTITYID);
-        junit.framework.Assert.assertEquals(DATEENTITYID, serviceType.getDateEntityId());
+        Assert.assertEquals(DATEENTITYID, serviceType.getDateEntityId());
 
         serviceType.setUnits(UNITS);
-        junit.framework.Assert.assertEquals(UNITS, serviceType.getUnits());
+        Assert.assertEquals(UNITS, serviceType.getUnits());
 
         serviceType.setServiceLogic(SERVICELOGIC);
-        junit.framework.Assert.assertEquals(SERVICELOGIC, serviceType.getServiceLogic());
+        Assert.assertEquals(SERVICELOGIC, serviceType.getServiceLogic());
 
         serviceType.setPrerequisite(PREREQUISITE);
-        junit.framework.Assert.assertEquals(PREREQUISITE, serviceType.getPrerequisite());
+        Assert.assertEquals(PREREQUISITE, serviceType.getPrerequisite());
 
         serviceType.setPreOffset(PREOFFSET);
-        junit.framework.Assert.assertEquals(PREOFFSET, serviceType.getPreOffset());
+        Assert.assertEquals(PREOFFSET, serviceType.getPreOffset());
 
         serviceType.setExpiryOffset(EXPIRYOFFSET);
-        junit.framework.Assert.assertEquals(EXPIRYOFFSET, serviceType.getExpiryOffset());
+        Assert.assertEquals(EXPIRYOFFSET, serviceType.getExpiryOffset());
 
         serviceType.setMilestoneOffset(MILESTONEOFFSET);
-        junit.framework.Assert.assertEquals(MILESTONEOFFSET, serviceType.getMilestoneOffset());
+        Assert.assertEquals(MILESTONEOFFSET, serviceType.getMilestoneOffset());
 
         serviceType.setUpdatedAt(0l);
-        junit.framework.Assert.assertEquals(0l, serviceType.getUpdatedAt().longValue());
+        Assert.assertEquals(0l, serviceType.getUpdatedAt().longValue());
     }
 }

@@ -1,5 +1,6 @@
 package org.smartregister.immunization.domain;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.smartregister.immunization.BaseUnitTest;
 
@@ -23,63 +24,63 @@ public class VaccineNameTest extends BaseUnitTest {
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        junit.framework.Assert.assertNotNull(new VaccineName(0l, "", "", "", "", "", ""));
+        Assert.assertNotNull(new VaccineName(0l, "", "", "", "", "", ""));
     }
 
     @Test
     public void assertgetIDwillreturnID() {
         VaccineName vaccineName = new VaccineName(0l, "", "", "", "", "", "");
-        junit.framework.Assert.assertEquals(vaccineName.getId().longValue(), 0l);
+        Assert.assertEquals(vaccineName.getId().longValue(), 0l);
         vaccineName.setId(1l);
-        junit.framework.Assert.assertEquals(vaccineName.getId().longValue(), 1l);
+        Assert.assertEquals(vaccineName.getId().longValue(), 1l);
     }
 
     @Test
     public void assertgetNamewillreturnName() {
         VaccineName vaccineName = new VaccineName(0l, BCG, "", "", "", "", "");
-        junit.framework.Assert.assertEquals(vaccineName.getName(), BCG);
+        Assert.assertEquals(vaccineName.getName(), BCG);
         vaccineName.setName(TT);
-        junit.framework.Assert.assertEquals(vaccineName.getName(), TT);
+        Assert.assertEquals(vaccineName.getName(), TT);
     }
 
     @Test
     public void assertgetTypeIDwillreturnTypeID() {
         VaccineName vaccineName = new VaccineName(0l, TT1, TT, "", "", "", "");
-        junit.framework.Assert.assertEquals(vaccineName.getVaccine_type_id(), TT);
+        Assert.assertEquals(vaccineName.getVaccine_type_id(), TT);
         vaccineName.setVaccine_type_id(BCG);
-        junit.framework.Assert.assertEquals(vaccineName.getVaccine_type_id(), BCG);
+        Assert.assertEquals(vaccineName.getVaccine_type_id(), BCG);
     }
 
     @Test
     public void assertgetDueDayswillreturnDueDays() {
         VaccineName vaccineName = new VaccineName(0l, TT1, TT, DUEDAYS5, "", "", "");
-        junit.framework.Assert.assertEquals(vaccineName.getDue_days(), DUEDAYS5);
+        Assert.assertEquals(vaccineName.getDue_days(), DUEDAYS5);
         vaccineName.setDue_days(DUEDAYS10);
-        junit.framework.Assert.assertEquals(vaccineName.getDue_days(), DUEDAYS10);
+        Assert.assertEquals(vaccineName.getDue_days(), DUEDAYS10);
     }
 
     @Test
     public void assertgetReferenceVaccineIDwillreturnReferenceVaccineID() {
         VaccineName vaccineName = new VaccineName(0l, TT2, TT, DUEDAYS5, TT1, "", "");
-        junit.framework.Assert.assertEquals(vaccineName.getReference_vaccine_id(), TT1);
+        Assert.assertEquals(vaccineName.getReference_vaccine_id(), TT1);
         vaccineName.setReference_vaccine_id(TT3);
-        junit.framework.Assert.assertEquals(vaccineName.getReference_vaccine_id(), TT3);
+        Assert.assertEquals(vaccineName.getReference_vaccine_id(), TT3);
     }
 
     @Test
     public void assertgetClientTypewillreturnClientType() {
         VaccineName vaccineName = new VaccineName(0l, TT2, TT, DUEDAYS5, TT1, MOTHER, "");
-        junit.framework.Assert.assertEquals(vaccineName.getClient_type(), MOTHER);
+        Assert.assertEquals(vaccineName.getClient_type(), MOTHER);
         vaccineName.setClient_type(CHILD);
-        junit.framework.Assert.assertEquals(vaccineName.getClient_type(), CHILD);
+        Assert.assertEquals(vaccineName.getClient_type(), CHILD);
     }
 
     @Test
     public void assertgetDoseNowillreturnDoseNo() {
         VaccineName vaccineName = new VaccineName(0l, TT2, TT, DUEDAYS5, TT1, MOTHER, DOSENO5);
-        junit.framework.Assert.assertEquals(vaccineName.getDose_no(), DOSENO5);
+        Assert.assertEquals(vaccineName.getDose_no(), DOSENO5);
         vaccineName.setDose_no(DOSENO10);
-        junit.framework.Assert.assertEquals(vaccineName.getDose_no(), DOSENO10);
+        Assert.assertEquals(vaccineName.getDose_no(), DOSENO10);
     }
 
 }

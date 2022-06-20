@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -19,10 +17,8 @@ import org.smartregister.immunization.domain.conditions.GivenCondition;
 import org.smartregister.immunization.domain.conditions.NotGivenCondition;
 import org.smartregister.immunization.domain.jsonmapping.Condition;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.service.AlertService;
-import org.smartregister.util.AppProperties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.reflect.Type;
@@ -43,13 +39,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
     @Mock
     private ImmunizationLibrary immunizationLibrary;
     @Mock
-    private VaccineRepository vaccineRepository;
-    @Mock
-    private Context context;
-    @Mock
     private AlertService alertService;
-    @Mock
-    private AppProperties appProperties;
 
     private Vaccine newVaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, magicOPV0, 0,
             new Date(),
@@ -58,8 +48,6 @@ public class VaccineScheduleTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
     }
 
@@ -186,7 +174,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        VaccineSchedule.init(vaccines, specialVaccines, "child");
+        VaccineSchedule.init(vaccines, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
 
         List<Vaccine> list = new ArrayList<>();
         list.add(new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, "MCV 1", 0,
@@ -222,7 +210,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
         given3.type = "not_given";
         object.conditions.add(given3);
 
-        VaccineCondition joinCondition = VaccineCondition.init("child", object); //new JoinCondition("child", object);
+        VaccineCondition joinCondition = VaccineCondition.init(IMConstants.VACCINE_TYPE.CHILD, object); //new JoinCondition(IMConstants.VACCINE_TYPE.CHILD, object);
         Assert.assertTrue(joinCondition.passes(sdf.parse("2020-01-01"), list));
     }
 

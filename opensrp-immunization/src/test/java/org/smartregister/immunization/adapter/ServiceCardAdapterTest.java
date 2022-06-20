@@ -6,14 +6,14 @@ import android.view.ViewGroup;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -139,19 +139,19 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     @Test
     public void assertConstructorsCreateNonNullObjectsOnInstantiation() {
 
-        org.junit.Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
+        Assert.assertNotNull(new ServiceCardAdapter(context, view, serviceTypeList, serviceRecordList, alertList));
     }
 
     @Test
     public void assertGetViewReturnsServiceGroup() {
-        org.junit.Assert.assertEquals(serviceCardAdapter.getView(0, null, null) != null, true);
+        Assert.assertEquals(serviceCardAdapter.getView(0, null, null) != null, true);
     }
 
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() throws Exception {
 
-        org.junit.Assert.assertNotNull(serviceCardAdapter);
-        org.junit.Assert.assertEquals(1, serviceCardAdapter.getCount());
+        Assert.assertNotNull(serviceCardAdapter);
+        Assert.assertEquals(1, serviceCardAdapter.getCount());
 
         //should return null
         Assert.assertNull(serviceCardAdapter.getItem(0));
@@ -163,7 +163,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     public void testallWrappers() {
 
         serviceCardAdapter.getView(0, null, null);
-        org.junit.Assert.assertEquals(1, serviceCardAdapter.allWrappers().size());
+        Assert.assertEquals(1, serviceCardAdapter.allWrappers().size());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         HashMap<String, ServiceCard> serviceCards = new HashMap<>();
         serviceCards.put("sample", serviceCard);
 
-        Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
+        ReflectionHelpers.setField(serviceCardAdapter, "serviceCards", serviceCards);
         serviceCardAdapter.updateAll();
         Mockito.verify(serviceCard).updateState();
 
@@ -188,7 +188,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         HashMap<String, ServiceCard> serviceCards = new HashMap<>();
         serviceCards.put("sample", serviceCard);
 
-        Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
+        ReflectionHelpers.setField(serviceCardAdapter, "serviceCards", serviceCards);
         serviceCardAdapter.updateChildsActiveStatus();
         Mockito.verify(serviceCard).updateChildsActiveStatus();
     }

@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -129,7 +129,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
     @Test
     public void assertGetCountReturnsTheCorrectNumberOfItems() {
 
-        junit.framework.Assert.assertEquals(1, serviceRowAdapter.getCount());
+        Assert.assertEquals(1, serviceRowAdapter.getCount());
 
         //should return null
         Assert.assertNull(serviceRowAdapter.getItem(0));

@@ -2,7 +2,7 @@ package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -49,7 +49,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
-        org.junit.Assert.assertNotNull(recurringServiceRecordRepository);
+        Assert.assertNotNull(recurringServiceRecordRepository);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
         RecurringServiceRecordRepository vaccineNameRepository = new RecurringServiceRecordRepository();
-        org.junit.Assert.assertNotNull(vaccineNameRepository);
+        Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
@@ -235,8 +235,8 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     @Test
     public void assertRemoveHyphenMethodRemoveHyphenFromString() {
         String testString = RecurringServiceRecordRepository.removeHyphen("test_string");
-        org.junit.Assert.assertNotNull(testString);
-        junit.framework.Assert.assertFalse(testString.contains("-"));
+        Assert.assertNotNull(testString);
+        Assert.assertFalse(testString.contains("-"));
     }
 
     @Test

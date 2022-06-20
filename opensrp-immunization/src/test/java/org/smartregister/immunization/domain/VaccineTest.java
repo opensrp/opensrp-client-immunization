@@ -33,15 +33,15 @@ public class VaccineTest extends BaseUnitTest {
 
     @Test
     public void assertDefaultConstructorsCreateNonNullObjectOnInstantiation() {
-        junit.framework.Assert.assertNotNull(new Vaccine());
-        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
+        Assert.assertNotNull(new Vaccine());
+        Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID));
-        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
+        Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0));
-        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
+        Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1));
 
-        junit.framework.Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
+        Assert.assertNotNull(new Vaccine(0l, BASEENTITYID, PROGRAMCLIENTID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0, new Date(), 1,1));
     }
 
@@ -49,27 +49,27 @@ public class VaccineTest extends BaseUnitTest {
     public void assetGetIDwillReturnID() {
         Vaccine vaccine = new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0);
-        junit.framework.Assert.assertEquals(0l, vaccine.getId().longValue());
+        Assert.assertEquals(0l, vaccine.getId().longValue());
         vaccine.setId(1l);
-        junit.framework.Assert.assertEquals(1l, vaccine.getId().longValue());
+        Assert.assertEquals(1l, vaccine.getId().longValue());
     }
 
     @Test
     public void assetGetBaseEntityIDwillReturnBaseEntityID() {
         Vaccine vaccine = new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0);
-        junit.framework.Assert.assertEquals(BASEENTITYID, vaccine.getBaseEntityId());
+        Assert.assertEquals(BASEENTITYID, vaccine.getBaseEntityId());
         vaccine.setBaseEntityId(BASEENTITYID2);
-        junit.framework.Assert.assertEquals(BASEENTITYID2, vaccine.getBaseEntityId());
+        Assert.assertEquals(BASEENTITYID2, vaccine.getBaseEntityId());
     }
 
     @Test
     public void assetGetNamewillReturnName() {
         Vaccine vaccine = new Vaccine(0l, BASEENTITYID, NAME, 0, new Date(),
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0);
-        junit.framework.Assert.assertEquals(NAME, vaccine.getName());
+        Assert.assertEquals(NAME, vaccine.getName());
         vaccine.setName(NAME2);
-        junit.framework.Assert.assertEquals(NAME2, vaccine.getName());
+        Assert.assertEquals(NAME2, vaccine.getName());
     }
 
     @Test
@@ -77,10 +77,10 @@ public class VaccineTest extends BaseUnitTest {
         Date date = new Date();
         Vaccine vaccine = new Vaccine(0l, BASEENTITYID, NAME, 0, date,
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0);
-        junit.framework.Assert.assertEquals(date, vaccine.getDate());
+        Assert.assertEquals(date, vaccine.getDate());
         Date date2 = new Date();
         vaccine.setDate(date2);
-        junit.framework.Assert.assertEquals(date2, vaccine.getDate());
+        Assert.assertEquals(date2, vaccine.getDate());
     }
 
     @Test
@@ -88,47 +88,47 @@ public class VaccineTest extends BaseUnitTest {
         Date date = new Date();
         Vaccine vaccine = new Vaccine(0l, BASEENTITYID, NAME, 0, date,
                 ANMID, LOCATIONID, SYNCSTATUS, HIA2STATUS, 0l, EVENTID, FORMSUBMISSIONID, 0);
-        junit.framework.Assert.assertEquals(0, vaccine.getCalculation().intValue());
-        junit.framework.Assert.assertEquals(ANMID, vaccine.getAnmId());
-        junit.framework.Assert.assertEquals(LOCATIONID, vaccine.getLocationId());
-        junit.framework.Assert.assertEquals(SYNCSTATUS, vaccine.getSyncStatus());
-        junit.framework.Assert.assertEquals(HIA2STATUS, vaccine.getHia2Status());
-        junit.framework.Assert.assertEquals(0l, vaccine.getUpdatedAt().longValue());
-        junit.framework.Assert.assertEquals(EVENTID, vaccine.getEventId());
-        junit.framework.Assert.assertEquals(FORMSUBMISSIONID, vaccine.getFormSubmissionId());
-        junit.framework.Assert.assertEquals(0, vaccine.getOutOfCatchment().intValue());
+        Assert.assertEquals(0, vaccine.getCalculation().intValue());
+        Assert.assertEquals(ANMID, vaccine.getAnmId());
+        Assert.assertEquals(LOCATIONID, vaccine.getLocationId());
+        Assert.assertEquals(SYNCSTATUS, vaccine.getSyncStatus());
+        Assert.assertEquals(HIA2STATUS, vaccine.getHia2Status());
+        Assert.assertEquals(0l, vaccine.getUpdatedAt().longValue());
+        Assert.assertEquals(EVENTID, vaccine.getEventId());
+        Assert.assertEquals(FORMSUBMISSIONID, vaccine.getFormSubmissionId());
+        Assert.assertEquals(0, vaccine.getOutOfCatchment().intValue());
 
         vaccine.setCalculation(1);
-        junit.framework.Assert.assertEquals(1, vaccine.getCalculation().intValue());
+        Assert.assertEquals(1, vaccine.getCalculation().intValue());
 
         vaccine.setAnmId(ANMID1);
-        junit.framework.Assert.assertEquals(ANMID1, vaccine.getAnmId());
+        Assert.assertEquals(ANMID1, vaccine.getAnmId());
 
         vaccine.setLocationId(LOCATIONID1);
-        junit.framework.Assert.assertEquals(LOCATIONID1, vaccine.getLocationId());
+        Assert.assertEquals(LOCATIONID1, vaccine.getLocationId());
 
         vaccine.setSyncStatus(SYNCSTATUS1);
-        junit.framework.Assert.assertEquals(SYNCSTATUS1, vaccine.getSyncStatus());
+        Assert.assertEquals(SYNCSTATUS1, vaccine.getSyncStatus());
 
         vaccine.setHia2Status(HIA2STATUS1);
-        junit.framework.Assert.assertEquals(HIA2STATUS1, vaccine.getHia2Status());
+        Assert.assertEquals(HIA2STATUS1, vaccine.getHia2Status());
 
         vaccine.setUpdatedAt(1l);
-        junit.framework.Assert.assertEquals(1l, vaccine.getUpdatedAt().longValue());
+        Assert.assertEquals(1l, vaccine.getUpdatedAt().longValue());
 
         vaccine.setEventId(EVENTID1);
-        junit.framework.Assert.assertEquals(EVENTID1, vaccine.getEventId());
+        Assert.assertEquals(EVENTID1, vaccine.getEventId());
 
         vaccine.setFormSubmissionId(FORMSUBMISSIONID1);
-        junit.framework.Assert.assertEquals(FORMSUBMISSIONID1, vaccine.getFormSubmissionId());
+        Assert.assertEquals(FORMSUBMISSIONID1, vaccine.getFormSubmissionId());
 
         vaccine.setOutOfCatchment(1);
-        junit.framework.Assert.assertEquals(1, vaccine.getOutOfCatchment().intValue());
+        Assert.assertEquals(1, vaccine.getOutOfCatchment().intValue());
 
         vaccine.setOutreach(1);
         Assert.assertEquals(1,vaccine.getOutreach().intValue());
         vaccine.setProgramClientId(PROGRAMCLIENTID);
-        junit.framework.Assert.assertEquals(PROGRAMCLIENTID, vaccine.getProgramClientId());
+        Assert.assertEquals(PROGRAMCLIENTID, vaccine.getProgramClientId());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class VaccineTest extends BaseUnitTest {
         vaccine.setProgramClientId(PROGRAMCLIENTID);
         HashMap<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("ZEIR_ID", PROGRAMCLIENTID);
-        junit.framework.Assert.assertEquals(hashMap, vaccine.getIdentifiers());
+        Assert.assertEquals(hashMap, vaccine.getIdentifiers());
     }
 
 }

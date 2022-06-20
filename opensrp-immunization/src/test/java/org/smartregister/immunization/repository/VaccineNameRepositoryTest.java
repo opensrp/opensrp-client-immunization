@@ -4,6 +4,7 @@ import android.content.ContentValues;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -47,13 +48,13 @@ public class VaccineNameRepositoryTest extends BaseUnitTest {
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
-        org.junit.Assert.assertNotNull(vaccineNameRepository);
+        Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
         VaccineNameRepository vaccineNameRepository = new VaccineNameRepository(commonFtsObject, alertService);
-        org.junit.Assert.assertNotNull(vaccineNameRepository);
+        Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
