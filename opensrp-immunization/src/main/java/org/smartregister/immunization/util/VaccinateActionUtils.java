@@ -1,5 +1,7 @@
 package org.smartregister.immunization.util;
 
+import static org.smartregister.util.Utils.convertDateFormat;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -13,19 +15,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.gson.Gson;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
-import org.smartregister.commonregistry.AllCommonsRepository;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
-import org.smartregister.domain.form.FormSubmission;
-import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -36,7 +32,6 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.service.AlertService;
-import org.smartregister.service.ZiggyService;
 import org.smartregister.util.FormUtils;
 
 import java.util.ArrayList;
@@ -47,15 +42,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import static org.smartregister.AllConstants.ENTITY_ID_PARAM;
-import static org.smartregister.AllConstants.FORM_NAME_PARAM;
-import static org.smartregister.AllConstants.INSTANCE_ID_PARAM;
-import static org.smartregister.AllConstants.SYNC_STATUS;
-import static org.smartregister.AllConstants.VERSION_PARAM;
-import static org.smartregister.domain.SyncStatus.PENDING;
-import static org.smartregister.util.EasyMap.create;
-import static org.smartregister.util.Utils.convertDateFormat;
 
 /**
  * Created by keyman on 17/11/2016.
@@ -177,49 +163,6 @@ public class VaccinateActionUtils {
             });
         }
 
-    }
-
-    public static void saveFormSubmission(Context appContext, String formSubmission, String id, String formName,
-                                          JSONObject fieldOverrides) {
-
-        Log.v("fieldoverride", fieldOverrides.toString());
-
-        // save the form
-        try {
-            FormUtils formUtils = FormUtils.getInstance(appContext);
-            FormSubmission submission = formUtils
-                    .generateFormSubmisionFromXMLString(id, formSubmission, formName, fieldOverrides);
-
-            org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
-            ZiggyService ziggyService = context.ziggyService();
-            ziggyService.saveForm(getParams(submission), submission.instance());
-
-            // Update Fts Tables
-            CommonFtsObject commonFtsObject = context.commonFtsObject();
-            if (commonFtsObject != null) {
-                String[] ftsTables = commonFtsObject.getTables();
-                for (String ftsTable : ftsTables) {
-                    AllCommonsRepository allCommonsRepository = context.allCommonsRepositoryobjects(ftsTable);
-                    boolean updated = allCommonsRepository.updateSearch(submission.entityId());
-                    if (updated) {
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
-            e.printStackTrace();
-        }
-    }
-
-    private static String getParams(FormSubmission submission) {
-        return new Gson().toJson(
-                create(INSTANCE_ID_PARAM, submission.instanceId())
-                        .put(ENTITY_ID_PARAM, submission.entityId())
-                        .put(FORM_NAME_PARAM, submission.formName())
-                        .put(VERSION_PARAM, submission.version())
-                        .put(SYNC_STATUS, PENDING.value())
-                        .map());
     }
 
     public static JSONObject retrieveFieldOverides(String overrides) {

@@ -1,7 +1,5 @@
 package org.smartregister.immunization.service.intent;
 
-import android.os.Build;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.smartregister.immunization.domain.VaccinationClient;
 import org.smartregister.immunization.util.IMConstants;
 
@@ -22,7 +19,6 @@ import java.util.ArrayList;
  */
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.P)
 public class VaccineSchedulesUpdateIntentServiceTest {
 
     @Rule

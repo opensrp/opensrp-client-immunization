@@ -1,7 +1,5 @@
 package org.smartregister.immunization.service.intent;
 
-import android.os.Build;
-
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +32,7 @@ import java.util.List;
  * Created by onaio on 30/08/2017.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(shadows = {ShadowJsonFormUtils.class}, sdk = Build.VERSION_CODES.P)
+@Config(shadows = {ShadowJsonFormUtils.class})
 public class ServiceIntentServiceRoboTest {
 
     @Rule

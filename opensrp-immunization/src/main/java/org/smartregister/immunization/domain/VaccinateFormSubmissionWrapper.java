@@ -5,7 +5,6 @@ import android.util.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
-import org.json.XML;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 
@@ -70,7 +69,7 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
                 parent = "Woman_TT_Followup_Form";
             }
 
-            JSONObject formSubmission = XML.toJSONObject(formData);
+            JSONObject formSubmission = new JSONObject(formData);
 
             JSONObject encounterJson = VaccinateActionUtils.find(formSubmission, parent);
 
@@ -136,7 +135,7 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
             VaccinateActionUtils.updateJson(encounterJson, "phonenumber", "no phonenumber property in enketo");
 
 
-            String data = XML.toString(formSubmission);
+            String data = formSubmission.toString();
             return data;
         } catch (Exception e) {
             Log.e(VaccinateFormSubmissionWrapper.class.getName(), "", e);

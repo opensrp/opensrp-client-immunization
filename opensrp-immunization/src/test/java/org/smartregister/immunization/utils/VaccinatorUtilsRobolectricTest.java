@@ -1,7 +1,5 @@
 package org.smartregister.immunization.utils;
 
-import android.os.Build;
-
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
@@ -31,11 +29,11 @@ import java.util.Map;
  */
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = {Build.VERSION_CODES.O_MR1}, shadows = {ShadowAssetHandler.class})
+@Config(shadows = {ShadowAssetHandler.class})
 public class VaccinatorUtilsRobolectricTest {
 
     @Rule
-    public MockitoRule mockitoRule  = MockitoJUnit.rule();
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Test
     public void getVaccineFromVaccineConfigFileShouldReturnSpecialVaccinesAndAddThemToConfigJsonMapping() {
@@ -58,10 +56,11 @@ public class VaccinatorUtilsRobolectricTest {
     @Test
     public void testThatSpecialVaccinesFileIsAvailableAndCanBeRead() {
         Class<List<org.smartregister.immunization.domain.jsonmapping.Vaccine>> classType = (Class) List.class;
-        Type listType = new TypeToken<List<Vaccine>>() {}.getType();
+        Type listType = new TypeToken<List<Vaccine>>() {
+        }.getType();
 
         Map<String, Object> jsonMap = new HashMap<>();
-        List<Vaccine> specialVaccinesList = AssetHandler.assetJsonToJava(jsonMap, RuntimeEnvironment.application, "special_vaccines.json", classType,listType);
+        List<Vaccine> specialVaccinesList = AssetHandler.assetJsonToJava(jsonMap, RuntimeEnvironment.application, "special_vaccines.json", classType, listType);
 
         Assert.assertEquals(1, specialVaccinesList.size());
     }
