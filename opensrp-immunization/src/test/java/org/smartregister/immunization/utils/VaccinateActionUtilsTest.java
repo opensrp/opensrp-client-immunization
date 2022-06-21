@@ -3,6 +3,8 @@ package org.smartregister.immunization.utils;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
@@ -11,13 +13,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -97,10 +100,10 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(FormUtils.class);
         Assert.assertNull(VaccinateActionUtils.formData(context, "", "", ""));
-        PowerMockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+        PowerMockito.when(FormUtils.getInstance(ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(formUtils);
-        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(),
-                org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(magicData);
+        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(magicData);
         Assert.assertEquals(VaccinateActionUtils.formData(context, "", "", ""), magicData);
 
     }
@@ -144,8 +147,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         String tag = "TAG";
         String wrong_tag = "WRONG TAG";
         Set<TableLayout> tables = new HashSet<>();
-        TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
-        TableRow row = new TableRow(RuntimeEnvironment.application);
+        TableLayout tableLayout = new TableLayout(ApplicationProvider.getApplicationContext());
+        TableRow row = new TableRow(ApplicationProvider.getApplicationContext());
         row.setTag(tag);
         tableLayout.addView(row);
         tables.add(tableLayout);
@@ -239,12 +242,12 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
                 .fromJson(VaccineData.special_vacines, listType);
 
         PowerMockito
-                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .when(VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(specialVaccines);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
         PowerMockito
-                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .when(VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(null);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 

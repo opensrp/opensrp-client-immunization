@@ -12,12 +12,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
@@ -88,7 +89,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, ImmunizationRowGroupTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ImmunizationRowGroupTestActivity.class);
         controller = Robolectric.buildActivity(ImmunizationRowGroupTestActivity.class, intent);
         activity = controller.start().resume().get();
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
@@ -213,8 +214,8 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
-        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                org.mockito.ArgumentMatchers.any(ArrayList.class));
+        Mockito.verify(onRecordAllClickListener).onClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
         ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
@@ -224,7 +225,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
         ImmunizationRowAdapter adapter = view.getVaccineCardAdapter();
 
-        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(RuntimeEnvironment.application);
+        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(ApplicationProvider.getApplicationContext());
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         wrapper.setVaccineDate(DateTime.now());
@@ -233,26 +234,26 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         immunizationRowCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineClickListener, Mockito.never())
-                .onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineClickListener, Mockito.never())
-                .onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineClickListener, Mockito.never())
-                .onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineClickListener, Mockito.never())
-                .onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
@@ -270,26 +271,26 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         immunizationRowCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
@@ -315,8 +316,8 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
-        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                org.mockito.ArgumentMatchers.any(ArrayList.class));
+        Mockito.verify(onRecordAllClickListener).onClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
         ImmunizationRowGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
@@ -326,7 +327,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
         ImmunizationRowAdapter adapter = view.getVaccineCardAdapter();
 
-        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(RuntimeEnvironment.application, true);
+        ImmunizationRowCard immunizationRowCard = new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), true);
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         wrapper.setVaccineDate(DateTime.now());
@@ -339,26 +340,26 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         immunizationRowCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(ImmunizationRowGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(ImmunizationRowGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         immunizationRowCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(immunizationRowCard, 0, adapter.getItemId(0));
@@ -411,13 +412,13 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
 
         Assert.assertNotNull(activity.getInstance());
       
-        ImmunizationRowGroup instance1 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs);
+        ImmunizationRowGroup instance1 = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), attrs);
         Assert.assertNotNull(instance1);
 
-        ImmunizationRowGroup instance2 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0);
+        ImmunizationRowGroup instance2 = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), attrs, 0);
         Assert.assertNotNull(instance2);
 
-        ImmunizationRowGroup instance3 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs, 0, 0);
+        ImmunizationRowGroup instance3 = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), attrs, 0, 0);
         Assert.assertNotNull(instance3);
     }
 

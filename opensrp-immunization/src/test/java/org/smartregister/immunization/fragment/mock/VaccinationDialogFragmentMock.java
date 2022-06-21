@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 
 import org.mockito.Mockito;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineData;
@@ -97,11 +97,11 @@ public class VaccinationDialogFragmentMock extends VaccinationDialogFragment {
                 .spy((LinearLayout) dialogView.findViewById(R.id.vaccination_name_layout));
         Mockito.doReturn(vaccinationNameLayout).when(dialogView).findViewById(R.id.vaccination_name_layout);
 
-        LinearLayout vaccineName = Mockito.spy(new LinearLayout(RuntimeEnvironment.application));
+        LinearLayout vaccineName = Mockito.spy(new LinearLayout(ApplicationProvider.getApplicationContext()));
         CheckBoxMock checkBox = Mockito.mock(CheckBoxMock.class);
         RadioButtonMock radioButton = Mockito
-                .mock(RadioButtonMock.class);//new RadioButtonMock(RuntimeEnvironment.application);
-        TextView textView = new TextView(RuntimeEnvironment.application);
+                .mock(RadioButtonMock.class);//new RadioButtonMock(ApplicationProvider.getApplicationContext());
+        TextView textView = new TextView(ApplicationProvider.getApplicationContext());
         Mockito.doReturn(vaccineName).when(this.inflater).inflate(R.layout.vaccination_name, null);
         Mockito.doReturn(radioButton).when(vaccineName).findViewById(R.id.radio);
         Mockito.doReturn(textView).when(vaccineName).findViewById(R.id.vaccine);

@@ -3,13 +3,14 @@ package org.smartregister.immunization.utils;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.immunization.BaseUnitTest;
 
@@ -25,7 +26,7 @@ public class VaccinatorUtilsTestMock extends BaseUnitTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinatorUtilsTestMockActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), VaccinatorUtilsTestMockActivity.class);
         controller = Robolectric.buildActivity(VaccinatorUtilsTestMockActivity.class, intent);
         activity = controller.get();
         controller.setup();

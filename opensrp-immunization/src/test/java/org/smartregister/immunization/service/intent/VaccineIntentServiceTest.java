@@ -4,11 +4,14 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -17,7 +20,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
@@ -38,8 +40,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -76,7 +76,7 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
 
     @Test
     public void onHandleIntentTest() {
-        Application application = RuntimeEnvironment.application;
+        Application application = ApplicationProvider.getApplicationContext();
         Intent intent = new Intent(application, VaccineIntentService.class);
 
         VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
@@ -91,8 +91,8 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
         Assert.assertNotNull(vaccineRepository);
 
-        PowerMockito.when(VaccinatorUtils.getSupportedVaccines(any(Context.class))).thenReturn(availableVaccines);
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(any(Context.class))).thenReturn(specialJsonMappingVaccines);
+        PowerMockito.when(VaccinatorUtils.getSupportedVaccines(ArgumentMatchers.any(Context.class))).thenReturn(availableVaccines);
+        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(Context.class))).thenReturn(specialJsonMappingVaccines);
         Assert.assertNotNull(availableVaccines);
         Assert.assertNotNull(specialJsonMappingVaccines);
 

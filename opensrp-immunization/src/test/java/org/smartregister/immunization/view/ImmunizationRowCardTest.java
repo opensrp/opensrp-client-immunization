@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -15,7 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
@@ -57,7 +58,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new ImmunizationRowCard(RuntimeEnvironment.application);
+        view = new ImmunizationRowCard(ApplicationProvider.getApplicationContext());
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
         Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.PROGRAMCLIENTID, VaccineTest.NAME, 0,
@@ -75,21 +76,21 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
                 Mockito.mock(CommonFtsObject.class), 0, 0);
         PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
         PowerMockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
-        PowerMockito.when(vaccineRepository.find(org.mockito.ArgumentMatchers.anyLong())).thenReturn(vaccine);
+        PowerMockito.when(vaccineRepository.find(ArgumentMatchers.anyLong())).thenReturn(vaccine);
         PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
         PowerMockito.when(eventClientRepository
-                .convert(org.mockito.ArgumentMatchers.any(JSONObject.class), org.mockito.ArgumentMatchers.any(Class.class)))
+                .convert(ArgumentMatchers.any(JSONObject.class), ArgumentMatchers.any(Class.class)))
                 .thenReturn(event);
     }
 
     @Test
     public void testConstructors() {
 
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, true));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new ImmunizationRowCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext()));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), true));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new ImmunizationRowCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0, 0));
 
     }
 

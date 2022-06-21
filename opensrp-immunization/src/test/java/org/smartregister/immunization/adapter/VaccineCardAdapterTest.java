@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -70,9 +70,9 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        view = new VaccineGroup(RuntimeEnvironment.application);
+        view = new VaccineGroup(ApplicationProvider.getApplicationContext());
         setDataForTest(magicDate);
-        vaccineCardAdapter = new VaccineCardAdapter(RuntimeEnvironment.application, view, "child", vaccineList, alertList);
+        vaccineCardAdapter = new VaccineCardAdapter(ApplicationProvider.getApplicationContext(), view, "child", vaccineList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }
 

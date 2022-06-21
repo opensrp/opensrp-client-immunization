@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
@@ -57,7 +57,7 @@ public class ServiceCardTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        Intent intent = new Intent(RuntimeEnvironment.application, ServiceCardTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ServiceCardTestActivity.class);
         controller = Robolectric.buildActivity(ServiceCardTestActivity.class, intent);
         activity = controller.start().resume().get();
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);

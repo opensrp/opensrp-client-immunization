@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
@@ -50,17 +50,17 @@ public class RecurringServiceUtilsTest extends BaseUnitTest {
     public void testGetLastOpenedServiceViewReturnsCorrectView() {
         List<ServiceGroup> serviceGroups = new ArrayList<>();
 
-        ServiceGroup serviceGroup = new ServiceGroup(RuntimeEnvironment.application);
+        ServiceGroup serviceGroup = new ServiceGroup(ApplicationProvider.getApplicationContext());
         serviceGroup.setModalOpen(false);
         serviceGroup.setTag(R.id.key, "SG Alpha");
         serviceGroups.add(serviceGroup);
 
-        serviceGroup = new ServiceGroup(RuntimeEnvironment.application);
+        serviceGroup = new ServiceGroup(ApplicationProvider.getApplicationContext());
         serviceGroup.setModalOpen(true);
         serviceGroup.setTag(R.id.key, SG_BETA);
         serviceGroups.add(serviceGroup);
 
-        serviceGroup = new ServiceGroup(RuntimeEnvironment.application);
+        serviceGroup = new ServiceGroup(ApplicationProvider.getApplicationContext());
         serviceGroup.setModalOpen(false);
         serviceGroup.setTag(R.id.key, "SG Gamma");
         serviceGroups.add(serviceGroup);

@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
@@ -101,7 +101,7 @@ public class VaccinationDialogFragmentTest extends BaseUnitTest {
     @Test
     public void assertOnCreateViewTestSetsUpTheActivity() {
         destroyController();
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccinationDialogFragmentTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), VaccinationDialogFragmentTestActivity.class);
         controller = Robolectric.buildActivity(VaccinationDialogFragmentTestActivity.class, intent);
         activity = controller.get();
         controller.setup();

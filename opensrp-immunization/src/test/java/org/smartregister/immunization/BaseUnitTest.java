@@ -3,6 +3,7 @@ package org.smartregister.immunization;
 import androidx.annotation.NonNull;
 
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -49,7 +50,7 @@ public abstract class BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(VaccineRepo.Vaccine.values());
         PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.WOMAN)).thenReturn(VaccineRepo.Vaccine.values());
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
         PowerMockito.when(ImmunizationLibrary.getInstance().getProperties()).thenReturn(appProperties);
     }
