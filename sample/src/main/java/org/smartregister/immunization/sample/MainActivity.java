@@ -1,5 +1,7 @@
 package org.smartregister.immunization.sample;
 
+import static org.smartregister.util.Utils.getName;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -68,8 +70,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static org.smartregister.util.Utils.getName;
-
 /**
  * Created by Jason Rogena - jrogena@ona.io on 16/02/2017.
  */
@@ -77,17 +77,14 @@ import static org.smartregister.util.Utils.getName;
 public class MainActivity extends AppCompatActivity implements VaccinationActionListener, ServiceActionListener {
 
 
-    // Data
-    private CommonPersonObjectClient childDetails = SampleUtil.dummyDetatils();
-
     private static final String TAG = MainActivity.class.getCanonicalName();
     private static final String DIALOG_TAG = "DIALOG_TAAAGGG";
     private static final String EXTRA_CHILD_DETAILS = "child_details";
-
+    private static final boolean isChildActive = true;
+    // Data
+    private CommonPersonObjectClient childDetails = SampleUtil.dummyDetatils();
     private ArrayList<VaccineGroup> vaccineGroups;
     private ArrayList<ServiceGroup> serviceGroups;
-
-    private static final boolean isChildActive = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +97,13 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
+
+        setUpViewGroups();
+
+        updateViews();
     }
 
     @Override
@@ -132,6 +132,11 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     @Override
     protected void onResume() {
         super.onResume();
+
+        startServices();
+    }
+
+    private void setUpViewGroups() {
         if (vaccineGroups != null) {
             LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
             vaccineGroupCanvasLL.removeAllViews();
@@ -143,9 +148,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             serviceGroupCanvasLL.removeAllViews();
             serviceGroups = null;
         }
-        updateViews();
-
-        startServices();
     }
 
     private boolean isDataOk() {
@@ -251,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             if (foundServiceTypeMap.isEmpty()) {
                 return;
             }
-
 
             serviceGroups = new ArrayList<>();
             LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
@@ -531,6 +532,119 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     }
 
+    private String constructChildName() {
+        String firstName = Utils.getValue(childDetails.getColumnmaps(), "first_name", true);
+        String lastName = Utils.getValue(childDetails.getColumnmaps(), "last_name", true);
+        return getName(firstName, lastName).trim();
+    }
+
+    private VaccineGroup getLastOpenedView() {
+        if (vaccineGroups == null) {
+            return null;
+        }
+
+        for (VaccineGroup vaccineGroup : vaccineGroups) {
+            if (vaccineGroup.isModalOpen()) {
+                return vaccineGroup;
+            }
+        }
+
+        return null;
+    }
+
+    private void updateVaccineGroupsUsingAlerts(List<String> affectedVaccines, List<Vaccine> vaccineList, List<Alert> alerts) {
+        if (affectedVaccines != null && vaccineList != null) {
+            // Update all other affected vaccine groups
+            HashMap<VaccineGroup, ArrayList<VaccineWrapper>> affectedGroups = new HashMap<>();
+            for (String curAffectedVaccineName : affectedVaccines) {
+                boolean viewFound = false;
+                // Check what group it is in
+                for (VaccineGroup curGroup : vaccineGroups) {
+                    ArrayList<VaccineWrapper> groupWrappers = curGroup.getAllVaccineWrappers();
+                    if (groupWrappers == null) groupWrappers = new ArrayList<>();
+                    for (VaccineWrapper curWrapper : groupWrappers) {
+                        String curWrapperName = curWrapper.getName();
+
+                        // Check if current wrapper is one of the combined vaccines
+                        if (ImmunizationLibrary.getInstance().COMBINED_VACCINES.contains(curWrapperName)) {
+                            // Check if any of the sister vaccines is currAffectedVaccineName
+                            String[] allSisters = ImmunizationLibrary.getInstance().COMBINED_VACCINES_MAP.get(curWrapperName).split(" / ");
+                            for (int i = 0; i < allSisters.length; i++) {
+                                if (allSisters[i].replace(" ", "").equalsIgnoreCase(curAffectedVaccineName.replace(" ", ""))) {
+                                    curWrapperName = allSisters[i];
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (curWrapperName.replace(" ", "").toLowerCase()
+                                .contains(curAffectedVaccineName.replace(" ", "").toLowerCase())) {
+                            if (!affectedGroups.containsKey(curGroup)) {
+                                affectedGroups.put(curGroup, new ArrayList<VaccineWrapper>());
+                            }
+
+                            affectedGroups.get(curGroup).add(curWrapper);
+                            viewFound = true;
+                        }
+
+                        if (viewFound) break;
+                    }
+
+                    if (viewFound) break;
+                }
+            }
+
+            for (VaccineGroup curGroup : affectedGroups.keySet()) {
+                try {
+                    vaccineGroups.remove(curGroup);
+                    addVaccineGroup(Integer.valueOf((String) curGroup.getTag(R.id.vaccine_group_parent_id)),
+                            //TODO if error use immediately below
+                            // (org.smartregister.immunization.domain.jsonmapping.VaccineGroup) curGroup.getTag(R.id.vaccine_group_vaccine_data),
+                            curGroup.getVaccineData(),
+                            vaccineList, alerts);
+                } catch (Exception e) {
+                    Log.e(TAG, Log.getStackTraceString(e));
+                }
+            }
+        }
+    }
+
+    //Recurring Service
+    @Override
+    public void onGiveToday(ServiceWrapper tag, View v) {
+        if (tag != null) {
+            View view = RecurringServiceUtils.getLastOpenedServiceView(serviceGroups);
+            saveService(tag, view);
+        }
+    }
+
+    @Override
+    public void onGiveEarlier(ServiceWrapper tag, View v) {
+        if (tag != null) {
+            View view = RecurringServiceUtils.getLastOpenedServiceView(serviceGroups);
+            saveService(tag, view);
+        }
+    }
+
+    @Override
+    public void onUndoService(ServiceWrapper tag, View v) {
+        Utils.startAsyncTask(new UndoServiceTask(tag), null);
+    }
+
+    public void saveService(ServiceWrapper tag, final View view) {
+        if (tag == null) {
+            return;
+        }
+
+        ServiceWrapper[] arrayTags = {tag};
+        SaveServiceTask backgroundTask = new SaveServiceTask();
+        String providerId = ImmunizationLibrary.getInstance().context().allSharedPreferences().fetchRegisteredANM();
+
+        backgroundTask.setProviderId(providerId);
+        backgroundTask.setView(view);
+        Utils.startAsyncTask(backgroundTask, arrayTags);
+    }
+
     private class SaveVaccinesTask extends AsyncTask<VaccineWrapper, Void, Pair<ArrayList<VaccineWrapper>, List<Vaccine>>> {
 
         private View view;
@@ -580,27 +694,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
             return pair;
         }
-    }
-
-    private String constructChildName() {
-        String firstName = Utils.getValue(childDetails.getColumnmaps(), "first_name", true);
-        String lastName = Utils.getValue(childDetails.getColumnmaps(), "last_name", true);
-        return getName(firstName, lastName).trim();
-    }
-
-
-    private VaccineGroup getLastOpenedView() {
-        if (vaccineGroups == null) {
-            return null;
-        }
-
-        for (VaccineGroup vaccineGroup : vaccineGroups) {
-            if (vaccineGroup.isModalOpen()) {
-                return vaccineGroup;
-            }
-        }
-
-        return null;
     }
 
     private class UpdateViewTask extends AsyncTask<Void, Void, Map<String, NamedObject<?>>> {
@@ -735,10 +828,10 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     private class UndoVaccineTask extends AsyncTask<Void, Void, Void> {
 
-        private VaccineWrapper tag;
-        private View v;
         private final VaccineRepository vaccineRepository;
         private final AlertService alertService;
+        private VaccineWrapper tag;
+        private View v;
         private List<Vaccine> vaccineList;
         private List<Alert> alertList;
         private List<String> affectedVaccines;
@@ -792,63 +885,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         }
     }
 
-    private void updateVaccineGroupsUsingAlerts(List<String> affectedVaccines, List<Vaccine> vaccineList, List<Alert> alerts) {
-        if (affectedVaccines != null && vaccineList != null) {
-            // Update all other affected vaccine groups
-            HashMap<VaccineGroup, ArrayList<VaccineWrapper>> affectedGroups = new HashMap<>();
-            for (String curAffectedVaccineName : affectedVaccines) {
-                boolean viewFound = false;
-                // Check what group it is in
-                for (VaccineGroup curGroup : vaccineGroups) {
-                    ArrayList<VaccineWrapper> groupWrappers = curGroup.getAllVaccineWrappers();
-                    if (groupWrappers == null) groupWrappers = new ArrayList<>();
-                    for (VaccineWrapper curWrapper : groupWrappers) {
-                        String curWrapperName = curWrapper.getName();
-
-                        // Check if current wrapper is one of the combined vaccines
-                        if (ImmunizationLibrary.getInstance().COMBINED_VACCINES.contains(curWrapperName)) {
-                            // Check if any of the sister vaccines is currAffectedVaccineName
-                            String[] allSisters = ImmunizationLibrary.getInstance().COMBINED_VACCINES_MAP.get(curWrapperName).split(" / ");
-                            for (int i = 0; i < allSisters.length; i++) {
-                                if (allSisters[i].replace(" ", "").equalsIgnoreCase(curAffectedVaccineName.replace(" ", ""))) {
-                                    curWrapperName = allSisters[i];
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (curWrapperName.replace(" ", "").toLowerCase()
-                                .contains(curAffectedVaccineName.replace(" ", "").toLowerCase())) {
-                            if (!affectedGroups.containsKey(curGroup)) {
-                                affectedGroups.put(curGroup, new ArrayList<VaccineWrapper>());
-                            }
-
-                            affectedGroups.get(curGroup).add(curWrapper);
-                            viewFound = true;
-                        }
-
-                        if (viewFound) break;
-                    }
-
-                    if (viewFound) break;
-                }
-            }
-
-            for (VaccineGroup curGroup : affectedGroups.keySet()) {
-                try {
-                    vaccineGroups.remove(curGroup);
-                    addVaccineGroup(Integer.valueOf((String) curGroup.getTag(R.id.vaccine_group_parent_id)),
-                            //TODO if error use immediately below
-                            // (org.smartregister.immunization.domain.jsonmapping.VaccineGroup) curGroup.getTag(R.id.vaccine_group_vaccine_data),
-                            curGroup.getVaccineData(),
-                            vaccineList, alerts);
-                } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
-                }
-            }
-        }
-    }
-
     private class NamedObject<T> {
         public final String name;
         public final T object;
@@ -858,43 +894,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             this.object = object;
         }
     }
-
-    //Recurring Service
-    @Override
-    public void onGiveToday(ServiceWrapper tag, View v) {
-        if (tag != null) {
-            View view = RecurringServiceUtils.getLastOpenedServiceView(serviceGroups);
-            saveService(tag, view);
-        }
-    }
-
-    @Override
-    public void onGiveEarlier(ServiceWrapper tag, View v) {
-        if (tag != null) {
-            View view = RecurringServiceUtils.getLastOpenedServiceView(serviceGroups);
-            saveService(tag, view);
-        }
-    }
-
-    @Override
-    public void onUndoService(ServiceWrapper tag, View v) {
-        Utils.startAsyncTask(new UndoServiceTask(tag), null);
-    }
-
-    public void saveService(ServiceWrapper tag, final View view) {
-        if (tag == null) {
-            return;
-        }
-
-        ServiceWrapper[] arrayTags = {tag};
-        SaveServiceTask backgroundTask = new SaveServiceTask();
-        String providerId = ImmunizationLibrary.getInstance().context().allSharedPreferences().fetchRegisteredANM();
-
-        backgroundTask.setProviderId(providerId);
-        backgroundTask.setView(view);
-        Utils.startAsyncTask(backgroundTask, arrayTags);
-    }
-
 
     public class SaveServiceTask extends AsyncTask<ServiceWrapper, Void, Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>> {
 

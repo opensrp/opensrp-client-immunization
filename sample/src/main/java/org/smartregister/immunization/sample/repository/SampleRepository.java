@@ -11,6 +11,7 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
+import org.smartregister.immunization.repository.VaccineOverdueCountRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.sample.BuildConfig;
@@ -89,6 +90,9 @@ public class SampleRepository extends Repository {
                     break;
                 case 6:
                     upgradeToVersion6(db);
+                    break;
+                case 7:
+                    upgradeToVersion7(db);
                 default:
                     break;
             }
@@ -205,16 +209,23 @@ public class SampleRepository extends Repository {
         }
     }
 
-    private void upgradeToVersion6(SQLiteDatabase db)
-    {
-        try{
-            AllSharedPreferences sharedPreferences = SampleApplication.getInstance().context().userService()
-                    .getAllSharedPreferences();
+    private void upgradeToVersion6(SQLiteDatabase db) {
+        try {
+            AllSharedPreferences sharedPreferences = SampleApplication.getInstance().context().userService().getAllSharedPreferences();
             db.execSQL(VaccineRepository.UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL);
             db.execSQL(VaccineRepository.UPDATE_OUTREACH_QUERRY, new String[]{sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchPioneerUser())});
 
         } catch (Exception e) {
-            Timber.e(TAG,"upgradeToVersion6" + Log.getStackTraceString(e));
+            Timber.e(TAG, "upgradeToVersion6" + Log.getStackTraceString(e));
+        }
+    }
+
+    private void upgradeToVersion7(SQLiteDatabase db) {
+        try {
+            db.execSQL(VaccineOverdueCountRepository.CREATE_TABLE_SQL);
+
+        } catch (Exception e) {
+            Log.e(TAG, "upgradeToVersion5 " + Log.getStackTraceString(e));
         }
     }
 
