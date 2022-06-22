@@ -8,6 +8,7 @@ import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
+import org.smartregister.immunization.repository.VaccineOverdueCountRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.util.IMConstants;
@@ -54,6 +55,7 @@ public class ImmunizationLibrary {
     private String currentConditionalVaccine;
     private boolean allowSyncImmediately = false;
     private List<VaccineRepo.Vaccine> skippableVaccines = new ArrayList<>();
+    private VaccineOverdueCountRepository vaccineOverdueCountRepository;
 
     private long vaccineSyncTime = -1;
 
@@ -148,6 +150,13 @@ public class ImmunizationLibrary {
             vaccineNameRepository = new VaccineNameRepository(commonFtsObject(), context().alertService());
         }
         return vaccineNameRepository;
+    }
+
+    public VaccineOverdueCountRepository getVaccineOverdueCountRepository() {
+        if (vaccineOverdueCountRepository == null) {
+            vaccineOverdueCountRepository = new VaccineOverdueCountRepository();
+        }
+        return vaccineOverdueCountRepository;
     }
 
     public int getApplicationVersion() {

@@ -110,6 +110,7 @@ android {
 
 dependencies {
 
+    testImplementation 'junit:junit:4.12'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     implementation('org.smartregister:opensrp-client-core:6.0.0-ALPHA-SNAPSHOT@aar') {
