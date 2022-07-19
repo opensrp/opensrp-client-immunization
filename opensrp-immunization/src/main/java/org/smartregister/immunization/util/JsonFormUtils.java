@@ -5,8 +5,11 @@ import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.domain.Observation;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
@@ -14,15 +17,26 @@ import org.smartregister.repository.EventClientRepository;
 
 import java.util.Date;
 
+import timber.log.Timber;
+
 /**
  * Created by keyman on 31/07/2017.
  */
 public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
 
-    public static void createVaccineEvent(Context context, Vaccine vaccine, String eventType, String entityType,
-                                          JSONArray fields) {
+    /**
+     * This createVaccineEvent method is deprecated, use {@link #createVaccineEvent(Vaccine vaccine, String eventType, String entityType, JSONArray fields, org.smartregister.Context context)} instead which adds application version name.
+     */
+    @Deprecated
+    public static void createVaccineEvent(Context context, Vaccine vaccine, String eventType, String entityType, JSONArray fields) {
+
+        org.smartregister.Context openSRPContext = ImmunizationLibrary.getInstance().context();
+        createVaccineEvent(vaccine, eventType, entityType, fields, openSRPContext);
+    }
+
+    public static void createVaccineEvent(Vaccine vaccine, String eventType, String entityType, JSONArray fields, org.smartregister.Context context) {
         try {
-            EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
+            EventClientRepository db = context.getEventClientRepository();
 
             Event event = (Event) new Event()
                     .withBaseEntityId(vaccine.getBaseEntityId())
@@ -40,8 +54,16 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             event.setTeamId(vaccine.getTeamId());
             event.setChildLocationId(vaccine.getChildLocationId());
             event.addDetails(IMConstants.VaccineEvent.PROGRAM_CLIENT_ID, vaccine.getProgramClientId());
+            event.addDetails(AllConstants.DATA_STRATEGY, context.allSharedPreferences().fetchCurrentDataStrategy());
+
+            try {
+                addFormSubmissionFieldObservation(AllConstants.DATA_STRATEGY, context.allSharedPreferences().fetchCurrentDataStrategy(), Observation.TYPE.TEXT, event);
+            } catch (JSONException jsonException) {
+                Timber.e(jsonException);
+            }
 
             event.setClientApplicationVersion(ImmunizationLibrary.getInstance().getApplicationVersion());
+            event.setClientApplicationVersionName(ImmunizationLibrary.getInstance().getApplicationVersionName());
             event.setClientDatabaseVersion(ImmunizationLibrary.getInstance().getDatabaseVersion());
 
             if (fields != null && fields.length() != 0)
@@ -72,10 +94,19 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
         }
     }
 
-    public static void createServiceEvent(Context context, ServiceRecord serviceRecord, String eventType, String entityType,
-                                          JSONArray fields) {
+    /**
+     * This createServiceEvent method is deprecated, use {@link #createServiceEvent(ServiceRecord serviceRecord, String eventType, String entityType, JSONArray fields, org.smartregister.Context context)} instead which adds application version name.
+     */
+    @Deprecated
+    public static void createServiceEvent(Context context, ServiceRecord serviceRecord, String eventType, String entityType, JSONArray fields) {
+
+        org.smartregister.Context openSRPContext = ImmunizationLibrary.getInstance().context();
+        createServiceEvent(serviceRecord, eventType, entityType, fields, openSRPContext);
+    }
+
+    public static void createServiceEvent(ServiceRecord serviceRecord, String eventType, String entityType, JSONArray fields, org.smartregister.Context context) {
         try {
-            EventClientRepository db = ImmunizationLibrary.getInstance().eventClientRepository();
+            EventClientRepository db = context.getEventClientRepository();
 
             Event event = (Event) new Event()
                     .withBaseEntityId(serviceRecord.getBaseEntityId())
@@ -94,8 +125,16 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             event.setTeamId(serviceRecord.getTeamId());
             event.setChildLocationId(serviceRecord.getChildLocationId());
             event.addDetails(IMConstants.VaccineEvent.PROGRAM_CLIENT_ID, serviceRecord.getProgramClientId());
+            event.addDetails(AllConstants.DATA_STRATEGY, context.allSharedPreferences().fetchCurrentDataStrategy());
+
+            try {
+                addFormSubmissionFieldObservation(AllConstants.DATA_STRATEGY, context.allSharedPreferences().fetchCurrentDataStrategy(), Observation.TYPE.TEXT, event);
+            } catch (JSONException jsonException) {
+                Timber.e(jsonException);
+            }
 
             event.setClientApplicationVersion(ImmunizationLibrary.getInstance().getApplicationVersion());
+            event.setClientApplicationVersionName(ImmunizationLibrary.getInstance().getApplicationVersionName());
             event.setClientDatabaseVersion(ImmunizationLibrary.getInstance().getDatabaseVersion());
 
             if (fields != null && fields.length() != 0)
@@ -106,7 +145,6 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                         addObservation(event, jsonObject);
                     }
                 }
-
 
             if (event != null) {
 

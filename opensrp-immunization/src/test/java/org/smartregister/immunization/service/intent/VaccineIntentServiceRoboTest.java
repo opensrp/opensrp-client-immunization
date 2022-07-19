@@ -45,7 +45,7 @@ public class VaccineIntentServiceRoboTest {
 
         org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
         Mockito.doReturn(new AppProperties()).when(context).getAppProperties();
-        ImmunizationLibrary.init(context, Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 1, 1);
+        ImmunizationLibrary.init(context, Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 1, "1.0.0", 1);
 
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
         ReflectionHelpers.setField(vaccineIntentService, "vaccineRepository", vaccineRepository);
@@ -69,6 +69,6 @@ public class VaccineIntentServiceRoboTest {
         vaccineIntentService.onHandleIntent(null);
 
         HashMap<String, HashMap<Integer, ArrayList<Object>>> methodCalls = ShadowJsonFormUtils.getMethodCalls();
-        Assert.assertEquals(2, methodCalls.get("createVaccineEvent(Context, Vaccine, String, String, JSONArray)").size());
+        Assert.assertEquals(2, methodCalls.get("createVaccineEvent(Vaccine, String, String, JSONArray, Context)").size());
     }
 }

@@ -1,12 +1,12 @@
 package org.smartregister.immunization.customshadows;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
+import org.smartregister.Context;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.util.JsonFormUtils;
@@ -23,9 +23,9 @@ public class ShadowJsonFormUtils {
     private static HashMap<String, HashMap<Integer, ArrayList<Object>>> methodCalls = new HashMap<>();
 
     @Implementation
-    public static void createVaccineEvent(Context context, Vaccine vaccine, String eventType, String entityType, JSONArray fields) {
+    public static void createVaccineEvent( Vaccine vaccine, String eventType, String entityType, JSONArray fields,Context context) {
         // TODO: Make this dynamic and reusable for other instances
-        String methodName = "createVaccineEvent(Context, Vaccine, String, String, JSONArray)";
+        String methodName = "createVaccineEvent(Vaccine, String, String, JSONArray, Context)";
 
         int count = 0;
 
@@ -47,9 +47,9 @@ public class ShadowJsonFormUtils {
     }
 
     @Implementation
-    public static void createServiceEvent(Context context, ServiceRecord serviceRecord, String eventType, String entityType, JSONArray fields) {
+    public static void createServiceEvent(ServiceRecord serviceRecord, String eventType, String entityType, JSONArray fields, Context context) {
         // TODO: Make this dynamic and reusable for other instances
-        String methodName = "createServiceEvent(Context, ServiceRecord, String, String, JSONArray)";
+        String methodName = "createServiceEvent(ServiceRecord, String, String, JSONArray, Context)";
 
         int count = 0;
 

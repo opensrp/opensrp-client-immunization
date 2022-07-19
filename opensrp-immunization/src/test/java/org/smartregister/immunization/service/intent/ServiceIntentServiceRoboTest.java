@@ -44,7 +44,7 @@ public class ServiceIntentServiceRoboTest {
 
         org.smartregister.Context context = Mockito.mock(org.smartregister.Context.class);
         Mockito.doReturn(new AppProperties()).when(context).getAppProperties();
-        ImmunizationLibrary.init(context, Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 1, 1);
+        ImmunizationLibrary.init(context, Mockito.mock(Repository.class), Mockito.mock(CommonFtsObject.class), 1, "1.0.0", 1);
 
         RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito.mock(RecurringServiceRecordRepository.class);
         RecurringServiceTypeRepository recurringServiceTypeRepository = Mockito.mock(RecurringServiceTypeRepository.class);
@@ -86,6 +86,6 @@ public class ServiceIntentServiceRoboTest {
         recurringIntentService.onHandleIntent(null);
 
         HashMap<String, HashMap<Integer, ArrayList<Object>>> methodCalls = ShadowJsonFormUtils.getMethodCalls();
-        Assert.assertEquals(2, methodCalls.get("createServiceEvent(Context, ServiceRecord, String, String, JSONArray)").size());
+        Assert.assertEquals(2, methodCalls.get("createServiceEvent(ServiceRecord, String, String, JSONArray, Context)").size());
     }
 }
