@@ -218,6 +218,8 @@ public class VaccineSchedule {
 
                 alertService.deleteOfflineAlerts(baseEntityId, alertNames.toArray(new String[0]));
 
+                boolean isAnyVaccineUrgent = false;
+
                 for (VaccineSchedule curSchedule : vaccineSchedules.get(vaccineCategory).values()) {
                     Alert curAlert = curSchedule.getOfflineAlert(baseEntityId, dob.toDate(), issuedVaccines);
 
@@ -225,6 +227,23 @@ public class VaccineSchedule {
                         // Insert alert into table
                         newAlerts.add(curAlert);
                         alertService.updateFtsSearch(curAlert, true);
+
+                        if (!isAnyVaccineUrgent && AlertStatus.urgent.equals(curAlert.status())) {
+                            try {
+                                isAnyVaccineUrgent = true;
+                                ImmunizationLibrary.getInstance().getVaccineOverdueCountRepository().upsert(baseEntityId);
+                            } catch (Exception e) {
+                                Timber.e(e);
+                            }
+                        }
+                    }
+                }
+
+                if (!isAnyVaccineUrgent) {
+                    try {
+                        ImmunizationLibrary.getInstance().getVaccineOverdueCountRepository().delete(baseEntityId);
+                    } catch (Exception e) {
+                        Timber.e(e);
                     }
                 }
 
@@ -289,6 +308,50 @@ public class VaccineSchedule {
         return notInNew;
     }
 
+    public static void standardiseCalendarDate(Calendar calendarDate) {
+        calendarDate.set(Calendar.HOUR_OF_DAY, 0);
+        calendarDate.set(Calendar.MINUTE, 0);
+        calendarDate.set(Calendar.SECOND, 0);
+        calendarDate.set(Calendar.MILLISECOND, 0);
+    }
+
+    /**
+     * This method adds an offset to the provided calendar. Offsets can look like: "+5y,3m,2d" : Plus 5 years, 3 months, and
+     * 2 days "-2d" : Minus 2 days
+     * <p>
+     * Accepted time units for the offset are: d : Days m : Months y : Years
+     * <p>
+     * Accepted operators for the offset are: - : Minus + : Plus
+     *
+     * @param calendar The calendar to add the offset
+     * @param offset   The offset in the format above to add to the calendar
+     * @return
+     */
+    public static Calendar addOffsetToCalendar(Calendar calendar, String offset) {
+        if (calendar != null && offset != null) {
+            VaccinatorUtils.processConfigCalendarOffset(calendar, offset);
+        }
+
+        return calendar;
+    }
+
+    public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
+        if (vaccineSchedules != null && vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
+                .containsKey(vaccineName.toUpperCase())) {
+            return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
+        }
+
+        return null;
+    }
+
+    public static HashMap<String, HashMap<String, VaccineSchedule>> getVaccineSchedules() {
+        return vaccineSchedules;
+    }
+
+    public static void setVaccineSchedules(HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules) {
+        VaccineSchedule.vaccineSchedules = vaccineSchedules;
+    }
+
     /**
      * Returns the offline alert for a vaccine, if one exists. Currently, the only alert status returned is {@code
      * AlertStatus.normal}
@@ -335,7 +398,6 @@ public class VaccineSchedule {
 
         return defaultAlert;
     }
-
 
     protected boolean isVaccineIssued(String currentVaccine, List<Vaccine> issuedVaccines) {
 
@@ -443,49 +505,5 @@ public class VaccineSchedule {
         }
 
         return null;
-    }
-
-    public static void standardiseCalendarDate(Calendar calendarDate) {
-        calendarDate.set(Calendar.HOUR_OF_DAY, 0);
-        calendarDate.set(Calendar.MINUTE, 0);
-        calendarDate.set(Calendar.SECOND, 0);
-        calendarDate.set(Calendar.MILLISECOND, 0);
-    }
-
-    /**
-     * This method adds an offset to the provided calendar. Offsets can look like: "+5y,3m,2d" : Plus 5 years, 3 months, and
-     * 2 days "-2d" : Minus 2 days
-     * <p>
-     * Accepted time units for the offset are: d : Days m : Months y : Years
-     * <p>
-     * Accepted operators for the offset are: - : Minus + : Plus
-     *
-     * @param calendar The calendar to add the offset
-     * @param offset   The offset in the format above to add to the calendar
-     * @return
-     */
-    public static Calendar addOffsetToCalendar(Calendar calendar, String offset) {
-        if (calendar != null && offset != null) {
-            VaccinatorUtils.processConfigCalendarOffset(calendar, offset);
-        }
-
-        return calendar;
-    }
-
-    public static VaccineSchedule getVaccineSchedule(String vaccineCategory, String vaccineName) {
-        if (vaccineSchedules != null && vaccineSchedules.containsKey(vaccineCategory) && vaccineSchedules.get(vaccineCategory)
-                .containsKey(vaccineName.toUpperCase())) {
-            return vaccineSchedules.get(vaccineCategory).get(vaccineName.toUpperCase());
-        }
-
-        return null;
-    }
-
-    public static void setVaccineSchedules(HashMap<String, HashMap<String, VaccineSchedule>> vaccineSchedules) {
-        VaccineSchedule.vaccineSchedules = vaccineSchedules;
-    }
-
-    public static HashMap<String, HashMap<String, VaccineSchedule>> getVaccineSchedules() {
-        return vaccineSchedules;
     }
 }
