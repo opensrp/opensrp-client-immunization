@@ -15,6 +15,7 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -105,7 +106,7 @@ public class VaccineIntentService extends IntentService {
             if (!vaccines.isEmpty()) {
                 for (Vaccine vaccine : vaccines) {
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                     String formattedDate = simpleDateFormat.format(vaccine.getDate());
 
                     JSONArray jsonArray = new JSONArray();
