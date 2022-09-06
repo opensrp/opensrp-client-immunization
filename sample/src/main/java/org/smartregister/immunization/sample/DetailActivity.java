@@ -39,6 +39,9 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.tabfragments.ImmunizationFragment;
+import org.smartregister.immunization.util.CallableInteractor;
+import org.smartregister.immunization.util.CallableInteractorCallBack;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
@@ -58,6 +61,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import static org.smartregister.util.Utils.getName;
 
@@ -308,35 +312,46 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
             updateVaccineGroupViews(view);
         } else {
             VaccineWrapper[] arrayTags = tags.toArray(new VaccineWrapper[tags.size()]);
-            SaveVaccinesTask backgroundTask = new SaveVaccinesTask();
-            backgroundTask.setView(view);
-            backgroundTask.execute(arrayTags);
+            Callable<Void> callable = ()->{
+                for (VaccineWrapper tag:arrayTags){
+                    saveVaccine(tag);
+                }
+                return null;
+            };
+            GenericInteractor interactor  = getGenericInteractor();
+            SaveVaccineCallableInteractorCallback saveVaccineCallableInteractorCallback  = new SaveVaccineCallableInteractorCallback();
+            saveVaccineCallableInteractorCallback.setView(view);
+            interactor.execute(callable, saveVaccineCallableInteractorCallback);
+
         }
     }
 
-    private class SaveVaccinesTask extends AsyncTask<VaccineWrapper, Void, Void> {
+    private GenericInteractor getGenericInteractor() {
+        return new GenericInteractor();
+    }
 
+    private class SaveVaccineCallableInteractorCallback implements CallableInteractorCallBack<Void> {
         private View view;
-
-        public void setView(View view) {
+        public void setView(View view){
             this.view = view;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            updateVaccineGroupViews(view);
+        public void onResult(Void unused) {
+            if (view == null || !(view instanceof ImmunizationRowGroup)) {
+                return;
+            }
+            final ImmunizationRowGroup vaccineGroup = (ImmunizationRowGroup) view;
+
+            vaccineGroup.updateViews();
+
         }
 
         @Override
-        protected Void doInBackground(VaccineWrapper... vaccineWrappers) {
-            for (VaccineWrapper tag : vaccineWrappers) {
-                saveVaccine(tag);
-            }
-            return null;
+        public void onError(Exception ex) {
+
         }
-
     }
-
     private void updateVaccineGroupViews(View view) {
         if (view == null || !(view instanceof ImmunizationRowGroup)) {
             return;

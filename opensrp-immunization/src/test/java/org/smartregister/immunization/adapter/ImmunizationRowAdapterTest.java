@@ -30,7 +30,10 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.AppExecutors;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
 import org.smartregister.util.JsonFormUtils;
 
@@ -40,6 +43,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -47,7 +52,7 @@ import java.util.Map;
 @PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ImmunizationRowCardShadow.class})
 @PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
-public class ImmunizationRowAdapterTest extends BaseUnitTest {
+public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executor {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
     private final int magicNumber = 231231;
@@ -191,4 +196,37 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
         Assert.assertEquals(vaccineWrapper.getVaccineDate().year(), new DateTime().plusDays(28).year());
     }
 
+    @Test
+    public void testImmunizationRowCallableInteractorCallbackOnResult(){
+        ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback =
+                Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
+        GenericInteractor interactor = Mockito.spy(new GenericInteractor(new AppExecutors(this, this, this)));
+        VaccineWrapper vaccineWrapper = new VaccineWrapper();
+        Callable<VaccineWrapper> vaccineWrapperCallable = ()-> vaccineWrapper;
+        ImmunizationRowCard mockImmunizationRowCard = Mockito.mock(ImmunizationRowCard.class);
+
+        ImmunizationRowAdapter mockAdapter = Mockito
+                .spy(new ImmunizationRowAdapter(context, view, true, vaccinelist, alertlist));
+
+
+//        Mockito.when(interactor.execute(Mockito.any(), Mockito.any())).ex
+        Mockito.doReturn(mockImmunizationRowCard)
+                        .when(mockAdapter).getImmunizationRowCard();
+        
+        Mockito.doReturn(interactor).when(mockAdapter).getGenericInteractor();
+        Mockito.doReturn(immunizationRowCallableInteractorCallback).when(mockAdapter).getImmunizationRowCallableInteractor(Mockito.any(),Mockito.anyString());
+
+        mockAdapter.getView(1, view, null);
+        Mockito.verify(interactor).execute(Mockito.any(), Mockito.any());
+        Mockito.verify(immunizationRowCallableInteractorCallback).onResult(vaccineWrapper);
+
+//        Mockito.doAnswer(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback)).
+//                when(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback));
+
+    }
+
+    @Override
+    public void execute(Runnable runnable) {
+        runnable.run();
+    }
 }

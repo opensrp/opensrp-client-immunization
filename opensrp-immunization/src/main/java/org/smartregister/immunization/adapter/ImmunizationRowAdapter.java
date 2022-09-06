@@ -83,7 +83,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                     .get(position);
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
-                ImmunizationRowCard vaccineCard = new ImmunizationRowCard(context, editmode);
+                ImmunizationRowCard vaccineCard = getImmunizationRowCard();
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
                 Callable<VaccineWrapper> callable = () -> {
@@ -117,8 +117,8 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                     updateWrapperStatus(vaccineWrapper, childDetails);
                     return vaccineWrapper;
                 };
-                ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback = new ImmunizationRowCallableInteractorCallback(vaccineCard, vaccineName);
-                GenericInteractor interactor = new GenericInteractor();
+                ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback = getImmunizationRowCallableInteractor(vaccineCard, vaccineName);
+                GenericInteractor interactor = getGenericInteractor();
                 interactor.execute(callable, immunizationRowCallableInteractorCallback);
             }
             return vaccineCards.get(vaccineName);
@@ -126,6 +126,19 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             Log.e(TAG, e.getMessage(), e);
             return null;
         }
+    }
+
+    public GenericInteractor getGenericInteractor() {
+        return new GenericInteractor();
+    }
+
+    public ImmunizationRowCallableInteractorCallback getImmunizationRowCallableInteractor(ImmunizationRowCard vaccineCard, String vaccineName) {
+        return new ImmunizationRowCallableInteractorCallback(vaccineCard, vaccineName);
+    }
+
+
+    public ImmunizationRowCard getImmunizationRowCard() {
+        return new ImmunizationRowCard(context, editmode);
     }
 
     public void update(ArrayList<VaccineWrapper> vaccinesToUpdate) {
