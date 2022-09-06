@@ -240,4 +240,17 @@ public class VaccineScheduleTest extends BaseUnitTest {
         Assert.assertTrue(joinCondition.passes(sdf.parse("2020-01-01"), list));
     }
 
+    @Test
+    public void testSetterAndGetterForVaccineSchedules() {
+        HashMap<String, VaccineSchedule> schedules = new HashMap<>();
+        schedules.put("bcg", new VaccineSchedule(null, null, VaccineRepo.Vaccine.bcg, null));
+
+        HashMap<String, HashMap<String, VaccineSchedule>> vaccineScheduleMap = new HashMap<>();
+        vaccineScheduleMap.put("key1", schedules);
+
+        VaccineSchedule.setVaccineSchedules(vaccineScheduleMap);
+        Assert.assertNotNull(VaccineSchedule.getVaccineSchedules());
+        Assert.assertEquals(vaccineScheduleMap.get("key1"), VaccineSchedule.getVaccineSchedules().get("key1"));
+    }
+
 }
