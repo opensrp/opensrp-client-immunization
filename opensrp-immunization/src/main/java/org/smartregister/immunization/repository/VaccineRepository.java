@@ -124,13 +124,13 @@ public class VaccineRepository extends BaseRepository {
 
             SQLiteDatabase database = getWritableDatabase();
 
-            Vaccine existingVaccine = findByBaseEntityIdAndVaccineName(vaccine.getBaseEntityId(), vaccine.getName());
-
-            if (vaccine.getId() == null && existingVaccine != null) {
+            if (vaccine.getId() == null) {
                 Vaccine sameVaccine = findUnique(database, vaccine);
-                if (sameVaccine != null) {
-                    vaccine.setUpdatedAt(sameVaccine.getUpdatedAt());
-                    vaccine.setId(sameVaccine.getId());
+                Vaccine existingVaccine = findByBaseEntityIdAndVaccineName(vaccine.getBaseEntityId(), vaccine.getName());
+
+                if (sameVaccine != null || existingVaccine != null) {
+                    vaccine.setUpdatedAt(sameVaccine != null ? sameVaccine.getUpdatedAt() : existingVaccine.getUpdatedAt());
+                    vaccine.setId(sameVaccine != null ? sameVaccine.getId() : existingVaccine.getId());
                     update(database, vaccine);
                 } else {
                     if (vaccine.getCreatedAt() == null) {
