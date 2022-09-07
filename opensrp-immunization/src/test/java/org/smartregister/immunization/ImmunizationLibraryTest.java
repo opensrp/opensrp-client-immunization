@@ -71,4 +71,9 @@ public class ImmunizationLibraryTest extends BaseUnitTest {
         Assert.assertNotNull(ImmunizationLibrary.getInstance().context());
     }
 
+    @Test
+    public void assertVaccineOverdueCountRepositoryReturnsNonNUllObject() {
+        Assert.assertNotNull(ImmunizationLibrary.getInstance().getVaccineOverdueCountRepository());
+    }
+
 }

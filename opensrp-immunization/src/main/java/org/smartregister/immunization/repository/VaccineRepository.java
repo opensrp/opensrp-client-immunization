@@ -328,7 +328,7 @@ public class VaccineRepository extends BaseRepository {
     public Vaccine findUnique(SQLiteDatabase database, Vaccine vaccine) {
         if (vaccine == null || (StringUtils.isBlank(vaccine.getFormSubmissionId()) &&
                 StringUtils.isBlank(vaccine.getEventId()))) {
-            
+
             return null;
         }
 

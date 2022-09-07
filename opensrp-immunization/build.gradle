@@ -128,7 +128,7 @@ dependencies {
     testImplementation 'com.ibm.fhir:fhir-model:4.7.0'
     testImplementation 'com.ibm.fhir:fhir-path:4.7.0'
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.2'
 
     testImplementation('org.robolectric:shadows-multidex:4.0.1') {
         exclude group: 'com.google.guava', module: 'guava'
