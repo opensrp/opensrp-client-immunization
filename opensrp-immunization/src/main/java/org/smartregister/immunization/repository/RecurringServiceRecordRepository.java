@@ -37,24 +37,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
     public static final String CHILD_LOCATION_ID = "child_location_id";
-    public static final String[] TABLE_COLUMNS = {
-            ID_COLUMN,
-            BASE_ENTITY_ID,
-            PROGRAM_CLIENT_ID,
-            RECURRING_SERVICE_ID,
-            VALUE,
-            DATE,
-            ANMID,
-            LOCATION_ID,
-            CHILD_LOCATION_ID,
-            TEAM,
-            TEAM_ID,
-            SYNC_STATUS,
-            EVENT_ID,
-            FORMSUBMISSION_ID,
-            UPDATED_AT_COLUMN,
-            CREATED_AT
-    };
+    public static final String[] TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, VALUE, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, CREATED_AT};
     public static final String RECURRING_SERVICE_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + RECURRING_SERVICE_ID + "_index ON " + TABLE_NAME + "(" + RECURRING_SERVICE_ID + ");";
     public static final String EVENT_ID_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + EVENT_ID + "_index ON " + TABLE_NAME + "(" + EVENT_ID + " COLLATE NOCASE);";
     public static final String FORMSUBMISSION_INDEX = "CREATE INDEX " + TABLE_NAME + "_" + FORMSUBMISSION_ID + "_index ON " + TABLE_NAME + "(" + FORMSUBMISSION_ID + " COLLATE NOCASE);";
@@ -106,7 +89,6 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             if (StringUtils.isBlank(serviceRecord.getSyncStatus())) {
                 serviceRecord.setSyncStatus(TYPE_Unsynced);
             }
-
             if (StringUtils.isBlank(serviceRecord.getFormSubmissionId())) {
                 serviceRecord.setFormSubmissionId(generateRandomUUIDString());
             }
@@ -116,12 +98,9 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             }
 
             SQLiteDatabase database = getWritableDatabase();
-
             if (serviceRecord.getId() == null) {
                 ServiceRecord sameServiceRecord = findUnique(database, serviceRecord);
-                ServiceRecord existingServiceRecord = findByBaseEntityIdAndRecurringServiceId(serviceRecord.getBaseEntityId(), serviceRecord.getRecurringServiceId());
-
-                if (sameServiceRecord != null || existingServiceRecord != null) {
+                if (sameServiceRecord != null) {
                     serviceRecord.setUpdatedAt(sameServiceRecord.getUpdatedAt());
                     serviceRecord.setId(sameServiceRecord.getId());
                     update(database, serviceRecord);
@@ -158,13 +137,13 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             if (StringUtils.isNotBlank(serviceRecord.getFormSubmissionId()) && StringUtils
                     .isNotBlank(serviceRecord.getEventId())) {
                 selection = FORMSUBMISSION_ID + " = ? " + COLLATE_NOCASE + " OR " + EVENT_ID + " = ? " + COLLATE_NOCASE;
-                selectionArgs = new String[]{serviceRecord.getFormSubmissionId(), serviceRecord.getEventId()};
+                selectionArgs = new String[] {serviceRecord.getFormSubmissionId(), serviceRecord.getEventId()};
             } else if (StringUtils.isNotBlank(serviceRecord.getEventId())) {
                 selection = EVENT_ID + " = ? " + COLLATE_NOCASE;
-                selectionArgs = new String[]{serviceRecord.getEventId()};
+                selectionArgs = new String[] {serviceRecord.getEventId()};
             } else if (StringUtils.isNotBlank(serviceRecord.getFormSubmissionId())) {
                 selection = FORMSUBMISSION_ID + " = ? " + COLLATE_NOCASE;
-                selectionArgs = new String[]{serviceRecord.getFormSubmissionId()};
+                selectionArgs = new String[] {serviceRecord.getFormSubmissionId()};
             }
 
             Cursor cursor = database
@@ -193,7 +172,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         try {
             String idSelection = ID_COLUMN + " = ?";
             database.update(TABLE_NAME, createValuesFor(serviceRecord), idSelection,
-                    new String[]{serviceRecord.getId().toString()});
+                    new String[] {serviceRecord.getId().toString()});
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -306,7 +285,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
 
             cursor = getReadableDatabase()
                     .query(TABLE_NAME, TABLE_COLUMNS, UPDATED_AT_COLUMN + " < ? AND " + SYNC_STATUS + " = ?",
-                            new String[]{time.toString(), TYPE_Unsynced}, null, null, null, null);
+                            new String[] {time.toString(), TYPE_Unsynced}, null, null, null, null);
             serviceRecords = readAllServiceRecords(cursor);
         } catch (Exception e) {
             Timber.e(e);
@@ -322,8 +301,9 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         List<ServiceRecord> serviceRecords = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().query(TABLE_NAME, TABLE_COLUMNS, SYNC_STATUS + " = ?",
-                    new String[]{TYPE_Unsynced}, null, null, null, null);
+            cursor = getReadableDatabase()
+                    .query(TABLE_NAME, TABLE_COLUMNS, SYNC_STATUS + " = ?",
+                            new String[] {TYPE_Unsynced}, null, null, null, null);
             serviceRecords = readAllServiceRecords(cursor);
         } catch (Exception e) {
             Timber.e(e);
@@ -340,7 +320,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         String sql = " SELECT " + TABLE_NAME + ".*, " + RecurringServiceTypeRepository.TABLE_NAME + ".name, " + RecurringServiceTypeRepository.TABLE_NAME + ".type FROM " + TABLE_NAME + " LEFT JOIN " + RecurringServiceTypeRepository.TABLE_NAME +
                 " ON " + TABLE_NAME + "." + RECURRING_SERVICE_ID + " = " + RecurringServiceTypeRepository.TABLE_NAME + "." + RecurringServiceTypeRepository.ID_COLUMN +
                 " WHERE " + TABLE_NAME + "." + BASE_ENTITY_ID + " = ? " + COLLATE_NOCASE + " ORDER BY " + TABLE_NAME + "." + UPDATED_AT_COLUMN;
-        Cursor cursor = database.rawQuery(sql, new String[]{entityId});
+        Cursor cursor = database.rawQuery(sql, new String[] {entityId});
         return readAllServiceRecords(cursor);
     }
 
@@ -348,7 +328,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         try {
             ServiceRecord serviceRecord = find(caseId);
             if (serviceRecord != null) {
-                getWritableDatabase().delete(TABLE_NAME, ID_COLUMN + "= ?", new String[]{caseId.toString()});
+                getWritableDatabase().delete(TABLE_NAME, ID_COLUMN + "= ?", new String[] {caseId.toString()});
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -359,52 +339,15 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         ServiceRecord serviceRecord = null;
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().query(
-                    TABLE_NAME,
-                    TABLE_COLUMNS,
-                    ID_COLUMN + " = ?",
-                    new String[]{caseId.toString()},
-                    null,
-                    null,
-                    null,
-                    null
-            );
+            cursor = getReadableDatabase()
+                    .query(TABLE_NAME, TABLE_COLUMNS, ID_COLUMN + " = ?", new String[] {caseId.toString()}, null, null, null,
+                            null);
             List<ServiceRecord> serviceRecords = readAllServiceRecords(cursor);
             if (!serviceRecords.isEmpty()) {
                 serviceRecord = serviceRecords.get(0);
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return serviceRecord;
-    }
-
-    public ServiceRecord findByBaseEntityIdAndRecurringServiceId(String baseEntityId, Long recurringServiceId) {
-        ServiceRecord serviceRecord = null;
-        Cursor cursor = null;
-
-        try {
-            cursor = getReadableDatabase().query(
-                    TABLE_NAME,
-                    TABLE_COLUMNS,
-                    BASE_ENTITY_ID + " = ? AND " + RECURRING_SERVICE_ID + " = ?",
-                    new String[]{baseEntityId, String.valueOf(recurringServiceId)},
-                    null,
-                    null,
-                    null,
-                    null
-            );
-
-            List<ServiceRecord> serviceRecords = readAllServiceRecords(cursor);
-            if (!serviceRecords.isEmpty()) {
-                serviceRecord = serviceRecords.get(0);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -417,7 +360,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
         try {
             ContentValues values = new ContentValues();
             values.put(SYNC_STATUS, TYPE_Synced);
-            getWritableDatabase().update(TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId.toString()});
+            getWritableDatabase().update(TABLE_NAME, values, ID_COLUMN + " = ?", new String[] {caseId.toString()});
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

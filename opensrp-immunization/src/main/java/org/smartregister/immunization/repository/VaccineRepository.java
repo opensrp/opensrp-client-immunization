@@ -46,7 +46,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String CREATED_AT = "created_at";
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, IS_VOIDED, CREATED_AT, OUTREACH};
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, IS_VOIDED, CREATED_AT,OUTREACH};
     public static final String UPDATE_TABLE_ADD_EVENT_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + EVENT_ID + " VARCHAR;";
     public static final String EVENT_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + EVENT_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + EVENT_ID + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_FORMSUBMISSION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + FORMSUBMISSION_ID + " VARCHAR;";
@@ -61,8 +61,8 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
-    public static final String UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + OUTREACH + " INTEGER DEFAULT 0;";
-    public static final String UPDATE_OUTREACH_QUERRY = "UPDATE " + VACCINE_TABLE_NAME + " SET " + OUTREACH + " = 1 WHERE location_id != ?;";
+    public static final String UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL = "ALTER TABLE "+ VACCINE_TABLE_NAME + " ADD COLUMN "+ OUTREACH + " INTEGER DEFAULT 0;";
+    public static final String UPDATE_OUTREACH_QUERRY = "UPDATE "+ VACCINE_TABLE_NAME+" SET " + OUTREACH + " = 1 WHERE location_id != ?;";
     private static final String TAG = VaccineRepository.class.getCanonicalName();
     private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR, updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
@@ -108,12 +108,12 @@ public class VaccineRepository extends BaseRepository {
         }
 
         try {
+
             vaccine.setHia2Status(null);
 
             if (StringUtils.isBlank(vaccine.getSyncStatus())) {
                 vaccine.setSyncStatus(TYPE_Unsynced);
             }
-
             if (StringUtils.isBlank(vaccine.getFormSubmissionId())) {
                 vaccine.setFormSubmissionId(generateRandomUUIDString());
             }
@@ -123,14 +123,11 @@ public class VaccineRepository extends BaseRepository {
             }
 
             SQLiteDatabase database = getWritableDatabase();
-
             if (vaccine.getId() == null) {
                 Vaccine sameVaccine = findUnique(database, vaccine);
-                Vaccine existingVaccine = findByBaseEntityIdAndVaccineName(vaccine.getBaseEntityId(), vaccine.getName());
-
-                if (sameVaccine != null || existingVaccine != null) {
-                    vaccine.setUpdatedAt(sameVaccine != null ? sameVaccine.getUpdatedAt() : existingVaccine.getUpdatedAt());
-                    vaccine.setId(sameVaccine != null ? sameVaccine.getId() : existingVaccine.getId());
+                if (sameVaccine != null) {
+                    vaccine.setUpdatedAt(sameVaccine.getUpdatedAt());
+                    vaccine.setId(sameVaccine.getId());
                     update(database, vaccine);
                 } else {
                     if (vaccine.getCreatedAt() == null) {
