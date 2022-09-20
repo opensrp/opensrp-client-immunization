@@ -16,12 +16,12 @@ import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.CallableInteractorCallBack;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
-import org.smartregister.util.CallableInteractorCallBack;
-import org.smartregister.util.GenericInteractor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -123,7 +123,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             }
             return vaccineCards.get(vaccineName);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
             return null;
         }
     }
@@ -271,7 +271,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         this.alertList = alertList;
     }
 
-    class ImmunizationRowCallableInteractorCallback implements CallableInteractorCallBack<VaccineWrapper>{
+    class ImmunizationRowCallableInteractorCallback implements CallableInteractorCallBack<VaccineWrapper> {
 
         private ImmunizationRowCard vaccineCard;
         private String vaccineName;

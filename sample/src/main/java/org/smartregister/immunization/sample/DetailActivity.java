@@ -65,6 +65,8 @@ import java.util.concurrent.Callable;
 
 import static org.smartregister.util.Utils.getName;
 
+import timber.log.Timber;
+
 /**
  * Created by raihan on 1/03/2017.
  */
@@ -338,18 +340,17 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
 
         @Override
         public void onResult(Void unused) {
-            if (view == null || !(view instanceof ImmunizationRowGroup)) {
+            if ( view == null || !(view instanceof ImmunizationRowGroup) ) {
                 return;
             }
             final ImmunizationRowGroup vaccineGroup = (ImmunizationRowGroup) view;
 
             vaccineGroup.updateViews();
-
         }
 
         @Override
         public void onError(Exception ex) {
-
+            Timber.e(ex);
         }
     }
     private void updateVaccineGroupViews(View view) {

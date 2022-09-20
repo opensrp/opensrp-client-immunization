@@ -200,9 +200,10 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
     public void testImmunizationRowCallableInteractorCallbackOnResult(){
         ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback =
                 Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
-        GenericInteractor interactor = Mockito.spy(new GenericInteractor(new AppExecutors(this, this, this)));
-        VaccineWrapper vaccineWrapper = new VaccineWrapper();
-        Callable<VaccineWrapper> vaccineWrapperCallable = ()-> vaccineWrapper;
+        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+        interactor = Mockito.spy(interactor);
+//        VaccineWrapper vaccineWrapper = new VaccineWrapper();
+//        Callable<VaccineWrapper> vaccineWrapperCallable = ()-> vaccineWrapper;
         ImmunizationRowCard mockImmunizationRowCard = Mockito.mock(ImmunizationRowCard.class);
 
         ImmunizationRowAdapter mockAdapter = Mockito
@@ -213,12 +214,12 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
         Mockito.doReturn(mockImmunizationRowCard)
                         .when(mockAdapter).getImmunizationRowCard();
         
-        Mockito.doReturn(interactor).when(mockAdapter).getGenericInteractor();
+        Mockito.when(mockAdapter.getGenericInteractor()).thenReturn(interactor);
         Mockito.doReturn(immunizationRowCallableInteractorCallback).when(mockAdapter).getImmunizationRowCallableInteractor(Mockito.any(),Mockito.anyString());
 
         mockAdapter.getView(1, view, null);
         Mockito.verify(interactor).execute(Mockito.any(), Mockito.any());
-        Mockito.verify(immunizationRowCallableInteractorCallback).onResult(vaccineWrapper);
+        Mockito.verify(immunizationRowCallableInteractorCallback).onResult(Mockito.any());
 
 //        Mockito.doAnswer(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback)).
 //                when(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback));
