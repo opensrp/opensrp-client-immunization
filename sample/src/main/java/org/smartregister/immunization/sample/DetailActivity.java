@@ -328,7 +328,7 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         }
     }
 
-    private GenericInteractor getGenericInteractor() {
+    public GenericInteractor getGenericInteractor() {
         return new GenericInteractor();
     }
 
@@ -344,8 +344,9 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
                 return;
             }
             final ImmunizationRowGroup vaccineGroup = (ImmunizationRowGroup) view;
-
+            Timber.e("before update views");
             vaccineGroup.updateViews();
+            Timber.e("after update views");
         }
 
         @Override

@@ -18,6 +18,8 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.CallableInteractorCallBack;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.VaccineCard;
@@ -31,11 +33,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
 import static org.smartregister.util.Utils.getName;
 import static org.smartregister.util.Utils.getValue;
+
+import timber.log.Timber;
 
 /**
  * Created by Jason Rogena - jrogena@ona.io on 22/02/2017.
@@ -91,10 +96,20 @@ public class VaccineCardAdapter extends BaseAdapter {
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
 
-                VaccineRowTask vaccineRowTask = new VaccineRowTask(vaccineCard, vaccineData,
-                        vaccineGroup.getChildDetails(),
-                        vaccineGroup.getVaccineData().days_after_birth_due, position);
-                Utils.startAsyncTask(vaccineRowTask, null);
+                VaccineWrapperCallableTask vaccineWrapperCallableTask =
+                        new VaccineWrapperCallableTask(vaccineCard,
+                                vaccineData,
+                                vaccineGroup.getChildDetails(),
+                                vaccineGroup.getVaccineData().days_after_birth_due,
+                                position);
+
+                VaccineRowTaskCallableInteractorCallback vaccineRowTaskCallableInteractorCallback =
+                        new VaccineRowTaskCallableInteractorCallback(vaccineCard, position);
+
+                GenericInteractor interactor = getGenericInteractor();
+
+                interactor.execute(vaccineWrapperCallableTask, vaccineRowTaskCallableInteractorCallback);
+
             }
 
             return vaccineCards.get(vaccineName);
@@ -275,8 +290,11 @@ public class VaccineCardAdapter extends BaseAdapter {
         checkRemainingAsyncTasksStatus();
     }
 
-    class VaccineRowTask extends AsyncTask<Void, Void, VaccineWrapper> {
+    public GenericInteractor getGenericInteractor() {
+        return new GenericInteractor();
+    }
 
+    private class VaccineWrapperCallableTask implements Callable<VaccineWrapper> {
         private VaccineCard vaccineCard;
 
         private String vaccineName;
@@ -287,24 +305,24 @@ public class VaccineCardAdapter extends BaseAdapter {
         private int position;
 
         private org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData;
+         VaccineWrapperCallableTask (VaccineCard vaccineCard, org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData,
+                CommonPersonObjectClient childDetails, Integer days_after_birth_due, int position){
+             this.vaccineCard = vaccineCard;
+             vaccineName = vaccineData.name;
+             this.childDetails = childDetails;
+             this.days_after_birth_due = days_after_birth_due;
+             this.position = position;
+             this.vaccineData = vaccineData;
+         }
 
-        VaccineRowTask(VaccineCard vaccineCard, org.smartregister.immunization.domain.jsonmapping.Vaccine vaccineData,
-                       CommonPersonObjectClient childDetails, Integer days_after_birth_due, int position) {
-            this.vaccineCard = vaccineCard;
-            vaccineName = vaccineData.name;
-            this.childDetails = childDetails;
-            this.days_after_birth_due = days_after_birth_due;
-            this.position = position;
-            this.vaccineData = vaccineData;
-        }
 
         @Override
-        protected VaccineWrapper doInBackground(Void... params) {
+        public VaccineWrapper call() throws Exception {
             VaccineWrapper vaccineWrapper = new VaccineWrapper();
             vaccineWrapper.setId(childDetails.entityId());
             vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
-            vaccineWrapper.setName(vaccineName);
-            vaccineWrapper.setDefaultName(vaccineName);
+            vaccineWrapper.setName(vaccineData.name);
+            vaccineWrapper.setDefaultName(vaccineData.name);
             if (vaccineData.schedule != null && vaccineData.schedule.conditions != null) {
                 vaccineWrapper.setNotGivenCondition(vaccineData.schedule.conditions.get(0).vaccine);
             }
@@ -331,13 +349,21 @@ public class VaccineCardAdapter extends BaseAdapter {
 
             updateWrapper(vaccineWrapper);
             updateWrapperStatus(vaccineWrapper, type, childDetails);
-
             return vaccineWrapper;
         }
 
+    }
+
+    public class VaccineRowTaskCallableInteractorCallback implements CallableInteractorCallBack<VaccineWrapper>{
+        private VaccineCard vaccineCard;
+        private int position;
+        VaccineRowTaskCallableInteractorCallback(VaccineCard vaccineCard, int position){
+            this.vaccineCard  = vaccineCard;
+            this.position = position;
+        }
         @Override
-        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
-            vaccineCard.setVaccineWrapper(vaccineWrapper);
+        public void onResult(VaccineWrapper vaccineWrapper) {
+            this.vaccineCard.setVaccineWrapper(vaccineWrapper);
 
             //If last position, toggle RecordAll
             if (position == (getCount() - 1)) {
@@ -346,6 +372,12 @@ public class VaccineCardAdapter extends BaseAdapter {
             notifyDataSetChanged();
             notifyAsyncTaskCompleted();
         }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
+        }
     }
+
 
 }
