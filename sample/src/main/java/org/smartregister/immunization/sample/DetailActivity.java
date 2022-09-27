@@ -18,6 +18,8 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
+import org.checkerframework.checker.units.qual.A;
+import org.checkerframework.framework.qual.Unused;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +41,7 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.tabfragments.ImmunizationFragment;
+import org.smartregister.immunization.util.AppExecutors;
 import org.smartregister.immunization.util.CallableInteractor;
 import org.smartregister.immunization.util.CallableInteractorCallBack;
 import org.smartregister.immunization.util.GenericInteractor;
@@ -82,6 +85,7 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
     public static final String EXTRA_CHILD_DETAILS = "child_details";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private ImmunizationFragment immunizationFragment;
+    private AppExecutors appExecutors;
 
     public CommonPersonObjectClient getChildDetails() {
         return childDetails;
@@ -234,7 +238,8 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
     public void onVaccinateToday(ArrayList<VaccineWrapper> tags, View view) {
         if (tags != null && !tags.isEmpty()) {
             saveVaccine(tags, view);
-            Utils.startAsyncTask(new UpdateOfflineAlertsTask(), null);
+            appExecutors = new AppExecutors();
+            appExecutors.diskIO().execute(UpdateOfflineAlertsTaskCallable::new);
         }
     }
 
@@ -242,7 +247,8 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
     public void onVaccinateEarlier(ArrayList<VaccineWrapper> tags, View view) {
         if (tags != null && !tags.isEmpty()) {
             saveVaccine(tags, view);
-            Utils.startAsyncTask(new UpdateOfflineAlertsTask(), null);
+            appExecutors = new AppExecutors();
+            appExecutors.diskIO().execute(UpdateOfflineAlertsTaskCallable::new);
         }
     }
 
@@ -265,7 +271,8 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
                 wrappers.add(tag);
                 updateVaccineGroupViews(view, wrappers, vaccineList, true);
 
-                Utils.startAsyncTask(new UpdateOfflineAlertsTask(), null);
+                appExecutors = new AppExecutors();
+                appExecutors.diskIO().execute(UpdateOfflineAlertsTaskCallable::new);
             }
         }
     }
@@ -495,7 +502,13 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
 
     @Override
     public void onUndoService(ServiceWrapper tag, View view) {
-        Utils.startAsyncTask(new UndoServiceTask(tag, view), null);
+
+        UndoServiceCallableTask callableTask = new UndoServiceCallableTask(tag);
+        UndoServiceCallableInteractorCallback callableInteractorCallback = new UndoServiceCallableInteractorCallback(view, tag);
+        GenericInteractor interactor = getGenericInteractor();
+
+        interactor.execute(callableTask, callableInteractorCallback);
+
     }
 
     public void saveService(ServiceWrapper tag, final View view) {
@@ -551,26 +564,19 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         }
     }
 
-    private class UndoServiceTask extends AsyncTask<Void, Void, Void> {
+    private class UndoServiceCallableTask implements Callable<Triple<List<ServiceRecord>, ArrayList<ServiceWrapper>, List<Alert>>>{
 
-        private View view;
         private ServiceWrapper tag;
         private List<ServiceRecord> serviceRecordList;
         private ArrayList<ServiceWrapper> wrappers;
         private List<Alert> alertList;
 
-        public UndoServiceTask(ServiceWrapper tag, View view) {
+        public UndoServiceCallableTask(ServiceWrapper tag){
             this.tag = tag;
-            this.view = view;
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
+        public Triple<List<ServiceRecord>, ArrayList<ServiceWrapper>, List<Alert>> call() throws Exception {
             if (tag != null) {
 
                 if (tag.getDbKey() != null) {
@@ -593,23 +599,41 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
                     alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(), alertArray);
                 }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void params) {
-            super.onPostExecute(params);
-
-            tag.setUpdatedVaccineDate(null, false);
-            tag.setDbKey(null);
-
-            RecurringServiceUtils.updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, true);
+            return Triple.of(serviceRecordList, wrappers, alertList);
         }
     }
 
-    private class UpdateOfflineAlertsTask extends AsyncTask<Void, Void, Void> {
+    private class UndoServiceCallableInteractorCallback implements CallableInteractorCallBack<Triple<List<ServiceRecord>, ArrayList<ServiceWrapper>, List<Alert>>> {
+
+        private final View view;
+        private final ServiceWrapper tag;
+
+        UndoServiceCallableInteractorCallback(View view, ServiceWrapper tag){
+            this.view = view;
+            this.tag = tag;
+        }
+
         @Override
-        protected Void doInBackground(Void... params) {
+        public void onResult(Triple<List<ServiceRecord>, ArrayList<ServiceWrapper>, List<Alert>> serviceRecordsWrappersAlertsTriple) {
+            tag.setUpdatedVaccineDate(null, false);
+            tag.setDbKey(null);
+            ArrayList<ServiceWrapper> wrappers = serviceRecordsWrappersAlertsTriple.getMiddle();
+            List<ServiceRecord> serviceRecordList = serviceRecordsWrappersAlertsTriple.getLeft();
+            List<Alert> alertList = serviceRecordsWrappersAlertsTriple.getRight();
+
+            RecurringServiceUtils.updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, true);
+        }
+
+        @Override
+        public void onError(Exception ex) {
+
+        }
+    }
+
+    private class UpdateOfflineAlertsTaskCallable implements Callable<Void>{
+
+        @Override
+        public Void call() throws Exception {
             DateTime birthDateTime = Utils.dobToDateTime(childDetails);
             if (birthDateTime != null) {
                 VaccineSchedule.updateOfflineAlertsOnly(childDetails.entityId(), birthDateTime, IMConstants.VACCINE_TYPE.CHILD);
