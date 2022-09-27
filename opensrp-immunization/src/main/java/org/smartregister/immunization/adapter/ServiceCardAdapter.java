@@ -17,6 +17,8 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.immunization.util.CallableInteractorCallBack;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ServiceCard;
@@ -30,12 +32,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
 import static org.smartregister.immunization.util.VaccinatorUtils.nextServiceDue;
 import static org.smartregister.util.Utils.getName;
 import static org.smartregister.util.Utils.getValue;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 15/05/2017.
@@ -122,8 +127,12 @@ public class ServiceCardAdapter extends BaseAdapter {
                 serviceCard.setId((int) getItemId(position));
                 serviceCards.put(type, serviceCard);
 
-                ServiceCardTask serviceRowTask = new ServiceCardTask(serviceCard, serviceGroup.getChildDetails(), type);
-                Utils.startAsyncTask(serviceRowTask, null);
+                ServiceCardTaskCallable callable = new ServiceCardTaskCallable(serviceGroup.getChildDetails(), type);
+                ServiceCardTaskCallableInteractorCallable callableInteractorCallaback = new ServiceCardTaskCallableInteractorCallable(serviceCard);
+                GenericInteractor interactor = genericInteractor();
+
+                interactor.execute(callable, callableInteractorCallaback);
+
             }
 
             return serviceCards.get(type);
@@ -291,22 +300,23 @@ public class ServiceCardAdapter extends BaseAdapter {
 
     }
 
-    class ServiceCardTask extends AsyncTask<Void, Void, ServiceWrapper> {
+    public GenericInteractor genericInteractor(){
+        return new GenericInteractor();
+    }
 
-        private ServiceCard serviceCard;
+    public class ServiceCardTaskCallable implements Callable<ServiceWrapper> {
 
         private CommonPersonObjectClient childDetails;
 
         private String type;
 
-        ServiceCardTask(ServiceCard serviceCard, CommonPersonObjectClient childDetails, String type) {
-            this.serviceCard = serviceCard;
+        ServiceCardTaskCallable(CommonPersonObjectClient childDetails, String type) {
             this.childDetails = childDetails;
             this.type = type;
         }
 
         @Override
-        protected ServiceWrapper doInBackground(Void... params) {
+        public ServiceWrapper call() throws Exception {
             ServiceWrapper serviceWrapper = new ServiceWrapper();
             serviceWrapper.setId(childDetails.entityId());
             serviceWrapper.setGender(childDetails.getDetails().get("gender"));
@@ -336,12 +346,26 @@ public class ServiceCardAdapter extends BaseAdapter {
 
             return serviceWrapper;
         }
+    }
+
+    public class ServiceCardTaskCallableInteractorCallable implements CallableInteractorCallBack<ServiceWrapper>{
+
+        private ServiceCard serviceCard;
+
+        public ServiceCardTaskCallableInteractorCallable(ServiceCard serviceCard){
+            this.serviceCard = serviceCard;
+        }
 
         @Override
-        protected void onPostExecute(ServiceWrapper serviceWrapper) {
+        public void onResult(ServiceWrapper serviceWrapper) {
             serviceCard.setServiceWrapper(serviceWrapper);
             visibilityCheck();
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
         }
     }
 
