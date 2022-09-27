@@ -517,14 +517,69 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         }
 
         ServiceWrapper[] arrayTags = {tag};
-        SaveServiceTask backgroundTask = new SaveServiceTask();
 
-        backgroundTask.setView(view);
-        Utils.startAsyncTask(backgroundTask, arrayTags);
+        SaveServiceCallableTask saveServiceCallableTask = new SaveServiceCallableTask(arrayTags);
+        SaveServiceCallableInteractorCallaback callableInteractorCallaback = new SaveServiceCallableInteractorCallaback(view);
+        GenericInteractor interactor = getGenericInteractor();
+
+        interactor.execute(saveServiceCallableTask, callableInteractorCallaback);
+
+    }
+
+    public class SaveServiceCallableTask implements Callable<Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>> {
+
+        private final ServiceWrapper[] arrayTags;
+
+        SaveServiceCallableTask(ServiceWrapper[] arrayTags){
+            this.arrayTags = arrayTags;
+        }
+        @Override
+        public Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> call() throws Exception {
+            ArrayList<ServiceWrapper> list = new ArrayList<>();
+
+            for (ServiceWrapper tag : arrayTags) {
+                RecurringServiceUtils.saveService(tag, childDetails.entityId(), null, null, null, null, null);
+                list.add(tag);
+
+                ServiceSchedule.updateOfflineAlerts(tag.getType(), childDetails.entityId(), Utils.dobToDateTime(childDetails));
+            }
+
+            RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+            List<ServiceRecord> serviceRecordList = recurringServiceRecordRepository.findByEntityId(childDetails.entityId());
+
+            RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
+            List<ServiceType> serviceTypes = recurringServiceTypeRepository.fetchAll();
+            String[] alertArray = VaccinateActionUtils.allAlertNames(serviceTypes);
+
+            AlertService alertService = ImmunizationLibrary.getInstance().context().alertService();
+            List<Alert> alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(), alertArray);
+
+            return Triple.of(list, serviceRecordList, alertList);
+        }
+    }
+
+    private class SaveServiceCallableInteractorCallaback implements CallableInteractorCallBack<Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>>{
+
+        private View view;
+
+        SaveServiceCallableInteractorCallaback(View view){
+            this.view = view;
+        }
+
+        @Override
+        public void onResult(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
+            RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight());
+
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
+        }
     }
 
 
-    public class SaveServiceTask extends AsyncTask<ServiceWrapper, Void, Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>> {
+    private class SaveServiceTask extends AsyncTask<ServiceWrapper, Void, Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>> {
 
         private View view;
 
@@ -626,7 +681,7 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
 
         @Override
         public void onError(Exception ex) {
-
+            Timber.e(ex);
         }
     }
 
