@@ -578,47 +578,6 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         }
     }
 
-
-    private class SaveServiceTask extends AsyncTask<ServiceWrapper, Void, Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>> {
-
-        private View view;
-
-        public void setView(View view) {
-            this.view = view;
-        }
-
-        @Override
-        protected void onPostExecute(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
-            RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight());
-        }
-
-        @Override
-        protected Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> doInBackground(ServiceWrapper... params) {
-
-            ArrayList<ServiceWrapper> list = new ArrayList<>();
-
-            for (ServiceWrapper tag : params) {
-                RecurringServiceUtils.saveService(tag, childDetails.entityId(), null, null, null, null, null);
-                list.add(tag);
-
-                ServiceSchedule.updateOfflineAlerts(tag.getType(), childDetails.entityId(), Utils.dobToDateTime(childDetails));
-            }
-
-            RecurringServiceRecordRepository recurringServiceRecordRepository = ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
-            List<ServiceRecord> serviceRecordList = recurringServiceRecordRepository.findByEntityId(childDetails.entityId());
-
-            RecurringServiceTypeRepository recurringServiceTypeRepository = ImmunizationLibrary.getInstance().recurringServiceTypeRepository();
-            List<ServiceType> serviceTypes = recurringServiceTypeRepository.fetchAll();
-            String[] alertArray = VaccinateActionUtils.allAlertNames(serviceTypes);
-
-            AlertService alertService = ImmunizationLibrary.getInstance().context().alertService();
-            List<Alert> alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(), alertArray);
-
-            return Triple.of(list, serviceRecordList, alertList);
-
-        }
-    }
-
     private class UndoServiceCallableTask implements Callable<Triple<List<ServiceRecord>, ArrayList<ServiceWrapper>, List<Alert>>>{
 
         private ServiceWrapper tag;

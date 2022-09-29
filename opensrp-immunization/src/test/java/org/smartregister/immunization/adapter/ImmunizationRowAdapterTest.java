@@ -202,8 +202,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
                 Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
         GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
         interactor = Mockito.spy(interactor);
-//        VaccineWrapper vaccineWrapper = new VaccineWrapper();
-//        Callable<VaccineWrapper> vaccineWrapperCallable = ()-> vaccineWrapper;
+
         ImmunizationRowCard mockImmunizationRowCard = Mockito.mock(ImmunizationRowCard.class);
 
         ImmunizationRowAdapter mockAdapter = Mockito
@@ -224,6 +223,23 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
 //        Mockito.doAnswer(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback)).
 //                when(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback));
 
+    }
+
+    @Test
+    public void testGetViewsCallsImmunizationCallbackInteractorOnError(){
+        ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback =
+                Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
+        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+        interactor = Mockito.spy(interactor);
+
+        Exception exception = new IllegalStateException("Some Exception");
+        Callable<VaccineWrapper> callable = () -> {
+            throw exception;
+        };
+
+        interactor.execute(callable, immunizationRowCallableInteractorCallback);
+
+        Mockito.verify(immunizationRowCallableInteractorCallback).onError(exception);
     }
 
     @Override
