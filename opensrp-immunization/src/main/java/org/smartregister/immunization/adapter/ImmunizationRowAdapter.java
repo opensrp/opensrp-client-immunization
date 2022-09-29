@@ -50,6 +50,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
     private HashMap<String, ImmunizationRowCard> vaccineCards;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
+    private GenericInteractor mInteractor;
 
     public ImmunizationRowAdapter(Context context, ImmunizationRowGroup vaccineGroup,
                                   boolean editmode, List<Vaccine> vaccineList, List<Alert> alertList) {
@@ -59,6 +60,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         this.vaccineList = vaccineList;
         this.alertList = alertList;
         vaccineCards = new HashMap<>();
+        mInteractor = new GenericInteractor();
     }
 
     @Override
@@ -129,7 +131,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
     }
 
     public GenericInteractor getGenericInteractor() {
-        return new GenericInteractor();
+        return mInteractor;
     }
 
     public ImmunizationRowCallableInteractorCallback getImmunizationRowCallableInteractor(ImmunizationRowCard vaccineCard, String vaccineName) {

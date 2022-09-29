@@ -197,7 +197,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
     }
 
     @Test
-    public void testImmunizationRowCallableInteractorCallbackOnResult(){
+    public void testGetViewCallsImmunizationRowCallableInteractorCallbackOnResult(){
         ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback =
                 Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
         GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
