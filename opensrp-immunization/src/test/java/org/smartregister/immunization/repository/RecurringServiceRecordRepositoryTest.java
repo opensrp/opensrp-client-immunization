@@ -90,7 +90,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
-        org.junit.Assert.assertNotNull(recurringServiceRecordRepository);
+        Assert.assertNotNull(recurringServiceRecordRepository);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     @Test
     public void assertInstantiatesSuccessfullyOnConstructorCall() {
         RecurringServiceRecordRepository vaccineNameRepository = new RecurringServiceRecordRepository();
-        org.junit.Assert.assertNotNull(vaccineNameRepository);
+        Assert.assertNotNull(vaccineNameRepository);
     }
 
     @Test
@@ -231,8 +231,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifyDeletecallsDatabaseDeleteMethod1Times() {
-
+    public void verifyDeleteCallsDatabaseDeleteMethod1Times() {
         RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = Mockito.spy(recurringServiceRecordRepository);
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setBaseEntityId("baseEntityID");
@@ -248,7 +247,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void verifycloseMethodCallsInternalMethodsWithCorrectParams() {
+    public void verifyCloseMethodCallsInternalMethodsWithCorrectParams() {
         Mockito.when(recurringServiceRecordRepository.getWritableDatabase()).thenReturn(sqliteDatabase);
         recurringServiceRecordRepository.close(5l);
         Mockito.verify(recurringServiceRecordRepository.getWritableDatabase(), Mockito.times(1))
@@ -267,8 +266,8 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     @Test
     public void assertRemoveHyphenMethodRemoveHyphenFromString() {
         String testString = RecurringServiceRecordRepository.removeHyphen("test_string");
-        org.junit.Assert.assertNotNull(testString);
-        org.junit.Assert.assertFalse(testString.contains("-"));
+        Assert.assertNotNull(testString);
+        Assert.assertFalse(testString.contains("-"));
     }
 
     @Test
@@ -282,7 +281,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
                         anyString(), any(String[].class),
                         isNull(), isNull(), isNull(),
                         isNull())).thenReturn(cursor);
-        org.junit.Assert.assertNotNull(recurringServiceRecordRepository.findUnSyncedBeforeTime(magicNumber10));
+        Assert.assertNotNull(recurringServiceRecordRepository.findUnSyncedBeforeTime(magicNumber10));
     }
 
     @Test
@@ -304,9 +303,9 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
                 .query(anyString(), any(String[].class), anyString(), any(String[].class),
                         isNull(), isNull(), isNull(), isNull());
 
-        org.junit.Assert.assertNotNull(serviceRecord);
-        org.junit.Assert.assertEquals(Long.valueOf(1), serviceRecord.getRecurringServiceId());
-        org.junit.Assert.assertEquals("base-entity-id", serviceRecord.getBaseEntityId());
+        Assert.assertNotNull(serviceRecord);
+        Assert.assertEquals(Long.valueOf(1), serviceRecord.getRecurringServiceId());
+        Assert.assertEquals("base-entity-id", serviceRecord.getBaseEntityId());
     }
 
     @Test
@@ -320,6 +319,6 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         ).thenThrow(new RuntimeException());
 
         ServiceRecord serviceRecord = recurringServiceRecordRepository.findByBaseEntityIdAndRecurringServiceId("base-entity-id", 1L);
-        org.junit.Assert.assertNull(serviceRecord);
+        Assert.assertNull(serviceRecord);
     }
 }
