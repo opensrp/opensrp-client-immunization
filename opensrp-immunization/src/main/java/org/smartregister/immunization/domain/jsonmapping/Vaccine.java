@@ -1,14 +1,14 @@
 package org.smartregister.immunization.domain.jsonmapping;
 
-import android.util.Log;
-
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * Created by samuelgithengi on 2/27/18.
  */
 
-public class Vaccine implements Cloneable{
+public class Vaccine implements Cloneable {
 
     public String name;
 
@@ -85,7 +85,7 @@ public class Vaccine implements Cloneable{
         try {
             return (Vaccine) super.clone();
         } catch (CloneNotSupportedException e) {
-            Log.e(Vaccine.class.getCanonicalName(), e.getMessage());
+            Timber.e(e);
             return null;
         }
     }

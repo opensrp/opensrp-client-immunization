@@ -1,9 +1,9 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
-import androidx.fragment.app.Fragment;
-import android.util.Log;
 import android.view.View;
+
+import androidx.fragment.app.Fragment;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -31,6 +31,8 @@ import org.smartregister.util.AppProperties;
 
 import java.util.Collections;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -89,7 +91,7 @@ public class ServiceEditDialogFragmentTest extends BaseUnitTest {
             controller.pause().stop().destroy(); //destroy controller if we can
 
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
 
         System.gc();

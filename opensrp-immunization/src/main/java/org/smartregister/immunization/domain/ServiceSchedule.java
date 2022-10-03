@@ -1,7 +1,5 @@
 package org.smartregister.immunization.domain;
 
-import android.util.Log;
-
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +18,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by Keyman on 26/05/2017.
@@ -102,7 +102,7 @@ public class ServiceSchedule {
             alertService.create(newAlerts);
 
         } catch (Exception e) {
-            Log.e(ServiceSchedule.class.getName(), e.toString(), e);
+            Timber.e(e);
         }
 
 
@@ -132,7 +132,7 @@ public class ServiceSchedule {
             }
             return null;
         } catch (Exception e) {
-            Log.e(ServiceSchedule.class.getName(), e.toString(), e);
+            Timber.e(e);
             return null;
         }
     }
@@ -204,7 +204,7 @@ public class ServiceSchedule {
 
             return afterOffset;
         } catch (Exception e) {
-            Log.e(ServiceSchedule.class.getName(), e.toString(), e);
+            Timber.e(e);
             return dateTime;
         }
     }

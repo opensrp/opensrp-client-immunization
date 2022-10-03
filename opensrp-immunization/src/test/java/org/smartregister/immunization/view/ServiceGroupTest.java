@@ -1,7 +1,6 @@
 package org.smartregister.immunization.view;
 
 import android.content.Intent;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -38,6 +37,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -97,7 +98,7 @@ public class ServiceGroupTest extends BaseUnitTest {
             controller.pause().stop().destroy(); //destroy controller if we can
 
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
 
         System.gc();

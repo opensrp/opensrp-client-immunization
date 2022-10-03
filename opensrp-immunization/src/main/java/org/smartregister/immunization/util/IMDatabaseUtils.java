@@ -1,7 +1,6 @@
 package org.smartregister.immunization.util;
 
 import android.content.Context;
-import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -117,7 +116,7 @@ public class IMDatabaseUtils {
 
                                 }
                             } catch (Exception e) {
-                                Log.e(IMDatabaseUtils.class.getName(), e.getMessage(), e);
+                                Timber.e(e);
                             }
 
 
@@ -166,7 +165,7 @@ public class IMDatabaseUtils {
                     vaccineTypeRepository.add(vtObject, db);
                 }
             } catch (JSONException e) {
-                Log.e(IMDatabaseUtils.class.getName(), e.getMessage(), e);
+                Timber.e(e);
             }
         }
     }

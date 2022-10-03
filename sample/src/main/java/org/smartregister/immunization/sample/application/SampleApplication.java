@@ -1,6 +1,6 @@
 package org.smartregister.immunization.sample.application;
 
-import android.util.Log;
+import static org.smartregister.util.Log.logError;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
@@ -20,7 +20,7 @@ import org.smartregister.view.activity.DrishtiApplication;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.smartregister.util.Log.logError;
+import timber.log.Timber;
 
 /**
  * Created by keyman on 01/08/2017.
@@ -103,7 +103,7 @@ public class SampleApplication extends DrishtiApplication {
             List<Vaccine> vaccineList = VaccinatorUtils.getVaccineFromVaccineConfigFile(this.getApplicationContext(), VaccinatorUtils.special_vaccines_file);
             VaccineSchedule.init(childVaccines, specialVaccines, "child");
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 }

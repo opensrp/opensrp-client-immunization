@@ -1,8 +1,8 @@
 package org.smartregister.immunization.fragment;
 
 import android.content.Intent;
+
 import androidx.fragment.app.Fragment;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -23,6 +23,8 @@ import org.smartregister.immunization.fragment.mock.UndoServiceDialogFragmentTes
 import org.smartregister.util.AppProperties;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -66,7 +68,7 @@ public class UndoServiceDialogFragmentTest extends BaseUnitTest {
             controller.pause().stop().destroy(); //destroy controller if we can
 
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
 
         System.gc();

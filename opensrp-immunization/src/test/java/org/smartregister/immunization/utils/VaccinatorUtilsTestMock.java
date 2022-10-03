@@ -1,7 +1,6 @@
 package org.smartregister.immunization.utils;
 
 import android.content.Intent;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -12,6 +11,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.immunization.BaseUnitTest;
+
+import timber.log.Timber;
 
 /**
  * Created by kaderchowdhury on 14/12/17.
@@ -49,7 +50,7 @@ public class VaccinatorUtilsTestMock extends BaseUnitTest {
             activity.finish();
             controller.pause().stop().destroy(); //destroy controller if we can
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
         System.gc();
     }
