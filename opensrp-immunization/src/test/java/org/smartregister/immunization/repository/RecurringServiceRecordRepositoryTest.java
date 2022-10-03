@@ -319,6 +319,10 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         ).thenThrow(new RuntimeException());
 
         ServiceRecord serviceRecord = recurringServiceRecordRepository.findByBaseEntityIdAndRecurringServiceId("base-entity-id", 1L);
+
+        Mockito.verify(sqliteDatabase, Mockito.times(0))
+                .query(anyString(), any(String[].class), anyString(), any(String[].class),
+                        isNull(), isNull(), isNull(), isNull());
         Assert.assertNull(serviceRecord);
     }
 }
