@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import androidx.test.core.app.ApplicationProvider;
+
+import org.mockito.Mockito;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -22,6 +24,8 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
+import org.smartregister.immunization.util.AppExecutors;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.view.ServiceRowGroup;
 
 import java.util.ArrayList;
@@ -29,12 +33,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * Created by onaio on 30/08/2017.
  */
 @Config (shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceRowCardShadow.class})
-public class ServiceRowAdapterTest extends BaseUnitTest {
+public class ServiceRowAdapterTest extends BaseUnitTest implements Executor {
 
     private final int magicNumber = 231231;
     private final String magicDate = "1985-07-24T00:00:00.000Z";
@@ -142,4 +147,28 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
         Assert.assertEquals(serviceRowAdapter.getView(0, null, null) != null, true);
     }
 
+    @Test
+    public void testGetViewCallsServiceRowTaskCallableInteractorCallBackOnResult(){
+        ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack serviceRowTaskCallableInteractorCallBack =
+                Mockito.mock(ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack.class);
+        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+        interactor = Mockito.spy(interactor);
+
+
+        ServiceRowAdapter mockAdapter = Mockito
+                .spy(new ServiceRowAdapter(ApplicationProvider.getApplicationContext(), view, false, serviceTypeList, serviceRecordList, alertList));
+
+        Mockito.when(mockAdapter.getGenericInteractor()).thenReturn(interactor);
+        Mockito.doReturn(serviceRowTaskCallableInteractorCallBack).when(mockAdapter).getServiceRowTaskCallableInteractor(Mockito.any());
+
+        mockAdapter.getView(0, view, null);
+        Mockito.verify(interactor).execute(Mockito.any(), Mockito.any());
+        Mockito.verify(serviceRowTaskCallableInteractorCallBack).onResult(Mockito.any());
+
+    }
+
+    @Override
+    public void execute(Runnable runnable) {
+        runnable.run();
+    }
 }

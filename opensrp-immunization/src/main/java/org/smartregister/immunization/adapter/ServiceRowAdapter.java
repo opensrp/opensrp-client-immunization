@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ServiceRowCard;
 import org.smartregister.immunization.view.ServiceRowGroup;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -96,7 +94,7 @@ public class ServiceRowAdapter extends BaseAdapter {
                 ServiceRowTaskCallable callable = new ServiceRowTaskCallable(serviceRowGroup.getChildDetails(),
                         serviceType);
                 ServiceRowTaskCallableInteractorCallBack callableInteractorCallBack
-                        = new ServiceRowTaskCallableInteractorCallBack(serviceRowCard);
+                        = getServiceRowTaskCallableInteractor(serviceRowCard);
                 GenericInteractor interactor = getGenericInteractor();
 
                 interactor.execute(callable, callableInteractorCallBack);
@@ -104,9 +102,13 @@ public class ServiceRowAdapter extends BaseAdapter {
 
             return serviceRowCards.get(serviceType.getName());
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
             return null;
         }
+    }
+
+    public ServiceRowTaskCallableInteractorCallBack getServiceRowTaskCallableInteractor(ServiceRowCard serviceRowCard) {
+        return  new ServiceRowTaskCallableInteractorCallBack(serviceRowCard);
     }
 
     public void update(ArrayList<ServiceWrapper> servicesToUpdate) {
