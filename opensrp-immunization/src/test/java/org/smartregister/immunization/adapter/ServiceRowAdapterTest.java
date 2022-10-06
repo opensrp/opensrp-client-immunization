@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 /**
@@ -161,9 +162,26 @@ public class ServiceRowAdapterTest extends BaseUnitTest implements Executor {
         Mockito.when(mockAdapter.getGenericInteractor()).thenReturn(interactor);
         Mockito.doReturn(serviceRowTaskCallableInteractorCallBack).when(mockAdapter).getServiceRowTaskCallableInteractor(Mockito.any());
 
+
         mockAdapter.getView(0, view, null);
         Mockito.verify(interactor).execute(Mockito.any(), Mockito.any());
         Mockito.verify(serviceRowTaskCallableInteractorCallBack).onResult(Mockito.any());
+
+    }
+
+    @Test
+    public void testGetViewCallsServiceRowTaskCallableInteractorCallbackonError(){
+        ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack serviceRowTaskCallableInteractorCallBack
+                = Mockito.mock(ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack.class);
+        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+        Exception exception = new IllegalStateException("some exception");
+        Callable<ServiceWrapper> callable = () -> {
+            throw exception;
+        };
+
+        interactor.execute(callable, serviceRowTaskCallableInteractorCallBack);
+
+        Mockito.verify(serviceRowTaskCallableInteractorCallBack).onError(exception);
 
     }
 

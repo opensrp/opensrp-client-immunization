@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +53,7 @@ public class ServiceCardAdapter extends BaseAdapter {
     private Map<String, List<ServiceType>> serviceTypeMap;
 
     private boolean isChildActive = true;
+    private GenericInteractor mGenericInteractor;
 
     public ServiceCardAdapter(Context context, ServiceGroup serviceGroup, List<ServiceRecord> serviceRecordList,
                               List<Alert> alertList, Map<String, List<ServiceType>> serviceTypeMap) {
@@ -64,6 +63,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         this.alertList = alertList;
         this.serviceTypeMap = serviceTypeMap;
         serviceCards = new HashMap<>();
+        mGenericInteractor = new GenericInteractor();
     }
 
     public void updateAll() {
@@ -128,8 +128,8 @@ public class ServiceCardAdapter extends BaseAdapter {
                 serviceCards.put(type, serviceCard);
 
                 ServiceCardTaskCallable callable = new ServiceCardTaskCallable(serviceGroup.getChildDetails(), type);
-                ServiceCardTaskCallableInteractorCallable callableInteractorCallaback = new ServiceCardTaskCallableInteractorCallable(serviceCard);
-                GenericInteractor interactor = genericInteractor();
+                ServiceCardTaskCallableInteractorCallable callableInteractorCallaback = getServiceCardTaskCallableInteractorCallable(serviceCard);
+                GenericInteractor interactor = getGenericInteractor();
 
                 interactor.execute(callable, callableInteractorCallaback);
 
@@ -141,6 +141,10 @@ public class ServiceCardAdapter extends BaseAdapter {
             return null;
         }
 
+    }
+
+    public ServiceCardTaskCallableInteractorCallable getServiceCardTaskCallableInteractorCallable(ServiceCard serviceCard) {
+        return new ServiceCardTaskCallableInteractorCallable(serviceCard);
     }
 
     public boolean atLeastOneVisibleCard() {
@@ -300,8 +304,8 @@ public class ServiceCardAdapter extends BaseAdapter {
 
     }
 
-    public GenericInteractor genericInteractor(){
-        return new GenericInteractor();
+    public GenericInteractor getGenericInteractor(){
+        return mGenericInteractor;
     }
 
     public class ServiceCardTaskCallable implements Callable<ServiceWrapper> {
@@ -316,7 +320,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         }
 
         @Override
-        public ServiceWrapper call() throws Exception {
+        public ServiceWrapper call() {
             ServiceWrapper serviceWrapper = new ServiceWrapper();
             serviceWrapper.setId(childDetails.entityId());
             serviceWrapper.setGender(childDetails.getDetails().get("gender"));

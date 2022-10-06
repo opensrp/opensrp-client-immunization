@@ -24,6 +24,8 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
+import org.smartregister.immunization.util.AppExecutors;
+import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
 
@@ -32,12 +34,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * Created by onaio on 30/08/2017.
  */
 @Config(shadows = {FontTextViewShadow.class, ImageUtilsShadow.class, ServiceCardShadow.class})
-public class ServiceCardAdapterTest extends BaseUnitTest {
+public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
 
     private final String magicDate = "1985-07-24T00:00:00.000Z";
     private final String type = "SERVICETYPE";
@@ -57,6 +60,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
     private List<ServiceRecord> serviceTypeList = new ArrayList<>();
     private List<Alert> serviceRecordList = new ArrayList<>();
     private Map<String, List<ServiceType>> alertList = new HashMap<>();
+    private HashMap<String, List<ServiceType>> serviceTypeMap;
 
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {
         List<String> keys = new ArrayList<>();
@@ -106,7 +110,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
 
         List<Alert> alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
-        Map<String, List<ServiceType>> serviceTypeMap = new HashMap<>();
+        serviceTypeMap = new HashMap<>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
@@ -191,5 +195,26 @@ public class ServiceCardAdapterTest extends BaseUnitTest {
         Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
         serviceCardAdapter.updateChildsActiveStatus();
         Mockito.verify(serviceCard).updateChildsActiveStatus();
+    }
+
+    @Test
+    public void testGetViewCallsServiceCardTaskCallableInteractorCallableOnResult(){
+        ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable serviceCardTaskCallableInteractorCallable
+                = Mockito.mock(ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable.class);
+        GenericInteractor interactor= new GenericInteractor(new AppExecutors(this, this , this));
+        interactor = Mockito.spy(interactor);
+
+        ServiceCardAdapter mockAdapter = Mockito.spy(serviceCardAdapter);
+        Mockito.when(mockAdapter.getGenericInteractor()).thenReturn(interactor);
+        Mockito.when(mockAdapter.getServiceCardTaskCallableInteractorCallable(Mockito.any())).thenReturn(serviceCardTaskCallableInteractorCallable);
+
+        mockAdapter.getView(0, view, null);
+        Mockito.verify(serviceCardTaskCallableInteractorCallable).onResult(Mockito.any());
+
+    }
+
+    @Override
+    public void execute(Runnable runnable) {
+        runnable.run();
     }
 }
