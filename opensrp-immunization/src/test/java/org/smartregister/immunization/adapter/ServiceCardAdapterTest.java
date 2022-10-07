@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 /**
@@ -210,6 +211,22 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
 
         mockAdapter.getView(0, view, null);
         Mockito.verify(serviceCardTaskCallableInteractorCallable).onResult(Mockito.any());
+
+    }
+
+    @Test
+    public void testGetViewCallsServiceRowTaskCallableInteractorCallbackonError(){
+        ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable serviceCardTaskCallableInteractorCallable
+                = Mockito.mock(ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable.class);
+        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+        Exception exception = new IllegalStateException("some exception");
+        Callable<ServiceWrapper> callable = () -> {
+            throw exception;
+        };
+
+        interactor.execute(callable, serviceCardTaskCallableInteractorCallable);
+
+        Mockito.verify(serviceCardTaskCallableInteractorCallable).onError(exception);
 
     }
 
