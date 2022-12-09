@@ -1,7 +1,6 @@
 package org.smartregister.immunization.fragment;
 
 import androidx.fragment.app.Fragment;
-import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -43,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -124,7 +125,7 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
             activity.finish();
             controller.pause().stop().destroy(); //destroy controller if we can
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
         System.gc();
     }

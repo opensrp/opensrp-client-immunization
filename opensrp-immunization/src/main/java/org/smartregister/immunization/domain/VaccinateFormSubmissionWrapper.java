@@ -1,7 +1,5 @@
 package org.smartregister.immunization.domain;
 
-import android.util.Log;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
@@ -13,6 +11,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 22/11/2016.
@@ -139,7 +139,7 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
             String data = XML.toString(formSubmission);
             return data;
         } catch (Exception e) {
-            Log.e(VaccinateFormSubmissionWrapper.class.getName(), "", e);
+            Timber.e(e);
         }
         return null;
     }

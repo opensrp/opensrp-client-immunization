@@ -1,7 +1,6 @@
 package org.smartregister.immunization.sample.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -68,9 +67,8 @@ public class SampleRepository extends Repository {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(Repository.class.getName(),
-                "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
+        Timber.w("Upgrading database from version " + oldVersion + " to "
+                + newVersion + ", which will destroy all old data");
 
         int upgradeTo = oldVersion + 1;
         while (upgradeTo <= newVersion) {
@@ -117,7 +115,7 @@ public class SampleRepository extends Repository {
             }
             return readableDatabase;
         } catch (Exception e) {
-            Log.e(TAG, "Database Error. " + e.getMessage());
+            Timber.e(e);
             return null;
         }
 
@@ -166,7 +164,7 @@ public class SampleRepository extends Repository {
             IMDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, db);
 
         } catch (Exception e) {
-            Log.e(TAG, "upgradeToVersion2 " + Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -181,7 +179,7 @@ public class SampleRepository extends Repository {
             db.execSQL(RecurringServiceRecordRepository.ALTER_ADD_CREATED_AT_COLUMN);
             RecurringServiceRecordRepository.migrateCreatedAt(db);
         } catch (Exception e) {
-            Log.e(TAG, "upgradeToVersion3 " + Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -192,7 +190,7 @@ public class SampleRepository extends Repository {
             db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_TEAM_COL);
             db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_TEAM_ID_COL);
         } catch (Exception e) {
-            Log.e(TAG, "upgradeToVersion4 " + Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -201,20 +199,19 @@ public class SampleRepository extends Repository {
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL);
             db.execSQL(RecurringServiceRecordRepository.UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL);
         } catch (Exception e) {
-            Log.e(TAG, "upgradeToVersion5 " + Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
-    private void upgradeToVersion6(SQLiteDatabase db)
-    {
-        try{
+    private void upgradeToVersion6(SQLiteDatabase db) {
+        try {
             AllSharedPreferences sharedPreferences = SampleApplication.getInstance().context().userService()
                     .getAllSharedPreferences();
             db.execSQL(VaccineRepository.UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL);
             db.execSQL(VaccineRepository.UPDATE_OUTREACH_QUERRY, new String[]{sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchPioneerUser())});
 
         } catch (Exception e) {
-            Timber.e(TAG,"upgradeToVersion6" + Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 

@@ -1,5 +1,7 @@
 package org.smartregister.immunization.sample;
 
+import static org.smartregister.util.Utils.getName;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -7,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static org.smartregister.util.Utils.getName;
+import timber.log.Timber;
 
 /**
  * Created by Jason Rogena - jrogena@ona.io on 16/02/2017.
@@ -485,6 +486,12 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         vaccine.setTeam("testTeam");
         vaccine.setTeamId("testTeamId");
         vaccine.setChildLocationId("testChildLocationId");
+
+        Vaccine existingVaccine = vaccineRepository.findByBaseEntityIdAndVaccineName(vaccine.getBaseEntityId(), vaccine.getName());
+        if (existingVaccine != null) {
+            vaccine.setId(existingVaccine.getId());
+        }
+
         vaccineRepository.add(vaccine);
         tag.setDbKey(vaccine.getId());
     }
@@ -843,7 +850,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                             curGroup.getVaccineData(),
                             vaccineList, alerts);
                 } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
+                    Timber.e(e);
                 }
             }
         }

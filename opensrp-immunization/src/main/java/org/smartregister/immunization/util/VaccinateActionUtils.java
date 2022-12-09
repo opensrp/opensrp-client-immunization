@@ -1,8 +1,16 @@
 package org.smartregister.immunization.util;
 
+import static org.smartregister.AllConstants.ENTITY_ID_PARAM;
+import static org.smartregister.AllConstants.FORM_NAME_PARAM;
+import static org.smartregister.AllConstants.INSTANCE_ID_PARAM;
+import static org.smartregister.AllConstants.SYNC_STATUS;
+import static org.smartregister.AllConstants.VERSION_PARAM;
+import static org.smartregister.domain.SyncStatus.PENDING;
+import static org.smartregister.util.EasyMap.create;
+import static org.smartregister.util.Utils.convertDateFormat;
+
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
@@ -48,14 +56,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.smartregister.AllConstants.ENTITY_ID_PARAM;
-import static org.smartregister.AllConstants.FORM_NAME_PARAM;
-import static org.smartregister.AllConstants.INSTANCE_ID_PARAM;
-import static org.smartregister.AllConstants.SYNC_STATUS;
-import static org.smartregister.AllConstants.VERSION_PARAM;
-import static org.smartregister.domain.SyncStatus.PENDING;
-import static org.smartregister.util.EasyMap.create;
-import static org.smartregister.util.Utils.convertDateFormat;
+import timber.log.Timber;
 
 /**
  * Created by keyman on 17/11/2016.
@@ -66,7 +67,7 @@ public class VaccinateActionUtils {
         try {
             return FormUtils.getInstance(context).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
         } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
             return null;
         }
     }
@@ -78,7 +79,7 @@ public class VaccinateActionUtils {
                 fieldJson.put("content", value);
             }
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
     }
 
@@ -89,7 +90,7 @@ public class VaccinateActionUtils {
 
             }
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
 
         return null;
@@ -182,7 +183,7 @@ public class VaccinateActionUtils {
     public static void saveFormSubmission(Context appContext, String formSubmission, String id, String formName,
                                           JSONObject fieldOverrides) {
 
-        Log.v("fieldoverride", fieldOverrides.toString());
+        Timber.d("fieldoverride %s", fieldOverrides.toString());
 
         // save the form
         try {
@@ -207,8 +208,7 @@ public class VaccinateActionUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
@@ -231,7 +231,7 @@ public class VaccinateActionUtils {
                 return new JSONObject(overridesStr);
             }
         } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
         return new JSONObject();
 
@@ -246,7 +246,7 @@ public class VaccinateActionUtils {
                 }
             }
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
         return null;
     }

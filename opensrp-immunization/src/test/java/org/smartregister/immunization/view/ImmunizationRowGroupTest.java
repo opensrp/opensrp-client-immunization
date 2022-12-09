@@ -3,7 +3,6 @@ package org.smartregister.immunization.view;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -47,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by onaio on 30/08/2017.
@@ -410,7 +411,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     public void asertConstructorsNotNull() {
 
         Assert.assertNotNull(activity.getInstance());
-      
+
         ImmunizationRowGroup instance1 = new ImmunizationRowGroup(RuntimeEnvironment.application, attrs);
         Assert.assertNotNull(instance1);
 
@@ -438,7 +439,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
             controller.pause().stop().destroy(); //destroy controller if we can
 
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         }
 
         System.gc();

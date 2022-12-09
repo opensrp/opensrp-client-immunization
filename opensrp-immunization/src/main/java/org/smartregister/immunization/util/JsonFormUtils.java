@@ -1,7 +1,6 @@
 package org.smartregister.immunization.util;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -13,6 +12,8 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.EventClientRepository;
 
 import java.util.Date;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 31/07/2017.
@@ -68,7 +69,7 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                 db.addEvent(event.getBaseEntityId(), eventJson);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
     }
 
@@ -122,7 +123,7 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                 db.addEvent(event.getBaseEntityId(), eventJson);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
     }
 
