@@ -15,6 +15,7 @@ import static org.smartregister.immunization.repository.RecurringServiceRecordRe
 import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.PROGRAM_CLIENT_ID;
 import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.RECURRING_SERVICE_ID;
 import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.SYNC_STATUS;
+import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.TABLE_COLUMNS;
 import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.TABLE_NAME;
 import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.TEAM;
 import static org.smartregister.immunization.repository.RecurringServiceRecordRepository.TEAM_ID;
@@ -51,6 +52,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
     private final String magicNAME = "NAME";
     private final int magicNumber10 = 10;
     private final String magicDate = "1985-07-24 00:00:00";
+    private final String tableName = "recurring_service_records";
 
     @InjectMocks
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
@@ -289,18 +291,22 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1L, "base-entity-id", "", 1L, "", magicNumber, "", "", "", "", "", "", "", "", 1L, magicDate});
 
-        Mockito.when(
-                sqliteDatabase.query(
-                        anyString(), any(String[].class), anyString(), any(String[].class),
-                        isNull(), isNull(), isNull(), isNull()
-                )
-        ).thenReturn(cursor);
+        Mockito.when(sqliteDatabase.query(
+                eq(tableName),
+                eq(TABLE_COLUMNS),
+                eq(String.format("%s = ? AND %s = ?", BASE_ENTITY_ID, RECURRING_SERVICE_ID)),
+                eq(new String[]{"base-entity-id", String.valueOf(1L)}),
+                isNull(), isNull(), isNull(), isNull()
+        )).thenReturn(cursor);
         Mockito.when(recurringServiceRecordRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
 
         ServiceRecord serviceRecord = recurringServiceRecordRepository.findByBaseEntityIdAndRecurringServiceId("base-entity-id", 1L);
 
         Mockito.verify(sqliteDatabase, Mockito.times(1))
-                .query(anyString(), any(String[].class), anyString(), any(String[].class),
+                .query(eq(tableName),
+                        eq(TABLE_COLUMNS),
+                        eq(String.format("%s = ? AND %s = ?", BASE_ENTITY_ID, RECURRING_SERVICE_ID)),
+                        eq(new String[]{"base-entity-id", String.valueOf(1L)}),
                         isNull(), isNull(), isNull(), isNull());
 
         Assert.assertNotNull(serviceRecord);
@@ -310,18 +316,21 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void testFindByBaseEntityIdAndRecurringServiceIdReturnsNullVaccineWhenExceptionThrown() {
-        MatrixCursor cursor = new MatrixCursor(columns);
-        cursor.addRow(new Object[]{1L, "base-entity-id", "", 1L, "", magicNumber, "", "", "", "", "", "", "", "", 1L, magicDate});
-
         Mockito.when(sqliteDatabase.query(
-                anyString(), any(String[].class), anyString(), any(String[].class),
+                eq(tableName),
+                eq(TABLE_COLUMNS),
+                eq(String.format("%s = ? AND %s = ?", BASE_ENTITY_ID, RECURRING_SERVICE_ID)),
+                eq(new String[]{"base-entity-id", String.valueOf(1L)}),
                 isNull(), isNull(), isNull(), isNull())
         ).thenThrow(new RuntimeException());
 
         ServiceRecord serviceRecord = recurringServiceRecordRepository.findByBaseEntityIdAndRecurringServiceId("base-entity-id", 1L);
 
         Mockito.verify(sqliteDatabase, Mockito.times(0))
-                .query(anyString(), any(String[].class), anyString(), any(String[].class),
+                .query(eq(tableName),
+                        eq(TABLE_COLUMNS),
+                        eq(String.format("%s = ? AND %s = ?", BASE_ENTITY_ID, RECURRING_SERVICE_ID)),
+                        eq(new String[]{"base-entity-id", String.valueOf(1L)}),
                         isNull(), isNull(), isNull(), isNull());
         Assert.assertNull(serviceRecord);
     }
