@@ -2,7 +2,6 @@ package org.smartregister.immunization.service.intent;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -17,6 +16,8 @@ import org.smartregister.immunization.util.JsonFormUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import timber.log.Timber;
 
 
 /**
@@ -153,7 +154,7 @@ public class RecurringIntentService extends IntentService {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 
@@ -172,7 +173,7 @@ public class RecurringIntentService extends IntentService {
             jsonObject.put(OPENMRS_CHOICES_IDS, choices);
 
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 }

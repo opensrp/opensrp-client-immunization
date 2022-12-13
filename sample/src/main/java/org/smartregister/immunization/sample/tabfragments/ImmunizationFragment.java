@@ -1,14 +1,14 @@
 package org.smartregister.immunization.sample.tabfragments;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -44,6 +44,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 
 public class ImmunizationFragment extends Fragment {
@@ -198,7 +200,7 @@ public class ImmunizationFragment extends Fragment {
                 serviceRowGroups.add(curGroup);
             }
         } catch (Exception e) {
-            Log.e(getClass().getName(), Log.getStackTraceString(e));
+            Timber.e(e);
         }
 
     }

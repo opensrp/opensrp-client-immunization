@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +24,8 @@ import org.smartregister.util.DisplayUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 21/02/2017.
@@ -257,7 +258,7 @@ public class ServiceCard extends LinearLayout {
         try {
             name = VaccinatorUtils.getTranslatedVaccineName(context, name);
         } catch (Exception e) {
-            Log.i(VaccineGroup.class.getCanonicalName(), e.getMessage(), e);
+            Timber.e(e);
         }
 
         return name;
