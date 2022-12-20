@@ -10,6 +10,7 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineNameRepository;
+import org.smartregister.immunization.repository.VaccineOverdueCountRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.repository.VaccineTypeRepository;
 import org.smartregister.immunization.sample.BuildConfig;
@@ -62,7 +63,6 @@ public class SampleRepository extends Repository {
         IMDatabaseUtils.populateRecurringServices(context, database, recurringServiceTypeRepository);
 
         onUpgrade(database, 1, BuildConfig.DATABASE_VERSION);
-
     }
 
     @Override
@@ -87,6 +87,9 @@ public class SampleRepository extends Repository {
                     break;
                 case 6:
                     upgradeToVersion6(db);
+                    break;
+                case 7:
+                    upgradeToVersion7(db);
                 default:
                     break;
             }
@@ -118,7 +121,6 @@ public class SampleRepository extends Repository {
             Timber.e(e);
             return null;
         }
-
     }
 
     @Override
@@ -144,7 +146,6 @@ public class SampleRepository extends Repository {
         super.close();
     }
 
-
     private void upgradeToVersion2(SQLiteDatabase db) {
         try {
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_EVENT_ID_COL);
@@ -162,7 +163,6 @@ public class SampleRepository extends Repository {
             db.execSQL(VaccineRepository.UPDATE_TABLE_ADD_HIA2_STATUS_COL);
 
             IMDatabaseUtils.accessAssetsAndFillDataBaseForVaccineTypes(context, db);
-
         } catch (Exception e) {
             Timber.e(e);
         }
@@ -205,14 +205,19 @@ public class SampleRepository extends Repository {
 
     private void upgradeToVersion6(SQLiteDatabase db) {
         try {
-            AllSharedPreferences sharedPreferences = SampleApplication.getInstance().context().userService()
-                    .getAllSharedPreferences();
+            AllSharedPreferences sharedPreferences = SampleApplication.getInstance().context().userService().getAllSharedPreferences();
             db.execSQL(VaccineRepository.UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL);
             db.execSQL(VaccineRepository.UPDATE_OUTREACH_QUERRY, new String[]{sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchPioneerUser())});
-
         } catch (Exception e) {
             Timber.e(e);
         }
     }
 
+    private void upgradeToVersion7(SQLiteDatabase db) {
+        try {
+            db.execSQL(VaccineOverdueCountRepository.CREATE_TABLE_SQL);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
 }

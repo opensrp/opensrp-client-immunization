@@ -1,11 +1,11 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
-        classpath 'org.apache.commons:commons-lang3:3.10'
+        classpath 'org.apache.commons:commons-lang3:3.12.0'
     }
 }
 
@@ -15,6 +15,7 @@ allprojects {
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
         maven { url "https://dl.bintray.com/ibm-watson-health/ibm-fhir-server-releases" }
         mavenLocal()
+        mavenCentral()
     }
 }
 
@@ -43,11 +44,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "int", "DATABASE_VERSION", '6'
+            buildConfigField "int", "DATABASE_VERSION", '7'
         }
 
         debug {
-            buildConfigField "int", "DATABASE_VERSION", '6'
+            buildConfigField "int", "DATABASE_VERSION", '7'
         }
     }
 
@@ -90,31 +91,18 @@ android {
 
 dependencies {
 
-    implementation('org.smartregister:opensrp-client-core:4.3.26-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:6.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.ibm.fhir', module: 'fhir-model'
         exclude group: 'com.ibm.fhir', module: 'fhir-path'
     }
 
-    jarJar 'com.ibm.fhir:fhir-model:4.7.0'
+    jarJar 'com.ibm.fhir:fhir-model:4.7.1'
 
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
 
-    implementation('com.google.android.material:material:1.0.0') {
-        exclude group: 'com.android.support'
-    }
+    runtimeOnly 'com.google.android.material:material:1.6.1'
 
     implementation project(':opensrp-immunization')
-
-    testImplementation 'junit:junit:4.12'
-    testImplementation('org.robolectric:robolectric:3.8') {
-        exclude group: 'com.google.guava', module: 'guava'
-        exclude group: 'org.apache.maven', module: 'maven-model'
-        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
-    }
-    testImplementation('org.robolectric:shadows-multidex:3.8') {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    testImplementation 'org.robolectric:shadows-support-v4:3.4-rc2'
 }

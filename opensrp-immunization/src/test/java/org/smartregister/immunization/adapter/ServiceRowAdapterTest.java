@@ -4,12 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -56,9 +56,9 @@ public class ServiceRowAdapterTest extends BaseUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        view = new ServiceRowGroup(RuntimeEnvironment.application, true);
+        view = new ServiceRowGroup(ApplicationProvider.getApplicationContext(), true);
         setDataForTest(magicDate);
-        serviceRowAdapter = new ServiceRowAdapter(RuntimeEnvironment.application, view, true, serviceTypeList,
+        serviceRowAdapter = new ServiceRowAdapter(ApplicationProvider.getApplicationContext(), view, true, serviceTypeList,
                 serviceRecordList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
     }

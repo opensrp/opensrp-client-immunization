@@ -3,30 +3,27 @@ package org.smartregister.immunization.utils;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.util.ReflectionHelpers;
-import org.smartregister.AllConstants;
+import androidx.test.core.app.ApplicationProvider;
 import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
-import org.smartregister.domain.SyncStatus;
-import org.smartregister.domain.form.FormSubmission;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
@@ -103,10 +100,10 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         android.content.Context context = Mockito.mock(android.content.Context.class);
         PowerMockito.mockStatic(FormUtils.class);
         Assert.assertNull(VaccinateActionUtils.formData(context, "", "", ""));
-        PowerMockito.when(FormUtils.getInstance(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+        PowerMockito.when(FormUtils.getInstance(ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(formUtils);
-        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(org.mockito.ArgumentMatchers.anyString(),
-                org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(magicData);
+        PowerMockito.when(formUtils.generateXMLInputForFormWithEntityId(ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(magicData);
         Assert.assertEquals(VaccinateActionUtils.formData(context, "", "", ""), magicData);
 
     }
@@ -150,8 +147,8 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         String tag = "TAG";
         String wrong_tag = "WRONG TAG";
         Set<TableLayout> tables = new HashSet<>();
-        TableLayout tableLayout = new TableLayout(RuntimeEnvironment.application);
-        TableRow row = new TableRow(RuntimeEnvironment.application);
+        TableLayout tableLayout = new TableLayout(ApplicationProvider.getApplicationContext());
+        TableRow row = new TableRow(ApplicationProvider.getApplicationContext());
         row.setTag(tag);
         tableLayout.addView(row);
         tables.add(tableLayout);
@@ -245,12 +242,12 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
                 .fromJson(VaccineData.special_vacines, listType);
 
         PowerMockito
-                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .when(VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(specialVaccines);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
         PowerMockito
-                .when(VaccinatorUtils.getSpecialVaccines(org.mockito.ArgumentMatchers.any(android.content.Context.class)))
+                .when(VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(android.content.Context.class)))
                 .thenReturn(null);
         VaccinateActionUtils.addBcg2SpecialVaccine(Mockito.mock(android.content.Context.class), vaccines.get(0), list);
 
@@ -385,22 +382,6 @@ public class VaccinateActionUtilsTest extends BaseUnitTest {
         dateTime = dateTime.minusMonths(5);
         serviceRecord.setCreatedAt(new Date(dateTime.getMillis()));
         Assert.assertFalse(VaccinateActionUtils.lessThanThreeMonths(serviceRecord));
-    }
-
-    @Test
-    public void getParamsShouldProvideJsonStringWith5properties() throws JSONException {
-        FormSubmission formSubmission = new FormSubmission("instance-id", "entity-id", "form-name", "{}", "client-version", SyncStatus.SYNCED, "synced");
-        String jsonString = ReflectionHelpers.callStaticMethod(VaccinateActionUtils.class, "getParams", ReflectionHelpers.ClassParameter.from(FormSubmission.class, formSubmission));
-
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONArray keys = jsonObject.names();
-
-        Assert.assertEquals(5, keys.length());
-        Assert.assertEquals("instance-id", jsonObject.getString(AllConstants.INSTANCE_ID_PARAM));
-        Assert.assertEquals("entity-id", jsonObject.getString(AllConstants.ENTITY_ID_PARAM));
-        Assert.assertEquals("form-name", jsonObject.getString(AllConstants.FORM_NAME_PARAM));
-        Assert.assertEquals("client-version", jsonObject.getString(AllConstants.VERSION_PARAM));
-        Assert.assertEquals(SyncStatus.PENDING.value(), jsonObject.getString(AllConstants.SYNC_STATUS));
     }
 
 }

@@ -33,9 +33,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class ImmunizationLibrary {
 
+    public static List<String> COMBINED_VACCINES = new ArrayList<>();
+    public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
     private static ImmunizationLibrary instance;
+    private static boolean allowExpiredVaccineEntry;
+    private static Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
     private final Repository repository;
     private final Context context;
+    private final Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private EventClientRepository eventClientRepository;
     private VaccineRepository vaccineRepository;
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
@@ -45,13 +50,8 @@ public class ImmunizationLibrary {
     private CommonFtsObject commonFtsObject;
     private int applicationVersion;
     private int databaseVersion;
+    private String applicationVersionName;
     private Map<String, Object> jsonMap = new HashMap<>();
-    private static boolean allowExpiredVaccineEntry;
-    private static Map<String, VaccineCache> vaccineCacheMap = new HashMap<>();
-
-    public static List<String> COMBINED_VACCINES = new ArrayList<>();
-    public static Map<String, String> COMBINED_VACCINES_MAP = new HashMap<>();
-    private final Map<String, String> conditionalVaccinesMap = new HashMap<>();
     private String currentConditionalVaccine;
     private boolean allowSyncImmediately = false;
     private List<VaccineRepo.Vaccine> skippableVaccines = new ArrayList<>();
@@ -59,19 +59,20 @@ public class ImmunizationLibrary {
 
     private long vaccineSyncTime = -1;
 
-    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
+    private ImmunizationLibrary(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, String applicationVersionName, int databaseVersion) {
         this.repository = repository;
         this.context = context;
         this.commonFtsObject = commonFtsObject;
         this.applicationVersion = applicationVersion;
+        this.applicationVersionName = applicationVersionName;
         this.databaseVersion = databaseVersion;
         setCurrentConditionalVaccine(null);
         setSkippableVaccines(Arrays.asList(VaccineRepo.Vaccine.bcg2, VaccineRepo.Vaccine.measles1));
     }
 
-    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
+    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, String applicationVersionName, int databaseVersion) {
         if (instance == null) {
-            instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, databaseVersion);
+            instance = new ImmunizationLibrary(context, repository, commonFtsObject, applicationVersion, applicationVersionName, databaseVersion);
 
             allowExpiredVaccineEntry = instance.getProperties().isTrue(IMConstants.APP_PROPERTIES.VACCINE_EXPIRED_ENTRY_ALLOW);
 
@@ -85,16 +86,43 @@ public class ImmunizationLibrary {
         }
     }
 
+    /**
+     * This init method is deprecated, use {@link #init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, String applicationVersionName, int databaseVersion.
+     */
+    @Deprecated
+    public static void init(Context context, Repository repository, CommonFtsObject commonFtsObject, int applicationVersion, int databaseVersion) {
+        init(context, repository, commonFtsObject, applicationVersion, null, databaseVersion);
+    }
+
+    public static <T> T assetJsonToJava(Map<String, Object> jsonMap, android.content.Context context, String fileName, Class<T> clazz, Type type) {
+        return AssetHandler.assetJsonToJava(jsonMap, context, fileName, clazz, type);
+    }
+
+    public static ImmunizationLibrary getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException(" Instance does not exist!!! Call " + ImmunizationLibrary.class
+                    .getName() + ".init method in the onCreate method of your Application class ");
+        }
+        return instance;
+    }
+
+    public static Map<String, VaccineCache> getVaccineCacheMap() {
+        return vaccineCacheMap;
+    }
+
+    /**
+     * Public method to clear the instance/destroy useful for testing
+     */
+    public static void destroy() {
+        instance = null;
+    }
+
     public Map<String, String> getConditionalVaccinesMap() {
         return conditionalVaccinesMap;
     }
 
     public <T> T assetJsonToJava(String fileName, Class<T> clazz, Type type) {
         return AssetHandler.assetJsonToJava(jsonMap, context.applicationContext(), fileName, clazz, type);
-    }
-
-    public static <T> T assetJsonToJava(Map<String, Object> jsonMap, android.content.Context context, String fileName, Class<T> clazz, Type type) {
-        return AssetHandler.assetJsonToJava(jsonMap, context, fileName, clazz, type);
     }
 
     public EventClientRepository eventClientRepository() {
@@ -163,20 +191,16 @@ public class ImmunizationLibrary {
         return applicationVersion;
     }
 
+    public String getApplicationVersionName() {
+        return applicationVersionName;
+    }
+
     public int getDatabaseVersion() {
         return databaseVersion;
     }
 
     public Locale getLocale() {
         return ImmunizationLibrary.getInstance().context().applicationContext().getResources().getConfiguration().locale;
-    }
-
-    public static ImmunizationLibrary getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException(" Instance does not exist!!! Call " + ImmunizationLibrary.class
-                    .getName() + ".init method in the onCreate method of your Application class ");
-        }
-        return instance;
     }
 
     public Map<String, Object> getVaccinesConfigJsonMap() {
@@ -206,10 +230,6 @@ public class ImmunizationLibrary {
 
     public boolean isAllowExpiredVaccineEntry() {
         return allowExpiredVaccineEntry;
-    }
-
-    public static Map<String, VaccineCache> getVaccineCacheMap() {
-        return vaccineCacheMap;
     }
 
     public boolean isExpiredVaccineCardRed() {

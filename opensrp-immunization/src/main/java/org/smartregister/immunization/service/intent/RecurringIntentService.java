@@ -149,8 +149,7 @@ public class RecurringIntentService extends IntentService {
                         jsonArray.put(jsonObject);
                     }
 
-                    JsonFormUtils
-                            .createServiceEvent(getApplicationContext(), serviceRecord, EVENT_TYPE, ENTITY_TYPE, jsonArray);
+                    JsonFormUtils.createServiceEvent(serviceRecord, EVENT_TYPE, ENTITY_TYPE, jsonArray, ImmunizationLibrary.getInstance().context());
                     recurringServiceRecordRepository.close(serviceRecord.getId());
                 }
             }

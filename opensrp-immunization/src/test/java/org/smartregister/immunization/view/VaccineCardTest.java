@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
@@ -65,7 +65,7 @@ public class VaccineCardTest extends BaseUnitTest {
         Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
         Mockito.doReturn(allSharedPreferences).when(context_).allSharedPreferences();
 
-        Intent intent = new Intent(RuntimeEnvironment.application, VaccineCardTestActivity.class);
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), VaccineCardTestActivity.class);
         controller = Robolectric.buildActivity(VaccineCardTestActivity.class, intent);
         activity = controller.start().resume().get();
         CoreLibrary.init(context_);
@@ -80,10 +80,10 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Test
     public void testConstructors() {
-        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application));
-        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new VaccineCard(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+        Assert.assertNotNull(new VaccineCard(ApplicationProvider.getApplicationContext()));
+        Assert.assertNotNull(new VaccineCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new VaccineCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new VaccineCard(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0, 0));
     }
 
     @Test

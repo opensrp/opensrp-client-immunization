@@ -1,9 +1,9 @@
 package org.smartregister.immunization;
 
-import android.os.Build;
 import androidx.annotation.NonNull;
 
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -24,7 +24,7 @@ import org.smartregister.util.AppProperties;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(shadows = {FontTextViewShadow.class}, sdk = Build.VERSION_CODES.P)
+@Config(shadows = {FontTextViewShadow.class})
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "androidx.*", "javax.xml.*", "org.xml.sax.*"
         , "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*", "com.android.internal.policy.*"
         , "org.xmlpull.v1.*", "org.smartregister.immunization.view.ExpandableHeightGridView"})
@@ -50,7 +50,7 @@ public abstract class BaseUnitTest {
         PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.CHILD)).thenReturn(VaccineRepo.Vaccine.values());
         PowerMockito.when(ImmunizationLibrary.getInstance().getVaccines(IMConstants.VACCINE_TYPE.WOMAN)).thenReturn(VaccineRepo.Vaccine.values());
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(org.mockito.ArgumentMatchers.anyString())).thenReturn(null);
+        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository().findByEntityId(ArgumentMatchers.anyString())).thenReturn(null);
         PowerMockito.when(ImmunizationLibrary.getInstance().context().alertService()).thenReturn(alertService);
         PowerMockito.when(ImmunizationLibrary.getInstance().getProperties()).thenReturn(appProperties);
     }

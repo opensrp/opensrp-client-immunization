@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -65,7 +65,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new ImmunizationRowGroup(RuntimeEnvironment.application, false);
+        view = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), false);
         setDataForTest(magicDate);
     }
 
@@ -148,7 +148,7 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest {
 
     @Test
     public void assertGetViewReturnsVaccineGroup() {
-        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(RuntimeEnvironment.application, view,
+        ImmunizationRowAdapter immunizationRowAdapter = new ImmunizationRowAdapter(ApplicationProvider.getApplicationContext(), view,
                 true, vaccinelist, alertlist);
 
         Assert.assertNotNull(immunizationRowAdapter.getView(0, null, null));

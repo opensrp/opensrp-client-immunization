@@ -16,7 +16,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
+import androidx.test.core.app.ApplicationProvider;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -64,9 +64,8 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Test
     public void onHandleIntentTest() {
-        Application application = RuntimeEnvironment.application;
+        Application application = ApplicationProvider.getApplicationContext();
         Intent intent = new Intent(application, RecurringIntentService.class);
-        //List<ServiceRecord> spyServiceRecordList = Mockito.spy(serviceRecordList);
 
         RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
         PowerMockito.mockStatic(ImmunizationLibrary.class);

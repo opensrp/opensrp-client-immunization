@@ -2,16 +2,18 @@ package org.smartregister.immunization.view;
 
 import android.util.AttributeSet;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
@@ -61,7 +63,7 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
-        view = new VaccineGroup(RuntimeEnvironment.application);
+        view = new VaccineGroup(ApplicationProvider.getApplicationContext());
 
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
         view.setImmunizationLibraryInstance(immunizationLibrary);
@@ -69,10 +71,10 @@ public class VaccineGroupTest extends BaseUnitTest {
 
     @Test
     public void testConstructors() {
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build()));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0));
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, Robolectric.buildAttributeSet().build(), 0, 0));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext()));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build()));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), Robolectric.buildAttributeSet().build(), 0, 0));
     }
 
     @Test
@@ -188,8 +190,8 @@ public class VaccineGroupTest extends BaseUnitTest {
         view.setOnRecordAllClickListener(onRecordAllClickListener);
 
         view.onClick(view.findViewById(R.id.record_all_tv));
-        Mockito.verify(onRecordAllClickListener).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                org.mockito.ArgumentMatchers.any(ArrayList.class));
+        Mockito.verify(onRecordAllClickListener).onClick(ArgumentMatchers.any(VaccineGroup.class),
+                ArgumentMatchers.any(ArrayList.class));
 
         // Vaccine Clicked
         VaccineGroup.OnVaccineClickedListener onVaccineClickListener = Mockito
@@ -199,38 +201,38 @@ public class VaccineGroupTest extends BaseUnitTest {
         ExpandableHeightGridView expandableHeightGridView = view.getVaccinesGV();
         VaccineCardAdapter adapter = view.getVaccineCardAdapter();
 
-        VaccineCard vaccineCard = new VaccineCard(RuntimeEnvironment.application);
+        VaccineCard vaccineCard = new VaccineCard(ApplicationProvider.getApplicationContext());
         wrapper = new VaccineWrapper();
         wrapper.setVaccine(VaccineRepo.Vaccine.bcg);
         vaccineCard.setVaccineWrapper(wrapper);
 
         vaccineCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(ArgumentMatchers.any(VaccineGroup.class),
+                ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(ArgumentMatchers.any(VaccineGroup.class),
+                ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.never()).onClick(ArgumentMatchers.any(VaccineGroup.class),
+                ArgumentMatchers.any(VaccineWrapper.class));
 
         //If expiry retroactive data entry Not Allowed
         vaccineCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.times(0)).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.times(0)).onClick(ArgumentMatchers.any(VaccineGroup.class),
+                ArgumentMatchers.any(VaccineWrapper.class));
 
         //If expiry retroactive data entry Allowed
         Mockito.doReturn(true).when(immunizationLibrary).isAllowExpiredVaccineEntry();
         vaccineCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
-        Mockito.verify(onVaccineClickListener, Mockito.times(1)).onClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+        Mockito.verify(onVaccineClickListener, Mockito.times(1)).onClick(ArgumentMatchers.any(VaccineGroup.class),
+                ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
@@ -248,32 +250,32 @@ public class VaccineGroupTest extends BaseUnitTest {
         vaccineCard.setState(State.DONE_CAN_NOT_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(VaccineGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(VaccineGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.OVERDUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(VaccineGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.EXPIRED);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(VaccineGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.NOT_DUE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
         Mockito.verify(onVaccineUndoClickListener, Mockito.never())
-                .onUndoClick(org.mockito.ArgumentMatchers.any(VaccineGroup.class),
-                        org.mockito.ArgumentMatchers.any(VaccineWrapper.class));
+                .onUndoClick(ArgumentMatchers.any(VaccineGroup.class),
+                        ArgumentMatchers.any(VaccineWrapper.class));
 
         vaccineCard.setState(State.DONE_CAN_BE_UNDONE);
         expandableHeightGridView.performItemClick(vaccineCard, 0, adapter.getItemId(0));
@@ -309,10 +311,10 @@ public class VaccineGroupTest extends BaseUnitTest {
     @Test
     public void assertConstructorsNotNull() {
         AttributeSet attrs = Robolectric.buildAttributeSet().build();
-        Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application));
-        //Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs));
-        //Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0));
-        //Assert.assertNotNull(new VaccineGroup(RuntimeEnvironment.application, ViewAttributes.attrs, 0, 0));
+        Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext()));
+        //Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), ViewAttributes.attrs));
+        //Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), ViewAttributes.attrs, 0));
+        //Assert.assertNotNull(new VaccineGroup(ApplicationProvider.getApplicationContext(), ViewAttributes.attrs, 0, 0));
     }
 
     @After
