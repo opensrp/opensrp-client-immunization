@@ -1,5 +1,7 @@
 package org.smartregister.immunization.sample;
 
+import static org.smartregister.util.Utils.getName;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,10 +67,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
-import static org.smartregister.util.Utils.getName;
-
-import timber.log.Timber;
 
 /**
  * Created by raihan on 1/03/2017.
@@ -428,7 +426,14 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
         } else {
             vaccine.setCalculation(-1);
         }
+
+        Vaccine existingVaccine = vaccineRepository.findByBaseEntityIdAndVaccineName(vaccine.getBaseEntityId(), vaccine.getName());
+        if (existingVaccine != null) {
+            vaccine.setId(existingVaccine.getId());
+        }
+
         vaccineRepository.add(vaccine);
+
         tag.setDbKey(vaccine.getId());
     }
 

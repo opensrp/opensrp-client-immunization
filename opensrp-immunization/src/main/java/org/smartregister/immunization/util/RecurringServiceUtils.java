@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class RecurringServiceUtils {
 
-
     public static void updateServiceGroupViews(View view, ArrayList<ServiceWrapper> wrappers,
                                                List<ServiceRecord> serviceRecordList, List<Alert> alertList) {
         updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, false);
@@ -39,24 +38,22 @@ public class RecurringServiceUtils {
 
             if (Looper.myLooper() == Looper.getMainLooper()) {
                 //if (undo) {
-                    serviceGroup.setServiceRecordList(serviceRecordList);
-                    serviceGroup.getServiceCardAdapter().updateServiceRecordList(serviceRecordList);
-                    serviceGroup.setAlertList(alertList);
-                    serviceGroup.getServiceCardAdapter().updateAlertList(alertList);
-                    serviceGroup.updateAllWrapperStatus();
+                serviceGroup.setServiceRecordList(serviceRecordList);
+                serviceGroup.getServiceCardAdapter().updateServiceRecordList(serviceRecordList);
+                serviceGroup.setAlertList(alertList);
+                serviceGroup.getServiceCardAdapter().updateAlertList(alertList);
+                serviceGroup.updateAllWrapperStatus();
                 //}
                 serviceGroup.updateViews();
-
-
             } else {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         //if (undo) {
-                            serviceGroup.setServiceRecordList(serviceRecordList);
-                            serviceGroup.setAlertList(alertList);
-                            serviceGroup.updateAllWrapperStatus();
+                        serviceGroup.setServiceRecordList(serviceRecordList);
+                        serviceGroup.setAlertList(alertList);
+                        serviceGroup.updateAllWrapperStatus();
                         //}
                         serviceGroup.updateViews();
                     }
@@ -133,8 +130,16 @@ public class RecurringServiceUtils {
             serviceRecord.setChildLocationId(childLocationId);
         }
 
+        ServiceRecord existingServiceRecord = recurringServiceRecordRepository.findByBaseEntityIdAndRecurringServiceId(
+                serviceRecord.getBaseEntityId(),
+                serviceRecord.getRecurringServiceId()
+        );
+        if (existingServiceRecord != null) {
+            serviceRecord.setId(existingServiceRecord.getId());
+        }
+
         recurringServiceRecordRepository.add(serviceRecord);
+
         tag.setDbKey(serviceRecord.getId());
     }
-
 }

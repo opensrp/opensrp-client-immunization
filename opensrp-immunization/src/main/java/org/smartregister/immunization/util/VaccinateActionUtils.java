@@ -4,7 +4,6 @@ import static org.smartregister.util.Utils.convertDateFormat;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
@@ -43,6 +42,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import timber.log.Timber;
+
 /**
  * Created by keyman on 17/11/2016.
  */
@@ -52,7 +53,7 @@ public class VaccinateActionUtils {
         try {
             return FormUtils.getInstance(context).generateXMLInputForFormWithEntityId(entityId, formName, metaData);
         } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
             return null;
         }
     }
@@ -64,7 +65,7 @@ public class VaccinateActionUtils {
                 fieldJson.put("content", value);
             }
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
     }
 
@@ -75,7 +76,7 @@ public class VaccinateActionUtils {
 
             }
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
 
         return null;
@@ -174,7 +175,7 @@ public class VaccinateActionUtils {
                 return new JSONObject(overridesStr);
             }
         } catch (Exception e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
         return new JSONObject();
 
@@ -189,7 +190,7 @@ public class VaccinateActionUtils {
                 }
             }
         } catch (JSONException e) {
-            Log.e(VaccinateActionUtils.class.getName(), "", e);
+            Timber.e(e);
         }
         return null;
     }
