@@ -39,12 +39,12 @@ public class VaccineOverdueCountRepositoryTest extends BaseUnitTest {
 
         VaccineOverdueCountRepository.createTable(sqliteDatabase);
 
-        Mockito.verify(sqliteDatabase).execSQL(stringArgumentCaptor.capture());
+        Mockito.verify(sqliteDatabase, Mockito.times(2)).execSQL(stringArgumentCaptor.capture());
 
         String sQLExecuted = stringArgumentCaptor.getValue();
 
         Assert.assertNotNull(sQLExecuted);
-        Assert.assertEquals(VaccineOverdueCountRepository.CREATE_TABLE_SQL, sQLExecuted);
+        Assert.assertEquals(VaccineOverdueCountRepository.ADD_STATUS_COLUMN, sQLExecuted);
 
     }
 
@@ -95,6 +95,7 @@ public class VaccineOverdueCountRepositoryTest extends BaseUnitTest {
     @Test
     public void testUpsertExecuteCorrectUpdateAndInsertQuery() {
         String TEST_BASE_ENTIY_ID = "test-id";
+        String STATUS = "urgent";
 
         Mockito.doNothing().when(sqliteDatabase).execSQL(ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class));
         Mockito.doReturn(sqliteDatabase).when(overdueCountRepository).getWritableDatabase();
@@ -102,7 +103,7 @@ public class VaccineOverdueCountRepositoryTest extends BaseUnitTest {
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String[]> stringArrayArgumentCaptor = ArgumentCaptor.forClass(String[].class);
 
-        overdueCountRepository.upsert(TEST_BASE_ENTIY_ID);
+        overdueCountRepository.upsert(TEST_BASE_ENTIY_ID, STATUS);
 
         Mockito.verify(sqliteDatabase).execSQL(stringArgumentCaptor.capture(), stringArrayArgumentCaptor.capture());
 
@@ -113,8 +114,9 @@ public class VaccineOverdueCountRepositoryTest extends BaseUnitTest {
 
         String[] resultParameters = stringArrayArgumentCaptor.getValue();
         Assert.assertNotNull(resultParameters);
-        Assert.assertEquals(1, resultParameters.length);
+        Assert.assertEquals(2, resultParameters.length);
         Assert.assertEquals(TEST_BASE_ENTIY_ID, resultParameters[0]);
+        Assert.assertEquals(STATUS, resultParameters[1]);
     }
 
     @Test

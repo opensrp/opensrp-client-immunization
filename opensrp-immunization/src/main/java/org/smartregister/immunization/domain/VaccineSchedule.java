@@ -228,10 +228,12 @@ public class VaccineSchedule {
                         newAlerts.add(curAlert);
                         alertService.updateFtsSearch(curAlert, true);
 
-                        if (!isAnyVaccineUrgent && AlertStatus.urgent.equals(curAlert.status())) {
+                        if (!isAnyVaccineUrgent && (AlertStatus.urgent.equals(curAlert.status())
+                                || AlertStatus.normal.equals(curAlert.status()))) {
                             try {
                                 isAnyVaccineUrgent = true;
-                                ImmunizationLibrary.getInstance().getVaccineOverdueCountRepository().upsert(baseEntityId);
+                                ImmunizationLibrary.getInstance().getVaccineOverdueCountRepository()
+                                        .upsert(baseEntityId, curAlert.status().value());
                             } catch (Exception e) {
                                 Timber.e(e);
                             }
