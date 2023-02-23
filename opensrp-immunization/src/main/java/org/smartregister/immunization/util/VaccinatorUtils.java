@@ -16,6 +16,12 @@
 
 package org.smartregister.immunization.util;
 
+import static org.smartregister.immunization.R.id.vaccine;
+import static org.smartregister.util.Utils.addToList;
+import static org.smartregister.util.Utils.addToRow;
+import static org.smartregister.util.Utils.convertDateFormat;
+import static org.smartregister.util.Utils.getValue;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -23,7 +29,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -89,12 +94,6 @@ import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
-import static org.smartregister.immunization.R.id.vaccine;
-import static org.smartregister.util.Utils.addToList;
-import static org.smartregister.util.Utils.addToRow;
-import static org.smartregister.util.Utils.convertDateFormat;
-import static org.smartregister.util.Utils.getValue;
-
 /**
  * Class containing some static utility methods.
  */
@@ -110,9 +109,9 @@ public class VaccinatorUtils {
 
     public static HashMap<String, String> providerDetails() {
         org.smartregister.Context context = ImmunizationLibrary.getInstance().context();
-        org.smartregister.util.Log.logDebug("ANM DETAILS" + context.anmController().get());
-        org.smartregister.util.Log.logDebug("USER DETAILS" + context.allSettings().fetchUserInformation());
-        org.smartregister.util.Log.logDebug("TEAM DETAILS" + context.allSharedPreferences().getPreference("team"));
+        Timber.d("ANM DETAILS %s", context.anmController().get());
+        Timber.d("USER DETAILS %s", context.allSettings().fetchUserInformation());
+        Timber.d("TEAM DETAILS %s", context.allSharedPreferences().getPreference("team"));
 
         String locationJson = context.anmLocationController().get();
         LocationTree locationTree = AssetHandler.jsonStringToJava(locationJson, LocationTree.class);
@@ -144,7 +143,7 @@ public class VaccinatorUtils {
             map.put("provider_identifier", tm.getString("identifier"));
             map.put("provider_team", tm.getJSONObject("team").getString("teamName"));
         } catch (JSONException e) {
-            Log.e(TAG, "", e);
+            Timber.e(e);
         }
 
         return map;
@@ -178,7 +177,7 @@ public class VaccinatorUtils {
                 totalUsed += Integer.parseInt(v.get(k) == null ? "0" : v.get(k));
             }
         }
-        Log.i("", "TOTAL USED: " + totalUsed);
+        Timber.i("TOTAL USED: %s", totalUsed);
 
         return totalUsed;
     }
@@ -192,7 +191,7 @@ public class VaccinatorUtils {
         q = q.trim().substring(0, q.trim().lastIndexOf(","));
         q += " ) e ";
 
-        Log.i("DD", q);
+        Timber.i("DD %s", q);
         return ImmunizationLibrary.getInstance().context().commonrepository(table).rawQuery(q, new String[]{});
     }
 
@@ -438,7 +437,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
         return schedule;
     }
@@ -547,7 +546,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
         return schedule;
     }
@@ -612,7 +611,7 @@ public class VaccinatorUtils {
 
             return getSchedules(hasPrerequisite, serviceType, milestoneDate, prereq);
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
         return null;
     }
@@ -661,7 +660,7 @@ public class VaccinatorUtils {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
         return null;
     }
@@ -713,7 +712,7 @@ public class VaccinatorUtils {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString(), e);
+            Timber.e(e);
         }
         return v;
     }

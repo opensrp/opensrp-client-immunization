@@ -2,7 +2,6 @@ package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -46,7 +45,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String CREATED_AT = "created_at";
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, IS_VOIDED, CREATED_AT,OUTREACH};
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, IS_VOIDED, CREATED_AT, OUTREACH};
     public static final String UPDATE_TABLE_ADD_EVENT_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + EVENT_ID + " VARCHAR;";
     public static final String EVENT_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + EVENT_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + EVENT_ID + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_FORMSUBMISSION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + FORMSUBMISSION_ID + " VARCHAR;";
@@ -61,8 +60,8 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_TEAM_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
-    public static final String UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL = "ALTER TABLE "+ VACCINE_TABLE_NAME + " ADD COLUMN "+ OUTREACH + " INTEGER DEFAULT 0;";
-    public static final String UPDATE_OUTREACH_QUERRY = "UPDATE "+ VACCINE_TABLE_NAME+" SET " + OUTREACH + " = 1 WHERE location_id != ?;";
+    public static final String UPDATE_TABLE_VACCINES_ADD_OUTREACH_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + OUTREACH + " INTEGER DEFAULT 0;";
+    public static final String UPDATE_OUTREACH_QUERRY = "UPDATE " + VACCINE_TABLE_NAME + " SET " + OUTREACH + " = 1 WHERE location_id != ?;";
     private static final String TAG = VaccineRepository.class.getCanonicalName();
     private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR, updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
@@ -98,7 +97,7 @@ public class VaccineRepository extends BaseRepository {
                     " WHERE " + CREATED_AT + " is null ";
             database.execSQL(sql);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -108,12 +107,12 @@ public class VaccineRepository extends BaseRepository {
         }
 
         try {
-
             vaccine.setHia2Status(null);
 
             if (StringUtils.isBlank(vaccine.getSyncStatus())) {
                 vaccine.setSyncStatus(TYPE_Unsynced);
             }
+
             if (StringUtils.isBlank(vaccine.getFormSubmissionId())) {
                 vaccine.setFormSubmissionId(generateRandomUUIDString());
             }
@@ -141,7 +140,7 @@ public class VaccineRepository extends BaseRepository {
                 update(database, vaccine);
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
         updateFtsSearch(vaccine);
     }
@@ -166,7 +165,7 @@ public class VaccineRepository extends BaseRepository {
             database.update(VACCINE_TABLE_NAME, createValuesFor(vaccine), idSelection,
                     new String[]{vaccine.getId().toString()});
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -263,7 +262,7 @@ public class VaccineRepository extends BaseRepository {
                         try {
                             createdAt = EventClientRepository.dateFormat.parse(dateCreatedString);
                         } catch (ParseException e) {
-                            Log.e(TAG, Log.getStackTraceString(e));
+                            Timber.e(e);
                         }
                     }
                     Vaccine vaccine = new Vaccine(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
@@ -328,7 +327,7 @@ public class VaccineRepository extends BaseRepository {
     public Vaccine findUnique(SQLiteDatabase database, Vaccine vaccine) {
         if (vaccine == null || (StringUtils.isBlank(vaccine.getFormSubmissionId()) &&
                 StringUtils.isBlank(vaccine.getEventId()))) {
-            
+
             return null;
         }
 
@@ -357,7 +356,7 @@ public class VaccineRepository extends BaseRepository {
                 return vaccines.get(0);
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
         return null;
 
@@ -373,7 +372,7 @@ public class VaccineRepository extends BaseRepository {
                             null);
             vaccines = readAllVaccines(cursor);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -400,7 +399,7 @@ public class VaccineRepository extends BaseRepository {
                 updateFtsSearch(vaccine.getBaseEntityId(), vaccine.getName());
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -416,7 +415,7 @@ public class VaccineRepository extends BaseRepository {
                 vaccine = vaccines.get(0);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -428,6 +427,7 @@ public class VaccineRepository extends BaseRepository {
     public Vaccine findByBaseEntityIdAndVaccineName(String baseEntityId, String vaccineName) {
         Vaccine vaccine = null;
         Cursor cursor = null;
+
         try {
             cursor = getReadableDatabase()
                     .query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS,
@@ -439,7 +439,7 @@ public class VaccineRepository extends BaseRepository {
                 vaccine = vaccines.get(0);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -463,7 +463,7 @@ public class VaccineRepository extends BaseRepository {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -480,7 +480,7 @@ public class VaccineRepository extends BaseRepository {
             values.put(SYNC_STATUS, TYPE_Synced);
             getWritableDatabase().update(VACCINE_TABLE_NAME, values, ID_COLUMN + " = ?", new String[]{caseId.toString()});
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -506,8 +506,7 @@ public class VaccineRepository extends BaseRepository {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
-
     }
 }

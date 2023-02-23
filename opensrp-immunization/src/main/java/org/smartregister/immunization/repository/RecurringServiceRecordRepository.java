@@ -2,7 +2,6 @@ package org.smartregister.immunization.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -76,7 +75,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                     " WHERE " + CREATED_AT + " is null ";
             database.execSQL(sql);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -116,7 +115,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                 update(database, serviceRecord);
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -153,7 +152,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                 return serviceRecordList.get(0);
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
 
         return null;
@@ -174,7 +173,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             database.update(TABLE_NAME, createValuesFor(serviceRecord), idSelection,
                     new String[] {serviceRecord.getId().toString()});
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -215,7 +214,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                         try {
                             createdAt = EventClientRepository.dateFormat.parse(dateCreatedString);
                         } catch (ParseException e) {
-                            Log.e(TAG, Log.getStackTraceString(e));
+                            Timber.e(e);
                         }
                     }
                     ServiceRecord serviceRecord = new ServiceRecord(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
@@ -258,7 +257,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+                Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -331,7 +330,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                 getWritableDatabase().delete(TABLE_NAME, ID_COLUMN + "= ?", new String[] {caseId.toString()});
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -347,7 +346,37 @@ public class RecurringServiceRecordRepository extends BaseRepository {
                 serviceRecord = serviceRecords.get(0);
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return serviceRecord;
+    }
+
+    public ServiceRecord findByBaseEntityIdAndRecurringServiceId(String baseEntityId, Long recurringServiceId) {
+        ServiceRecord serviceRecord = null;
+        Cursor cursor = null;
+
+        try {
+            cursor = getReadableDatabase().query(
+                    TABLE_NAME,
+                    TABLE_COLUMNS,
+                    BASE_ENTITY_ID + " = ? AND " + RECURRING_SERVICE_ID + " = ?",
+                    new String[]{baseEntityId, String.valueOf(recurringServiceId)},
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            List<ServiceRecord> serviceRecords = readAllServiceRecords(cursor);
+            if (!serviceRecords.isEmpty()) {
+                serviceRecord = serviceRecords.get(0);
+            }
+        } catch (Exception e) {
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -362,7 +391,7 @@ public class RecurringServiceRecordRepository extends BaseRepository {
             values.put(SYNC_STATUS, TYPE_Synced);
             getWritableDatabase().update(TABLE_NAME, values, ID_COLUMN + " = ?", new String[] {caseId.toString()});
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 }

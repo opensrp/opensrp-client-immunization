@@ -1,7 +1,11 @@
 package org.smartregister.immunization.adapter;
 
+import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
+import static org.smartregister.immunization.util.VaccinatorUtils.nextServiceDue;
+import static org.smartregister.util.Utils.getName;
+import static org.smartregister.util.Utils.getValue;
+
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -33,10 +37,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
-import static org.smartregister.immunization.util.VaccinatorUtils.nextServiceDue;
-import static org.smartregister.util.Utils.getName;
-import static org.smartregister.util.Utils.getValue;
+import timber.log.Timber;
 
 import timber.log.Timber;
 
@@ -137,7 +138,7 @@ public class ServiceCardAdapter extends BaseAdapter {
 
             return serviceCards.get(type);
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
             return null;
         }
 
@@ -192,7 +193,7 @@ public class ServiceCardAdapter extends BaseAdapter {
         for (ServiceRecord serviceRecord : getServiceRecordList()) {
             //if (serviceRecord.getRecurringServiceId().equals(tag.getTypeId())) {
             //if (serviceRecord.getName().equalsIgnoreCase(tag.getDefaultName())) {
-                serviceRecordList.add(serviceRecord);
+            serviceRecordList.add(serviceRecord);
             //}
         }
 

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,6 +23,8 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by raihan on 13/03/2017.
@@ -195,7 +196,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
-                statusIV.setBackground(vaccineWrapper.isOutOfCatchment()?ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange):ContextCompat.getDrawable(context, R.drawable.ic_action_check));
+                statusIV.setBackground(vaccineWrapper.isOutOfCatchment() ? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange) : ContextCompat.getDrawable(context, R.drawable.ic_action_check));
 
                 break;
 
@@ -210,7 +211,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
-                statusIV.setBackground(vaccineWrapper.isOutOfCatchment()? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange):ContextCompat.getDrawable(context, R.drawable.ic_action_check));
+                statusIV.setBackground(vaccineWrapper.isOutOfCatchment() ? ContextCompat.getDrawable(context, R.drawable.ic_action_check_orange) : ContextCompat.getDrawable(context, R.drawable.ic_action_check));
 
                 break;
 
@@ -268,7 +269,7 @@ public class ImmunizationRowCard extends LinearLayout {
             try {
                 name = VaccinatorUtils.getTranslatedVaccineName(context, name);
             } catch (Exception e) {
-                Log.i(VaccineGroup.class.getCanonicalName(), e.getMessage(), e);
+                Timber.e(e);
             }
 
             return name;

@@ -66,7 +66,6 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
     public void onHandleIntentTest() {
         Application application = ApplicationProvider.getApplicationContext();
         Intent intent = new Intent(application, RecurringIntentService.class);
-        //List<ServiceRecord> spyServiceRecordList = Mockito.spy(serviceRecordList);
 
         RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
         PowerMockito.mockStatic(ImmunizationLibrary.class);
