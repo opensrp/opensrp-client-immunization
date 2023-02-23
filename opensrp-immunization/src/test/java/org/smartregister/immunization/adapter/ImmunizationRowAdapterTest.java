@@ -30,11 +30,11 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.util.AppExecutors;
-import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
+import org.smartregister.util.AppExecutors;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.reflect.Type;
@@ -64,6 +64,8 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
     private VaccineWrapper wrapper;
     private ArrayList<VaccineWrapper> wrappers;
     private ImmunizationRowGroup view;
+    private  GenericInteractor interactor;
+
     @Mock
     private CommonPersonObjectClient commonPersonObjectClient;
 
@@ -72,6 +74,10 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
         org.mockito.MockitoAnnotations.initMocks(this);
         view = new ImmunizationRowGroup(ApplicationProvider.getApplicationContext(), false);
         setDataForTest(magicDate);
+        interactor = new GenericInteractor();
+        ReflectionHelpers.setField(interactor, "appExecutors",
+                new AppExecutors(this, this, this));
+        interactor = Mockito.spy(interactor);
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -200,8 +206,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
     public void testGetViewCallsImmunizationRowCallableInteractorCallbackOnResult(){
         ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback =
                 Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
-        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
-        interactor = Mockito.spy(interactor);
 
         ImmunizationRowCard mockImmunizationRowCard = Mockito.mock(ImmunizationRowCard.class);
 
@@ -229,8 +233,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
     public void testGetViewsCallsImmunizationCallbackInteractorOnError(){
         ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback =
                 Mockito.mock(ImmunizationRowAdapter.ImmunizationRowCallableInteractorCallback.class);
-        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
-        interactor = Mockito.spy(interactor);
 
         Exception exception = new IllegalStateException("Some Exception");
         Callable<VaccineWrapper> callable = () -> {

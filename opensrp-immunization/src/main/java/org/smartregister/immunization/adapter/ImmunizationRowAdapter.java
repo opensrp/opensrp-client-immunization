@@ -1,7 +1,6 @@
 package org.smartregister.immunization.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,12 +15,12 @@ import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
-import org.smartregister.immunization.util.CallableInteractorCallBack;
-import org.smartregister.immunization.util.GenericInteractor;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
