@@ -43,10 +43,9 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.tabfragments.ImmunizationFragment;
-import org.smartregister.immunization.util.AppExecutors;
-import org.smartregister.immunization.util.CallableInteractor;
-import org.smartregister.immunization.util.CallableInteractorCallBack;
-import org.smartregister.immunization.util.GenericInteractor;
+import org.smartregister.util.AppExecutors;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.util.VaccinateActionUtils;
@@ -67,6 +66,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
+import timber.log.Timber;
 
 /**
  * Created by raihan on 1/03/2017.

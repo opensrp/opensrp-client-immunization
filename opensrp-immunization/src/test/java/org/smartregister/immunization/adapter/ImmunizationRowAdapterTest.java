@@ -224,9 +224,6 @@ public class ImmunizationRowAdapterTest extends BaseUnitTest  implements Executo
         Mockito.verify(interactor).execute(Mockito.any(), Mockito.any());
         Mockito.verify(immunizationRowCallableInteractorCallback).onResult(Mockito.any());
 
-//        Mockito.doAnswer(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback)).
-//                when(interactor.execute(vaccineWrapperCallable, immunizationRowCallableInteractorCallback));
-
     }
 
     @Test

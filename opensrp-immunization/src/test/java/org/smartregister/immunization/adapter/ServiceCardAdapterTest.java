@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -24,8 +25,8 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
-import org.smartregister.immunization.util.AppExecutors;
-import org.smartregister.immunization.util.GenericInteractor;
+import org.smartregister.util.AppExecutors;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.immunization.view.ServiceCard;
 import org.smartregister.immunization.view.ServiceGroup;
 
@@ -63,6 +64,8 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
     private Map<String, List<ServiceType>> alertList = new HashMap<>();
     private HashMap<String, List<ServiceType>> serviceTypeMap;
 
+    private GenericInteractor interactor;
+
     public static List<String> getServiceTypeKeys(HashMap<String, List<ServiceType>> vaccineData) {
         List<String> keys = new ArrayList<>();
         if (vaccineData == null || vaccineData.isEmpty()) {
@@ -81,6 +84,9 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
         serviceCardAdapter = new ServiceCardAdapter(ApplicationProvider.getApplicationContext(), view, serviceTypeList, serviceRecordList,
                 alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
+        interactor = new GenericInteractor();
+        ReflectionHelpers.setField(interactor, "appExecutors",
+                new AppExecutors(this, this, this));
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -202,8 +208,6 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
     public void testGetViewCallsServiceCardTaskCallableInteractorCallableOnResult(){
         ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable serviceCardTaskCallableInteractorCallable
                 = Mockito.mock(ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable.class);
-        GenericInteractor interactor= new GenericInteractor(new AppExecutors(this, this , this));
-        interactor = Mockito.spy(interactor);
 
         ServiceCardAdapter mockAdapter = Mockito.spy(serviceCardAdapter);
         Mockito.when(mockAdapter.getGenericInteractor()).thenReturn(interactor);
@@ -218,7 +222,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
     public void testGetViewCallsServiceRowTaskCallableInteractorCallbackonError(){
         ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable serviceCardTaskCallableInteractorCallable
                 = Mockito.mock(ServiceCardAdapter.ServiceCardTaskCallableInteractorCallable.class);
-        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+
         Exception exception = new IllegalStateException("some exception");
         Callable<ServiceWrapper> callable = () -> {
             throw exception;

@@ -13,6 +13,7 @@ import androidx.test.core.app.ApplicationProvider;
 
 import org.mockito.Mockito;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -24,8 +25,8 @@ import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceTypeTest;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.domain.ServiceWrapperTest;
-import org.smartregister.immunization.util.AppExecutors;
-import org.smartregister.immunization.util.GenericInteractor;
+import org.smartregister.util.AppExecutors;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.immunization.view.ServiceRowGroup;
 
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ public class ServiceRowAdapterTest extends BaseUnitTest implements Executor {
     private List<ServiceRecord> serviceRecordList = new ArrayList<>();
     private List<Alert> alertList = new ArrayList<>();
 
+    private GenericInteractor interactor;
+
     @Before
     public void setUp() throws Exception {
         view = new ServiceRowGroup(ApplicationProvider.getApplicationContext(), true);
@@ -67,6 +70,11 @@ public class ServiceRowAdapterTest extends BaseUnitTest implements Executor {
         serviceRowAdapter = new ServiceRowAdapter(ApplicationProvider.getApplicationContext(), view, true, serviceTypeList,
                 serviceRecordList, alertList);
         org.mockito.MockitoAnnotations.initMocks(this);
+        interactor = new GenericInteractor();
+        ReflectionHelpers.setField(interactor, "appExecutors",
+                new AppExecutors(this, this, this));
+        interactor = Mockito.spy(interactor);
+
     }
 
     public void setDataForTest(String dateTimeString) {
@@ -152,7 +160,7 @@ public class ServiceRowAdapterTest extends BaseUnitTest implements Executor {
     public void testGetViewCallsServiceRowTaskCallableInteractorCallBackOnResult(){
         ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack serviceRowTaskCallableInteractorCallBack =
                 Mockito.mock(ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack.class);
-        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
+
         interactor = Mockito.spy(interactor);
 
 
@@ -173,7 +181,6 @@ public class ServiceRowAdapterTest extends BaseUnitTest implements Executor {
     public void testGetViewCallsServiceRowTaskCallableInteractorCallbackonError(){
         ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack serviceRowTaskCallableInteractorCallBack
                 = Mockito.mock(ServiceRowAdapter.ServiceRowTaskCallableInteractorCallBack.class);
-        GenericInteractor interactor = new GenericInteractor(new AppExecutors(this, this, this));
         Exception exception = new IllegalStateException("some exception");
         Callable<ServiceWrapper> callable = () -> {
             throw exception;
