@@ -5,7 +5,6 @@ import static org.smartregister.util.Utils.getName;
 import static org.smartregister.util.Utils.getValue;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,7 +26,6 @@ import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
