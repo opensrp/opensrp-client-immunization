@@ -117,7 +117,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
 
         List<Alert> alertlist = new ArrayList<Alert>();
         alertlist.add(alert);
-        serviceTypeMap = new HashMap<>();
+        HashMap<String, List<ServiceType>> serviceTypeMap = new HashMap<>();
         ServiceType serviceType = new ServiceType();
         serviceType.setId(0l);
         serviceType.setType(ServiceTypeTest.TYPE);
