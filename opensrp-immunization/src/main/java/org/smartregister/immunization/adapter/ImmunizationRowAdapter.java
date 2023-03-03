@@ -5,7 +5,6 @@ import static org.smartregister.immunization.util.VaccinatorUtils.receivedVaccin
 import static org.smartregister.util.Utils.getValue;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -24,7 +23,8 @@ import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ImmunizationRowCard;
 import org.smartregister.immunization.view.ImmunizationRowGroup;
-import org.smartregister.util.Utils;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
+import timber.log.Timber;
 
 import timber.log.Timber;
 
@@ -48,6 +51,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
     private HashMap<String, ImmunizationRowCard> vaccineCards;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
+    private GenericInteractor mInteractor;
 
     public ImmunizationRowAdapter(Context context, ImmunizationRowGroup vaccineGroup,
                                   boolean editmode, List<Vaccine> vaccineList, List<Alert> alertList) {
@@ -57,6 +61,7 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         this.vaccineList = vaccineList;
         this.alertList = alertList;
         vaccineCards = new HashMap<>();
+        mInteractor = new GenericInteractor();
     }
 
     @Override
@@ -81,19 +86,62 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                     .get(position);
             String vaccineName = vaccineData.name;
             if (!vaccineCards.containsKey(vaccineName)) {
-                ImmunizationRowCard vaccineCard = new ImmunizationRowCard(context, editmode);
+                ImmunizationRowCard vaccineCard = getImmunizationRowCard();
                 vaccineCard.setId((int) getItemId(position));
                 vaccineCards.put(vaccineName, vaccineCard);
-                ImmunizationRowTask immunizationRowTask = new ImmunizationRowTask(vaccineCard, vaccineName,
-                        vaccineGroup.getVaccineData().days_after_birth_due,
-                        vaccineGroup.getChildDetails());
-                Utils.startAsyncTask(immunizationRowTask, null);
+                Callable<VaccineWrapper> callable = () -> {
+                    CommonPersonObjectClient childDetails = vaccineGroup.getChildDetails();
+                    int days_after_birth_due = vaccineGroup.getVaccineData().days_after_birth_due;
+                    VaccineWrapper vaccineWrapper = new VaccineWrapper();
+                    vaccineWrapper.setId(childDetails.entityId());
+                    vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
+                    vaccineWrapper.setName(vaccineName);
+
+                    String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
+                    if (StringUtils.isNotBlank(dobString)) {
+                        Calendar dobCalender = Calendar.getInstance();
+                        DateTime dateTime = new DateTime(dobString);
+                        dobCalender.setTime(dateTime.toDate());
+                        dobCalender.add(Calendar.DATE, days_after_birth_due);
+                        vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
+                    }
+
+
+                    Photo photo = ImageUtils.profilePhotoByClient(childDetails);
+                    vaccineWrapper.setPhoto(photo);
+
+                    String zeirId = getValue(childDetails.getColumnmaps(), "zeir_id", false);
+                    vaccineWrapper.setPatientNumber(zeirId);
+                    vaccineWrapper.setPatientName(
+                            getValue(childDetails.getColumnmaps(), "first_name", true) + " " + getValue(childDetails.getColumnmaps(),
+                                    "last_name", true));
+
+                    updateWrapper(vaccineWrapper);
+                    updateWrapperStatus(vaccineWrapper, childDetails);
+                    return vaccineWrapper;
+                };
+                ImmunizationRowCallableInteractorCallback immunizationRowCallableInteractorCallback = getImmunizationRowCallableInteractor(vaccineCard, vaccineName);
+                GenericInteractor interactor = getGenericInteractor();
+                interactor.execute(callable, immunizationRowCallableInteractorCallback);
             }
             return vaccineCards.get(vaccineName);
         } catch (Exception e) {
             Timber.e(e);
             return null;
         }
+    }
+
+    public GenericInteractor getGenericInteractor() {
+        return mInteractor;
+    }
+
+    public ImmunizationRowCallableInteractorCallback getImmunizationRowCallableInteractor(ImmunizationRowCard vaccineCard, String vaccineName) {
+        return new ImmunizationRowCallableInteractorCallback(vaccineCard, vaccineName);
+    }
+
+
+    public ImmunizationRowCard getImmunizationRowCard() {
+        return new ImmunizationRowCard(context, editmode);
     }
 
     public void update(ArrayList<VaccineWrapper> vaccinesToUpdate) {
@@ -226,58 +274,18 @@ public class ImmunizationRowAdapter extends BaseAdapter {
         this.alertList = alertList;
     }
 
-    class ImmunizationRowTask extends AsyncTask<Void, Void, VaccineWrapper> {
+    class ImmunizationRowCallableInteractorCallback implements CallableInteractorCallBack<VaccineWrapper> {
 
         private ImmunizationRowCard vaccineCard;
-
         private String vaccineName;
 
-        private int days_after_birth_due;
-
-        private CommonPersonObjectClient childDetails;
-
-        ImmunizationRowTask(ImmunizationRowCard vaccineCard, String vaccineName, int days_after_birth_due,
-                            CommonPersonObjectClient childDetails) {
+        ImmunizationRowCallableInteractorCallback(ImmunizationRowCard vaccineCard, String vaccineName) {
             this.vaccineCard = vaccineCard;
             this.vaccineName = vaccineName;
-            this.days_after_birth_due = days_after_birth_due;
-            this.childDetails = childDetails;
         }
 
         @Override
-        protected VaccineWrapper doInBackground(Void... params) {
-
-            VaccineWrapper vaccineWrapper = new VaccineWrapper();
-            vaccineWrapper.setId(childDetails.entityId());
-            vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
-            vaccineWrapper.setName(vaccineName);
-
-            String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
-            if (StringUtils.isNotBlank(dobString)) {
-                Calendar dobCalender = Calendar.getInstance();
-                DateTime dateTime = new DateTime(dobString);
-                dobCalender.setTime(dateTime.toDate());
-                dobCalender.add(Calendar.DATE, days_after_birth_due);
-                vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
-            }
-
-
-            Photo photo = ImageUtils.profilePhotoByClient(childDetails);
-            vaccineWrapper.setPhoto(photo);
-
-            String zeirId = getValue(childDetails.getColumnmaps(), "zeir_id", false);
-            vaccineWrapper.setPatientNumber(zeirId);
-            vaccineWrapper.setPatientName(
-                    getValue(childDetails.getColumnmaps(), "first_name", true) + " " + getValue(childDetails.getColumnmaps(),
-                            "last_name", true));
-
-            updateWrapper(vaccineWrapper);
-            updateWrapperStatus(vaccineWrapper, childDetails);
-            return vaccineWrapper;
-        }
-
-        @Override
-        protected void onPostExecute(VaccineWrapper vaccineWrapper) {
+        public void onResult(VaccineWrapper vaccineWrapper) {
             vaccineCard.setVaccineWrapper(vaccineWrapper);
             vaccineGroup.toggleRecordAllTV();
             if (vaccineWrapper.getStatus() == null) {
@@ -285,6 +293,11 @@ public class ImmunizationRowAdapter extends BaseAdapter {
             } else {
                 notifyDataSetChanged();
             }
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
         }
     }
 

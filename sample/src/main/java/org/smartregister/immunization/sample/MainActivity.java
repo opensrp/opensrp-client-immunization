@@ -4,7 +4,6 @@ import static org.smartregister.util.Utils.getName;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,6 +48,9 @@ import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.sample.util.SampleUtil;
 import org.smartregister.immunization.service.intent.RecurringIntentService;
 import org.smartregister.immunization.service.intent.VaccineIntentService;
+import org.smartregister.util.AppExecutors;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.IMDatabaseConstants;
 import org.smartregister.immunization.util.RecurringServiceUtils;
@@ -68,6 +70,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Callable;
+
+import timber.log.Timber;
 
 import timber.log.Timber;
 
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     private CommonPersonObjectClient childDetails = SampleUtil.dummyDetatils();
     private ArrayList<VaccineGroup> vaccineGroups;
     private ArrayList<ServiceGroup> serviceGroups;
+    private GenericInteractor genericInteractor = new GenericInteractor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,12 +180,15 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         AlertService alertService = ImmunizationLibrary.getInstance().context().alertService();
 
-        UpdateViewTask updateViewTask = new UpdateViewTask();
-        updateViewTask.setVaccineRepository(vaccineRepository);
-        updateViewTask.setRecurringServiceTypeRepository(recurringServiceTypeRepository);
-        updateViewTask.setRecurringServiceRecordRepository(recurringServiceRecordRepository);
-        updateViewTask.setAlertService(alertService);
-        Utils.startAsyncTask(updateViewTask, null);
+        UpdateViewTaskCallableInteractorCallback updateViewTaskCallableInteractorCallback = new UpdateViewTaskCallableInteractorCallback();
+        UpdateViewTaskCallable callable = new UpdateViewTaskCallable();
+        callable.setVaccineRepository(vaccineRepository);
+        callable.setRecurringServiceTypeRepository(recurringServiceTypeRepository);
+        callable.setRecurringServiceRecordRepository(recurringServiceRecordRepository);
+        callable.setAlertService(alertService);
+
+        genericInteractor.execute(callable, updateViewTaskCallableInteractorCallback);
+
     }
 
     private void updateChildIdViews() {
@@ -396,7 +405,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     @Override
     public void onUndoVaccination(VaccineWrapper tag, View v) {
-        Utils.startAsyncTask(new UndoVaccineTask(tag, v), null);
+        UndoVaccineTaskRunnable runnable = new UndoVaccineTaskRunnable( tag, v );
+        AppExecutors executors = new AppExecutors();
+        executors.diskIO().execute(runnable);
     }
 
     public void addVaccinationDialogFragment(ArrayList<VaccineWrapper> vaccineWrappers, VaccineGroup vaccineGroup) {
@@ -455,10 +466,10 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         VaccineRepository vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
 
         VaccineWrapper[] arrayTags = tags.toArray(new VaccineWrapper[tags.size()]);
-        SaveVaccinesTask backgroundTask = new SaveVaccinesTask();
-        backgroundTask.setVaccineRepository(vaccineRepository);
-        backgroundTask.setView(view);
-        Utils.startAsyncTask(backgroundTask, arrayTags);
+
+        SaveVaccineTaskCallable callable = new SaveVaccineTaskCallable(arrayTags, vaccineRepository);
+        SaveVaccineTaskCallbackInteractorCallback callback = new SaveVaccineTaskCallbackInteractorCallback(view);
+        genericInteractor.execute(callable, callback);
 
     }
 
@@ -635,7 +646,9 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
     @Override
     public void onUndoService(ServiceWrapper tag, View v) {
-        Utils.startAsyncTask(new UndoServiceTask(tag), null);
+        UndoServiceTaskCallable callable = new UndoServiceTaskCallable(tag);
+        UndoServiceTaskCallableInteractorCallback callback = new UndoServiceTaskCallableInteractorCallback(tag);
+        genericInteractor.execute(callable, callback);
     }
 
     public void saveService(ServiceWrapper tag, final View view) {
@@ -644,43 +657,58 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         }
 
         ServiceWrapper[] arrayTags = {tag};
-        SaveServiceTask backgroundTask = new SaveServiceTask();
         String providerId = ImmunizationLibrary.getInstance().context().allSharedPreferences().fetchRegisteredANM();
 
-        backgroundTask.setProviderId(providerId);
-        backgroundTask.setView(view);
-        Utils.startAsyncTask(backgroundTask, arrayTags);
+        SaveServiceTaskCallable callable = new SaveServiceTaskCallable(arrayTags, providerId);
+        SaveServiceTaskCallableInteractorCallback callback = new SaveServiceTaskCallableInteractorCallback(view);
+
+        genericInteractor.execute(callable, callback);
     }
 
-    private class SaveVaccinesTask extends AsyncTask<VaccineWrapper, Void, Pair<ArrayList<VaccineWrapper>, List<Vaccine>>> {
-
+    public class SaveVaccineTaskCallbackInteractorCallback implements CallableInteractorCallBack<Triple<Pair<ArrayList<VaccineWrapper>, List<Vaccine>>, List<String>, List<Alert>>>{
         private View view;
-        private VaccineRepository vaccineRepository;
-        private AlertService alertService;
-        private List<String> affectedVaccines;
-        private List<Vaccine> vaccineList;
-        private List<Alert> alertList;
 
-        public void setView(View view) {
+        SaveVaccineTaskCallbackInteractorCallback(View view){
             this.view = view;
         }
 
-        public void setVaccineRepository(VaccineRepository vaccineRepository) {
-            this.vaccineRepository = vaccineRepository;
-            alertService = ImmunizationLibrary.getInstance().context().alertService();
-            affectedVaccines = new ArrayList<>();
-        }
 
         @Override
-        protected void onPostExecute(Pair<ArrayList<VaccineWrapper>, List<Vaccine>> pair) {
-            updateVaccineGroupViews(view, pair.first, pair.second);
+        public void onResult(Triple<Pair<ArrayList<VaccineWrapper>, List<Vaccine>>, List<String>, List<Alert>> triple) {
+            Pair<ArrayList<VaccineWrapper>, List<Vaccine>> pair = triple.getLeft();
+            List<String> affectedVaccines = triple.getMiddle();
+            List<Vaccine> vaccineList = pair.second;
+            ArrayList<VaccineWrapper> vaccineWrappers = pair.first;
+            List<Alert> alertList = triple.getRight();
+
+            updateVaccineGroupViews(view, vaccineWrappers, vaccineList);
 
             updateVaccineGroupsUsingAlerts(affectedVaccines, vaccineList, alertList);
         }
 
         @Override
-        protected Pair<ArrayList<VaccineWrapper>, List<Vaccine>> doInBackground(VaccineWrapper... vaccineWrappers) {
+        public void onError(Exception ex) {
+            Timber.e(ex);
+        }
+    }
 
+    public class SaveVaccineTaskCallable implements Callable<Triple<Pair<ArrayList<VaccineWrapper>, List<Vaccine>>, List<String>, List<Alert>>> {
+
+        private VaccineRepository vaccineRepository;
+        private AlertService alertService;
+        private List<String> affectedVaccines;
+        private List<Vaccine> vaccineList;
+        private List<Alert> alertList;
+        private VaccineWrapper[] vaccineWrappers;
+
+        SaveVaccineTaskCallable(VaccineWrapper[] vaccineWrappers, VaccineRepository vaccineRepository){
+            this.vaccineWrappers = vaccineWrappers;
+            this.vaccineRepository = vaccineRepository;
+            alertService = ImmunizationLibrary.getInstance().context().alertService();
+        }
+
+        @Override
+        public Triple<Pair<ArrayList<VaccineWrapper>, List<Vaccine>>, List<String>, List<Alert>> call() {
             ArrayList<VaccineWrapper> list = new ArrayList<>();
             if (vaccineRepository != null) {
                 for (VaccineWrapper tag : vaccineWrappers) {
@@ -689,7 +717,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 }
             }
 
-            Pair<ArrayList<VaccineWrapper>, List<Vaccine>> pair = new Pair<>(list, vaccineList);
             String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
@@ -699,11 +726,13 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(),
                     VaccinateActionUtils.allAlertNames(IMConstants.VACCINE_TYPE.CHILD));
 
-            return pair;
+            Pair<ArrayList<VaccineWrapper>, List<Vaccine>> pair = new Pair<>(list, vaccineList);
+
+            return Triple.of(pair, affectedVaccines, alertList);
         }
     }
 
-    private class UpdateViewTask extends AsyncTask<Void, Void, Map<String, NamedObject<?>>> {
+    private class UpdateViewTaskCallable implements Callable<Map<String, NamedObject<?>>>{
 
         private VaccineRepository vaccineRepository;
         private RecurringServiceTypeRepository recurringServiceTypeRepository;
@@ -725,57 +754,8 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         public void setAlertService(AlertService alertService) {
             this.alertService = alertService;
         }
-
-
-        @SuppressWarnings("unchecked")
         @Override
-        protected void onPostExecute(Map<String, NamedObject<?>> map) {
-
-            List<Vaccine> vaccineList = new ArrayList<>();
-
-            Map<String, List<ServiceType>> serviceTypeMap = new LinkedHashMap<>();
-            List<ServiceRecord> serviceRecords = new ArrayList<>();
-
-            List<Alert> alertList = new ArrayList<>();
-
-            if (map.containsKey(Vaccine.class.getName())) {
-                NamedObject<?> namedObject = map.get(Vaccine.class.getName());
-                if (namedObject != null) {
-                    vaccineList = (List<Vaccine>) namedObject.object;
-                }
-
-            }
-
-            if (map.containsKey(ServiceType.class.getName())) {
-                NamedObject<?> namedObject = map.get(ServiceType.class.getName());
-                if (namedObject != null) {
-                    serviceTypeMap = (Map<String, List<ServiceType>>) namedObject.object;
-                }
-
-            }
-
-            if (map.containsKey(ServiceRecord.class.getName())) {
-                NamedObject<?> namedObject = map.get(ServiceRecord.class.getName());
-                if (namedObject != null) {
-                    serviceRecords = (List<ServiceRecord>) namedObject.object;
-                }
-
-            }
-
-            if (map.containsKey(Alert.class.getName())) {
-                NamedObject<?> namedObject = map.get(Alert.class.getName());
-                if (namedObject != null) {
-                    alertList = (List<Alert>) namedObject.object;
-                }
-
-            }
-
-            updateServiceViews(serviceTypeMap, serviceRecords, alertList);
-            updateVaccinationViews(vaccineList, alertList);
-        }
-
-        @Override
-        protected Map<String, NamedObject<?>> doInBackground(Void... voids) {
+        public Map<String, NamedObject<?>> call() {
             String dobString = Utils.getValue(childDetails.getColumnmaps(), IMDatabaseConstants.Client.DOB, false);
             if (!TextUtils.isEmpty(dobString)) {
                 DateTime dateTime = new DateTime(dobString);
@@ -833,8 +813,60 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         }
     }
 
-    private class UndoVaccineTask extends AsyncTask<Void, Void, Void> {
+    private class UpdateViewTaskCallableInteractorCallback implements CallableInteractorCallBack<Map<String, NamedObject<?>>>{
 
+        @Override
+        public void onResult(Map<String, NamedObject<?>> map) {
+            List<Vaccine> vaccineList = new ArrayList<>();
+
+            Map<String, List<ServiceType>> serviceTypeMap = new LinkedHashMap<>();
+            List<ServiceRecord> serviceRecords = new ArrayList<>();
+
+            List<Alert> alertList = new ArrayList<>();
+
+            if (map.containsKey(Vaccine.class.getName())) {
+                NamedObject<?> namedObject = map.get(Vaccine.class.getName());
+                if (namedObject != null) {
+                    vaccineList = (List<Vaccine>) namedObject.object;
+                }
+
+            }
+
+            if (map.containsKey(ServiceType.class.getName())) {
+                NamedObject<?> namedObject = map.get(ServiceType.class.getName());
+                if (namedObject != null) {
+                    serviceTypeMap = (Map<String, List<ServiceType>>) namedObject.object;
+                }
+
+            }
+
+            if (map.containsKey(ServiceRecord.class.getName())) {
+                NamedObject<?> namedObject = map.get(ServiceRecord.class.getName());
+                if (namedObject != null) {
+                    serviceRecords = (List<ServiceRecord>) namedObject.object;
+                }
+
+            }
+
+            if (map.containsKey(Alert.class.getName())) {
+                NamedObject<?> namedObject = map.get(Alert.class.getName());
+                if (namedObject != null) {
+                    alertList = (List<Alert>) namedObject.object;
+                }
+
+            }
+
+            updateServiceViews(serviceTypeMap, serviceRecords, alertList);
+            updateVaccinationViews(vaccineList, alertList);
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
+        }
+    }
+
+    private class UndoVaccineTaskRunnable implements Runnable {
         private final VaccineRepository vaccineRepository;
         private final AlertService alertService;
         private VaccineWrapper tag;
@@ -843,20 +875,16 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         private List<Alert> alertList;
         private List<String> affectedVaccines;
 
-        public UndoVaccineTask(VaccineWrapper tag, View v) {
+        public UndoVaccineTaskRunnable(VaccineWrapper tag, View v){
             this.tag = tag;
             this.v = v;
             vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
             alertService = ImmunizationLibrary.getInstance().context().alertService();
+
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
+        public void run() {
             if (tag != null) {
 
                 if (tag.getDbKey() != null) {
@@ -872,23 +900,6 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                     }
                 }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void params) {
-            super.onPostExecute(params);
-
-            // Refresh the vaccine group with the updated vaccine
-            tag.setUpdatedVaccineDate(null, false);
-            tag.setDbKey(null);
-
-            View view = getLastOpenedView();
-
-            ArrayList<VaccineWrapper> wrappers = new ArrayList<>();
-            wrappers.add(tag);
-            updateVaccineGroupViews(view, wrappers, vaccineList, true);
-            updateVaccineGroupsUsingAlerts(affectedVaccines, vaccineList, alertList);
         }
     }
 
@@ -902,30 +913,22 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         }
     }
 
-    public class SaveServiceTask extends AsyncTask<ServiceWrapper, Void, Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>> {
+    public class SaveServiceTaskCallable implements Callable<Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>>{
 
-        private View view;
         private String providerId;
+        private ServiceWrapper[] arrayTags;
 
-        public void setView(View view) {
-            this.view = view;
-        }
-
-        public void setProviderId(String providerId) {
+        SaveServiceTaskCallable(ServiceWrapper[] arrayTags, String providerId){
+            this.arrayTags = arrayTags;
             this.providerId = providerId;
         }
 
         @Override
-        protected void onPostExecute(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
-            RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight());
-        }
-
-        @Override
-        protected Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> doInBackground(ServiceWrapper... params) {
+        public Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> call() {
 
             ArrayList<ServiceWrapper> list = new ArrayList<>();
 
-            for (ServiceWrapper tag : params) {
+            for (ServiceWrapper tag : arrayTags) {
                 RecurringServiceUtils.saveService(tag, childDetails.entityId(), providerId, null, null, null, null);
                 list.add(tag);
 
@@ -943,30 +946,66 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
             List<Alert> alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(), alertArray);
 
             return Triple.of(list, serviceRecordList, alertList);
-
         }
     }
 
-    private class UndoServiceTask extends AsyncTask<Void, Void, Void> {
+    public class SaveServiceTaskCallableInteractorCallback implements CallableInteractorCallBack<Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>>{
 
         private View view;
-        private ServiceWrapper tag;
-        private List<ServiceRecord> serviceRecordList;
-        private ArrayList<ServiceWrapper> wrappers;
-        private List<Alert> alertList;
 
-        public UndoServiceTask(ServiceWrapper tag) {
+        SaveServiceTaskCallableInteractorCallback(View view){
+            this.view = view;
+        }
+
+        @Override
+        public void onResult(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
+            RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight());
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
+        }
+    }
+
+    public class UndoServiceTaskCallableInteractorCallback implements CallableInteractorCallBack<Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>>{
+
+        private ServiceWrapper tag;
+        private View view;
+
+
+        public UndoServiceTaskCallableInteractorCallback(ServiceWrapper tag) {
             this.tag = tag;
             this.view = RecurringServiceUtils.getLastOpenedServiceView(serviceGroups);
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        public void onResult(Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> triple) {
+            tag.setUpdatedVaccineDate(null, false);
+            tag.setDbKey(null);
+
+            RecurringServiceUtils.updateServiceGroupViews(view, triple.getLeft(), triple.getMiddle(), triple.getRight(), true);
+
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        public void onError(Exception ex) {
+            Timber.e(ex);
+        }
+    }
+    public class UndoServiceTaskCallable implements Callable<Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>>>{
+
+        private ServiceWrapper tag;
+
+        UndoServiceTaskCallable(ServiceWrapper tag){
+            this.tag = tag;
+        }
+
+        @Override
+        public Triple<ArrayList<ServiceWrapper>, List<ServiceRecord>, List<Alert>> call() {
+            ArrayList<ServiceWrapper> wrappers = new ArrayList<>();
+            List<ServiceRecord> serviceRecordList = new ArrayList<>();
+            List<Alert> alertList = new ArrayList<>();
             if (tag != null) {
 
                 if (tag.getDbKey() != null) {
@@ -989,20 +1028,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                     alertList = alertService.findByEntityIdAndAlertNames(childDetails.entityId(), alertArray);
                 }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void params) {
-            super.onPostExecute(params);
-
-            tag.setUpdatedVaccineDate(null, false);
-            tag.setDbKey(null);
-
-            RecurringServiceUtils.updateServiceGroupViews(view, wrappers, serviceRecordList, alertList, true);
-
+            return Triple.of(wrappers, serviceRecordList, alertList);
         }
     }
-
-
 }

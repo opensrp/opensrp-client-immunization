@@ -5,7 +5,6 @@ import static org.smartregister.util.Utils.getName;
 import static org.smartregister.util.Utils.getValue;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,11 +18,12 @@ import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.ServiceRowCard;
 import org.smartregister.immunization.view.ServiceRowGroup;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +32,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
+import timber.log.Timber;
 
 import timber.log.Timber;
 
@@ -89,9 +92,13 @@ public class ServiceRowAdapter extends BaseAdapter {
                 serviceRowCard.setId((int) getItemId(position));
                 serviceRowCards.put(serviceType.getName(), serviceRowCard);
 
-                ServiceRowTask serviceRowTask = new ServiceRowTask(serviceRowGroup.getChildDetails()
-                        , serviceType, serviceRowCard);
-                Utils.startAsyncTask(serviceRowTask, null);
+                ServiceRowTaskCallable callable = new ServiceRowTaskCallable(serviceRowGroup.getChildDetails(),
+                        serviceType);
+                ServiceRowTaskCallableInteractorCallBack callableInteractorCallBack
+                        = getServiceRowTaskCallableInteractor(serviceRowCard);
+                GenericInteractor interactor = getGenericInteractor();
+
+                interactor.execute(callable, callableInteractorCallBack);
             }
 
             return serviceRowCards.get(serviceType.getName());
@@ -99,6 +106,10 @@ public class ServiceRowAdapter extends BaseAdapter {
             Timber.e(e);
             return null;
         }
+    }
+
+    public ServiceRowTaskCallableInteractorCallBack getServiceRowTaskCallableInteractor(ServiceRowCard serviceRowCard) {
+        return  new ServiceRowTaskCallableInteractorCallBack(serviceRowCard);
     }
 
     public void update(ArrayList<ServiceWrapper> servicesToUpdate) {
@@ -175,25 +186,25 @@ public class ServiceRowAdapter extends BaseAdapter {
                 }
             }
         }
-
     }
 
-    class ServiceRowTask extends AsyncTask<Void, Void, ServiceWrapper> {
+    public GenericInteractor getGenericInteractor(){
+        return new GenericInteractor();
+    }
+
+    class ServiceRowTaskCallable implements Callable<ServiceWrapper> {
 
         private CommonPersonObjectClient childDetails;
 
         private ServiceType serviceType;
 
-        private ServiceRowCard serviceRowCard;
-
-        ServiceRowTask(CommonPersonObjectClient childDetails, ServiceType serviceType, ServiceRowCard serviceRowCard) {
+        ServiceRowTaskCallable(CommonPersonObjectClient childDetails, ServiceType serviceType){
             this.childDetails = childDetails;
             this.serviceType = serviceType;
-            this.serviceRowCard = serviceRowCard;
         }
 
         @Override
-        protected ServiceWrapper doInBackground(Void... params) {
+        public ServiceWrapper call() throws Exception {
             ServiceWrapper serviceWrapper = new ServiceWrapper();
             serviceWrapper.setId(childDetails.entityId());
             serviceWrapper.setGender(childDetails.getDetails().get("gender"));
@@ -223,11 +234,24 @@ public class ServiceRowAdapter extends BaseAdapter {
 
             return serviceWrapper;
         }
+    }
 
+    public class ServiceRowTaskCallableInteractorCallBack implements CallableInteractorCallBack<ServiceWrapper> {
+
+        private final ServiceRowCard serviceRowCard;
+
+        ServiceRowTaskCallableInteractorCallBack(ServiceRowCard serviceRowCard){
+            this.serviceRowCard = serviceRowCard;
+        }
         @Override
-        protected void onPostExecute(ServiceWrapper serviceWrapper) {
+        public void onResult(ServiceWrapper serviceWrapper) {
             serviceRowCard.setServiceWrapper(serviceWrapper);
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            Timber.e(ex);
         }
     }
 
