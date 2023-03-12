@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,7 +51,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
-    private SimpleDateFormat READABLE_DATE_FORMAT;
+    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
     private String type;
 

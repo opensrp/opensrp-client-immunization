@@ -44,6 +44,11 @@ public class RecurringServiceTypeRepository extends BaseRepository {
 
     public static final String ADD_SERVICE_GROUP_COLUMN = "ALTER TABLE " + TABLE_NAME + " ADD " + SERVICE_GROUP + " VARCHAR;";
 
+    public RecurringServiceTypeRepository(Repository repository) {
+        super(repository);
+    }
+
+
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_SQL);
         database.execSQL(TYPE_INDEX);

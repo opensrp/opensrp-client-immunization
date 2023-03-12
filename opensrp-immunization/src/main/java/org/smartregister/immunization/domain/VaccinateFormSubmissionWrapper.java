@@ -31,8 +31,7 @@ public class VaccinateFormSubmissionWrapper implements Serializable {
 
     private HashMap<String, VaccineWrapper> map;
 
-    public VaccinateFormSubmissionWrapper(String formData, String entityId, String formName, String metaData,
-                                          String category) {
+    public VaccinateFormSubmissionWrapper(String formData, String entityId, String formName, String metaData, String category) {
         this.formData = formData;
         this.entityId = entityId;
         this.formName = formName;

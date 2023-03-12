@@ -84,12 +84,12 @@ android {
 }
 
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
+//tasks.withType(Test) {
+//    jacoco.includeNoLocationClasses = true
+//}
 
 dependencies {
-    implementation('org.smartregister:opensrp-client-core:1.8.16-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.7.60-p2-invalid-brac-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
@@ -128,30 +128,30 @@ dependencies {
     testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+//task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+//
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//
+//    getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
+//    getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
+//
+//    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$ViewBinder*.*']
+//    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+//    def mainSrc = "$project.projectDir/src/main/java"
+//
+////    sourceDirectories = files([mainSrc])
+////    classDirectories = files([debugTree])
+////    executionData = fileTree(dir: project.buildDir, includes: [
+////            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+////    ])
+//}
 
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
-    getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$ViewBinder*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
-
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-    ])
-}
-
-coveralls {
-    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
-}
+//coveralls {
+//    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
+//}
 
 
 apply from: '../maven.gradle'

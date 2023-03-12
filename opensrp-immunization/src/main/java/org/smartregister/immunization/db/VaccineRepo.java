@@ -61,6 +61,7 @@ public class VaccineRepo {
         opv0("OPV 0", null, 13, 0, 0, "child"),
 
         opv1("OPV 1", null, 1768, 42, 0, "child"),
+        fipv1("fIPV 1", null, 1768, 42, 0, "child"),
         penta1("PENTA 1", null, 1768, 42, 0, "child"),
         pcv1("PCV 1", null, 1768, 42, 0, "child"),
         rota1("ROTA 1", null, 213, 42, 0, "child"),
@@ -81,6 +82,7 @@ public class VaccineRepo {
         mv4("MV 4", null, 1095, 669, 0, "child"),
 
         opv3("OPV 3", opv2, 1830, 98, 28, "child"),
+        fipv2("fIPV 2", fipv1, 1830, 98, 56, "child"),
         penta3("PENTA 3", penta2, 1830, 98, 28, "child"),
         pcv3("PCV 3", pcv2, 1830, 98, 28, "child"),
         rota3("ROTA 3", rota2, 1830, 98, 28, "child"),
@@ -91,6 +93,7 @@ public class VaccineRepo {
         mr1("MR 1", null, -1, 274, 0, "child"),
         opv4("OPV 4", null, 1830, 274, 28, "child"),
         mcv1("MCV 1", null, -1, 274, 0, "child"),
+        yf("Yellow Fever", null, -1, 274, 0, "child"),
         rubella1("Rubella 1", null, 1830, 274, 0, "child"),
         yellowfever("Yellow Fever", null, 548, 274, 0, "child"),
         menA("MenA", null, 1830, 274, 0, "child"),
@@ -111,8 +114,7 @@ public class VaccineRepo {
         tt2("TT 2", tt1, 366, 0, 28, "woman"),
         tt3("TT 3", tt2, 366, 0, 26 * 7, "woman"),
         tt4("TT 4", tt3, 366, 0, 52 * 7, "woman"),
-        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),
-        ;
+        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),;
 
         private String display;
         private Vaccine prerequisite;

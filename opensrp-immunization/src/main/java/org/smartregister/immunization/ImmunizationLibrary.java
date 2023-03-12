@@ -76,7 +76,7 @@ public class ImmunizationLibrary {
 
     public EventClientRepository eventClientRepository() {
         if (eventClientRepository == null) {
-            eventClientRepository = new EventClientRepository();
+            eventClientRepository = new EventClientRepository(getRepository());
         }
 
         return eventClientRepository;
@@ -88,7 +88,7 @@ public class ImmunizationLibrary {
 
     public VaccineRepository vaccineRepository() {
         if (vaccineRepository == null) {
-            vaccineRepository = new VaccineRepository(commonFtsObject(), context.alertService());
+            vaccineRepository = new VaccineRepository(getRepository(),commonFtsObject(), context.alertService());
         }
         return vaccineRepository;
     }
@@ -99,21 +99,21 @@ public class ImmunizationLibrary {
 
     public RecurringServiceTypeRepository recurringServiceTypeRepository() {
         if (recurringServiceTypeRepository == null) {
-            recurringServiceTypeRepository = new RecurringServiceTypeRepository();
+            recurringServiceTypeRepository = new RecurringServiceTypeRepository(getRepository());
         }
         return recurringServiceTypeRepository;
     }
 
     public RecurringServiceRecordRepository recurringServiceRecordRepository() {
         if (recurringServiceRecordRepository == null) {
-            recurringServiceRecordRepository = new RecurringServiceRecordRepository();
+            recurringServiceRecordRepository = new RecurringServiceRecordRepository(getRepository());
         }
         return recurringServiceRecordRepository;
     }
 
     public VaccineTypeRepository vaccineTypeRepository() {
         if (vaccineTypeRepository == null) {
-            vaccineTypeRepository = new VaccineTypeRepository(commonFtsObject(), context().alertService());
+            vaccineTypeRepository = new VaccineTypeRepository(getRepository(),commonFtsObject(), context().alertService());
         }
         return vaccineTypeRepository;
     }
@@ -124,7 +124,7 @@ public class ImmunizationLibrary {
 
     public VaccineNameRepository vaccineNameRepository() {
         if (vaccineNameRepository == null) {
-            vaccineNameRepository = new VaccineNameRepository(commonFtsObject(), context().alertService());
+            vaccineNameRepository = new VaccineNameRepository(getRepository(),commonFtsObject(), context().alertService());
         }
         return vaccineNameRepository;
     }

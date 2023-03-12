@@ -997,6 +997,7 @@ public class VaccinatorUtils {
      */
     public static String translate(Context context, String vaccineName) {
         String resourceIdentifierKey = vaccineName;
+        Log.v("VACCINE_NAME","translate>>>vaccineName:"+vaccineName);
 
         int identifier = context.getResources().getIdentifier(createIdentifier(vaccineName), "string", context.getPackageName());
         if (identifier > 0) {

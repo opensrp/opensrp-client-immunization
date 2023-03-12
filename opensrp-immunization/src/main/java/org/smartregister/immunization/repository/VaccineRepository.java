@@ -65,9 +65,11 @@ public class VaccineRepository extends BaseRepository {
     private CommonFtsObject commonFtsObject;
     private AlertService alertService;
 
-    public VaccineRepository(CommonFtsObject commonFtsObject, AlertService alertService) {
+    public VaccineRepository(Repository repository,CommonFtsObject commonFtsObject, AlertService alertService) {
+        super(repository);
         this.commonFtsObject = commonFtsObject;
         this.alertService = alertService;
+
     }
 
     public static void createTable(SQLiteDatabase database) {

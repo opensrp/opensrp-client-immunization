@@ -36,7 +36,7 @@ public class Vaccine {
                            outOfCatchment) {
         this.id = id;
         this.baseEntityId = baseEntityId;
-        programClientId = null;
+        this.programClientId = null;
         this.name = name;
         this.calculation = calculation;
         this.date = date;
