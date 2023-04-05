@@ -16,6 +16,7 @@ import org.smartregister.immunization.util.JsonFormUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -74,7 +75,10 @@ public class RecurringIntentService extends IntentService {
             if (!serviceRecordList.isEmpty()) {
                 for (ServiceRecord serviceRecord : serviceRecordList) {
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.getDefault().toString().startsWith("ar") ? Locale.ENGLISH : Locale.getDefault()
+                    );
                     String formattedDate = simpleDateFormat.format(serviceRecord.getDate());
 
                     ServiceType serviceType = recurringServiceTypeRepository.find(serviceRecord.getRecurringServiceId());

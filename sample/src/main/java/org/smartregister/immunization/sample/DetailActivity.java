@@ -59,6 +59,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -74,7 +75,10 @@ public class DetailActivity extends AppCompatActivity implements VaccinationActi
     public static Gender gender;
 
     public static final String EXTRA_CHILD_DETAILS = "child_details";
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+            "dd-MM-yyyy",
+            Locale.getDefault().toString().startsWith("ar") ? Locale.ENGLISH : Locale.getDefault()
+    );
     private ImmunizationFragment immunizationFragment;
 
     public CommonPersonObjectClient getChildDetails() {

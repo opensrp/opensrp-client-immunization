@@ -115,7 +115,6 @@ public class VaccineSchedule {
 
         VaccineRepo.Vaccine vaccine = VaccineRepo.getVaccine(vaccineName, vaccineCategory);
 
-
         if (vaccine != null) {
             ArrayList<VaccineCondition> conditions = new ArrayList<>();
             if (schedule.conditions != null) {
@@ -151,7 +150,6 @@ public class VaccineSchedule {
             List<Alert> newAlerts = updateOfflineAlertsAndReturnNewAlertList(baseEntityId, dob, vaccineCategory);
             List<String> notInNew = getAlertsNotInNew(newAlerts);
             return notInNew;
-
         } catch (Exception e) {
             Timber.e(VaccineSchedule.class.getName(), e.toString(), e);
             return new ArrayList<>();
@@ -199,7 +197,6 @@ public class VaccineSchedule {
      * @param vaccineCategory
      */
     private static List<Alert> updateOfflineAlertsAndReturnNewAlertList(String baseEntityId, DateTime dob, String vaccineCategory) {
-
         List<Alert> newAlerts = new ArrayList<>();
         try {
             VaccineRepository vaccineRepository = ImmunizationLibrary.getInstance().vaccineRepository();
@@ -252,8 +249,7 @@ public class VaccineSchedule {
                 alertService.create(newAlerts);
             }
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             Timber.e(VaccineSchedule.class.getName(), e.toString(), e);
         }
 
@@ -360,8 +356,7 @@ public class VaccineSchedule {
      *
      * @return An {@link Alert} object if one exists, or {@code NULL} if non exists
      */
-    public Alert getOfflineAlert(String baseEntityId, Date dateOfBirth,
-                                 List<Vaccine> issuedVaccines) {
+    public Alert getOfflineAlert(String baseEntityId, Date dateOfBirth, List<Vaccine> issuedVaccines) {
         Alert defaultAlert = null;
 
         // Check if all conditions pass
@@ -386,14 +381,15 @@ public class VaccineSchedule {
         }
 
         if (alertStatus != null) {
-
-            Alert offlineAlert = new Alert(baseEntityId,
+            Alert offlineAlert = new Alert(
+                    baseEntityId,
                     vaccine.display(),
                     vaccine.name().toLowerCase(Locale.ENGLISH).replace(" ", ""),
                     alertStatus,
                     dueDate == null ? null : DateUtil.yyyyMMdd.format(dueDate),
                     expiryDate == null ? null : DateUtil.yyyyMMdd.format(expiryDate),
-                    true);
+                    true
+            );
 
             return offlineAlert;
         }
@@ -402,7 +398,6 @@ public class VaccineSchedule {
     }
 
     protected boolean isVaccineIssued(String currentVaccine, List<Vaccine> issuedVaccines) {
-
         for (Vaccine vaccine : issuedVaccines) {
             if (currentVaccine.equalsIgnoreCase(vaccine.getName().replaceAll(" ", ""))) {
                 return true;
