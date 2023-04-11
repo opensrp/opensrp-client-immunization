@@ -39,6 +39,15 @@ public class VaccineWrapper implements Serializable {
     private boolean synced;
 
     private Date createdAt;
+    private boolean isInvalid;
+
+    public void setInvalid(boolean invalid) {
+        isInvalid = invalid;
+    }
+
+    public boolean isInvalid() {
+        return isInvalid;
+    }
 
     public String getId() {
         return id;

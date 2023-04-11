@@ -26,6 +26,7 @@ public class Vaccine {
     private String formSubmissionId;
     private Integer outOfCatchment;
     private Date createdAt;
+    private boolean isInvalid;
 
     public Vaccine() {
     }
@@ -146,6 +147,14 @@ public class Vaccine {
 
     public Long getUpdatedAt() {
         return updatedAt;
+    }
+
+    public boolean isInvalid() {
+        return isInvalid;
+    }
+
+    public void setInvalid(boolean invalid) {
+        isInvalid = invalid;
     }
 
     public void setUpdatedAt(Long updatedAt) {

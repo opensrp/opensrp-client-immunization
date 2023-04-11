@@ -87,7 +87,6 @@
 
             <Button
                 android:id="@+id/vaccinate_today"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/btn_margin_bottom"
@@ -99,7 +98,6 @@
                 android:text="@string/change_service_date"
                 android:textAllCaps="false"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/silver"
                 android:textSize="@dimen/btn_text_size" />
 
             <Button
@@ -114,6 +112,7 @@
                 android:paddingBottom="@dimen/btn_padding_bottom"
                 android:paddingTop="@dimen/btn_padding_top"
                 android:text="@string/undo_record_vaccination"
+                android:visibility="gone"
                 android:textAllCaps="false"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/silver"
@@ -140,13 +139,16 @@
 
                 <Button
                     android:id="@+id/cancel"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginStart="@dimen/btn_margin_left"
+                    android:layout_marginEnd="@dimen/btn_margin_right"
                     android:paddingBottom="@dimen/btn_padding_bottom"
                     android:paddingTop="@dimen/btn_padding_top"
                     android:text="@string/cancel"
+                    android:background="@drawable/vaccination_earlier_bg"
+
                     android:textAllCaps="false"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="@color/silver"
@@ -154,7 +156,6 @@
 
                 <Button
                     android:id="@+id/set"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -163,7 +164,6 @@
                     android:text="@string/set"
                     android:textAllCaps="false"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="@color/silver"
                     android:textSize="@dimen/btn_text_size"
                     android:visibility="gone" />
 

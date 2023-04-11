@@ -7,7 +7,7 @@
     <color name="alert_na">#ECECEC</color>
     <color name="alert_upcoming">#D3EAF4</color>
     <color name="alert_normal">#389CCA</color>
-    <color name="alert_urgent">#D13F3F</color>
+    <color name="alert_urgent">#FFC107</color>
     <color name="alert_completed">#4fb45b</color>
     <color name="alert_expired">#ECECEC</color>
 

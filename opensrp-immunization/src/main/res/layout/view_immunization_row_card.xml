@@ -56,7 +56,7 @@
         android:id="@+id/undo_b"
         android:layout_width="@dimen/immunization_row_card_undo_btn_width"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
+        android:layout_toLeftOf="@+id/invalid_b"
         android:layout_centerVertical="true"
         android:background="@drawable/undo_background"
         android:clickable="false"
@@ -68,4 +68,19 @@
         android:textSize="14sp"
         android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/invalid_b"
+        android:layout_width="@dimen/immunization_row_card_undo_btn_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/due_vaccine_red_bg"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="@string/invalid"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="invisible" />
 </RelativeLayout>

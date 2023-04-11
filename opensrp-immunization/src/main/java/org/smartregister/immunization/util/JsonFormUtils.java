@@ -3,16 +3,23 @@ package org.smartregister.immunization.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Address;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.repository.EventClientRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by keyman on 31/07/2017.
@@ -35,7 +42,18 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                     .withFormSubmissionId(vaccine.getFormSubmissionId() == null ? generateRandomUUIDString() : vaccine
                             .getFormSubmissionId())
                     .withDateCreated(new Date());
+            Log.e("VACCINE","createVaccineEvent>>"+vaccine.getName()+":invalid:"+vaccine.isInvalid());
 
+            //get identifier from child registration event
+            String eventName = vaccine.getName().contains("tt")?"Member Registration":"Child Registration";
+            Log.v("EVENT_TYPE","eventName>>"+eventName);
+            Map<String,String> identifiers  = ImmunizationLibrary.getInstance().vaccineRepository().getAddressIdentifier(vaccine.getBaseEntityId(),eventType);
+
+            if(vaccine.isInvalid()){
+                identifiers.put("is_invalid","true");
+            }
+            Log.e("VACCINE","identifiers>>>"+identifiers);
+            event.setIdentifiers(identifiers);
             event.setTeam(vaccine.getTeam());
             event.setTeamId(vaccine.getTeamId());
             event.setChildLocationId(vaccine.getChildLocationId());
@@ -70,6 +88,7 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             Log.e(TAG, e.toString(), e);
         }
     }
+
 
     public static void createServiceEvent(Context context, ServiceRecord serviceRecord, String eventType, String entityType,
                                           JSONArray fields) {

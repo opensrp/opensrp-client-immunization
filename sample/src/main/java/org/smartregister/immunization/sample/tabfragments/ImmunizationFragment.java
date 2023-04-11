@@ -137,6 +137,19 @@ public class ImmunizationFragment extends Fragment {
             });
 
             vaccineGroupCanvasLL.addView(curGroup);
+
+            ImmunizationRowGroup invalidGroup = new ImmunizationRowGroup(getActivity(), editmode);
+            invalidGroup.setData(vaccineGroupObject, childDetails, vaccineList, alertList);
+            invalidGroup.setOnVaccineInvalidClickListener(new ImmunizationRowGroup.OnVaccineInvalidClickListener() {
+                @Override
+                public void onInvalidClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine) {
+                    vaccine.setInvalid(true);
+                    addVaccinationDialogFragment(Arrays.asList(vaccine), vaccineGroup);
+
+                }
+            });
+
+            vaccineGroupCanvasLL.addView(invalidGroup);
             vaccineGroups.add(curGroup);
         }
     }

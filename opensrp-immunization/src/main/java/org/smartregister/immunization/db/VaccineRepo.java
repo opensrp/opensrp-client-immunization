@@ -12,8 +12,7 @@ public class VaccineRepo {
 
     public static ArrayList<Vaccine> getVaccines(String category, boolean useDefault) {
         ArrayList<Vaccine> vl = new ArrayList<>();
-        Vaccine[] vaccines = useDefault ? Vaccine.values() : ImmunizationLibrary.getInstance().getVaccines();
-        for (Vaccine v : vaccines) {
+        for (Vaccine v : Vaccine.values()) {
             if (v.category().equalsIgnoreCase(category.trim())) {
                 vl.add(v);
             }
@@ -22,8 +21,7 @@ public class VaccineRepo {
     }
 
     public static Vaccine getVaccine(String name, String category) {
-        Vaccine[] vaccines = ImmunizationLibrary.getInstance().getVaccines();
-        for (Vaccine curVaccine : vaccines) {
+        for (Vaccine curVaccine : Vaccine.values()) {
             if (curVaccine.display.equalsIgnoreCase(name)
                     && curVaccine.category.equalsIgnoreCase(category)) {
                 return curVaccine;
@@ -111,10 +109,10 @@ public class VaccineRepo {
         bcg2("BCG 2", null, 366, 0, 84, "child"),
 
         tt1("TT 1", null, 0, 0, 0, "woman"),
-        tt2("TT 2", tt1, 366, 0, 28, "woman"),
-        tt3("TT 3", tt2, 366, 0, 26 * 7, "woman"),
-        tt4("TT 4", tt3, 366, 0, 52 * 7, "woman"),
-        tt5("TT 5", tt4, 1830, 0, 52 * 7, "woman"),;
+        tt2("TT 2", tt1, -1, 0, 28, "woman"),
+        tt3("TT 3", tt2, -1, 0, 26 * 7, "woman"),
+        tt4("TT 4", tt3, -1, 0, 52 * 7, "woman"),
+        tt5("TT 5", tt4, -1, 0, 52 * 7, "woman"),;
 
         private String display;
         private Vaccine prerequisite;

@@ -32,12 +32,12 @@ public class ImmunizationRowCard extends LinearLayout {
     private Button statusIV;
     private TextView nameTV;
     private TextView StatusTV;
-    private Button undoB;
+    private Button undoB,invalidB;
     private State state;
     private VaccineWrapper vaccineWrapper;
     private boolean editmode;
     private boolean statusForMoreThanThreeMonths = false;
-
+    private boolean statusInvalidVaccine= false;
     public ImmunizationRowCard(Context context, boolean editmode) {
         super(context);
         this.editmode = editmode;
@@ -52,6 +52,7 @@ public class ImmunizationRowCard extends LinearLayout {
         StatusTV = findViewById(R.id.status_text_tv);
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);
+        invalidB = findViewById(R.id.invalid_b);
         DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 
@@ -154,6 +155,7 @@ public class ImmunizationRowCard extends LinearLayout {
     private void updateStateUi() {
         if (getDbKey() != null) {
             statusForMoreThanThreeMonths = VaccinateActionUtils.moreThanThreeMonths(getCreatedAt());
+            //statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
         }
 
         statusIV.setVisibility(VISIBLE);
@@ -162,6 +164,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_white);
                 undoB.setVisibility(INVISIBLE);
+                invalidB.setVisibility(INVISIBLE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getVaccineName());
@@ -171,6 +174,7 @@ public class ImmunizationRowCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setBackgroundResource(R.drawable.vaccine_card_background_blue);
                 undoB.setVisibility(INVISIBLE);
+                invalidB.setVisibility(INVISIBLE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDue()));
@@ -183,6 +187,11 @@ public class ImmunizationRowCard extends LinearLayout {
                 } else {
                     undoB.setVisibility(INVISIBLE);
                 }
+                if(editmode && statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(INVISIBLE);
+                }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
                 StatusTV.setText(DATE_FORMAT.format(getDateDone()));
@@ -194,6 +203,11 @@ public class ImmunizationRowCard extends LinearLayout {
                     undoB.setVisibility(VISIBLE);
                 } else {
                     undoB.setVisibility(INVISIBLE);
+                }
+                if(editmode && statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(INVISIBLE);
                 }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setText(getVaccineName());
@@ -233,7 +247,18 @@ public class ImmunizationRowCard extends LinearLayout {
         }
         return null;
     }
-
+    private DateTime getVaccineDate() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getUpdatedVaccineDate();
+        }
+        return null;
+    }
+    private DateTime getVaccineDueDate() {
+        if (vaccineWrapper != null) {
+            return vaccineWrapper.getVaccineDate();
+        }
+        return null;
+    }
     private String getVaccineName() {
         if (vaccineWrapper != null) {
             String name = vaccineWrapper.getName();
@@ -278,5 +303,9 @@ public class ImmunizationRowCard extends LinearLayout {
 
     public boolean isStatusForMoreThanThreeMonths() {
         return statusForMoreThanThreeMonths;
+    }
+
+    public boolean isStatusInvalidVaccine() {
+        return statusInvalidVaccine;
     }
 }

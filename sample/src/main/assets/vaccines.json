@@ -95,14 +95,13 @@
           "due": [
             {
               "reference": "dob",
-              "offset": "+42d",
               "window": "+10d"
             }
           ],
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+5y"
             }
           ]
         }
@@ -125,14 +124,13 @@
           "due": [
             {
               "reference": "dob",
-              "offset": "+42d",
               "window": "+28d"
             }
           ],
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+5y"
             }
           ],
           "conditions": [

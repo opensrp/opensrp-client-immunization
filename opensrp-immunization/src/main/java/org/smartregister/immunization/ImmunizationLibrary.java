@@ -157,11 +157,11 @@ public class ImmunizationLibrary {
         return ImmunizationLibrary.getInstance().context().getAppProperties();
     }
 
-    public void setVaccines(VaccineRepo.Vaccine[] vaccines) {
+    public void setVaccines(VaccineRepo.Vaccine[] vaccines,String type) {
         this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines = vaccines;
     }
 
-    public VaccineRepo.Vaccine[] getVaccines() {
+    public VaccineRepo.Vaccine[] getVaccines(String type) {
         return this.vaccineCacheMap.get(IMConstants.VACCINE_TYPE.CHILD).vaccines;
     }
 

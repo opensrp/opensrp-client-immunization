@@ -4,10 +4,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.google.common.base.Splitter;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -21,7 +25,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class VaccineRepository extends BaseRepository {
     public static final String VACCINE_TABLE_NAME = "vaccines";
@@ -43,7 +50,8 @@ public class VaccineRepository extends BaseRepository {
     public static final String CREATED_AT = "created_at";
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT};
+    public static final String IS_INVALID = "is_invalid";
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT,IS_INVALID};
     public static final String UPDATE_TABLE_ADD_EVENT_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + EVENT_ID + " VARCHAR;";
     public static final String EVENT_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + EVENT_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + EVENT_ID + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_FORMSUBMISSION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + FORMSUBMISSION_ID + " VARCHAR;";
@@ -56,11 +64,12 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
     private static final String TAG = VaccineRepository.class.getCanonicalName();
-    private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR, updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
+    private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR,is_invalid VARCHAR,updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + VACCINE_TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
     public static String HIA2_Within = "Within";
     public static String HIA2_Overdue = "Overdue";
+    public static final String UPDATE_TABLE_ADD_INVALID = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN "+IS_INVALID+" VARCHAR;";
 
     private CommonFtsObject commonFtsObject;
     private AlertService alertService;
@@ -127,7 +136,9 @@ public class VaccineRepository extends BaseRepository {
                     if (vaccine.getCreatedAt() == null) {
                         vaccine.setCreatedAt(new Date());
                     }
-                    vaccine.setId(database.insert(VACCINE_TABLE_NAME, null, createValuesFor(vaccine)));
+                    long rowId = database.insert(VACCINE_TABLE_NAME, null, createValuesFor(vaccine));
+                    Log.e("VACCINE","INSERTED>>>"+rowId);
+                    vaccine.setId(rowId);
                 }
             } else {
                 //mark the vaccine as unsynced for processing as an updated event
@@ -135,7 +146,7 @@ public class VaccineRepository extends BaseRepository {
                 update(database, vaccine);
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+           e.printStackTrace();
         }
         updateFtsSearch(vaccine);
     }
@@ -183,6 +194,7 @@ public class VaccineRepository extends BaseRepository {
         values.put(EVENT_ID, vaccine.getEventId());
         values.put(FORMSUBMISSION_ID, vaccine.getFormSubmissionId());
         values.put(OUT_OF_AREA, vaccine.getOutOfCatchment());
+        values.put(IS_INVALID, vaccine.isInvalid());
         values.put(CREATED_AT,
                 vaccine.getCreatedAt() != null ? EventClientRepository.dateFormat.format(vaccine.getCreatedAt()) : null);
         return values;
@@ -194,11 +206,36 @@ public class VaccineRepository extends BaseRepository {
         }
         return s;
     }
+    public HashMap<String,String> getAddressIdentifier(String baseEntityId, String eventType){
+        Cursor cursor = null;
+        cursor = getReadableDatabase().query("event", null,
+                 " baseEntityId= ? AND eventType = ? ", new String[] {baseEntityId, eventType},
+                null, null, null, null);
+        try{
+            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                    String jsonStr = cursor.getString(cursor.getColumnIndex("json"));
+                    JSONObject clientJson = new JSONObject(jsonStr);
+                    String addessJson = clientJson.getString("identifiers");
+                addessJson = addessJson.replace("{","").replace("}","").replace("\"","");
+                 Map<String,String> properties = Splitter.on(",")
+                            .withKeyValueSeparator(":")
+                            .split(addessJson);
+                    return new HashMap<>(properties);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
+        if(cursor!=null) cursor.close();
+        return new HashMap<>();
+    }
 
     public List<Vaccine> findUnSyncedBeforeTime(int hours) {
         List<Vaccine> vaccines = new ArrayList<>();
         Cursor cursor = null;
-        try {
+        //try {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.HOUR_OF_DAY, -hours);
 
@@ -208,20 +245,39 @@ public class VaccineRepository extends BaseRepository {
                     UPDATED_AT_COLUMN + " < ? AND " + SYNC_STATUS + " = ? ", new String[] {time.toString(), TYPE_Unsynced},
                     null, null, null, null);
             vaccines = readAllVaccines(cursor);
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        } finally {
+//        } catch (Exception e) {
+//            Log.e(TAG, Log.getStackTraceString(e));
+//        } finally {
             if (cursor != null) {
                 cursor.close();
             }
+        //}
+        return vaccines;
+    }
+    public List<Vaccine> findUnSyncedVaccine() {
+        List<Vaccine> vaccines = new ArrayList<>();
+        Cursor cursor = null;
+        //try {
+
+
+        cursor = getReadableDatabase().query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS,
+                 SYNC_STATUS + " == ? ", new String[] {TYPE_Unsynced},
+                null, null, null, null);
+        vaccines = readAllVaccines(cursor);
+//        } catch (Exception e) {
+//            Log.e(TAG, Log.getStackTraceString(e));
+//        } finally {
+        if (cursor != null) {
+            cursor.close();
         }
+        //}
         return vaccines;
     }
 
     private List<Vaccine> readAllVaccines(Cursor cursor) {
         List<Vaccine> vaccines = new ArrayList<>();
 
-        try {
+       // try {
 
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
@@ -236,7 +292,7 @@ public class VaccineRepository extends BaseRepository {
                         try {
                             createdAt = EventClientRepository.dateFormat.parse(dateCreatedString);
                         } catch (ParseException e) {
-                            Log.e(TAG, Log.getStackTraceString(e));
+                            e.printStackTrace();
                         }
                     }
                     Vaccine vaccine = new Vaccine(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
@@ -259,17 +315,21 @@ public class VaccineRepository extends BaseRepository {
                     vaccine.setTeam(cursor.getString(cursor.getColumnIndex(TEAM)));
                     vaccine.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
                     vaccine.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILD_LOCATION_ID)));
-
+                    String invalidStr = cursor.getString(cursor.getColumnIndex(IS_INVALID));
+                    Log.v("VACCINE","invalidStr>>>>>>"+invalidStr);
+                    vaccine.setInvalid(invalidStr.equalsIgnoreCase("1"));
                     vaccines.add(vaccine);
 
                     cursor.moveToNext();
                 }
             }
-        } catch (Exception e) {
-
-        } finally {
-            cursor.close();
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//        } finally {
+//            cursor.close();
+//        }
+        if(cursor!=null) cursor.close();
         return vaccines;
     }
 
@@ -368,21 +428,21 @@ public class VaccineRepository extends BaseRepository {
     public Vaccine find(Long caseId) {
         Vaccine vaccine = null;
         Cursor cursor = null;
-        try {
+        //try {
             cursor = getReadableDatabase()
-                    .query(VACCINE_TABLE_NAME, VACCINE_TABLE_COLUMNS, ID_COLUMN + " = ?", new String[] {caseId.toString()},
+                    .query(VACCINE_TABLE_NAME, null, ID_COLUMN + " = ?", new String[] {caseId.toString()},
                             null, null, null, null);
             List<Vaccine> vaccines = readAllVaccines(cursor);
             if (!vaccines.isEmpty()) {
                 vaccine = vaccines.get(0);
             }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-        } finally {
+//        } catch (Exception e) {
+//            Log.e(TAG, e.getMessage(), e);
+//        } finally {
             if (cursor != null) {
                 cursor.close();
             }
-        }
+       // }
         return vaccine;
     }
 

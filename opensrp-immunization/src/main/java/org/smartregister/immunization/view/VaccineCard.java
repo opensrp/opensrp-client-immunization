@@ -18,6 +18,7 @@ import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.DisplayUtils;
 
@@ -37,10 +38,11 @@ public class VaccineCard extends LinearLayout {
     private ImageView statusIV;
     private TextView nameTV;
     private Button undoB;
+    private Button invalidB;
     private State state;
     private VaccineWrapper vaccineWrapper;
     private boolean isChildActive = true;
-
+    private boolean statusInvalidVaccine= false;
     public VaccineCard(Context context) {
         super(context);
         init(context);
@@ -53,7 +55,7 @@ public class VaccineCard extends LinearLayout {
         statusIV = findViewById(R.id.status_iv);
         nameTV = findViewById(R.id.name_tv);
         undoB = findViewById(R.id.undo_b);
-
+        invalidB = findViewById(R.id.invalid_b);
         //Init date formatters here to allow for dynamic language switching
         DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
         SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM",Locale.ENGLISH);
@@ -167,13 +169,26 @@ public class VaccineCard extends LinearLayout {
         }
         return null;
     }
-
+    private DateTime getVaccineDate() {
+        Log.v("VACCINE_NAME","getVaccineDate>>>>>:"+vaccineWrapper.getName()+":"+vaccineWrapper.getUpdatedVaccineDate());
+        return vaccineWrapper.getUpdatedVaccineDate();
+    }
+    private DateTime getVaccineDueDate() {
+        Log.v("VACCINE_NAME","getVaccineDueDate>>>>>:"+vaccineWrapper.getName()+":"+vaccineWrapper.getVaccineDate());
+        return vaccineWrapper.getVaccineDate();
+    }
+    public boolean isStatusInvalidVaccine() {
+        return statusInvalidVaccine;
+    }
     private void updateStateUi() {
+        statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
+        Log.e("INVALID_VACCINE","statusInvalidVaccine:"+statusInvalidVaccine);
         switch (state) {
             case NOT_DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
+                invalidB.setVisibility(GONE);
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getVaccineName());
@@ -182,6 +197,11 @@ public class VaccineCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_blue);
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
+                if(statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(GONE);
+                }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 String vaccineName = getVaccineName();
@@ -193,7 +213,12 @@ public class VaccineCard extends LinearLayout {
             case DONE_CAN_BE_UNDONE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setVisibility(VISIBLE);
-                undoB.setVisibility(VISIBLE);
+               // undoB.setVisibility(VISIBLE);
+                if(statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(GONE);
+                }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
 
@@ -208,6 +233,11 @@ public class VaccineCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setVisibility(VISIBLE);
                 undoB.setVisibility(GONE);
+                if(statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(GONE);
+                }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(getVaccineName() + " - " + DATE_FORMAT.format(getDateDone()));
@@ -216,6 +246,11 @@ public class VaccineCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_red);
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
+                if(statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(GONE);
+                }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
                 String vName = getVaccineName();
@@ -230,6 +265,11 @@ public class VaccineCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
+                if(statusInvalidVaccine){
+                    invalidB.setVisibility(VISIBLE);
+                }else{
+                    invalidB.setVisibility(GONE);
+                }
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(R.color.silver));
                 nameTV.setText(context.getResources().getString(R.string.expired_colon,getVaccineName()));

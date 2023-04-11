@@ -49,6 +49,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
+    private OnVaccineInvalidClickListener onVaccineInvalidClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
 
@@ -198,6 +199,10 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
                                         .isStatusForMoreThanThreeMonths()) {
                                     onUndoClick(immunizationRowCard);
                                 }
+                                if (immunizationRowCard.isEditmode() && !immunizationRowCard
+                                        .isStatusInvalidVaccine()) {
+                                    onInvalidClick(immunizationRowCard);
+                                }
                                 break;
                             default:
                                 break;
@@ -221,7 +226,11 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
             onVaccineUndoClickListener.onUndoClick(this, vaccineCard.getVaccineWrapper());
         }
     }
-
+    public void onInvalidClick(ImmunizationRowCard vaccineCard) {
+        if (onVaccineInvalidClickListener!= null) {
+            onVaccineInvalidClickListener.onInvalidClick(this, vaccineCard.getVaccineWrapper());
+        }
+    }
     public void toggleRecordAllTV() {
         if (vaccineCardAdapter.getDueVaccines().size() > 0) {
             recordAllTV.setVisibility(GONE);
@@ -232,6 +241,10 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
 
     public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
         this.onVaccineUndoClickListener = onVaccineUndoClickListener;
+    }
+
+    public void setOnVaccineInvalidClickListener(OnVaccineInvalidClickListener onVaccineInvalidClickListener) {
+        this.onVaccineInvalidClickListener = onVaccineInvalidClickListener;
     }
 
     public boolean isModalOpen() {
@@ -316,5 +329,8 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
 
     public interface OnVaccineUndoClickListener {
         void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine);
+    }
+    public interface OnVaccineInvalidClickListener {
+        void onInvalidClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine);
     }
 }

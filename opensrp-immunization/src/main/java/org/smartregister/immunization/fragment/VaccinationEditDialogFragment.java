@@ -206,6 +206,9 @@ public class VaccinationEditDialogFragment extends DialogFragment {
                 }
 
                 vaccinationNameLayout.addView(vaccinationName);
+                if(vaccineWrapper.isInvalid()){
+                    vaccinateEarlier.setVisibility(View.GONE);
+                }
             }
 
             vaccinateToday.setText(R.string.vaccines_done_today);

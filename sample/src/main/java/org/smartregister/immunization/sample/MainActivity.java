@@ -38,6 +38,7 @@ import org.smartregister.immunization.fragment.ServiceDialogFragment;
 import org.smartregister.immunization.fragment.UndoServiceDialogFragment;
 import org.smartregister.immunization.fragment.UndoVaccinationDialogFragment;
 import org.smartregister.immunization.fragment.VaccinationDialogFragment;
+import org.smartregister.immunization.fragment.VaccinationEditDialogFragment;
 import org.smartregister.immunization.listener.ServiceActionListener;
 import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -56,6 +57,7 @@ import org.smartregister.util.DateUtil;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,7 +102,13 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                         .setAction("Action", null).show();
             }
         });
+
+
+
+        updateViews();
+        startServices();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -125,24 +133,22 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (vaccineGroups != null) {
-            LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
-            vaccineGroupCanvasLL.removeAllViews();
-            vaccineGroups = null;
-        }
-
-        if (serviceGroups != null) {
-            LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
-            serviceGroupCanvasLL.removeAllViews();
-            serviceGroups = null;
-        }
-        updateViews();
-
-        startServices();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (vaccineGroups != null) {
+//            LinearLayout vaccineGroupCanvasLL = findViewById(R.id.vaccine_group_canvas_ll);
+//            vaccineGroupCanvasLL.removeAllViews();
+//            vaccineGroups = null;
+//        }
+//
+//        if (serviceGroups != null) {
+//            LinearLayout serviceGroupCanvasLL = findViewById(R.id.service_group_canvas_ll);
+//            serviceGroupCanvasLL.removeAllViews();
+//            serviceGroups = null;
+//        }
+//
+//    }
 
     private boolean isDataOk() {
         return childDetails != null && childDetails.getDetails() != null;
@@ -316,6 +322,13 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
                 addVaccineUndoDialogFragment(vaccineGroup, vaccine);
             }
         });
+        curGroup.setOnVaccineInvalidClickListener(new VaccineGroup.OnVaccineInvalidClickListener() {
+            @Override
+            public void onInvalidClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine) {
+                vaccine.setInvalid(true);
+                addVaccineUndoDialogFragment(vaccineGroup, vaccine);
+            }
+        });
 
         LinearLayout parent;
         if (canvasId == -1) {
@@ -343,9 +356,18 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
 
         ft.addToBackStack(null);
         vaccineGroup.setModalOpen(true);
+        String dobString = Utils.getValue(childDetails.getColumnmaps(), "dob", false);
+        Date dob = Calendar.getInstance().getTime();
+        if (!TextUtils.isEmpty(dobString)) {
+            DateTime dateTime = new DateTime(dobString);
+            dob = dateTime.toDate();
+        }
 
-        UndoVaccinationDialogFragment undoVaccinationDialogFragment = UndoVaccinationDialogFragment.newInstance(vaccineWrapper);
-        undoVaccinationDialogFragment.show(ft, DIALOG_TAG);
+        List<Vaccine> vaccineList = ImmunizationLibrary.getInstance().vaccineRepository()
+                .findByEntityId(childDetails.entityId());
+        if (vaccineList == null) vaccineList = new ArrayList<>();
+        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(this, dob, vaccineList, Arrays.asList(vaccineWrapper), vaccineGroup, true);
+        vaccinationDialogFragment.show(ft, DIALOG_TAG);
     }
 
     private void addServiceUndoDialogFragment(ServiceGroup serviceGroup, ServiceWrapper serviceWrapper) {
@@ -466,6 +488,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         if (tag.getDbKey() != null) {
             vaccine = vaccineRepository.find(tag.getDbKey());
         }
+        if(tag.isInvalid())vaccine.setInvalid(true);
         vaccine.setBaseEntityId(childDetails.entityId());
         vaccine.setName(tag.getName());
         vaccine.setDate(tag.getUpdatedVaccineDate().toDate());
@@ -477,6 +500,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         } else {
             vaccine.setCalculation(-1);
         }
+        vaccine.setInvalid(tag.isInvalid());
 
         vaccine.setTeam("testTeam");
         vaccine.setTeamId("testTeamId");

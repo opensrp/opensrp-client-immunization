@@ -51,10 +51,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
+    private OnVaccineInvalidClickListener onVaccineInvalidClickListener;
     private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
     private boolean modalOpen;
     private String type;
-
+    private boolean isInvalid = false;
     private boolean isChildActive = true;
     private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
     private ImmunizationLibrary immunizationLibraryInstance;
@@ -224,8 +225,15 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                                 }
                                 break;
                             case DONE_CAN_BE_UNDONE:
-                                onUndoClick(vaccineCard);
+                            case DONE_CAN_NOT_BE_UNDONE:
+                                if(vaccineCard.isStatusInvalidVaccine()){
+                                    onInvalidClick(vaccineCard);
+                                }else{
+                                  //  onUndoClick(vaccineCard);
+                                }
+
                                 break;
+
                             default:
                                 break;
                         }
@@ -247,7 +255,11 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
             onVaccineUndoClickListener.onUndoClick(this, vaccineCard.getVaccineWrapper());
         }
     }
-
+    public void onInvalidClick(VaccineCard vaccineCard) {
+        if (onVaccineInvalidClickListener != null) {
+            onVaccineInvalidClickListener.onInvalidClick(this, vaccineCard.getVaccineWrapper());
+        }
+    }
     public void toggleRecordAllTV() {
         if (vaccineCardAdapter.getDueVaccines().size() > 0 && isChildActive) {
             recordAllTV.setVisibility(VISIBLE);
@@ -259,7 +271,9 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     public void setOnVaccineUndoClickListener(OnVaccineUndoClickListener onVaccineUndoClickListener) {
         this.onVaccineUndoClickListener = onVaccineUndoClickListener;
     }
-
+    public void setOnVaccineInvalidClickListener(OnVaccineInvalidClickListener onVaccineInvalidClickListener) {
+        this.onVaccineInvalidClickListener = onVaccineInvalidClickListener;
+    }
     public void setChildActive(boolean childActive) {
         isChildActive = childActive;
     }
@@ -316,6 +330,14 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         this.modalOpen = modalOpen;
     }
 
+    public boolean isInvalid() {
+        return isInvalid;
+    }
+
+    public void setInvalid(boolean invalid) {
+        isInvalid = invalid;
+    }
+
     public void updateWrapperStatus(ArrayList<VaccineWrapper> wrappers, String child) {
         if (vaccineCardAdapter != null) {
             vaccineCardAdapter.updateWrapperStatus(wrappers, child, childDetails);
@@ -369,6 +391,10 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
 
     public interface OnVaccineUndoClickListener {
         void onUndoClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine);
+
+    }
+    public interface OnVaccineInvalidClickListener {
+        void onInvalidClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine);
 
     }
 }

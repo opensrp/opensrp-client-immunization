@@ -36,9 +36,10 @@
 
     <Button
         android:id="@+id/undo_b"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toLeftOf="@+id/invalid_b"
         android:layout_centerVertical="true"
         android:background="@drawable/undo_background"
         android:clickable="false"
@@ -50,5 +51,21 @@
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/invalid_b"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/due_vaccine_red_bg"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="@string/invalid"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
 </RelativeLayout>
