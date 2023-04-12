@@ -171,21 +171,19 @@ public class VaccineCardAdapter extends BaseAdapter {
         List<Alert> alertList = getAlertList();
 
         Map<String, Date> recievedVaccines = VaccinatorUtils.receivedVaccines(vaccineList);
-
         String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
         List<Map<String, Object>> sch = generateScheduleList(type, new DateTime(dobString), recievedVaccines, alertList);
 
 
         for (Map<String, Object> m : sch) {
             VaccineRepo.Vaccine vaccine = (VaccineRepo.Vaccine) m.get("vaccine");
-            if (tag.getName().toLowerCase().contains(vaccine.display().toLowerCase())) {
+            if (tag.getName().equalsIgnoreCase(vaccine.display().toLowerCase())) {
 
                 //Add exception for bcg 2
                 if (tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg2.display()) && !tag.getName()
                         .equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
-
                 if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
                         || vaccine.equals(VaccineRepo.Vaccine.mr2)
                         || vaccine.equals(VaccineRepo.Vaccine.measles1)
@@ -194,6 +192,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                 }
                 tag.setStatus(m.get("status").toString());
                 tag.setAlert((Alert) m.get("alert"));
+
             }
         }
     }

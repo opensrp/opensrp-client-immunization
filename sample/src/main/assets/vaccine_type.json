@@ -28,6 +28,13 @@
     "openmrs_dose_concept_id": ""
   },
   {
+    "doses": "3",
+    "name": "fIPV",
+    "openmrs_parent_entity_id": "",
+    "openmrs_date_concept_id": "",
+    "openmrs_dose_concept_id": ""
+  },
+  {
     "doses": "1",
     "name": "Rota",
     "openmrs_parent_entity_id": "",

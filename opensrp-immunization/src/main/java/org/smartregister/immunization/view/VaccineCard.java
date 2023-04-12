@@ -170,11 +170,9 @@ public class VaccineCard extends LinearLayout {
         return null;
     }
     private DateTime getVaccineDate() {
-        Log.v("VACCINE_NAME","getVaccineDate>>>>>:"+vaccineWrapper.getName()+":"+vaccineWrapper.getUpdatedVaccineDate());
         return vaccineWrapper.getUpdatedVaccineDate();
     }
     private DateTime getVaccineDueDate() {
-        Log.v("VACCINE_NAME","getVaccineDueDate>>>>>:"+vaccineWrapper.getName()+":"+vaccineWrapper.getVaccineDate());
         return vaccineWrapper.getVaccineDate();
     }
     public boolean isStatusInvalidVaccine() {
@@ -182,7 +180,7 @@ public class VaccineCard extends LinearLayout {
     }
     private void updateStateUi() {
         statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
-        Log.e("INVALID_VACCINE","statusInvalidVaccine:"+statusInvalidVaccine);
+        Log.e("VACCINE","updateStateUi>>state:"+state);
         switch (state) {
             case NOT_DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
