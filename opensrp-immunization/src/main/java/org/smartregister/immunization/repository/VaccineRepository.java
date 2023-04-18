@@ -211,11 +211,15 @@ public class VaccineRepository extends BaseRepository {
         cursor = getReadableDatabase().query("event", null,
                  " baseEntityId= ? AND eventType = ? ", new String[] {baseEntityId, eventType},
                 null, null, null, null);
+        Log.v("vaccine","getAddressIdentifier>>baseEntityId:"+baseEntityId+":eventType:"+eventType);
         try{
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                     String jsonStr = cursor.getString(cursor.getColumnIndex("json"));
+                Log.v("vaccine","jsonStr>>"+jsonStr);
                     JSONObject clientJson = new JSONObject(jsonStr);
                     String addessJson = clientJson.getString("identifiers");
+
+                    Log.v("vaccine","addessJson>>"+addessJson);
                 addessJson = addessJson.replace("{","").replace("}","").replace("\"","");
                  Map<String,String> properties = Splitter.on(",")
                             .withKeyValueSeparator(":")
