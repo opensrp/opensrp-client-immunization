@@ -205,9 +205,10 @@ public class VaccineCard extends LinearLayout {
                 nameTV.setVisibility(VISIBLE);
                 nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
 
-                nameTV.setText(String.format(context.getString(R.string.record_), vaccineName));
+                nameTV.setText(String.format(context.getString(R.string.record_due_), vaccineName, DATE_FORMAT.format(getDateDue())));
                 if (vaccineName.toLowerCase().contains("measles") || vaccineName.toLowerCase().contains("mr")) {
-                    nameTV.setText(vaccineName);
+                    nameTV.setText(String.format(context.getString(R.string.mr_due_),
+                            vaccineName, DATE_FORMAT.format(getDateDue())));
                 }
                 break;
             case DONE_CAN_BE_UNDONE:
