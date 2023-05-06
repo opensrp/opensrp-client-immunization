@@ -21,7 +21,7 @@ import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.fragment.ServiceEditDialogFragment;
-import org.smartregister.immunization.fragment.VaccinationEditDialogFragment;
+import org.smartregister.immunization.fragment.VaccinationDialogFragment;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
 import org.smartregister.immunization.repository.VaccineRepository;
@@ -131,7 +131,9 @@ public class ImmunizationFragment extends Fragment {
             curGroup.setOnVaccineUndoClickListener(new ImmunizationRowGroup.OnVaccineUndoClickListener() {
                 @Override
                 public void onUndoClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine) {
-                    addVaccinationDialogFragment(Arrays.asList(vaccine), vaccineGroup);
+                    ArrayList<VaccineWrapper> vaccineWrappers = new ArrayList<>();
+                    vaccineWrappers.add(vaccine);
+                    addVaccinationDialogFragment(vaccineWrappers, vaccineGroup);
 
                 }
             });
@@ -143,8 +145,9 @@ public class ImmunizationFragment extends Fragment {
             invalidGroup.setOnVaccineInvalidClickListener(new ImmunizationRowGroup.OnVaccineInvalidClickListener() {
                 @Override
                 public void onInvalidClick(ImmunizationRowGroup vaccineGroup, VaccineWrapper vaccine) {
-                    vaccine.setInvalid(true);
-                    addVaccinationDialogFragment(Arrays.asList(vaccine), vaccineGroup);
+                    ArrayList<VaccineWrapper> vaccineWrappers = new ArrayList<>();
+                    vaccineWrappers.add(vaccine);
+                    addVaccinationDialogFragment(vaccineWrappers, vaccineGroup);
 
                 }
             });
@@ -216,7 +219,7 @@ public class ImmunizationFragment extends Fragment {
 
     }
 
-    public void addVaccinationDialogFragment(List<VaccineWrapper> vaccineWrappers, ImmunizationRowGroup vaccineGroup) {
+    public void addVaccinationDialogFragment(ArrayList<VaccineWrapper> vaccineWrappers, ImmunizationRowGroup vaccineGroup) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         if (prev != null) {
@@ -234,9 +237,10 @@ public class ImmunizationFragment extends Fragment {
         List<Vaccine> vaccineList = ImmunizationLibrary.getInstance().vaccineRepository()
                 .findByEntityId(childDetails.entityId());
         if (vaccineList == null) vaccineList = new ArrayList<>();
-
-        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(getActivity(), dob, vaccineList, vaccineWrappers, vaccineGroup, true);
+        VaccinationDialogFragment vaccinationDialogFragment = VaccinationDialogFragment.newInstance(dob, vaccineList, vaccineWrappers, true);
         vaccinationDialogFragment.show(ft, DIALOG_TAG);
+//        VaccinationEditDialogFragment vaccinationDialogFragment = VaccinationEditDialogFragment.newInstance(getActivity(), dob, vaccineList, vaccineWrappers, vaccineGroup, true);
+//        vaccinationDialogFragment.show(ft, DIALOG_TAG);
     }
 
     public void addServiceDialogFragment(ServiceWrapper serviceWrapper, ServiceRowGroup serviceRowGroup) {

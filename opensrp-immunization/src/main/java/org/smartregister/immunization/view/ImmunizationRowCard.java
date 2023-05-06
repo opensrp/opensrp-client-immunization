@@ -31,8 +31,8 @@ public class ImmunizationRowCard extends LinearLayout {
     private Context context;
     private Button statusIV;
     private TextView nameTV;
-    private TextView StatusTV;
-    private Button undoB,invalidB;
+    private TextView StatusTV,invalidB;
+    private Button undoB;
     private State state;
     private VaccineWrapper vaccineWrapper;
     private boolean editmode;

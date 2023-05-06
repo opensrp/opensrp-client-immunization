@@ -135,6 +135,14 @@ public class ImmunizationRowAdapter extends BaseAdapter {
                             .equalsIgnoreCase(vaccine.getName())) {
                         continue;
                     }
+                    Log.v("INVALID_VACCINE","tag.getName()>>>"+tag.getName());
+                    if(tag.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv2.display())){
+                        Log.v("INVALID_VACCINE","updateWrapper>>"+tag.getName()+":vaccine:"+vaccine.getName()+""+vaccine.isInvalid());
+                        if(vaccine.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv1.display()) && vaccine.isInvalid()){
+                            Log.v("INVALID_VACCINE","invalid>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                            continue;
+                        }
+                    }
 
                     long diff = vaccine.getUpdatedAt() - vaccine.getDate().getTime();
                     if (diff > 0 && TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 1) {

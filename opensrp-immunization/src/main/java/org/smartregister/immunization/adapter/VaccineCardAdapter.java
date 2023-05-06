@@ -1,5 +1,6 @@
 package org.smartregister.immunization.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,6 +20,7 @@ import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.ImageUtils;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.immunization.view.VaccineCard;
 import org.smartregister.immunization.view.VaccineGroup;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static org.smartregister.immunization.util.IMConstants.isInvalidVaccineMap;
 import static org.smartregister.immunization.util.VaccinatorUtils.generateScheduleList;
 import static org.smartregister.util.Utils.getName;
 import static org.smartregister.util.Utils.getValue;
@@ -47,7 +50,6 @@ public class VaccineCardAdapter extends BaseAdapter {
     private HashMap<String, VaccineCard> vaccineCards;
     private List<Vaccine> vaccineList;
     private List<Alert> alertList;
-
     private boolean isChildActive = true;
     private int remainingAsyncTasks;
     private VaccineCardAdapterLoadingListener vaccineCardAdapterLoadingListener;
@@ -165,6 +167,7 @@ public class VaccineCardAdapter extends BaseAdapter {
         }
     }
 
+
     public void updateWrapperStatus(VaccineWrapper tag, String type, CommonPersonObjectClient childDetails) {
         List<Vaccine> vaccineList = getVaccineList();
 
@@ -184,6 +187,15 @@ public class VaccineCardAdapter extends BaseAdapter {
                         .equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
+                boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(tag.getUpdatedVaccineDate(),tag.getVaccineDate());
+
+                if(tag.isInvalid() || statusInvalidVaccine){
+                    isInvalidVaccineMap.put(tag.getName(),true);
+                }else{
+                    isInvalidVaccineMap.remove(tag.getName());
+                }
+                Log.v("INVALID_VACCINE","updateWrapperStatus>>"+tag.getName()+":vaccine:"+vaccine.display()+"isInvalid:"+tag.isInvalid()+":inValidVaccineMap>"+ isInvalidVaccineMap);
+
                 if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
                         || vaccine.equals(VaccineRepo.Vaccine.mr2)
                         || vaccine.equals(VaccineRepo.Vaccine.measles1)
@@ -225,6 +237,7 @@ public class VaccineCardAdapter extends BaseAdapter {
                         tag.setUpdatedVaccineDate(new DateTime(vaccine.getDate()), true);
                     }
                     tag.setDbKey(vaccine.getId());
+                    tag.setInvalid(vaccine.isInvalid());
                     tag.setSynced(vaccine.getSyncStatus() != null && vaccine.getSyncStatus()
                             .equals(VaccineRepository.TYPE_Synced));
                     if (tag.getName().contains("/")) {
@@ -264,6 +277,7 @@ public class VaccineCardAdapter extends BaseAdapter {
         checkRemainingAsyncTasksStatus();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class VaccineRowTask extends AsyncTask<Void, Void, VaccineWrapper> {
 
         private VaccineCard vaccineCard;

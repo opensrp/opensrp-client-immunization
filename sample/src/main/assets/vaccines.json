@@ -29,7 +29,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ],
           "conditions": [
@@ -65,7 +65,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -101,7 +101,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+5y"
+              "offset": "+18m"
             }
           ]
         }
@@ -130,7 +130,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+5y"
+              "offset": "+18m"
             }
           ],
           "conditions": [
@@ -159,14 +159,13 @@
           "due": [
             {
               "reference": "dob",
-              "offset": "+42d",
               "window": "+10d"
             }
           ],
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -196,7 +195,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -227,14 +226,13 @@
             {
               "reference": "prerequisite",
               "prerequisite": "OPV 1",
-              "offset": "+28d",
               "window": "+10d"
             }
           ],
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -258,14 +256,13 @@
             {
               "reference": "prerequisite",
               "prerequisite": "Penta 1",
-              "offset": "+28d",
               "window": "+10d"
             }
           ],
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -289,14 +286,13 @@
             {
               "reference": "prerequisite",
               "prerequisite": "PCV 1",
-              "offset": "+28d",
               "window": "+10d"
             }
           ],
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -334,7 +330,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -364,7 +360,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -395,7 +391,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -426,7 +422,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -463,7 +459,7 @@
           "expiry": [
             {
               "reference": "dob",
-              "offset": "+2y"
+              "offset": "+18m"
             }
           ]
         }
@@ -504,7 +500,7 @@
             "expiry": [
               {
                 "reference": "dob",
-                "offset": "+2y"
+                "offset": "+18m"
               }
             ]
           }

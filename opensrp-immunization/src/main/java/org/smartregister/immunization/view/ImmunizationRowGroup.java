@@ -199,10 +199,10 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
                                         .isStatusForMoreThanThreeMonths()) {
                                     onUndoClick(immunizationRowCard);
                                 }
-                                if (immunizationRowCard.isEditmode() && !immunizationRowCard
-                                        .isStatusInvalidVaccine()) {
-                                    onInvalidClick(immunizationRowCard);
-                                }
+//                                if (immunizationRowCard.isEditmode() && !immunizationRowCard
+//                                        .isStatusInvalidVaccine()) {
+//                                    onInvalidClick(immunizationRowCard);
+//                                }
                                 break;
                             default:
                                 break;

@@ -1,7 +1,9 @@
 package org.smartregister.immunization.view;
 
+import static org.smartregister.immunization.util.IMConstants.isInvalidVaccineMap;
+
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -15,15 +17,16 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.R;
+import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
-import org.smartregister.util.DisplayUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 
@@ -38,11 +41,11 @@ public class VaccineCard extends LinearLayout {
     private ImageView statusIV;
     private TextView nameTV;
     private Button undoB;
-    private Button invalidB;
+    private TextView invalidB;
     private State state;
     private VaccineWrapper vaccineWrapper;
     private boolean isChildActive = true;
-    private boolean statusInvalidVaccine= false;
+//    private boolean statusInvalidVaccine= false;
     public VaccineCard(Context context) {
         super(context);
         init(context);
@@ -135,8 +138,23 @@ public class VaccineCard extends LinearLayout {
                     this.state = State.DUE;
                 } */
             }
+            //need to ignore invalid vaccine. applycable for next vaccines
+            for (String keys : isInvalidVaccineMap.keySet()){
+                Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":map:"+isInvalidVaccineMap);
+                if(!vaccineWrapper.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv0.display())){
+                    if(!keys.equalsIgnoreCase(vaccineWrapper.getName())){
+                        Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":"+keys.contains(vaccineWrapper.getName()));
+                        if(keys.contains(vaccineWrapper.getName().split(" ")[0])){
+                            Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
+                            state = State.NOT_DUE;
+                        }
+                    }
+                }
+
+            }
             updateStateUi();
             updateChildsActiveStatus();
+
         }
     }
 
@@ -169,19 +187,18 @@ public class VaccineCard extends LinearLayout {
         }
         return null;
     }
-    private DateTime getVaccineDate() {
+    public DateTime getVaccineDate() {
         return vaccineWrapper.getUpdatedVaccineDate();
     }
-    private DateTime getVaccineDueDate() {
+    public DateTime getVaccineDueDate() {
         return vaccineWrapper.getVaccineDate();
     }
-    public boolean isStatusInvalidVaccine() {
-        return statusInvalidVaccine;
-    }
+    @SuppressLint("SetTextI18n")
     private void updateStateUi() {
-        statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
-        Log.e("VACCINE","updateStateUi>>state:"+state);
+        boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
         String vaccineName = getVaccineName();
+        Log.e("VACCINE","updateStateUi>>state:"+state+":vaccineName:"+vaccineName+":isInvalid:"+vaccineWrapper.isInvalid()+":statusInvalidVaccine:"+statusInvalidVaccine);
+
         switch (state) {
             case NOT_DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -212,36 +229,64 @@ public class VaccineCard extends LinearLayout {
                 }
                 break;
             case DONE_CAN_BE_UNDONE:
-                setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setVisibility(VISIBLE);
-               // undoB.setVisibility(VISIBLE);
+
                 if(statusInvalidVaccine && vaccineName!=null&&!vaccineName.contains("tt")){
-                    invalidB.setVisibility(VISIBLE);
+
+                    invalidB.setText("Invalid Dose given at \n"+DATE_FORMAT.format(getDateDone()));
+                    nameTV.setText(vaccineName+" - Due "+DATE_FORMAT.format(getDateDue()));
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    if(VaccinateActionUtils.isValidAfterInvalid(getVaccineDueDate())){
+                        nameTV.setText(String.format(context.getString(R.string.record_due_), vaccineName, DATE_FORMAT.format(getDateDue())));
+                        nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
+                        setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                        invalidB.setVisibility(VISIBLE);
+                    }else{
+                        setBackgroundResource(R.drawable.vaccine_card_background_white);
+                        invalidB.setClickable(false);
+                        invalidB.setVisibility(VISIBLE);
+                    }
+                    statusIV.setVisibility(GONE);
                 }else{
                     invalidB.setVisibility(GONE);
+                    nameTV.setText(vaccineName + " - " + DATE_FORMAT.format(getDateDone()));
+                    nameTV.setVisibility(VISIBLE);
+                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    statusIV.setVisibility(VISIBLE);
+                    undoB.setVisibility(GONE);
                 }
-                nameTV.setVisibility(VISIBLE);
-                nameTV.setTextColor(context.getResources().getColor(R.color.silver));
 
-                SimpleDateFormat dateFormatToUse = SHORT_DATE_FORMAT;
-                if (DisplayUtils.getScreenSize((Activity) context) > 7.2) {
-                    dateFormatToUse = DATE_FORMAT;
-                }
 
-                nameTV.setText(vaccineName + " - " + dateFormatToUse.format(getDateDone()));
                 break;
             case DONE_CAN_NOT_BE_UNDONE:
-                setBackgroundResource(R.drawable.vaccine_card_background_white);
-                statusIV.setVisibility(VISIBLE);
-                undoB.setVisibility(GONE);
-                if(statusInvalidVaccine&& vaccineName!=null&&!vaccineName.contains("tt")){
-                    invalidB.setVisibility(VISIBLE);
+
+                if(statusInvalidVaccine && vaccineName!=null&&!vaccineName.contains("tt")){
+
+                    invalidB.setText("Invalid Dose given at \n"+DATE_FORMAT.format(getDateDone()));
+                    nameTV.setText(vaccineName+" - Due "+DATE_FORMAT.format(getDateDue()));
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    if(VaccinateActionUtils.isValidAfterInvalid(getVaccineDueDate())){
+                        nameTV.setText(String.format(context.getString(R.string.record_due_), vaccineName, DATE_FORMAT.format(getDateDue())));
+                        nameTV.setTextColor(context.getResources().getColor(android.R.color.white));
+                        setBackgroundResource(R.drawable.vaccine_card_background_blue);
+                        invalidB.setVisibility(VISIBLE);
+                    }else{
+                        setBackgroundResource(R.drawable.vaccine_card_background_white);
+                        invalidB.setClickable(false);
+                        invalidB.setVisibility(VISIBLE);
+                    }
+                    statusIV.setVisibility(GONE);
                 }else{
                     invalidB.setVisibility(GONE);
+                    nameTV.setText(vaccineName + " - " + DATE_FORMAT.format(getDateDone()));
+                    nameTV.setVisibility(VISIBLE);
+                    nameTV.setTextColor(context.getResources().getColor(R.color.silver));
+                    setBackgroundResource(R.drawable.vaccine_card_background_white);
+                    statusIV.setVisibility(VISIBLE);
+                    undoB.setVisibility(GONE);
                 }
-                nameTV.setVisibility(VISIBLE);
-                nameTV.setTextColor(context.getResources().getColor(R.color.silver));
-                nameTV.setText(vaccineName + " - " + DATE_FORMAT.format(getDateDone()));
+
+
                 break;
             case OVERDUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_red);

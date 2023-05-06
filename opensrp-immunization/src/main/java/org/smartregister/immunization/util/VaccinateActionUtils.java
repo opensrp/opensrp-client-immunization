@@ -514,6 +514,9 @@ public class VaccinateActionUtils {
     public static boolean isInvalidVaccine(DateTime vaccineDate, DateTime dueDate) {
         return vaccineDate!=null && dueDate!=null && vaccineDate.getMillis() - dueDate.getMillis()<0;
     }
+    public static boolean isValidAfterInvalid(DateTime dueDate){
+        return dueDate != null && dueDate.getMillis() < new DateTime().getMillis();
+    }
     public static boolean moreThanThreeMonths(Date createdAt) {
         return createdAt != null && org.smartregister.util.DateUtil.checkIfDateThreeMonthsOlder(createdAt);
     }

@@ -319,14 +319,18 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         curGroup.setOnVaccineUndoClickListener(new VaccineGroup.OnVaccineUndoClickListener() {
             @Override
             public void onUndoClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine) {
-                addVaccineUndoDialogFragment(vaccineGroup, vaccine);
+                ArrayList<VaccineWrapper> vaccineWrappers = new ArrayList<>();
+                vaccineWrappers.add(vaccine);
+                addVaccinationDialogFragment(vaccineWrappers, vaccineGroup);
             }
         });
         curGroup.setOnVaccineInvalidClickListener(new VaccineGroup.OnVaccineInvalidClickListener() {
             @Override
             public void onInvalidClick(VaccineGroup vaccineGroup, VaccineWrapper vaccine) {
-                vaccine.setInvalid(true);
-                addVaccineUndoDialogFragment(vaccineGroup, vaccine);
+               // addVaccineUndoDialogFragment(vaccineGroup, vaccine);
+                ArrayList<VaccineWrapper> vaccineWrappers = new ArrayList<>();
+                vaccineWrappers.add(vaccine);
+                addVaccinationDialogFragment(vaccineWrappers, vaccineGroup);
             }
         });
 
@@ -492,6 +496,7 @@ public class MainActivity extends AppCompatActivity implements VaccinationAction
         vaccine.setBaseEntityId(childDetails.entityId());
         vaccine.setName(tag.getName());
         vaccine.setDate(tag.getUpdatedVaccineDate().toDate());
+        vaccine.setVaccineDueDate(tag.getVaccineDate());
         vaccine.setAnmId(ImmunizationLibrary.getInstance().context().allSharedPreferences().fetchRegisteredANM());
 
         String lastChar = vaccine.getName().substring(vaccine.getName().length() - 1);

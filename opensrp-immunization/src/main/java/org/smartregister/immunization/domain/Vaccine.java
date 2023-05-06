@@ -1,5 +1,7 @@
 package org.smartregister.immunization.domain;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -26,6 +28,7 @@ public class Vaccine {
     private String formSubmissionId;
     private Integer outOfCatchment;
     private Date createdAt;
+    private DateTime vaccineDueDate;
     private boolean isInvalid;
 
     public Vaccine() {
@@ -94,6 +97,14 @@ public class Vaccine {
 
     public void setProgramClientId(String programClientId) {
         this.programClientId = programClientId;
+    }
+
+    public void setVaccineDueDate(DateTime vaccineDueDate) {
+        this.vaccineDueDate = vaccineDueDate;
+    }
+
+    public DateTime getVaccineDueDate() {
+        return vaccineDueDate;
     }
 
     public HashMap<String, String> getIdentifiers() {

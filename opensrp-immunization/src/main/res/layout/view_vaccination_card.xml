@@ -52,20 +52,20 @@
         android:textSize="14sp"
         android:visibility="invisible" />
 
-    <Button
+    <TextView
         android:id="@+id/invalid_b"
-        android:layout_width="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/due_vaccine_red_bg"
-        android:clickable="false"
+        android:background="@drawable/invalid_vaccine_bg"
         android:focusable="false"
+        android:padding="5dp"
         android:focusableInTouchMode="false"
         android:text="@string/invalid"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
+        android:textSize="10sp"
         android:visibility="gone" />
 
 </RelativeLayout>

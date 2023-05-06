@@ -1,5 +1,6 @@
 package org.smartregister.immunization.view;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -22,6 +23,7 @@ import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.listener.VaccineCardAdapterLoadingListener;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.util.Utils;
 
@@ -29,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +68,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         init(context);
     }
 
+    @SuppressLint("SimpleDateFormat")
     private void init(Context context) {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -226,11 +230,16 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                                 break;
                             case DONE_CAN_BE_UNDONE:
                             case DONE_CAN_NOT_BE_UNDONE:
-                                if(vaccineCard.isStatusInvalidVaccine()){
+                                boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(vaccineCard.getVaccineDate(),vaccineCard.getVaccineDueDate());
+
+                                if(statusInvalidVaccine && VaccinateActionUtils.isValidAfterInvalid(vaccineCard.getVaccineDueDate())){
                                     onInvalidClick(vaccineCard);
-                                }else{
-                                  //  onUndoClick(vaccineCard);
                                 }
+//                                if(vaccineCard.isStatusInvalidVaccine()){
+//                                    onInvalidClick(vaccineCard);
+//                                }else{
+//                                  //  onUndoClick(vaccineCard);
+//                                }
 
                                 break;
 

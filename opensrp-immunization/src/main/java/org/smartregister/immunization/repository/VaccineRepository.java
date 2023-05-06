@@ -10,12 +10,14 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ei.drishti.dto.AlertStatus;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
+import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
@@ -120,7 +122,13 @@ public class VaccineRepository extends BaseRepository {
             if (StringUtils.isBlank(vaccine.getFormSubmissionId())) {
                 vaccine.setFormSubmissionId(generateRandomUUIDString());
             }
-
+            boolean isInvalid = VaccinateActionUtils.isInvalidVaccine(  new DateTime(vaccine.getDate()),vaccine.getVaccineDueDate());
+            Log.v("SAVE_VACCINE","isInvalid>>>"+isInvalid);
+            if(isInvalid){
+                vaccine.setInvalid(true);
+            }else{
+                vaccine.setInvalid(false);
+            }
             if (vaccine.getUpdatedAt() == null) {
                 vaccine.setUpdatedAt(Calendar.getInstance().getTimeInMillis());
             }

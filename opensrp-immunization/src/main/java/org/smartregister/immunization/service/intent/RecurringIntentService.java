@@ -124,8 +124,8 @@ public class RecurringIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.VALUE, calculation);
                     jsonArray.put(jsonObject);
 
-                    if (!(serviceType.getDateEntity().equalsIgnoreCase(ENCOUNTER) && serviceType.getDateEntityId()
-                            .equalsIgnoreCase(ENCOUNTER_DATE))) {
+//                    if (!(serviceType.getDateEntity().equalsIgnoreCase(ENCOUNTER) && serviceType.getDateEntityId()
+//                            .equalsIgnoreCase(ENCOUNTER_DATE))) {
                         jsonObject = new JSONObject();
                         jsonObject.put(JsonFormUtils.KEY, serviceRecordName + "_date");
                         jsonObject.put(JsonFormUtils.OPENMRS_ENTITY, CONCEPT);
@@ -133,7 +133,7 @@ public class RecurringIntentService extends IntentService {
                         jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, DATE_DATA_TYPE);
                         jsonObject.put(JsonFormUtils.VALUE, formattedDate);
                         jsonArray.put(jsonObject);
-                    }
+                    //}
 
                     if (itnHasNet) {
                         jsonObject = new JSONObject();
