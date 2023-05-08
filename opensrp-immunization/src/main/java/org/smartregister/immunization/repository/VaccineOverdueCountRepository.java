@@ -13,16 +13,18 @@ import timber.log.Timber;
 public class VaccineOverdueCountRepository extends BaseRepository {
 
     public static final String TABLE_NAME = "vaccine_overdue_count";
+    public static final String STATUS = "status";
 
     public static final String CREATE_TABLE_SQL = "CREATE TABLE " + TABLE_NAME + "("
             + VaccineRepository.BASE_ENTITY_ID + " VARCHAR NOT NULL,"
             + "UNIQUE(" + VaccineRepository.BASE_ENTITY_ID + ") ON CONFLICT REPLACE)";
-
+    public static final String ADD_STATUS_COLUMN = "ALTER TABLE " + TABLE_NAME + " ADD " + STATUS + " VARCHAR;";
     @VisibleForTesting
-    protected static final String UPDATE_QUERY_SQL = "INSERT INTO " + TABLE_NAME + "(base_entity_id) values ( ? ) ON conflict(base_entity_id) do nothing;";
+    protected static final String UPDATE_QUERY_SQL = "INSERT OR REPLACE INTO " + TABLE_NAME + "(base_entity_id, status) values ( ? , ? );";
 
     public static void createTable(@NonNull SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_SQL);
+        database.execSQL(ADD_STATUS_COLUMN);
     }
 
     /**
@@ -40,9 +42,9 @@ public class VaccineOverdueCountRepository extends BaseRepository {
      *
      * @param baseEntityId the entity id of client
      */
-    public void upsert(String baseEntityId) {
+    public void upsert(String baseEntityId, String status) {
         try {
-            getWritableDatabase().execSQL(UPDATE_QUERY_SQL, new String[]{baseEntityId});
+            getWritableDatabase().execSQL(UPDATE_QUERY_SQL, new String[]{baseEntityId, status});
         } catch (Exception e) {
             Timber.e(e);
         }

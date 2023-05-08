@@ -4,13 +4,17 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Random;
 
 /**
  * Created by keyman on 01/08/2017.
  */
 public class SampleUtil {
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+            "dd/MM/yyyy",
+            Locale.getDefault().toString().startsWith("ar") ? Locale.ENGLISH : Locale.getDefault()
+    );
 
     public static final String ENTITY_ID = "1";
     public static final String DOB_STRING = "2018-06-01T00:00:00.000Z";

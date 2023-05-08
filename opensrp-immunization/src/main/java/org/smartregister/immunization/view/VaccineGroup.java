@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -67,18 +68,22 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
         this.context = context;
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutInflater.inflate(R.layout.view_vaccine_group, this, true).setFilterTouchesWhenObscured(true);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
         setLayoutParams(layoutParams);
 
-        READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy");
+        READABLE_DATE_FORMAT = new SimpleDateFormat(
+                "dd MMMM, yyyy",
+                Locale.getDefault().toString().startsWith("ar") ? Locale.ENGLISH : Locale.getDefault()
+        );
 
         nameTV = findViewById(R.id.name_tv);
         vaccinesGV = findViewById(R.id.vaccines_gv);
         vaccinesGV.setExpanded(true);
         recordAllTV = findViewById(R.id.record_all_tv);
         recordAllTV.setOnClickListener(this);
-
     }
 
     public VaccineGroup(Context context, AttributeSet attrs) {

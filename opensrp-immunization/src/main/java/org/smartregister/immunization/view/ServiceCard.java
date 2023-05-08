@@ -32,8 +32,9 @@ import timber.log.Timber;
  */
 
 public class ServiceCard extends LinearLayout {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-    private static final SimpleDateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM");
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    private static final SimpleDateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.ENGLISH);
     private Context context;
     private ImageView statusIV;
     private TextView nameTV;
