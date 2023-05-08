@@ -88,6 +88,10 @@ public class VaccineIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        createVaccineEvents();
+    }
+
+    protected void createVaccineEvents() {
         if (availableVaccines == null) {
             availableVaccines = VaccinatorUtils.getSupportedVaccines(getBaseContext());
             specialVaccines = VaccinatorUtils.getSpecialVaccines(getBaseContext());
