@@ -95,7 +95,7 @@
           "due": [
             {
               "reference": "dob",
-              "window": "+10d"
+              "window": "+52d"
             }
           ],
           "expiry": [
@@ -124,7 +124,7 @@
           "due": [
             {
               "reference": "dob",
-              "window": "+28d"
+              "window": "+70d"
             }
           ],
           "expiry": [
@@ -226,6 +226,7 @@
             {
               "reference": "prerequisite",
               "prerequisite": "OPV 1",
+              "offset": "+28d",
               "window": "+10d"
             }
           ],
@@ -256,6 +257,7 @@
             {
               "reference": "prerequisite",
               "prerequisite": "Penta 1",
+              "offset": "+28d",
               "window": "+10d"
             }
           ],
@@ -286,6 +288,7 @@
             {
               "reference": "prerequisite",
               "prerequisite": "PCV 1",
+              "offset": "+28d",
               "window": "+10d"
             }
           ],
@@ -493,7 +496,6 @@
               {
                 "reference": "prerequisite",
                 "prerequisite": "MR 1",
-                "offset": "+9m",
                 "window": "+10d"
               }
             ],

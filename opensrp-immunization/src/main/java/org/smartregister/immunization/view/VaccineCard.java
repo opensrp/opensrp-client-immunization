@@ -197,7 +197,7 @@ public class VaccineCard extends LinearLayout {
     private void updateStateUi() {
         boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
         String vaccineName = getVaccineName();
-        Log.e("VACCINE","updateStateUi>>state:"+state+":vaccineName:"+vaccineName+":isInvalid:"+vaccineWrapper.isInvalid()+":statusInvalidVaccine:"+statusInvalidVaccine);
+        Log.e("INVALID_VACCINE","updateStateUi>>state:"+state+":vaccineName:"+vaccineName+":isInvalid:"+vaccineWrapper.isInvalid()+":statusInvalidVaccine:"+statusInvalidVaccine);
 
         switch (state) {
             case NOT_DUE:

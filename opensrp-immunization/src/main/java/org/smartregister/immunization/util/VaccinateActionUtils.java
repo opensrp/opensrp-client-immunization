@@ -512,7 +512,13 @@ public class VaccinateActionUtils {
         return false;
     }
     public static boolean isInvalidVaccine(DateTime vaccineDate, DateTime dueDate) {
-        return vaccineDate!=null && dueDate!=null && vaccineDate.getMillis() - dueDate.getMillis()<0;
+        if(vaccineDate == null || dueDate == null) return false;
+        DateTime newVDate = new DateTime(DateUtil.yyyyMMdd.format(vaccineDate.toDate()));
+        DateTime newDDate = new DateTime(DateUtil.yyyyMMdd.format(dueDate.toDate()));
+        long vaccineDateTime = newVDate.getMillis();//vaccineDate.getMillis();
+        long dueDateTime = newDDate.getMillis();//dueDate.getMillis();
+        Log.e("INVALID_VACCINE","isInvalidVaccine>>>>:newVDate:"+newVDate+":newDDate:"+newDDate+":diff:"+(vaccineDateTime - dueDateTime));
+        return vaccineDateTime - dueDateTime < 0;
     }
     public static boolean isValidAfterInvalid(DateTime dueDate){
         return dueDate != null && dueDate.getMillis() < new DateTime().getMillis();

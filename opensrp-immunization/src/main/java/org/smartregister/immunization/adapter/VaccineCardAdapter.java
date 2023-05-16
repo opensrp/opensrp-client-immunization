@@ -188,12 +188,16 @@ public class VaccineCardAdapter extends BaseAdapter {
                     continue;
                 }
                 boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(tag.getUpdatedVaccineDate(),tag.getVaccineDate());
+                try{
+                    if(tag.isInvalid() || statusInvalidVaccine){
+                        isInvalidVaccineMap.put(tag.getName(),true);
+                    }else{
+                        isInvalidVaccineMap.remove(tag.getName());
+                    }
+                }catch (Exception e){
 
-                if(tag.isInvalid() || statusInvalidVaccine){
-                    isInvalidVaccineMap.put(tag.getName(),true);
-                }else{
-                    isInvalidVaccineMap.remove(tag.getName());
                 }
+
                 Log.v("INVALID_VACCINE","updateWrapperStatus>>"+tag.getName()+":vaccine:"+vaccine.display()+"isInvalid:"+tag.isInvalid()+":inValidVaccineMap>"+ isInvalidVaccineMap);
 
                 if ((vaccine.equals(VaccineRepo.Vaccine.measles2)

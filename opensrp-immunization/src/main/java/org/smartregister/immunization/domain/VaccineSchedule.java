@@ -269,6 +269,7 @@ public class VaccineSchedule {
         alertStatus = expiryDate != null && expiryDate.before(Calendar.getInstance().getTime()) ? AlertStatus.expired : null; //Check if expired first
 
         if (alertStatus == null) {
+            Log.v("VACCINE_ALERT","alertStatus>>:"+vaccine.name()+":dueDate:"+dueDate+":overDueDate:"+overDueDate);
             alertStatus = isVaccineIssued(vaccine.name(), issuedVaccines) ? AlertStatus.complete : calculateAlertStatus(dueDate, overDueDate);
         }
 
@@ -305,8 +306,10 @@ public class VaccineSchedule {
         for (VaccineTrigger curTrigger : dueTriggers) {
             if (dueDate == null) {
                 dueDate = curTrigger.getFireDate(issuedVaccines, dob);
+                Log.v("VACCINE_ALERT","getDueDate>>:"+vaccine.name()+"dueDate:"+dueDate);
             } else {
                 Date curDate = curTrigger.getFireDate(issuedVaccines, dob);
+                Log.v("VACCINE_ALERT","getDueDate else >>:"+vaccine.name()+"curDate:"+curDate+":dueDate:"+dueDate);
                 if (curDate != null && curDate.getTime() < dueDate.getTime()) {
                     dueDate = curDate;
                 }
