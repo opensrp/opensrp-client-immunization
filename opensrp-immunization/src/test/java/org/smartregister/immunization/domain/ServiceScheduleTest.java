@@ -11,7 +11,9 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
+import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
@@ -147,6 +149,20 @@ public class ServiceScheduleTest extends BaseUnitTest {
         }
 
         Assert.assertTrue(ServiceSchedule.isServiceIssued("bcg2", serviceRecords));
+    }
+
+    @Test
+    public void testCalculateAlertStatusShouldReturnNormalForTodayDate() {
+        AlertStatus status = ReflectionHelpers.callStaticMethod(ServiceSchedule.class, "calculateAlertStatus",
+                ReflectionHelpers.ClassParameter.from(DateTime.class, new DateTime()));
+        Assert.assertEquals(AlertStatus.normal, status);
+    }
+
+    @Test
+    public void testCalculateAlertStatusShouldReturnNullForUpcomingDate() {
+        AlertStatus status = ReflectionHelpers.callStaticMethod(ServiceSchedule.class, "calculateAlertStatus",
+                ReflectionHelpers.ClassParameter.from(DateTime.class, new DateTime().plusDays(10)));
+        Assert.assertNull(status);
     }
 
 }
