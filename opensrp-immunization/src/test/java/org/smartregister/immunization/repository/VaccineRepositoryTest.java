@@ -122,7 +122,7 @@ public class VaccineRepositoryTest extends BaseUnitTest {
     @Test
     public void verifyCreateTableTest() {
         VaccineRepository.createTable(sqliteDatabase);
-        Mockito.verify(sqliteDatabase, Mockito.times(4)).execSQL(org.mockito.ArgumentMatchers.anyString());
+        Mockito.verify(sqliteDatabase, Mockito.times(4)).execSQL(ArgumentMatchers.anyString());
     }
 
     @Test
