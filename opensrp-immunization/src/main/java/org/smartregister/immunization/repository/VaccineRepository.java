@@ -66,6 +66,7 @@ public class VaccineRepository extends BaseRepository {
     private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR, updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + VACCINE_TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
+    public static final String SYNC_STATUS_INDEX = "CREATE INDEX IF NOT EXISTS " + VACCINE_TABLE_NAME + "_" + SYNC_STATUS + "_index ON " + VACCINE_TABLE_NAME + "(" + SYNC_STATUS + ");";
     public static String HIA2_Within = "Within";
     public static String HIA2_Overdue = "Overdue";
 
@@ -81,6 +82,7 @@ public class VaccineRepository extends BaseRepository {
         database.execSQL(VACCINE_SQL);
         database.execSQL(BASE_ENTITY_ID_INDEX);
         database.execSQL(UPDATED_AT_INDEX);
+        database.execSQL(SYNC_STATUS_INDEX);
     }
 
     public static void migrateCreatedAt(SQLiteDatabase database) {
