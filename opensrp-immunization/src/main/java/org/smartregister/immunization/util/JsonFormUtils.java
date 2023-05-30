@@ -48,7 +48,9 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             String eventName = vaccine.getName().contains("tt")?"Member Registration":"Child Registration";
             Log.v("EVENT_TYPE","eventName>>"+eventName);
             Map<String,String> identifiers  = ImmunizationLibrary.getInstance().vaccineRepository().getAddressIdentifier(vaccine.getBaseEntityId(),eventName);
-
+            if(identifiers==null){
+                identifiers = ImmunizationLibrary.getInstance().vaccineRepository().getOOCAddressIdentifier(vaccine.getBaseEntityId());
+            }
             if(vaccine.isInvalid()){
                 identifiers.put("is_invalid","true");
             }

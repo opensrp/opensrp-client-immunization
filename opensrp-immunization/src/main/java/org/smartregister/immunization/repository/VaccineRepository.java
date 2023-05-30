@@ -122,8 +122,7 @@ public class VaccineRepository extends BaseRepository {
             if (StringUtils.isBlank(vaccine.getFormSubmissionId())) {
                 vaccine.setFormSubmissionId(generateRandomUUIDString());
             }
-            boolean isInvalid = VaccinateActionUtils.isInvalidVaccine(  new DateTime(vaccine.getDate()),vaccine.getVaccineDueDate());
-            Log.v("SAVE_VACCINE","isInvalid>>>"+isInvalid);
+            boolean isInvalid = VaccinateActionUtils.isInvalidVaccine(  new DateTime(vaccine.getDate()),vaccine.getVaccineDueDate(),vaccine.getName());
             if(isInvalid){
                 vaccine.setInvalid(true);
             }else{
@@ -219,16 +218,12 @@ public class VaccineRepository extends BaseRepository {
         cursor = getReadableDatabase().query("event", null,
                  " baseEntityId= ? AND eventType = ? ", new String[] {baseEntityId, eventType},
                 null, null, null, null);
-        Log.v("vaccine","getAddressIdentifier>>baseEntityId:"+baseEntityId+":eventType:"+eventType);
         try{
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                     String jsonStr = cursor.getString(cursor.getColumnIndex("json"));
-                Log.v("vaccine","jsonStr>>"+jsonStr);
                     JSONObject clientJson = new JSONObject(jsonStr);
                     String addessJson = clientJson.getString("identifiers");
-
-                    Log.v("vaccine","addessJson>>"+addessJson);
-                addessJson = addessJson.replace("{","").replace("}","").replace("\"","");
+                    addessJson = addessJson.replace("{","").replace("}","").replace("\"","");
                  Map<String,String> properties = Splitter.on(",")
                             .withKeyValueSeparator(":")
                             .split(addessJson);
@@ -240,10 +235,38 @@ public class VaccineRepository extends BaseRepository {
 
         }
 
-        if(cursor!=null) cursor.close();
+       finally {
+            if(cursor!=null) cursor.close();
+        }
+        return null;
+    }
+    public HashMap<String,String> getOOCAddressIdentifier(String baseEntityId){
+        Cursor cursor = null;
+        cursor = getReadableDatabase().query("ec_guest_member", null,
+                " base_entity_id= ? ", new String[] {baseEntityId},
+                null, null, null, null);
+        HashMap<String,String> address = new HashMap<>();
+        try{
+            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                String division_id = cursor.getString(cursor.getColumnIndex("division_id"));
+                String district_id = cursor.getString(cursor.getColumnIndex("district_id"));
+                String upazila_id = cursor.getString(cursor.getColumnIndex("upazila_id"));
+                address.put("division_id",division_id);
+                address.put("district_id",district_id);
+                address.put("upazila_id",upazila_id);
+                return address;
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
+        finally {
+            if(cursor!=null) cursor.close();
+        }
         return new HashMap<>();
     }
-
     public List<Vaccine> findUnSyncedBeforeTime(int hours) {
         List<Vaccine> vaccines = new ArrayList<>();
         Cursor cursor = null;
@@ -436,7 +459,26 @@ public class VaccineRepository extends BaseRepository {
             Log.e(TAG, Log.getStackTraceString(e));
         }
     }
-
+    public Vaccine getVaccineByName(String baseEntityId, String vaccineName) {
+        Vaccine vaccine = null;
+        Cursor cursor = null;
+        //try {
+        cursor = getReadableDatabase()
+                .query(VACCINE_TABLE_NAME, null, BASE_ENTITY_ID + " = ? and "+NAME + " = ?", new String[] {baseEntityId,vaccineName},
+                        null, null, null, null);
+        List<Vaccine> vaccines = readAllVaccines(cursor);
+        if (!vaccines.isEmpty()) {
+            vaccine = vaccines.get(0);
+        }
+//        } catch (Exception e) {
+//            Log.e(TAG, e.getMessage(), e);
+//        } finally {
+        if (cursor != null) {
+            cursor.close();
+        }
+        // }
+        return vaccine;
+    }
     public Vaccine find(Long caseId) {
         Vaccine vaccine = null;
         Cursor cursor = null;

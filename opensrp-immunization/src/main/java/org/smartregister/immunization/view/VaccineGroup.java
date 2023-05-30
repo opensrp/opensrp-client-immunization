@@ -230,7 +230,7 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
                                 break;
                             case DONE_CAN_BE_UNDONE:
                             case DONE_CAN_NOT_BE_UNDONE:
-                                boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(vaccineCard.getVaccineDate(),vaccineCard.getVaccineDueDate());
+                                boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(vaccineCard.getVaccineDate(),vaccineCard.getVaccineDueDate(),vaccineCard.getVaccineWrapper().getName());
 
                                 if(statusInvalidVaccine && VaccinateActionUtils.isValidAfterInvalid(vaccineCard.getVaccineDueDate())){
                                     onInvalidClick(vaccineCard);
@@ -348,9 +348,9 @@ public class VaccineGroup extends LinearLayout implements View.OnClickListener {
     }
 
     public void updateWrapperStatus(ArrayList<VaccineWrapper> wrappers, String child) {
-        if (vaccineCardAdapter != null) {
-            vaccineCardAdapter.updateWrapperStatus(wrappers, child, childDetails);
-        }
+//        if (vaccineCardAdapter != null) {
+//            vaccineCardAdapter.updateWrapperStatus(wrappers, child, childDetails);
+//        }
     }
 
     public void updateWrapper(VaccineWrapper wrapper) {

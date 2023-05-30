@@ -51,6 +51,7 @@
                 android:text="@string/vaccine_number"
                 android:textColor="@color/client_list_grey"
                 android:textSize="@dimen/number_view_text_size"
+                android:visibility="invisible"
                 android:layout_gravity="center_horizontal"/>
 
             <View

@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import com.vijay.jsonwizard.utils.DatePickerUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
@@ -459,9 +462,9 @@ public class VaccinationDialogFragment extends DialogFragment {
 
         updateDateRanges(vaccinateToday, vaccinateEarlier, set, earlierDatePicker);
 
-        if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
-            vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
-        }
+//        if (ImmunizationLibrary.getInstance().isAllowExpiredVaccineEntry()) {
+//            vaccinateToday.setVisibility(AlertStatus.expired.value().equals(tags.get(0).getStatus()) ? View.GONE : View.VISIBLE);//Determine whether to show today for expired
+//        }
 
         Button cancel = dialogView.findViewById(R.id.cancel);
         cancel.setOnClickListener(new Button.OnClickListener() {
@@ -609,6 +612,7 @@ public class VaccinationDialogFragment extends DialogFragment {
      * @param vaccinateToday    The 'Vaccination done today' button
      * @param earlierDatePicker Date picker for selecting a previous date for a vaccine
      */
+    boolean isTodayButtonInvisible = false;
     private void updateDateRanges(Button vaccinateToday, Button vaccinateEarlier, Button set, DatePicker earlierDatePicker) {
         Calendar today = Calendar.getInstance();
         VaccineSchedule.standardiseCalendarDate(today);
@@ -633,6 +637,21 @@ public class VaccinationDialogFragment extends DialogFragment {
                 }
             }
         }
+        for (VaccineWrapper curVaccine : tags) {
+            if(curVaccine.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv0.display())){
+                maxDate = Calendar.getInstance();
+                maxDate.setTime(dateOfBirth);
+                maxDate.add(Calendar.DATE, 14);
+                isTodayButtonInvisible = true;
+            }
+            updatedVaccineMinDate(minDate,curVaccine.getName(),curVaccine.getPatientNumber());
+//            if(curVaccine.getName().equalsIgnoreCase(VaccineRepo.Vaccine.bcg.display())){
+//                maxDate = Calendar.getInstance();
+//                maxDate.setTime(dateOfBirth);
+//                maxDate.add(Calendar.DATE, 42);
+//                vaccinateToday.setVisibility(View.GONE);
+//            }
+        }
 
         VaccineSchedule.standardiseCalendarDate(minDate);
         VaccineSchedule.standardiseCalendarDate(maxDate);
@@ -644,7 +663,7 @@ public class VaccinationDialogFragment extends DialogFragment {
             if (today.getTimeInMillis() >= minDate.getTimeInMillis()
                     && today.getTimeInMillis() <= maxDate.getTimeInMillis()) {
                 vaccinateToday.setClickable(true);
-                vaccinateToday.setVisibility(View.VISIBLE);
+                vaccinateToday.setVisibility(isTodayButtonInvisible?View.GONE:View.VISIBLE);
 
                 vaccinateEarlier.setVisibility(View.VISIBLE);
                 earlierDatePicker.setVisibility(View.GONE);
@@ -663,13 +682,59 @@ public class VaccinationDialogFragment extends DialogFragment {
             earlierDatePicker.setMinDate(minDate.getTimeInMillis());
             earlierDatePicker.setMaxDate(maxDate.getTimeInMillis());
         } else {
-            vaccinateToday.setClickable(false);
-            vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
-            vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
+//            vaccinateToday.setClickable(false);
+//            vaccinateToday.setTextColor(getActivity().getResources().getColor(R.color.client_list_grey));
+//            vaccinateToday.setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_today_bg_disabled));
             vaccinateEarlier.setClickable(false);
             vaccinateEarlier
                     .setBackground(getActivity().getResources().getDrawable(R.drawable.vaccination_earlier_bg_disabled));
-            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), R.string.problem_applying_vaccine_constraints, Toast.LENGTH_LONG).show();
+        }
+    }
+    private String getApplicableVaccineName(String vaccineName){
+        switch (vaccineName){
+            case "OPV 2":
+            case "PENTA 2":
+            case "PCV 2":
+            case "OPV 3":
+            case "PENTA 3":
+            case "PCV 3":
+                return vaccineName;
+            case "Penta 2":
+                return "PENTA 2";
+            case "Penta 3":
+                return "PENTA 3";
+        }
+        return "";
+    }
+    private void updatedVaccineMinDate(Calendar dobCalender,String vaccineName, String baseEntityId){
+        Log.v("VACCINE_MIN_DATE","updatedVaccineMinDate>>"+vaccineName);
+        if(!TextUtils.isEmpty(getApplicableVaccineName(vaccineName))){
+            vaccineName = getApplicableVaccineName(vaccineName);
+            Alert alert = ImmunizationLibrary.getInstance().context().alertService().findByEntityIdAndScheduleName(baseEntityId, vaccineName);
+            if(alert!=null){
+                Log.v("VACCINE_MIN_DATE","updatedVaccineMinDate>>"+vaccineName+":"+alert.startDate());
+                DateTime opv1GivenDate = new DateTime(alert.startDate());
+                dobCalender.setTime(opv1GivenDate.toDate());
+                dobCalender.add(Calendar.DATE, 1);
+            }
+
+        }else if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.fipv2.display())){
+            Alert alert = ImmunizationLibrary.getInstance().context().alertService().findByEntityIdAndScheduleName(baseEntityId, vaccineName);
+            if(alert!=null){
+                DateTime opv1GivenDate = new DateTime(alert.startDate());
+                dobCalender.setTime(opv1GivenDate.toDate());
+                dobCalender.add(Calendar.DATE, 1);
+            }
+
+        }else if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.mr2.display())){
+            Alert alert = ImmunizationLibrary.getInstance().context().alertService().findByEntityIdAndScheduleName(baseEntityId, vaccineName);
+            if(alert!=null){
+                DateTime opv1GivenDate = new DateTime(alert.startDate());
+                dobCalender.setTime(opv1GivenDate.toDate());
+                dobCalender.add(Calendar.DATE, 1);
+            }
+
         }
     }
 

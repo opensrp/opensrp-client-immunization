@@ -3,6 +3,7 @@ package org.smartregister.immunization.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.Photo;
+import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.db.VaccineRepo;
 import org.smartregister.immunization.domain.State;
 import org.smartregister.immunization.domain.Vaccine;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -187,18 +190,31 @@ public class VaccineCardAdapter extends BaseAdapter {
                         .equalsIgnoreCase(vaccine.display())) {
                     continue;
                 }
-                boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(tag.getUpdatedVaccineDate(),tag.getVaccineDate());
+
                 try{
+                    boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(tag.getUpdatedVaccineDate(),tag.getVaccineDate(),tag.getName());
+
                     if(tag.isInvalid() || statusInvalidVaccine){
                         isInvalidVaccineMap.put(tag.getName(),true);
                     }else{
-                        isInvalidVaccineMap.remove(tag.getName());
+
+                        Iterator<Map.Entry<String, Boolean>> itr = isInvalidVaccineMap.entrySet().iterator();
+                        while(itr.hasNext())
+                        {
+                            Map.Entry<String, Boolean> entry = itr.next();
+                            if(entry.getKey().equalsIgnoreCase(tag.getName()))
+                            {
+                                Log.v("isInvalidVaccineMap","isInvalidVaccineMap  reomove>>"+entry.getKey()+":"+tag.getName());
+                                itr.remove();  // Call Iterator's remove method.
+                            }
+                        }
                     }
                 }catch (Exception e){
+                    e.printStackTrace();
 
                 }
 
-                Log.v("INVALID_VACCINE","updateWrapperStatus>>"+tag.getName()+":vaccine:"+vaccine.display()+"isInvalid:"+tag.isInvalid()+":inValidVaccineMap>"+ isInvalidVaccineMap);
+                Log.v("VACCINE_DUE","updateWrapperStatus>>"+tag.getName()+":vaccine:"+vaccine.display()+"isInvalid:"+tag.isInvalid()+":inValidVaccineMap>"+ isInvalidVaccineMap);
 
                 if ((vaccine.equals(VaccineRepo.Vaccine.measles2)
                         || vaccine.equals(VaccineRepo.Vaccine.mr2)
@@ -309,7 +325,8 @@ public class VaccineCardAdapter extends BaseAdapter {
         protected VaccineWrapper doInBackground(Void... params) {
             VaccineWrapper vaccineWrapper = new VaccineWrapper();
             vaccineWrapper.setId(childDetails.entityId());
-            vaccineWrapper.setGender(childDetails.getDetails().get("gender"));
+            String gender = getValue(childDetails.getColumnmaps(), "gender", false);
+            vaccineWrapper.setGender(gender);
             vaccineWrapper.setName(vaccineName);
             vaccineWrapper.setDefaultName(vaccineName);
             if (vaccineData.schedule != null && vaccineData.schedule.conditions != null) {
@@ -322,14 +339,15 @@ public class VaccineCardAdapter extends BaseAdapter {
                 DateTime dateTime = new DateTime(dobString);
                 dobCalender.setTime(dateTime.toDate());
                 dobCalender.add(Calendar.DATE, days_after_birth_due);
+                updatedVaccineDueDate(dobCalender,vaccineName,childDetails.getCaseId());
                 vaccineWrapper.setVaccineDate(new DateTime(dobCalender.getTime()));
             }
 
-            Photo photo = ImageUtils.profilePhotoByClient(childDetails);
-            vaccineWrapper.setPhoto(photo);
+//            Photo photo = ImageUtils.profilePhotoByClient(childDetails.getColumnmaps());
+//            vaccineWrapper.setPhoto(photo);
 
             String zeirId = getValue(childDetails.getColumnmaps(), "zeir_id", false);
-            vaccineWrapper.setPatientNumber(zeirId);
+            vaccineWrapper.setPatientNumber(childDetails.getCaseId());
 
             String firstName = getValue(childDetails.getColumnmaps(), "first_name", true);
             String lastName = getValue(childDetails.getColumnmaps(), "last_name", true);
@@ -340,6 +358,72 @@ public class VaccineCardAdapter extends BaseAdapter {
             updateWrapperStatus(vaccineWrapper, type, childDetails);
 
             return vaccineWrapper;
+        }
+        private void updatedVaccineDueDate(Calendar dobCalender,String vaccineName, String baseEntityId){
+            Log.v("VACCINE_DUE","updatedVaccineDueDate>>"+vaccineName+":baseEntityId:"+baseEntityId);
+            if(!TextUtils.isEmpty(getApplicableVaccineName(vaccineName))){
+                vaccineName = getApplicableVaccineName(vaccineName);
+               // Alert alert = ImmunizationLibrary.getInstance().context().alertService().findByEntityIdAndScheduleName("1", vaccineName);
+                Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,vaccineName);
+                if(vaccine!=null){
+                    Log.v("VACCINE_DUE","updatedVaccineDueDate>>"+vaccineName+":"+vaccine.getDate());
+                    DateTime opv1GivenDate = new DateTime(vaccine.getDate());
+                    dobCalender.setTime(opv1GivenDate.toDate());
+                    dobCalender.add(Calendar.DATE, 28);
+                }
+
+            }else if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.fipv2.display())){
+                Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,"fipv_1");
+                if(vaccine!=null){
+                    DateTime opv1GivenDate = new DateTime(vaccine.getDate());
+                    dobCalender.setTime(opv1GivenDate.toDate());
+                    dobCalender.add(Calendar.DATE, 56);
+                }
+
+            }else if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.mr2.display())){
+                Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,"mr_1");
+                if(vaccine!=null){
+                    //mr1 if>dob+13m mr2 = mr+1m else dob+15m
+                    DateTime mr1GivenDate = new DateTime(vaccine.getDate());
+                    dobCalender.setTime(mr1GivenDate.toDate());
+
+                    String dobString = getValue(childDetails.getColumnmaps(), "dob", false);
+                    Calendar dCalender = Calendar.getInstance();
+                    DateTime dateTime = new DateTime(dobString);
+                    dCalender.setTime(dateTime.toDate());
+                    dCalender.add(Calendar.DATE,390);
+                    if(dobCalender.getTime().getTime()>dCalender.getTime().getTime()){
+                        dobCalender.add(Calendar.DATE,30);
+                    }
+                    else{
+                        dCalender.add(Calendar.DATE,65);
+                        dobCalender.setTime(dCalender.getTime());
+                    }
+
+                }
+
+            }
+        }
+        private String getApplicableVaccineName(String vaccineName){
+            switch (vaccineName){
+                case "OPV 2":
+                    return "opv_1";
+                case "PENTA 2":
+                    return "penta_1";
+                case "PCV 2":
+                    return "pcv_1";
+                case "OPV 3":
+                    return "opv_2";
+                case "PENTA 3":
+                    return "penta_2";
+                case "PCV 3":
+                    return "pcv_2";
+                case "Penta 2":
+                    return "penta_1";
+                case "Penta 3":
+                    return "penta_2";
+            }
+            return "";
         }
 
         @Override

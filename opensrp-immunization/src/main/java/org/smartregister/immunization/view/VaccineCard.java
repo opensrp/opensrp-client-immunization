@@ -60,7 +60,7 @@ public class VaccineCard extends LinearLayout {
         undoB = findViewById(R.id.undo_b);
         invalidB = findViewById(R.id.invalid_b);
         //Init date formatters here to allow for dynamic language switching
-        DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+        DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         SHORT_DATE_FORMAT = new SimpleDateFormat("dd/MM",Locale.ENGLISH);
     }
 
@@ -141,21 +141,47 @@ public class VaccineCard extends LinearLayout {
             //need to ignore invalid vaccine. applycable for next vaccines
             for (String keys : isInvalidVaccineMap.keySet()){
                 Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":map:"+isInvalidVaccineMap);
-                if(!vaccineWrapper.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv0.display())){
-                    if(!keys.equalsIgnoreCase(vaccineWrapper.getName())){
-                        Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":"+keys.contains(vaccineWrapper.getName()));
-                        if(keys.contains(vaccineWrapper.getName().split(" ")[0])){
-                            Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
-                            state = State.NOT_DUE;
-                        }
-                    }
+
+                if(vaccineWrapper.getName().equalsIgnoreCase(getApplicableVaccineName(keys))){
+                    Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
+                    state = State.NOT_DUE;
                 }
+//
+//
+//                if(!vaccineWrapper.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv0.display())){
+//                    if(!keys.equalsIgnoreCase(vaccineWrapper.getName())){
+//                        Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":"+keys.contains(vaccineWrapper.getName()));
+//                        if(keys.contains(vaccineWrapper.getName().split(" ")[0])){
+//                            Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
+//                            state = State.NOT_DUE;
+//                        }
+//                    }
+//                }
 
             }
             updateStateUi();
             updateChildsActiveStatus();
 
         }
+    }
+    private String getApplicableVaccineName(String keysName){
+        switch (keysName){
+            case "OPV 1":
+                return "OPV 2";
+            case "OPV 2":
+                return "OPV 3";
+            case "Penta 1":
+                return "Penta 2";
+            case "Penta 2":
+                return "Penta 3";
+            case "PCV 1":
+                return "PCV 2";
+            case "PCV 2":
+                return "PCV 3";
+            case "MR 1":
+                return "MR 2";
+        }
+        return "";
     }
 
     private Date getDateDone() {
@@ -195,10 +221,8 @@ public class VaccineCard extends LinearLayout {
     }
     @SuppressLint("SetTextI18n")
     private void updateStateUi() {
-        boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate());
         String vaccineName = getVaccineName();
-        Log.e("INVALID_VACCINE","updateStateUi>>state:"+state+":vaccineName:"+vaccineName+":isInvalid:"+vaccineWrapper.isInvalid()+":statusInvalidVaccine:"+statusInvalidVaccine);
-
+        boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate(),vaccineName);
         switch (state) {
             case NOT_DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
