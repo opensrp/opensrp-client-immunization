@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -192,7 +193,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
         view.updateViews();
         view.updateViews(wrappers);
         String pattern = "yyyy-MM-dd";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.ENGLISH);
         setDataForTest(format.format(new Date()) + "T00:00:00.000Z");
         view.updateViews(wrappers);
         setDataForTest("2018-01-01T00:00:00.000Z");
@@ -305,7 +306,7 @@ public class ImmunizationRowGroupTest extends BaseUnitTest {
     public void assertOnClickCallsUndoClickedListener() throws Exception {
 
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         setDataForTest(simpleDateFormat.format(date));
         view.updateViews();
         view.updateViews(wrappers);

@@ -49,7 +49,7 @@ public class ImmunizationRowGroup extends LinearLayout implements View.OnClickLi
     private OnRecordAllClickListener onRecordAllClickListener;
     private OnVaccineClickedListener onVaccineClickedListener;
     private OnVaccineUndoClickListener onVaccineUndoClickListener;
-    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
+    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.ENGLISH);
     private boolean modalOpen;
 
     public ImmunizationRowGroup(Context context, boolean editmode) {
