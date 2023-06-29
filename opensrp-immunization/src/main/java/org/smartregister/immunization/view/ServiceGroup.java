@@ -49,7 +49,7 @@ public class ServiceGroup extends LinearLayout implements View.OnClickListener {
     private GroupState groupState;
     private OnServiceClickedListener onServiceClickedListener;
     private OnServiceUndoClickListener onServiceUndoClickListener;
-    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
+    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.ENGLISH);
     private boolean modalOpen;
     private ImmunizationLibrary immunizationLibraryInstance;
 

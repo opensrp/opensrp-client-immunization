@@ -48,7 +48,7 @@ public class ServiceRowGroup extends LinearLayout implements View.OnClickListene
     private GroupState groupState;
     private OnServiceClickedListener onServiceClickedListener;
     private OnServiceUndoClickListener onServiceUndoClickListener;
-    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.US);
+    private SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("dd MMMM, yyyy", Locale.ENGLISH);
     private boolean modalOpen;
 
     public ServiceRowGroup(Context context, boolean editmode) {

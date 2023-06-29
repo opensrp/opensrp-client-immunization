@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by real on 23/10/17.
@@ -198,7 +199,7 @@ public class VaccineScheduleTest extends BaseUnitTest {
 
         mockImmunizationLibrary();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
         VaccineSchedule.init(vaccines, specialVaccines, "child");
 
