@@ -25,6 +25,7 @@ import org.smartregister.immunization.util.VaccinateActionUtils;
 import org.smartregister.immunization.util.VaccinatorUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -124,16 +125,21 @@ public class VaccineCard extends LinearLayout {
                     }
                 }
             }
-            //need to ignore invalid vaccine. applycable for next vaccines
-            Iterator<String> itr = isInvalidVaccineMap.keySet().iterator();
-            while(itr.hasNext())
-            {
-                String keys = itr.next();
-                if(vaccineWrapper.getName().equalsIgnoreCase(getApplicableVaccineName(keys))){
-                    Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
-                    state = State.NOT_DUE;
+            try{
+                //need to ignore invalid vaccine. applycable for next vaccines
+                Iterator<String> itr = isInvalidVaccineMap.keySet().iterator();
+                while(itr.hasNext())
+                {
+                    String keys = itr.next();
+                    if(vaccineWrapper.getName().equalsIgnoreCase(getApplicableVaccineName(keys))){
+                        Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
+                        state = State.NOT_DUE;
+                    }
                 }
+            }catch (ConcurrentModificationException cm){
+
             }
+
 //
 //            for (String keys : isInvalidVaccineMap.keySet()){
 //                Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":map:"+isInvalidVaccineMap);
