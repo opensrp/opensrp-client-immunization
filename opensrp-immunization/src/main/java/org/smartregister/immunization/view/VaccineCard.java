@@ -27,7 +27,9 @@ import org.smartregister.immunization.util.VaccinatorUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -121,44 +123,27 @@ public class VaccineCard extends LinearLayout {
                         state = State.EXPIRED;
                     }
                 }
-
-                /*
-                Calendar today = Calendar.getInstance();
-                today.set(Calendar.HOUR_OF_DAY, 0);
-                today.set(Calendar.MINUTE, 0);
-                today.set(Calendar.SECOND, 0);
-                today.set(Calendar.MILLISECOND, 0);
-                if (dateDue.getTime() > (today.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                    // Vaccination due more than one day from today
-                    this.state = State.NOT_DUE;
-                } else if (dateDue.getTime() < (today.getTimeInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))) {
-                    // Vaccination overdue
-                    this.state = State.OVERDUE;
-                } else {
-                    this.state = State.DUE;
-                } */
             }
             //need to ignore invalid vaccine. applycable for next vaccines
-            for (String keys : isInvalidVaccineMap.keySet()){
-                Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":map:"+isInvalidVaccineMap);
-
+            Iterator<String> itr = isInvalidVaccineMap.keySet().iterator();
+            while(itr.hasNext())
+            {
+                String keys = itr.next();
                 if(vaccineWrapper.getName().equalsIgnoreCase(getApplicableVaccineName(keys))){
                     Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
                     state = State.NOT_DUE;
                 }
-//
-//
-//                if(!vaccineWrapper.getName().equalsIgnoreCase(VaccineRepo.Vaccine.opv0.display())){
-//                    if(!keys.equalsIgnoreCase(vaccineWrapper.getName())){
-//                        Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":"+keys.contains(vaccineWrapper.getName()));
-//                        if(keys.contains(vaccineWrapper.getName().split(" ")[0])){
-//                            Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
-//                            state = State.NOT_DUE;
-//                        }
-//                    }
-//                }
-
             }
+//
+//            for (String keys : isInvalidVaccineMap.keySet()){
+//                Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":map:"+isInvalidVaccineMap);
+//
+//                if(vaccineWrapper.getName().equalsIgnoreCase(getApplicableVaccineName(keys))){
+//                    Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
+//                    state = State.NOT_DUE;
+//                }
+//
+//            }
             updateStateUi();
             updateChildsActiveStatus();
 
