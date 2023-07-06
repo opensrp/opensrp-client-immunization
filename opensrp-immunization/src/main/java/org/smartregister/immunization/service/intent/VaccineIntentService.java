@@ -1,5 +1,6 @@
 package org.smartregister.immunization.service.intent;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
@@ -91,6 +92,7 @@ public class VaccineIntentService extends IntentService {
 
         String entityId = "1410AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String calId = "1418AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        String duedate = "due_date";
         String dateDataType = "date";
         String calculationDataType = "calculate";
         String concept = "concept";
@@ -100,8 +102,11 @@ public class VaccineIntentService extends IntentService {
             if (!vaccines.isEmpty()) {
                 for (Vaccine vaccine : vaccines) {
 
+                    @SuppressLint("SimpleDateFormat")
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String formattedDate = simpleDateFormat.format(vaccine.getDate());
+                    String formatedDueDate="";
+
 
                     JSONArray jsonArray = new JSONArray();
 
@@ -128,6 +133,28 @@ public class VaccineIntentService extends IntentService {
                     jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, calculationDataType);
                     jsonObject.put(JsonFormUtils.VALUE, vaccine.getCalculation());
                     jsonArray.put(jsonObject);
+                    if(vaccine.getVaccineDueDate()!=null){
+                        formatedDueDate = simpleDateFormat.format(vaccine.getVaccineDueDate().toDate());
+                        jsonObject = new JSONObject();
+                        jsonObject.put(JsonFormUtils.KEY, duedate);
+                        jsonObject.put(JsonFormUtils.OPENMRS_ENTITY, concept);
+                        jsonObject.put(JsonFormUtils.OPENMRS_ENTITY_ID, duedate);
+                        jsonObject.put(JsonFormUtils.OPENMRS_ENTITY_PARENT, getParentId(vaccine.getName()));
+                        jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, dateDataType);
+                        jsonObject.put(JsonFormUtils.VALUE, formatedDueDate);
+                        jsonArray.put(jsonObject);
+                    }
+                    if(vaccine.isInvalid()){
+                        jsonObject = new JSONObject();
+                        jsonObject.put(JsonFormUtils.KEY, "is_invalid");
+                        jsonObject.put(JsonFormUtils.OPENMRS_ENTITY, concept);
+                        jsonObject.put(JsonFormUtils.OPENMRS_ENTITY_ID, "is_invalid");
+                        jsonObject.put(JsonFormUtils.OPENMRS_ENTITY_PARENT, getParentId(vaccine.getName()));
+                        jsonObject.put(JsonFormUtils.OPENMRS_DATA_TYPE, "text");
+                        jsonObject.put(JsonFormUtils.VALUE, "true");
+                        jsonArray.put(jsonObject);
+                    }
+
 
                     JsonFormUtils.createVaccineEvent(getApplicationContext(), vaccine, getEventType(), getEntityType(), jsonArray);
                     //log out of catchment service since this is required in some of the hia2 report indicators

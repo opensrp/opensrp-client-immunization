@@ -42,6 +42,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String NAME = "name";
     public static final String CALCULATION = "calculation";
     public static final String DATE = "date";
+    public static final String DUE_DATE = "due_date";
     public static final String ANMID = "anmid";
     public static final String LOCATION_ID = "location_id";
     public static final String CHILD_LOCATION_ID = "child_location_id";
@@ -53,7 +54,7 @@ public class VaccineRepository extends BaseRepository {
     public static final String TEAM_ID = "team_id";
     public static final String TEAM = "team";
     public static final String IS_INVALID = "is_invalid";
-    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT,IS_INVALID};
+    public static final String[] VACCINE_TABLE_COLUMNS = {ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, NAME, CALCULATION, DATE, ANMID, LOCATION_ID, CHILD_LOCATION_ID, TEAM, TEAM_ID, SYNC_STATUS, HIA2_STATUS, UPDATED_AT_COLUMN, EVENT_ID, FORMSUBMISSION_ID, OUT_OF_AREA, CREATED_AT,IS_INVALID,DUE_DATE};
     public static final String UPDATE_TABLE_ADD_EVENT_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + EVENT_ID + " VARCHAR;";
     public static final String EVENT_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + EVENT_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + EVENT_ID + " COLLATE NOCASE);";
     public static final String UPDATE_TABLE_ADD_FORMSUBMISSION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + FORMSUBMISSION_ID + " VARCHAR;";
@@ -66,12 +67,13 @@ public class VaccineRepository extends BaseRepository {
     public static final String UPDATE_TABLE_ADD_TEAM_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + TEAM_ID + " VARCHAR;";
     public static final String UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN " + CHILD_LOCATION_ID + " VARCHAR;";
     private static final String TAG = VaccineRepository.class.getCanonicalName();
-    private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR,is_invalid VARCHAR,updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
+    private static final String VACCINE_SQL = "CREATE TABLE vaccines (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,base_entity_id VARCHAR NOT NULL,program_client_id VARCHAR NULL,name VARCHAR NOT NULL,calculation INTEGER,date DATETIME NOT NULL,anmid VARCHAR NULL,location_id VARCHAR NULL,sync_status VARCHAR,is_invalid VARCHAR,due_date DATETIME,updated_at INTEGER NULL, UNIQUE(base_entity_id, program_client_id, name) ON CONFLICT IGNORE)";
     private static final String BASE_ENTITY_ID_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + BASE_ENTITY_ID + "_index ON " + VACCINE_TABLE_NAME + "(" + BASE_ENTITY_ID + " COLLATE NOCASE);";
     private static final String UPDATED_AT_INDEX = "CREATE INDEX " + VACCINE_TABLE_NAME + "_" + UPDATED_AT_COLUMN + "_index ON " + VACCINE_TABLE_NAME + "(" + UPDATED_AT_COLUMN + ");";
     public static String HIA2_Within = "Within";
     public static String HIA2_Overdue = "Overdue";
     public static final String UPDATE_TABLE_ADD_INVALID = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN "+IS_INVALID+" VARCHAR;";
+    public static final String UPDATE_TABLE_ADD_DUE_DATE = "ALTER TABLE " + VACCINE_TABLE_NAME + " ADD COLUMN "+DUE_DATE+" DATETIME NOT NULL;";
 
     private CommonFtsObject commonFtsObject;
     private AlertService alertService;
@@ -126,6 +128,8 @@ public class VaccineRepository extends BaseRepository {
             if(isInvalid){
                 vaccine.setInvalid(true);
             }else{
+                // this comes from server event as vaccine not have vaccine due date need to set this based on
+                if(vaccine.isInvalid()) vaccine.setInvalid(true);
                 vaccine.setInvalid(false);
             }
             if (vaccine.getUpdatedAt() == null) {
@@ -144,7 +148,7 @@ public class VaccineRepository extends BaseRepository {
                         vaccine.setCreatedAt(new Date());
                     }
                     long rowId = database.insert(VACCINE_TABLE_NAME, null, createValuesFor(vaccine));
-                    Log.e("VACCINE","INSERTED>>>"+rowId);
+                    Log.e("VACCINE","INSERTED>>>"+rowId+":isInvalid:"+isInvalid);
                     vaccine.setId(rowId);
                 }
             } else {
@@ -190,6 +194,7 @@ public class VaccineRepository extends BaseRepository {
         values.put(NAME, vaccine.getName() != null ? addHyphen(vaccine.getName().toLowerCase()) : null);
         values.put(CALCULATION, vaccine.getCalculation());
         values.put(DATE, vaccine.getDate() != null ? vaccine.getDate().getTime() : null);
+        values.put(DUE_DATE, vaccine.getVaccineDueDate() != null ? vaccine.getVaccineDueDate().toDate().getTime() : 0);
         values.put(ANMID, vaccine.getAnmId());
         values.put(LOCATION_ID, vaccine.getLocationId());
         values.put(TEAM, vaccine.getTeam());
@@ -353,6 +358,7 @@ public class VaccineRepository extends BaseRepository {
                     String invalidStr = cursor.getString(cursor.getColumnIndex(IS_INVALID));
                     Log.v("VACCINE","invalidStr>>>>>>"+invalidStr);
                     vaccine.setInvalid(invalidStr.equalsIgnoreCase("1"));
+                    vaccine.setVaccineDueDate( new DateTime(cursor.getLong(cursor.getColumnIndex(DUE_DATE))));
                     vaccines.add(vaccine);
 
                     cursor.moveToNext();
