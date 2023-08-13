@@ -114,6 +114,7 @@ public class VaccineCard extends LinearLayout {
                         } else if (alert.status().value().equalsIgnoreCase("normal")) {
                             state = State.DUE;
                         } else if (alert.status().value().equalsIgnoreCase("upcoming")) {
+                            state = State.DUE;
                             //state = State.UPCOMING;
                         } else if (alert.status().value().equalsIgnoreCase("urgent")) {
                             state = State.OVERDUE;
@@ -140,16 +141,7 @@ public class VaccineCard extends LinearLayout {
 
             }
 
-//
-//            for (String keys : isInvalidVaccineMap.keySet()){
-//                Log.e("isInvalidVaccineMap","keys:"+keys+":vaccine:"+vaccineWrapper.getName()+":map:"+isInvalidVaccineMap);
-//
-//                if(vaccineWrapper.getName().equalsIgnoreCase(getApplicableVaccineName(keys))){
-//                    Log.e("isInvalidVaccineMap","ignore>>>>"+vaccineWrapper.getName());
-//                    state = State.NOT_DUE;
-//                }
-//
-//            }
+
             updateStateUi();
             updateChildsActiveStatus();
 
@@ -214,6 +206,7 @@ public class VaccineCard extends LinearLayout {
     private void updateStateUi() {
         String vaccineName = getVaccineName();
         boolean statusInvalidVaccine = VaccinateActionUtils.isInvalidVaccine(getVaccineDate(),getVaccineDueDate(),vaccineName);
+        Log.v("VACCINE_CARD","updateStateUi>>>state:"+state+":vaccineName:"+vaccineName);
         switch (state) {
             case NOT_DUE:
                 setBackgroundResource(R.drawable.vaccine_card_background_white);
