@@ -1136,6 +1136,8 @@ public class VaccinatorUtils {
                 String fieldString = m2.group(2);
                 if ("d".endsWith(fieldString)) {
                     afterOffset = afterOffset.plusDays(curValue);
+                } else if ("w".endsWith(fieldString)) {
+                    afterOffset = afterOffset.plusWeeks(curValue);
                 } else if ("m".equals(fieldString)) {
                     afterOffset = afterOffset.plusMonths(curValue);
                 } else if ("y".equals(fieldString)) {
