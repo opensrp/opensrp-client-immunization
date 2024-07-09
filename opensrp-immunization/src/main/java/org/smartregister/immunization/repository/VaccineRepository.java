@@ -218,10 +218,10 @@ public class VaccineRepository extends BaseRepository {
         }
         return s;
     }
-    public HashMap<String,String> getAddressIdentifier(String baseEntityId, String eventType){
+    public HashMap<String,String> getAddressIdentifier(String baseEntityId){
         Cursor cursor = null;
         cursor = getReadableDatabase().query("event", null,
-                 " baseEntityId= ? AND eventType = ? ", new String[] {baseEntityId, eventType},
+                 " baseEntityId= ? AND eventType in (?,?,?,?,?)", new String[] {baseEntityId, "Update Child Registration","Child Registration","Family Member Registration","OOC Member Registration","Update Family Member Registration"},
                 null, null, null, null);
         try{
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {

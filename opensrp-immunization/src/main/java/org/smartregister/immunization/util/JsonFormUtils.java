@@ -45,12 +45,10 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
             Log.e("VACCINE","createVaccineEvent>>"+vaccine.getName()+":invalid:"+vaccine.isInvalid());
 
             //get identifier from child registration event
-            String eventName = vaccine.getName().contains("tt")?"Member Registration":"Child Registration";
-            Log.v("EVENT_TYPE","eventName>>"+eventName);
-            Map<String,String> identifiers  = ImmunizationLibrary.getInstance().vaccineRepository().getAddressIdentifier(vaccine.getBaseEntityId(),eventName);
-            if(identifiers==null){
-                identifiers = ImmunizationLibrary.getInstance().vaccineRepository().getOOCAddressIdentifier(vaccine.getBaseEntityId());
-            }
+            //String eventName = vaccine.getName().contains("tt")?"Member Registration":"Child Registration";
+            //Log.v("EVENT_TYPE","eventName>>"+eventName);
+            Map<String,String> identifiers  = ImmunizationLibrary.getInstance().vaccineRepository().getAddressIdentifier(vaccine.getBaseEntityId());
+
             if(vaccine.isInvalid()){
                 identifiers.put("is_invalid","true");
             }
@@ -109,7 +107,10 @@ public class JsonFormUtils extends org.smartregister.util.JsonFormUtils {
                             serviceRecord.getFormSubmissionId() == null ? generateRandomUUIDString() : serviceRecord
                                     .getFormSubmissionId())
                     .withDateCreated(new Date());
+            Map<String,String> identifiers  = ImmunizationLibrary.getInstance().vaccineRepository().getAddressIdentifier(serviceRecord.getBaseEntityId());
 
+            Log.e("VACCINE","identifiers>>>"+identifiers);
+            event.setIdentifiers(identifiers);
             event.setTeam(serviceRecord.getTeam());
             event.setTeamId(serviceRecord.getTeamId());
             event.setChildLocationId(serviceRecord.getChildLocationId());
