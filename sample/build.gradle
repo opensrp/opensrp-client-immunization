@@ -85,15 +85,13 @@ dependencies {
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.7.0-SNAPSHOT@aar') {
-        transitive = true
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
+//    implementation('org.smartregister:opensrp-client-native-form:1.7.0-SNAPSHOT@aar') {
+//        transitive = true
+//        exclude group: 'com.android.support', module: 'recyclerview-v7'
+//    }
 
 
-    implementation('com.android.support:design:28.0.0') {
-        exclude group: 'com.android.support'
-    }
+    implementation('com.android.support:design:28.0.0')
 
     implementation project(':opensrp-immunization')
 

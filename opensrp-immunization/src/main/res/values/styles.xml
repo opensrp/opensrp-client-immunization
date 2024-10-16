@@ -1,13 +1,13 @@
 <resources>
 
-    <style name="Material.Drawable.CheckBox.Dialog" parent="Material.Drawable.CheckBox">
-        <item name="cbd_width">40dp</item>
-        <item name="cbd_height">40dp</item>
-        <item name="cbd_tickColor">@color/light_blue</item>
-        <item name="cbd_strokeColor">@color/vaccinate_popup_light_grey</item>
-        <item name="cbd_cornerRadius">0dp</item>
-        <item name="cbd_strokeSize">3.5dp</item>
-        <item name="cbd_boxSize">25dp</item>
-    </style>
+<!--    <style name="Material.Drawable.CheckBox.Dialog" >-->
+<!--        <item name="cbd_width">40dp</item>-->
+<!--        <item name="cbd_height">40dp</item>-->
+<!--        <item name="cbd_tickColor">@color/light_blue</item>-->
+<!--        <item name="cbd_strokeColor">@color/vaccinate_popup_light_grey</item>-->
+<!--        <item name="cbd_cornerRadius">0dp</item>-->
+<!--        <item name="cbd_strokeSize">3.5dp</item>-->
+<!--        <item name="cbd_boxSize">25dp</item>-->
+<!--    </style>-->
 
 </resources>

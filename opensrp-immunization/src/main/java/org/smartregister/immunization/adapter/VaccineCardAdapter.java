@@ -402,6 +402,43 @@ public class VaccineCardAdapter extends BaseAdapter {
 
                 }
 
+            }else if(!TextUtils.isEmpty(getWomanVaccineName(vaccineName))){
+                if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.tt2.display())){
+                    Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,"tt_1");
+                    if(vaccine!=null){
+                        DateTime opv1GivenDate = new DateTime(vaccine.getDate());
+                        dobCalender.setTime(opv1GivenDate.toDate());
+                        dobCalender.add(Calendar.DATE, 28);
+                    }
+                    return;
+                }
+                if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.tt3.display())){
+                    Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,"tt_2");
+                    if(vaccine!=null){
+                        DateTime opv1GivenDate = new DateTime(vaccine.getDate());
+                        dobCalender.setTime(opv1GivenDate.toDate());
+                        dobCalender.add(Calendar.DATE, 182);
+                    }
+                    return;
+                }
+                if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.tt4.display())){
+                    Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,"tt_3");
+                    if(vaccine!=null){
+                        DateTime opv1GivenDate = new DateTime(vaccine.getDate());
+                        dobCalender.setTime(opv1GivenDate.toDate());
+                        dobCalender.add(Calendar.DATE, 365);
+                    }
+                    return;
+                }
+                if(vaccineName.equalsIgnoreCase(VaccineRepo.Vaccine.tt5.display())){
+                    Vaccine vaccine = ImmunizationLibrary.getInstance().vaccineRepository().getVaccineByName(baseEntityId,"tt_4");
+                    if(vaccine!=null){
+                        DateTime opv1GivenDate = new DateTime(vaccine.getDate());
+                        dobCalender.setTime(opv1GivenDate.toDate());
+                        dobCalender.add(Calendar.DATE, 365);
+                    }
+                }
+
             }
         }
         private String getApplicableVaccineName(String vaccineName){
@@ -422,6 +459,21 @@ public class VaccineCardAdapter extends BaseAdapter {
                     return "penta_1";
                 case "Penta 3":
                     return "penta_2";
+            }
+            return "";
+        }
+        private String getWomanVaccineName(String vaccineName){
+            switch (vaccineName){
+                case "TT 1":
+                    return "tt_1";
+                case "TT 2":
+                    return "tt_2";
+                case "TT 3":
+                    return "tt_3";
+                case "TT 4":
+                    return "tt_4";
+                case "TT 5":
+                    return "tt_5";
             }
             return "";
         }

@@ -17,17 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.vijay.jsonwizard.customviews.CheckBox;
-import com.vijay.jsonwizard.customviews.RadioButton;
-import com.vijay.jsonwizard.utils.DatePickerUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -43,6 +41,7 @@ import org.smartregister.immunization.listener.VaccinationActionListener;
 import org.smartregister.immunization.util.ImageUtils;
 import org.smartregister.immunization.util.Utils;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.util.DatePickerUtils;
 import org.smartregister.util.OpenSRPImageLoader;
 import org.smartregister.view.activity.DrishtiApplication;
 

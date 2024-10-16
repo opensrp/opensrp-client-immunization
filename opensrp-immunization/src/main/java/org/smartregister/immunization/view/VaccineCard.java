@@ -222,7 +222,7 @@ public class VaccineCard extends LinearLayout {
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
 
-                if(statusInvalidVaccine&& vaccineName!=null && !vaccineName.contains("tt")){
+                if(statusInvalidVaccine&& vaccineName!=null ){
                     invalidB.setVisibility(VISIBLE);
                 }else{
                     invalidB.setVisibility(GONE);
@@ -238,7 +238,7 @@ public class VaccineCard extends LinearLayout {
                 break;
             case DONE_CAN_BE_UNDONE:
 
-                if(statusInvalidVaccine && vaccineName!=null&&!vaccineName.contains("tt")){
+                if(statusInvalidVaccine && vaccineName!=null){
 
                     invalidB.setText("Invalid Dose given at \n"+DATE_FORMAT.format(getDateDone()));
                     nameTV.setText(vaccineName+" - Due "+DATE_FORMAT.format(getDateDue()));
@@ -268,7 +268,7 @@ public class VaccineCard extends LinearLayout {
                 break;
             case DONE_CAN_NOT_BE_UNDONE:
 
-                if(statusInvalidVaccine && vaccineName!=null&&!vaccineName.contains("tt")){
+                if(statusInvalidVaccine && vaccineName!=null){
 
                     invalidB.setText("Invalid Dose given at \n"+DATE_FORMAT.format(getDateDone()));
                     nameTV.setText(vaccineName+" - Due "+DATE_FORMAT.format(getDateDue()));
@@ -300,7 +300,7 @@ public class VaccineCard extends LinearLayout {
                 setBackgroundResource(R.drawable.vaccine_card_background_red);
                 statusIV.setVisibility(GONE);
                 undoB.setVisibility(GONE);
-                if(statusInvalidVaccine&& vaccineName!=null&&!vaccineName.contains("tt")){
+                if(statusInvalidVaccine&& vaccineName!=null){
                     invalidB.setVisibility(VISIBLE);
                 }else{
                     invalidB.setVisibility(GONE);
