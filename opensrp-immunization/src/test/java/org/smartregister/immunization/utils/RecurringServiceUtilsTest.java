@@ -3,23 +3,22 @@ package org.smartregister.immunization.utils;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import androidx.test.core.app.ApplicationProvider;
+import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceWrapper;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
+import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.RecurringServiceUtils;
 import org.smartregister.immunization.view.ServiceGroup;
+import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,23 +26,31 @@ import java.util.List;
 /**
  * Created by ndegwamartin on 2020-03-23.
  */
-
-@PrepareForTest({ImmunizationLibrary.class})
 public class RecurringServiceUtilsTest extends BaseUnitTest {
 
     private static final String SG_BETA = "SG Beta";
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
     @Mock
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
+
     @Mock
     private ImmunizationLibrary immunizationLibrary;
 
+    @Mock
+    private Context drishtiContext;
+
+    @Mock
+    private VaccineRepository vaccineRepository;
+
+    @Mock
+    private AlertService alertService;
+
+    @Mock
+    private AppProperties appProperties;
+
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
+        mockImmunizationLibrary(immunizationLibrary, drishtiContext, vaccineRepository, alertService, appProperties);
     }
 
     @Test
@@ -75,17 +82,14 @@ public class RecurringServiceUtilsTest extends BaseUnitTest {
 
     @Test
     public void testCanSaveService() {
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
+        Mockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
         ServiceWrapper tag = new ServiceWrapper();
         tag.setUpdatedVaccineDate(new DateTime(), true);
         String baseEntityId = "test-entity-id";
         String providerId = "testProvider";
         String locationId = "test-location-id";
         RecurringServiceUtils.saveService(tag, baseEntityId, providerId, locationId,
-               "testTeam", "testTeamId", "testChildLocation");
-        Mockito.verify(recurringServiceRecordRepository, Mockito.times(1)).add((ServiceRecord) ArgumentMatchers.any());
+                "testTeam", "testTeamId", "testChildLocation");
+        Mockito.verify(recurringServiceRecordRepository, Mockito.times(1)).add((ServiceRecord) Mockito.any());
     }
 }
-

@@ -1,87 +1,79 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url "https://maven.google.com"
-        }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-        maven { url "https://repo.maven.apache.org/maven2" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0"
-        classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.12.0'
-        classpath 'org.smartregister:gradle-jarjar-plugin:1.0.0-SNAPSHOT'
-        classpath 'com.android.tools.build:gradle:4.2.2'
-    }
+plugins {
+  id 'com.android.application' version '8.6.0' apply false
+  id 'com.android.library' version '8.6.0' apply false
+  id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
-configure(allprojects) { project ->
-    buildscript {
+group = findProperty('GROUP') ?: 'org.smartregister'
+version = findProperty('VERSION_NAME') ?: '0.0.1-SNAPSHOT'
 
-        version = VERSION_NAME
-        group = GROUP
+allprojects {
+  group = rootProject.group
+  version = rootProject.version
 
-        repositories {
-            jcenter()
-            mavenCentral()
-            maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-            maven { url "https://plugins.gradle.org/m2/" }
-            mavenLocal()
-        }
+  repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://cloudant.github.io/cloudant-sync-eap/repository' }
+    maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+  }
+
+  configurations.configureEach {
+    resolutionStrategy {
+      dependencySubstitution {
+        substitute(module('com.github.BlueCodeSystems:opensrp-client-core'))
+          .using(module('io.github.bluecodesystems:opensrp-client-core:6.2.2'))
+        substitute(module('org.smartregister:opensrp-client-core'))
+          .using(module('io.github.bluecodesystems:opensrp-client-core:6.2.2'))
+        substitute(module('io.github.bluecodesystems:android-p2p-sync'))
+          .using(module('com.github.BlueCodeSystems:android-p2p-sync:v0.4.3'))
+      }
+      force 'com.commonsware.cwac:saferoom.x:1.3.0'
     }
+    exclude group: 'com.commonsware.cwac', module: 'saferoom'
+  }
 }
 
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
-
-subprojects {
-
-    group = 'org.smartregister'
-
-    ext.androidToolsBuildGradle = '4.2.2'
-    ext.androidBuildToolsVersion = '30.0.2'
-    ext.androidMinSdkVersion = 18
-    ext.androidCompileSdkVersion = 31
-    ext.androidTargetSdkVersion = 31
-
-    ext.androidAnnotationsVersion = '3.0.1'
-    ext.androidAnnotationsAPIVersion = '3.0.1'
-
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-        maven { url "https://acra.googlecode.com/svn/repository/releases" }
-        maven { url "https://repo.maven.apache.org/maven2" }
-        mavenLocal()
-    }
-
-    // Improve build server performance by allowing disabling of pre-dexing
-    // (see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
-    }
+subprojects { subproject ->
+  subproject.tasks.withType(Test).configureEach { testTask ->
+    maxParallelForks = 1
+    forkEvery = 0
+    useJUnit()
+    jvmArgs(
+      '--add-opens=java.base/java.lang=ALL-UNNAMED',
+      '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+      '--add-opens=java.base/java.io=ALL-UNNAMED',
+      '--add-opens=java.base/java.net=ALL-UNNAMED',
+      '--add-opens=java.base/java.util=ALL-UNNAMED',
+      '--add-opens=java.base/java.text=ALL-UNNAMED',
+      '--add-opens=java.base/java.security=ALL-UNNAMED',
+      '--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED',
+      '--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED',
+      '--add-opens=java.base/jdk.internal.util=ALL-UNNAMED',
+      '--add-opens=java.base/sun.nio.ch=ALL-UNNAMED',
+      '--add-opens=java.base/sun.security.util=ALL-UNNAMED',
+      '--add-opens=java.desktop/java.awt.font=ALL-UNNAMED',
+      '--add-exports=java.base/jdk.internal.reflect=ALL-UNNAMED'
+    )
+  }
 }
 
-apply plugin: 'java'
-apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'build-dashboard'
-apply plugin: 'io.codearte.nexus-staging'
-
-buildDashboard {
-    reports.html.setDestination(file("build/"))
+allprojects {
+  tasks.withType(JavaCompile).configureEach {
+    options.fork = true
+    options.forkOptions.memoryMaximumSize = '2048m'
+  }
 }
 
-test.reports.html.enabled = false
-test.reports.junitXml.enabled = false
+nexusStaging {
+  serverUrl = 'https://s01.oss.sonatype.org/service/local/'
+  // Credentials provided via -PsonatypeUsername/-PsonatypePassword
+}
 
-def isReleaseBuild() {
-    return version.contains("SNAPSHOT") == false
+tasks.register('clean', Delete) {
+  delete rootProject.layout.buildDirectory
 }

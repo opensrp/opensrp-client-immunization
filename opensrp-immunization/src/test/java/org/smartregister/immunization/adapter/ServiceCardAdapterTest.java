@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
@@ -185,7 +184,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
         HashMap<String, ServiceCard> serviceCards = new HashMap<>();
         serviceCards.put("sample", serviceCard);
 
-        Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
+        ReflectionHelpers.setField(serviceCardAdapter, "serviceCards", serviceCards);
         serviceCardAdapter.updateAll();
         Mockito.verify(serviceCard).updateState();
 
@@ -199,7 +198,7 @@ public class ServiceCardAdapterTest extends BaseUnitTest implements Executor {
         HashMap<String, ServiceCard> serviceCards = new HashMap<>();
         serviceCards.put("sample", serviceCard);
 
-        Whitebox.setInternalState(serviceCardAdapter, "serviceCards", serviceCards);
+        ReflectionHelpers.setField(serviceCardAdapter, "serviceCards", serviceCards);
         serviceCardAdapter.updateChildsActiveStatus();
         Mockito.verify(serviceCard).updateChildsActiveStatus();
     }

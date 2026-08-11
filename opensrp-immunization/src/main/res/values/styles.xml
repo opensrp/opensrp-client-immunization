@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <style name="Material.Drawable.CheckBox.Dialog" parent="Material.Drawable.CheckBox">
@@ -9,5 +10,7 @@
         <item name="cbd_strokeSize">3.5dp</item>
         <item name="cbd_boxSize">25dp</item>
     </style>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
 </resources>

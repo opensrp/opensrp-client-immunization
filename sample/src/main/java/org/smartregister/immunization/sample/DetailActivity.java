@@ -20,8 +20,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.framework.qual.Unused;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -10,11 +10,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.Robolectric;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -57,9 +55,7 @@ public class VaccineCardTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-
-        Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
+Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(context_).userService();
 
         Mockito.doReturn(5).when(allSharedPreferences).getDBEncryptionVersion();
@@ -165,7 +161,7 @@ public class VaccineCardTest extends BaseUnitTest {
         view.setVaccineWrapper(wrapper);
         Assert.assertEquals(view.getState(), State.DONE_CAN_BE_UNDONE);
 
-        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
+        ImmunizationLibrary.destroy();
     }
 
     @Test
@@ -215,9 +211,9 @@ public class VaccineCardTest extends BaseUnitTest {
         AppProperties appProperties = Mockito.mock(AppProperties.class);
         Mockito.when(context_.getAppProperties()).thenReturn(appProperties);
 
-        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+        org.robolectric.util.ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
 
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
@@ -243,7 +239,7 @@ public class VaccineCardTest extends BaseUnitTest {
 
         Mockito.verify(cardView).setBackgroundResource(R.drawable.vaccine_card_background_blue);
 
-        ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", null);
+        ImmunizationLibrary.destroy();
     }
 
     @After

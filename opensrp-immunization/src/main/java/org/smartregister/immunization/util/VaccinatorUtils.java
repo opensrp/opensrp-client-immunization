@@ -1082,11 +1082,43 @@ public class VaccinatorUtils {
     }
 
     public static List<VaccineGroup> getVaccineGroupsFromVaccineConfigFile(@Nullable android.content.Context context, String vaccines_file) {
+        if (!assetFileExists(context, vaccines_file)) {
+            Timber.w("Vaccine config file %s not found in assets, skipping", vaccines_file);
+            return new ArrayList<>();
+        }
+
         Map<String, Object> jsonMap = new HashMap<>();
         Class<List<VaccineGroup>> clazz = (Class) List.class;
         Type listType = new TypeToken<List<VaccineGroup>>() {
         }.getType();
         return ImmunizationLibrary.assetJsonToJava(jsonMap, context, vaccines_file, clazz, listType);
+    }
+
+    /**
+     * Checks whether a file exists in the app's assets root without attempting to open it,
+     * so callers can skip optional vaccine config files (e.g. mother_vaccines.json) that may
+     * not be bundled by every app, instead of relying on a caught FileNotFoundException.
+     */
+    private static boolean assetFileExists(@Nullable Context context, String fileName) {
+        if (context == null || fileName == null) {
+            return false;
+        }
+
+        try {
+            String[] rootAssets = context.getAssets().list("");
+            if (rootAssets == null) {
+                return false;
+            }
+            for (String asset : rootAssets) {
+                if (fileName.equals(asset)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (IOException e) {
+            Timber.e(e);
+            return false;
+        }
     }
 
     /***

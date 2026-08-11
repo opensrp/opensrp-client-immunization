@@ -1,2 +1,47 @@
+pluginManagement {
+  repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
+
+enableFeaturePreview('STABLE_CONFIGURATION_CACHE')
+
 rootProject.name = 'opensrp-client-immunization'
-include ':opensrp-immunization', ':sample'
+include ':sample', ':opensrp-immunization'
+
+// Optional local composite builds for sibling OpenSRP projects
+def sibling = { String path -> file(path)?.exists() }
+def useLocalSiblings = (
+  gradle.startParameter.projectProperties['useLocalSiblings'] ?:
+    System.getenv('USE_LOCAL_SIBLINGS')
+)?.toString()?.toBoolean() ?: false
+
+if (useLocalSiblings && sibling('../opensrp-client-core')) {
+  includeBuild('../opensrp-client-core') {
+    dependencySubstitution {
+      substitute(module('io.github.bluecodesystems:opensrp-client-core'))
+        .using(project(':opensrp-core'))
+    }
+  }
+}
+
+if (useLocalSiblings && sibling('../opensrp-client-native-form')) {
+  includeBuild('../opensrp-client-native-form') {
+    dependencySubstitution {
+      substitute(module('io.github.bluecodesystems:opensrp-client-native-form-new'))
+        .using(project(':opensrp-native-form'))
+    }
+  }
+}
+
+if (useLocalSiblings && sibling('../opensrp-client-configurable-views')) {
+  includeBuild('../opensrp-client-configurable-views') {
+    dependencySubstitution {
+      substitute(module('com.github.BlueCodeSystems:opensrp-client-configurable-views'))
+        .using(project(':opensrp-client-configurable-views'))
+    }
+  }
+}

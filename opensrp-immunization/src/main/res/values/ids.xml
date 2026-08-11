@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="not_give_condition_id" type="id" />>
+    <item type="id" name="entity_id" />
+    <item type="id" name="not_give_condition_id" />
+    <item type="id" name="key" />
 </resources>

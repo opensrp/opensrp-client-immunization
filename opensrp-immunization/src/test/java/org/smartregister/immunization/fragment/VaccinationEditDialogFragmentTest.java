@@ -7,14 +7,10 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
@@ -25,6 +21,7 @@ import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
 import org.smartregister.immunization.customshadows.FontTextViewShadow;
 import org.smartregister.immunization.db.VaccineRepo;
+import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.domain.VaccineData;
 import org.smartregister.immunization.domain.VaccineSchedule;
 import org.smartregister.immunization.domain.VaccineWrapper;
@@ -49,7 +46,6 @@ import timber.log.Timber;
  * Created by onaio on 30/08/2017.
  */
 @Config(shadows = {FontTextViewShadow.class, DrishtiApplicationShadow.class})
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     private ActivityController<VaccinationEditDialogFragmentTestActivity> controller;
@@ -65,8 +61,10 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
     @Mock
     private Context context;
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
+    @Mock
+    private VaccineRepository vaccineRepository;
+    @Mock
+    private org.smartregister.service.AlertService alertService;
 
     @Mock
     private AppProperties properties;
@@ -79,8 +77,6 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(context_).userService();
 
@@ -91,14 +87,15 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         CoreLibrary.init(context_);
         Mockito.doReturn(properties).when(context_).getAppProperties();
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(ImmunizationLibrary.getInstance().context()).thenReturn(context);
+        org.robolectric.util.ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+        Mockito.doReturn(context).when(immunizationLibrary).context();
         Mockito.doReturn(properties).when(immunizationLibrary).getProperties();
 
         Mockito.doReturn(VaccineRepo.Vaccine.values()).when(immunizationLibrary).getVaccines(IMConstants.VACCINE_TYPE.CHILD);
 
-        activity = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class).create().start().get();
+        ActivityController<VaccinationEditDialogFragmentTestActivity> activityController = Robolectric.buildActivity(VaccinationEditDialogFragmentTestActivity.class);
+        controller = activityController;
+        activity = activityController.create().start().get();
         activity.setContentView(R.layout.service_dialog_view);
 
         Type listType = new TypeToken<List<VaccineGroup>>() {
@@ -118,12 +115,17 @@ public class VaccinationEditDialogFragmentTest extends BaseUnitTest {
         destroyController();
         activity = null;
         controller = null;
+        ImmunizationLibrary.destroy();
     }
 
     private void destroyController() {
         try {
-            activity.finish();
-            controller.pause().stop().destroy(); //destroy controller if we can
+            if (activity != null) {
+                activity.finish();
+            }
+            if (controller != null) {
+                controller.pause().stop().destroy(); //destroy controller if we can
+            }
         } catch (Exception e) {
             Timber.e(e);
         }

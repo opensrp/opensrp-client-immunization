@@ -6,22 +6,15 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
-import org.smartregister.commonregistry.CommonFtsObject;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
-import org.smartregister.domain.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
@@ -32,7 +25,6 @@ import org.smartregister.immunization.domain.VaccineTest;
 import org.smartregister.immunization.domain.VaccineWrapper;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.repository.EventClientRepository;
-import org.smartregister.repository.Repository;
 
 import java.util.Date;
 
@@ -40,24 +32,19 @@ import java.util.Date;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ImmunizationRowCardTest extends BaseUnitTest {
 
     private final String magicDue = "due";
     private final String magicMR = "mr";
     private final String magicMeasles = "measles";
     private final String magicExpired = "expired";
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
     private ImmunizationRowCard view;
 
     private ImmunizationLibrary immunizationLibrary;
 
     @Before
     public void setUp() throws Exception {
-        org.mockito.MockitoAnnotations.initMocks(this);
         view = new ImmunizationRowCard(ApplicationProvider.getApplicationContext());
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
 
@@ -65,22 +52,14 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
                 new Date(),
                 VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
                 VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0, new Date(), 1,1);
-        Event event = new Event();
-        event.setEventId("1");
-        event.setDateCreated(new DateTime());
-
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
         immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         VaccineRepository vaccineRepository = Mockito.mock(VaccineRepository.class);
-        ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
-                Mockito.mock(CommonFtsObject.class), 0, 0);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
-        PowerMockito.when(vaccineRepository.find(ArgumentMatchers.anyLong())).thenReturn(vaccine);
-        PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository
-                .convert(ArgumentMatchers.any(JSONObject.class), ArgumentMatchers.any(Class.class)))
-                .thenReturn(event);
+        org.robolectric.util.ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+        Mockito.doReturn(vaccineRepository).when(immunizationLibrary).vaccineRepository();
+        Mockito.when(vaccineRepository.find(ArgumentMatchers.anyLong())).thenReturn(vaccine);
+        Mockito.doReturn(eventClientRepository).when(immunizationLibrary).eventClientRepository();
+        Mockito.when(eventClientRepository.convert(ArgumentMatchers.any(JSONObject.class), ArgumentMatchers.any(Class.class)))
+                .thenReturn(null);
     }
 
     @Test
@@ -172,7 +151,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
     @Test
     public void testHideVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
@@ -184,7 +163,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
         ImmunizationRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setVaccineWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -204,7 +183,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
     @Test
     public void testShowVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         VaccineWrapper wrapper = new VaccineWrapper();
@@ -216,7 +195,7 @@ public class ImmunizationRowCardTest extends BaseUnitTest {
 
         ImmunizationRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setVaccineWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_red);

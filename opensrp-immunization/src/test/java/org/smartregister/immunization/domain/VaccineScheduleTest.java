@@ -5,14 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.domain.Alert;
 import org.smartregister.immunization.BaseUnitTest;
@@ -39,12 +36,9 @@ import java.util.List;
 /**
  * Created by real on 23/10/17.
  */
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccineScheduleTest extends BaseUnitTest {
 
     private final String magicOPV0 = "OPV 0";
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
     @Mock
     private ImmunizationLibrary immunizationLibrary;
     @Mock

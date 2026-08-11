@@ -14,7 +14,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.TestApplication;
@@ -49,9 +48,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-
-        Mockito.when(application.getRepository()).thenReturn(repository);
+Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
         org.junit.Assert.assertNotNull(vaccineTypeRepository);
@@ -66,7 +63,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
         VaccineTypeRepository vaccineTypeRepository = new VaccineTypeRepository(commonFtsObject, alertService);
         //        Mockito.when(vaccineTypeRepository.getReadableDatabase()).thenReturn(sqliteDatabase);
         VaccineTypeRepository spy = Mockito.spy(vaccineTypeRepository);
-        PowerMockito.doReturn(list).when(spy).findIDByName(ArgumentMatchers.anyString());
+        Mockito.doReturn(list).when(spy).findIDByName(ArgumentMatchers.anyString());
         Assert.assertEquals(spy.getDosesPerVial(""), magic10);
     }
 
@@ -115,7 +112,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindbyEntityIDcallsDatabaseQueryMethod1Times() {
-        Cursor cursor = PowerMockito.mock(Cursor.class);
+        Cursor cursor = Mockito.mock(Cursor.class);
         Mockito.when(sqliteDatabase
                 .query(ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
                         ArgumentMatchers.anyString(), ArgumentMatchers.any(String[].class),
@@ -134,7 +131,7 @@ public class VaccineTypeRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindallVaccineTypcallsDatabaseQueryMethod1Times() {
-        //        Cursor cursor = PowerMockito.mock(Cursor.class);
+        //        Cursor cursor = Mockito.mock(Cursor.class);
         String[] columns = new String[]{VaccineTypeRepository.ID_COLUMN, VaccineTypeRepository.DOSES, VaccineTypeRepository.NAME, VaccineTypeRepository.OPENMRS_PARENT_ENTITIY_ID, VaccineTypeRepository.OPENMRS_DATE_CONCEPT_ID, VaccineTypeRepository.OPENMRS_DOSE_CONCEPT_ID};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, 1, "", "", "", ""});

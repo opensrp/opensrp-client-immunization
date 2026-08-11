@@ -3,7 +3,6 @@ package org.smartregister.immunization.fragment.mock;
 import android.content.Context;
 
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.shadow.api.Shadow;
@@ -19,17 +18,15 @@ public class DrishtiApplicationShadow extends Shadow {
     private static OpenSRPImageLoader openSRPImageLoader;
     private Repository repository;
 
-    private DrishtiApplication drishtiApplication;
+    private static DrishtiApplication drishtiApplication;
 
     public DrishtiApplicationShadow() {
         super();
         repository = Mockito.mock(Repository.class);
-        drishtiApplication = Mockito.mock(DrishtiApplication.class);
-
-
-        PowerMockito.mockStatic(DrishtiApplication.class);
-        PowerMockito.when(DrishtiApplication.getInstance()).thenReturn(drishtiApplication);
-        Mockito.doReturn(Mockito.mock(Context.class)).when(drishtiApplication).getApplicationContext();
+        if (drishtiApplication == null) {
+            drishtiApplication = Mockito.mock(DrishtiApplication.class);
+            Mockito.doReturn(Mockito.mock(Context.class)).when(drishtiApplication).getApplicationContext();
+        }
     }
 
     @Implementation
@@ -73,10 +70,8 @@ public class DrishtiApplicationShadow extends Shadow {
 
 
     @Implementation
-    public DrishtiApplication getInstance() {
-
+    public static DrishtiApplication getInstance() {
         return drishtiApplication;
-
     }
 
 }

@@ -55,6 +55,9 @@ public class ServiceCardTest extends BaseUnitTest {
     @Mock
     private AllSharedPreferences allSharedPreferences;
 
+    @Mock
+    private ImmunizationLibrary immunizationLibrary;
+
     @Before
     public void setUp() {
         org.mockito.MockitoAnnotations.initMocks(this);
@@ -64,6 +67,8 @@ public class ServiceCardTest extends BaseUnitTest {
         ReflectionHelpers.setStaticField(CoreLibrary.class, "instance", coreLibrary);
         Mockito.when(coreLibrary.context()).thenReturn(openSRPContext);
         Mockito.doReturn(allSharedPreferences).when(openSRPContext).allSharedPreferences();
+        org.robolectric.util.ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
         controller.setup();
         view = activity.getInstance();
 

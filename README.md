@@ -1,3 +1,153 @@
+<!-- JITPACK BADGES:START -->
+[![JitPack Latest](https://jitpack.io/v/BlueCodeSystems/opensrp-client-immunization.svg)](https://jitpack.io/#BlueCodeSystems/opensrp-client-immunization)
+[![Build for latest tag (v5.1.1)](https://jitpack.io/v/BlueCodeSystems/opensrp-client-immunization/v5.1.1.svg)](https://jitpack.io/#BlueCodeSystems/opensrp-client-immunization/v5.1.1)
+[![master-SNAPSHOT](https://jitpack.io/v/BlueCodeSystems/opensrp-client-immunization/master-SNAPSHOT.svg)](https://jitpack.io/#BlueCodeSystems/opensrp-client-immunization/master-SNAPSHOT)
+<!-- JITPACK BADGES:END -->
+
+# opensrp-client-immunization
+OpenSRP's immunization library delivers reusable Android components for capturing, scheduling, and displaying vaccination services in frontline health applications.
+
+## Project Status
+- Toolchain: Gradle 8.7 · Android Gradle Plugin 8.6.0 · Java 17 (no Kotlin dependency)
+- Verification: `./gradlew test` exercises Robolectric and Mockito based unit tests
+- Source: active development on the `master` branch (see `git log` for latest commit)
+- Releases: no tagged versions yet—follow the Releases tab for future builds
+
+## Features
+- Shared `ImmunizationLibrary` singleton that wires repositories, caches, and sync helpers
+- Vaccine scheduling utilities (`VaccineSchedule`, `VaccinatorUtils`) for child and woman cohorts
+- UI widgets and fragments for recording, undoing, and reviewing immunization services
+- Service and vaccine repositories backed by SQLCipher storage and ancillary metadata caches
+
+## Requirements
+- JDK 17 (or newer compatible with AGP 8.6.0)
+- Android Gradle Plugin 8.6.0 with Gradle 8.7
+- AndroidX toolchain; Kotlin is optional (the library is Java based)
+- Minimum SDK 28, target/compile SDK 35
+- Android NDK 26.2.11394342 for builds that include native dependencies
+
+## Install
+Add the dependency from Maven Central (replace `<version>` with the latest release number from the Releases page):
+
+<details>
+<summary>Groovy DSL</summary>
+
+```groovy
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.smartregister:opensrp-client-immunization:<version>'
+}
+```
+</details>
+
+<details>
+<summary>Kotlin DSL</summary>
+
+```kotlin
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation("org.smartregister:opensrp-client-immunization:<version>")
+}
+```
+</details>
+
+> ℹ️  See the Releases tab for stable version numbers; avoid using snapshot coordinates in production builds.
+
+## Initialize
+Create your `Application` subclass and initialize the library once with project specific repositories and metadata:
+
+```java
+public final class ImmunizationApp extends Application {
+
+  private static final int DATABASE_VERSION = 7; // match your repository schema
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+
+    Repository repository = /* TODO: provide your SQLCipher-backed Repository */ null;
+    CommonFtsObject ftsObject = new CommonFtsObject(new String[]{"ec_client"});
+
+    ImmunizationLibrary.init(
+        org.smartregister.Context.getInstance(),
+        repository,
+        ftsObject,
+        BuildConfig.VERSION_CODE,
+        BuildConfig.VERSION_NAME,
+        DATABASE_VERSION
+    );
+  }
+}
+```
+
+If your deployment already manages the shared repository/container, call `ImmunizationLibrary.getInstance()` directly after the hosting application performs the setup.
+
+## Usage examples
+```java
+// Retrieve localized vaccine groups for child services
+List<VaccineGroup> childGroups = VaccinatorUtils.getSupportedVaccines(context);
+```
+
+```java
+// Prime schedules and refresh alerts after syncing new records
+VaccineSchedule.init(vaccineGroups, specialVaccines, IMConstants.VACCINE_TYPE.CHILD);
+VaccineSchedule.updateOfflineAlerts(
+    baseEntityId,
+    new DateTime(),
+    IMConstants.VACCINE_TYPE.CHILD
+);
+```
+
+```java
+// Record completed services and fetch aggregates
+Map<String, Date> received = VaccinatorUtils.receivedVaccines(vaccines);
+RecurringServiceRecordRepository records =
+    ImmunizationLibrary.getInstance().recurringServiceRecordRepository();
+records.add(new ServiceRecord());
+```
+
+Explore `org.smartregister.immunization.*` for additional repositories, undo helpers, and UI components that you can compose inside your own workflows.
+
+## Sample app
+A runnable showcase is available under `sample/`.
+
+```bash
+./gradlew :sample:installDebug
+```
+
+Import the project into Android Studio, select the **sample** run configuration, and deploy to a device or emulator to exercise the screens.
+
+## Build & test
+```bash
+./gradlew clean assemble
+./gradlew test
+```
+
+The first command assembles all build variants; the second executes the unit test suite (Robolectric + Mockito).
+
+## Releases
+Release notes and published binaries will appear on the [GitHub Releases](https://github.com/BlueCodeSystems/opensrp-client-immunization/releases) page.
+
+## Contributing
+We welcome issues and pull requests. Before submitting changes:
+- Build and test with the toolchain documented above (Gradle 8.7 / AGP 8.6.0 / JDK 17)
+- Follow conventional commit messages and Android code style
+- If your contribution introduces new flows, update or expand the usage examples
+
+## License
+This project is licensed under the [Apache License 2.0](./LICENSE).
+
+---
+
+<details>
+<summary>Legacy documentation (retained for historical reference)</summary>
+
 ![Build status](https://github.com/OpenSRP/opensrp-client-immunization/workflows/Android%20CI%20with%20Gradle/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/OpenSRP/opensrp-client-immunization/badge.svg?branch=master)](https://coveralls.io/github/OpenSRP/opensrp-client-immunization?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a58cd4e1748432780ac66a9fbee0394)](https://www.codacy.com/app/OpenSRP/opensrp-client-immunization?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OpenSRP/opensrp-client-immunization&amp;utm_campaign=Badge_Grade)
 
 [![Dristhi](https://raw.githubusercontent.com/OpenSRP/opensrp-client/master/opensrp-app/res/drawable-mdpi/login_logo.png)](https://smartregister.atlassian.net/wiki/dashboard.action)
@@ -251,3 +401,5 @@ Some of the vaccine configurations are not dependent on change done to the `vacc
 and come-up with the correct configuration. Next step is to add the custom configuration to library. You should loop through the configurations array from `VaccineRepo.Vaccine[] ImmunizationLibrary.getInstance().getVaccines(category)` and add 
 modify the properties of the vaccine enum to whatever you need. You should then use `ImmunizationLibrary.getInstance().setVaccines(VaccineRepo.Vaccine[], category)`
 to re-set all the vaccine configs using the configurations array you retrieved.
+
+</details>

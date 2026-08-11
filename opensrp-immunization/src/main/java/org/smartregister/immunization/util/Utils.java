@@ -120,7 +120,7 @@ public class Utils {
         } else {
             //Eject from map if no values found. Will allow reprocessing if invoked later
             ImmunizationLibrary.getVaccineCacheMap().remove(category);
-            Timber.e("No such vaccine configuration file found for category");
+            Timber.w("No vaccine configuration file found for category %s, skipping", category);
         }
     }
 

@@ -3,28 +3,27 @@ package org.smartregister.immunization.service.intent;
 import android.app.Application;
 import android.content.Intent;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.powermock.reflect.Whitebox;
-import androidx.test.core.app.ApplicationProvider;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.ServiceRecord;
 import org.smartregister.immunization.domain.ServiceType;
 import org.smartregister.immunization.repository.RecurringServiceRecordRepository;
 import org.smartregister.immunization.repository.RecurringServiceTypeRepository;
+import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.IMConstants;
+import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,10 +31,7 @@ import java.util.List;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest ({ImmunizationLibrary.class})
 public class RecurringIntentServiceTest extends BaseUnitTest {
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     @Mock
     private ImmunizationLibrary immunizationLibrary;
@@ -45,6 +41,18 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Mock
     private RecurringServiceRecordRepository recurringServiceRecordRepository;
+
+    @Mock
+    private org.smartregister.Context drishtiContext;
+
+    @Mock
+    private VaccineRepository vaccineRepository;
+
+    @Mock
+    private AlertService alertService;
+
+    @Mock
+    private AppProperties appProperties;
 
     @Spy
     private List<ServiceRecord> serviceRecordList = new ArrayList<>();
@@ -59,46 +67,34 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        mockImmunizationLibrary(immunizationLibrary, drishtiContext, vaccineRepository, alertService, appProperties);
     }
 
     @Test
-    public void onHandleIntentTest() {
+    public void onHandleIntentTest() throws Exception {
         Application application = ApplicationProvider.getApplicationContext();
         Intent intent = new Intent(application, RecurringIntentService.class);
 
         RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        Assert.assertNotNull(immunizationLibrary);
+        Mockito.when(immunizationLibrary.recurringServiceTypeRepository()).thenReturn(recurringServiceTypeRepository);
+        Mockito.when(immunizationLibrary.recurringServiceRecordRepository()).thenReturn(recurringServiceRecordRepository);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceTypeRepository())
-                .thenReturn(recurringServiceTypeRepository);
-        Assert.assertNotNull(recurringServiceTypeRepository);
-
-        PowerMockito.when(ImmunizationLibrary.getInstance().recurringServiceRecordRepository())
-                .thenReturn(recurringServiceRecordRepository);
-        Assert.assertNotNull(recurringServiceRecordRepository);
         ServiceRecord serviceRecord = new ServiceRecord(0L, BASEENTITYID, 0L, VALUE, new Date(), ANMID, LOCATIONID, SYNCED,
-                EVENTID,
-                FORMSUBMISSIONID, 0L);
+                EVENTID, FORMSUBMISSIONID, 0L);
 
         Mockito.when(recurringServiceRecordRepository.findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME))
                 .thenReturn(serviceRecordList);
         serviceRecordList.add(serviceRecord);
-        Assert.assertNotNull(serviceRecordList);
 
         Mockito.when(recurringServiceTypeRepository.find(serviceRecordList.get(0).getRecurringServiceId()))
                 .thenReturn(serviceType);
         getServiceType();
-        Assert.assertNotNull(serviceType);
 
-        Assert.assertNotNull(recurringIntentService);
-        Whitebox.setInternalState(recurringIntentService, "recurringServiceRecordRepository",
-                recurringServiceRecordRepository);
-        Whitebox.setInternalState(recurringIntentService, "recurringServiceTypeRepository",
-                recurringServiceTypeRepository);
+        setField(recurringIntentService, "recurringServiceRecordRepository", recurringServiceRecordRepository);
+        setField(recurringIntentService, "recurringServiceTypeRepository", recurringServiceTypeRepository);
+        setField(recurringIntentService, "immunizationLibrary", immunizationLibrary);
+
         recurringIntentService.onHandleIntent(intent);
     }
 
@@ -122,17 +118,28 @@ public class RecurringIntentServiceTest extends BaseUnitTest {
     @Test
     public void addYesNoChoicesTest() {
         try {
-            String spinnerJson = "{\"key\":\"protected_at_birth\",\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\"," +
-                    "\"openmrs_entity_id\":\"164826AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"type\":\"spinner\"}";
+            String spinnerJson = "{\"key\":\"protected_at_birth\",\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_entity_id\":\"164826AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"type\":\"spinner\"}";
             JSONObject spinnerObject = new JSONObject(spinnerJson);
             RecurringIntentService recurringIntentService = Mockito.spy(new RecurringIntentService());
-            Whitebox.invokeMethod(recurringIntentService, "addYesNoChoices", spinnerObject);
+            invokeAddYesNoChoices(recurringIntentService, spinnerObject);
 
             Assert.assertNotNull(spinnerObject.getJSONArray("values"));
             Assert.assertNotNull(spinnerObject.getJSONObject("openmrs_choice_ids"));
         } catch (Exception e) {
-            e.printStackTrace();
+            Assert.fail(e.getMessage());
         }
 
+    }
+
+    private void setField(Object target, String fieldName, Object value) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
+    }
+
+    private void invokeAddYesNoChoices(RecurringIntentService service, JSONObject spinnerObject) throws Exception {
+        java.lang.reflect.Method method = RecurringIntentService.class.getDeclaredMethod("addYesNoChoices", JSONObject.class);
+        method.setAccessible(true);
+        method.invoke(service, spinnerObject);
     }
 }

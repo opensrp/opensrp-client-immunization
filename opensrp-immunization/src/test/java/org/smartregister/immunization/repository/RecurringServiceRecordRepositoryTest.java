@@ -28,7 +28,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.TestApplication;
 import org.smartregister.immunization.domain.ServiceRecord;
@@ -83,9 +82,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-
-        Mockito.when(application.getRepository()).thenReturn(repository);
+Mockito.when(application.getRepository()).thenReturn(repository);
         TestApplication.setInstance(application);
 
         Assert.assertNotNull(recurringServiceRecordRepository);
@@ -143,8 +140,7 @@ public class RecurringServiceRecordRepositoryTest extends BaseUnitTest {
 
     @Test
     public void verifyFindbyEntityIDcallsDatabaseQueryMethod1Times() {
-        RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = PowerMockito
-                .spy(recurringServiceRecordRepository);
+        RecurringServiceRecordRepository recurringServiceRecordRepositoryspy = Mockito.spy(recurringServiceRecordRepository);
         String[] columns = new String[]{ID_COLUMN, BASE_ENTITY_ID, PROGRAM_CLIENT_ID, RECURRING_SERVICE_ID, RecurringServiceRecordRepository.VALUE, DATE, RecurringServiceRecordRepository.ANMID, LOCATION_ID, SYNC_STATUS, EVENT_ID, FORMSUBMISSION_ID, UPDATED_AT_COLUMN, RecurringServiceTypeRepository.TYPE, RecurringServiceTypeRepository.NAME};
         MatrixCursor cursor = new MatrixCursor(columns);
         cursor.addRow(new Object[]{1l, "", "", 1l, "", magicNumber, "", "", "", "", "", 1l, magicType, magicNAME});

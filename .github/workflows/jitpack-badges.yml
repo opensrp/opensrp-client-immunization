@@ -1,0 +1,139 @@
+name: Maintain JitPack badges
+on:
+  push:
+    branches: ["master"]
+    tags: ["**"]
+  workflow_dispatch: {}
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute values
+        id: vars
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS='/' read -r OWNER REPO <<<"${GITHUB_REPOSITORY}"
+          git fetch --tags --force --prune 2>/dev/null || true
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          echo "owner=$OWNER" >> "$GITHUB_OUTPUT"
+          echo "repo=$REPO" >> "$GITHUB_OUTPUT"
+          echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve branch to push
+        id: branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF_TYPE:-}" == "branch" && -n "${GITHUB_REF_NAME:-}" ]]; then
+            BR="${GITHUB_REF_NAME}"
+          else
+            BR=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p' || true)
+            if [ -z "$BR" ]; then BR="master"; fi
+          fi
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
+
+      - name: Switch to target branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          BR="${{ steps.branch.outputs.branch }}"
+          echo "Switching to branch: $BR"
+          git fetch origin "$BR" --depth=1 || true
+          if git show-ref --verify --quiet "refs/remotes/origin/$BR"; then
+            git checkout -B "$BR" "origin/$BR"
+          else
+            git checkout -B "$BR"
+          fi
+
+      - name: Update README badges
+        shell: bash
+        run: |
+          set -euo pipefail
+          OWNER='${{ steps.vars.outputs.owner }}'
+          REPO='${{ steps.vars.outputs.repo }}'
+          LATEST_TAG='${{ steps.vars.outputs.latest_tag }}'
+
+          BADGE_BLOCK_START='<!-- JITPACK BADGES:START -->'
+          BADGE_BLOCK_END='<!-- JITPACK BADGES:END -->'
+          LATEST_MD="[![JitPack Latest](https://jitpack.io/v/${OWNER}/${REPO}.svg)](https://jitpack.io/#${OWNER}/${REPO})"
+          SNAPSHOT_MD="[![master-SNAPSHOT](https://jitpack.io/v/${OWNER}/${REPO}/master-SNAPSHOT.svg)](https://jitpack.io/#${OWNER}/${REPO}/master-SNAPSHOT)"
+
+          if [ -n "$LATEST_TAG" ]; then
+            TAG_MD="[![Build for latest tag (${LATEST_TAG})](https://jitpack.io/v/${OWNER}/${REPO}/${LATEST_TAG}.svg)](https://jitpack.io/#${OWNER}/${REPO}/${LATEST_TAG})"
+          else
+            TAG_MD=""
+          fi
+
+          if [ -n "$TAG_MD" ]; then
+            NEW_BLOCK=$(printf "%s\n%s\n%s\n%s\n%s\n" "$BADGE_BLOCK_START" "$LATEST_MD" "$TAG_MD" "$SNAPSHOT_MD" "$BADGE_BLOCK_END")
+          else
+            NEW_BLOCK=$(printf "%s\n%s\n%s\n%s\n" "$BADGE_BLOCK_START" "$LATEST_MD" "$SNAPSHOT_MD" "$BADGE_BLOCK_END")
+          fi
+
+          FILE="README.md"
+          if [ ! -f "$FILE" ]; then
+            if [ -f "README.MD" ]; then FILE="README.MD"; elif [ -f "README" ]; then FILE="README"; fi
+          fi
+
+          if [ ! -f "$FILE" ]; then
+            TITLE="# ${REPO}"
+            printf "%s\n\n%s\n" "$TITLE" "$NEW_BLOCK" > README.md
+            exit 0
+          fi
+
+          TMP_FILE="${FILE}.tmp"
+          if grep -q "$BADGE_BLOCK_START" "$FILE"; then
+            awk -v start="$BADGE_BLOCK_START" -v end="$BADGE_BLOCK_END" -v repl="$NEW_BLOCK" '
+              BEGIN{inblk=0}
+              index($0,start){print repl; inblk=1; next}
+              index($0,end){inblk=0; next}
+              inblk{next}
+              /\[!\[JitPack( Latest)?\]\(https:\/\/jitpack\.io\/v\// {next}
+              /\[!\[Build for latest tag/ {next}
+              /\[!\[master-SNAPSHOT\]\(https:\/\/jitpack\.io\/v\// {next}
+              {print}
+            ' "$FILE" > "$TMP_FILE"
+          else
+            printf "%s\n\n" "$NEW_BLOCK" > "$TMP_FILE"
+            awk '
+              /\[!\[JitPack( Latest)?\]\(https:\/\/jitpack\.io\/v\// {next}
+              /\[!\[Build for latest tag/ {next}
+              /\[!\[master-SNAPSHOT\]\(https:\/\/jitpack\.io\/v\// {next}
+              {print}
+            ' "$FILE" >> "$TMP_FILE"
+          fi
+
+          mv "$TMP_FILE" "$FILE"
+
+      - name: Commit changes if any
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(readme): ensure JitPack badges (latest, latest tag, master-SNAPSHOT)"
+          branch: ${{ steps.branch.outputs.branch }}
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          file_pattern: |
+            README*
+
+      - name: Trigger JitPack build (master)
+        if: github.ref == 'refs/heads/master'
+        shell: bash
+        run: |
+          set -euo pipefail
+          OWNER='${{ steps.vars.outputs.owner }}'
+          REPO='${{ steps.vars.outputs.repo }}'
+          ARTIFACT=$(grep -E '^POM_SETTING_ARTIFACT_ID=' gradle.properties | sed 's/^[^=]*=//' || true)
+          if [ -z "$ARTIFACT" ]; then ARTIFACT="$REPO"; fi
+          URL_DIR="https://jitpack.io/com/github/${OWNER}/${REPO}/master-SNAPSHOT/"
+          URL_POM="https://jitpack.io/com/github/${OWNER}/${REPO}/master-SNAPSHOT/${ARTIFACT}-master-SNAPSHOT.pom"
+          URL_BADGE="https://jitpack.io/v/${OWNER}/${REPO}/master-SNAPSHOT.svg"
+          curl -fsSIL "$URL_DIR" >/dev/null || true
+          curl -fsSIL "$URL_POM" >/dev/null || true
+          curl -fsSIL "$URL_BADGE" >/dev/null || true

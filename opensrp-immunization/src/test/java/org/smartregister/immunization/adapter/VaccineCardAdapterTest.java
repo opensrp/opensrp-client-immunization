@@ -11,9 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
@@ -152,14 +152,14 @@ public class VaccineCardAdapterTest extends BaseUnitTest {
     @Test
     public void updateChildsActiveStatusShouldCheckVaccineCardsForNull() {
         // An exception will be thrown and the test will fail if there is no null check
-        HashMap<String, VaccineCard> vaccineCards = Whitebox.getInternalState(vaccineCardAdapter, "vaccineCards");
+        HashMap<String, VaccineCard> vaccineCards = ReflectionHelpers.getField(vaccineCardAdapter, "vaccineCards");
         HashMap<String, VaccineCard> nullVaccineCards = null;
 
-        Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", nullVaccineCards);
+        ReflectionHelpers.setField(vaccineCardAdapter, "vaccineCards", nullVaccineCards);
 
         try {
             vaccineCardAdapter.updateChildsActiveStatus();
-            Whitebox.setInternalState(vaccineCardAdapter, "vaccineCards", vaccineCards);
+            ReflectionHelpers.setField(vaccineCardAdapter, "vaccineCards", vaccineCards);
         } catch (Exception e) {
             fail();
         }

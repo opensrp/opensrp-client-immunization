@@ -8,17 +8,11 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
@@ -28,7 +22,6 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.domain.Alert;
 import org.smartregister.domain.AlertStatus;
-import org.smartregister.domain.Event;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.R;
@@ -42,7 +35,6 @@ import org.smartregister.immunization.repository.RecurringServiceRecordRepositor
 import org.smartregister.immunization.view.mock.ServiceRowCardTestActivity;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.EventClientRepository;
-import org.smartregister.repository.Repository;
 import org.smartregister.service.UserService;
 
 import java.util.Date;
@@ -53,22 +45,18 @@ import timber.log.Timber;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 @Config(shadows = {FontTextViewShadow.class})
-@PowerMockIgnore({"javax.xml.*", "org.xml.sax.*", "org.w3c.dom.*", "org.springframework.context.*", "org.apache.log4j.*"})
 public class ServiceRowCardTest extends BaseUnitTest {
 
     private final String magicOne = "1";
     private final String magicDue = "due";
     private final String magicDefault = "DEFAULT";
     private final String magicExpired = "expired";
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
-
     @InjectMocks
     private ServiceRowCardTestActivity activity;
     @Mock
     private org.smartregister.Context openSRPContext;
+    @Mock
     private ImmunizationLibrary immunizationLibrary;
 
     @Mock
@@ -86,8 +74,6 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.mockito.MockitoAnnotations.initMocks(this);
-
         Mockito.doReturn(allSharedPreferences).when(userService).getAllSharedPreferences();
         Mockito.doReturn(userService).when(openSRPContext).userService();
 
@@ -108,27 +94,15 @@ public class ServiceRowCardTest extends BaseUnitTest {
         serviceRecord.setDate(new Date());
         serviceRecord.setName(ServiceWrapperTest.DEFAULTNAME);
         serviceRecord.setEventId(magicOne);
-        Event event = new Event();
-        event.setEventId(magicOne);
-        event.setDateCreated(new DateTime());
-
         EventClientRepository eventClientRepository = Mockito.mock(EventClientRepository.class);
-
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        immunizationLibrary = Mockito.mock(ImmunizationLibrary.class);
         RecurringServiceRecordRepository recurringServiceRecordRepository = Mockito
                 .mock(RecurringServiceRecordRepository.class);
-        ImmunizationLibrary.init(Mockito.mock(org.smartregister.Context.class), Mockito.mock(Repository.class),
-                Mockito.mock(CommonFtsObject.class), 0, 0);
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        PowerMockito.when(immunizationLibrary.recurringServiceRecordRepository())
-                .thenReturn(recurringServiceRecordRepository);
-        PowerMockito.when(recurringServiceRecordRepository.find(ArgumentMatchers.anyLong()))
-                .thenReturn(serviceRecord);
-        PowerMockito.when(immunizationLibrary.eventClientRepository()).thenReturn(eventClientRepository);
-        PowerMockito.when(eventClientRepository
-                .convert(ArgumentMatchers.any(JSONObject.class), ArgumentMatchers.any(Class.class)))
-                .thenReturn(event);
+        org.robolectric.util.ReflectionHelpers.setStaticField(ImmunizationLibrary.class, "instance", immunizationLibrary);
+        Mockito.doReturn(recurringServiceRecordRepository).when(immunizationLibrary).recurringServiceRecordRepository();
+        Mockito.doReturn(eventClientRepository).when(immunizationLibrary).eventClientRepository();
+        Mockito.doReturn(serviceRecord).when(recurringServiceRecordRepository).find(ArgumentMatchers.anyLong());
+        Mockito.when(eventClientRepository.convert(ArgumentMatchers.any(JSONObject.class), ArgumentMatchers.any(Class.class)))
+                .thenReturn(null);
         //        controller.setup();
         view = new ServiceRowCard(ApplicationProvider.getApplicationContext());
         //        view = activity.getInstance();
@@ -223,7 +197,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Test
     public void testHideVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(true);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
@@ -236,7 +210,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         ServiceRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setServiceWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_white);
@@ -256,7 +230,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
     @Test
     public void testShowVaccineOverdueRowCardColor() {
-        PowerMockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
+        Mockito.when(immunizationLibrary.hideOverdueVaccineStatus()).thenReturn(false);
 
         Alert alert = new Alert("", "", "", AlertStatus.urgent, "", "");
         ServiceWrapper wrapper = new ServiceWrapper();
@@ -269,7 +243,7 @@ public class ServiceRowCardTest extends BaseUnitTest {
 
         ServiceRowCard rowCard = Mockito.spy(view);
         Button statusIV = Mockito.mock(Button.class);
-        Whitebox.setInternalState(rowCard, "statusIV", statusIV);
+        ReflectionHelpers.setField(rowCard, "statusIV", statusIV);
         rowCard.setServiceWrapper(wrapper);
 
         Mockito.verify(statusIV).setBackgroundResource(R.drawable.vaccine_card_background_red);

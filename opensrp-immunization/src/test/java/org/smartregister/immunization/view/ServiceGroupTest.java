@@ -10,7 +10,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import androidx.test.core.app.ApplicationProvider;
 import org.robolectric.android.controller.ActivityController;
@@ -275,12 +274,12 @@ public class ServiceGroupTest extends BaseUnitTest {
         ServiceCardAdapter serviceCardAdapter = view.getServiceCardAdapter();
         ServiceCardAdapter nullServiceCardAdapter = null;
 
-        Whitebox.setInternalState(view, "serviceCardAdapter", nullServiceCardAdapter);
+        ReflectionHelpers.setField(view, "serviceCardAdapter", nullServiceCardAdapter);
 
         try {
             view.updateChildsActiveStatus();
         } catch (Exception e) {
-            Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
+            ReflectionHelpers.setField(view, "serviceCardAdapter", serviceCardAdapter);
             Assert.fail();
         }
     }
@@ -291,12 +290,12 @@ public class ServiceGroupTest extends BaseUnitTest {
         ExpandableHeightGridView servicesGV = view.getServicesGV();
         ExpandableHeightGridView nullServicesGV = null;
 
-        Whitebox.setInternalState(view, "servicesGV", nullServicesGV);
+        ReflectionHelpers.setField(view, "servicesGV", nullServicesGV);
 
         try {
             view.updateChildsActiveStatus();
         } catch (Exception e) {
-            Whitebox.setInternalState(view, "servicesGV", servicesGV);
+            ReflectionHelpers.setField(view, "servicesGV", servicesGV);
             Assert.fail();
         }
     }
@@ -307,12 +306,12 @@ public class ServiceGroupTest extends BaseUnitTest {
         ServiceCardAdapter serviceCardAdapter = view.getServiceCardAdapter();
         ServiceCardAdapter nullServiceCardAdapter = null;
 
-        Whitebox.setInternalState(view, "serviceCardAdapter", nullServiceCardAdapter);
+        ReflectionHelpers.setField(view, "serviceCardAdapter", nullServiceCardAdapter);
 
         try {
             view.updateAllWrapperStatus();
         } catch (Exception e) {
-            Whitebox.setInternalState(view, "serviceCardAdapter", serviceCardAdapter);
+            ReflectionHelpers.setField(view, "serviceCardAdapter", serviceCardAdapter);
             Assert.fail();
         }
     }

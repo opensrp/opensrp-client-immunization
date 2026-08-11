@@ -9,17 +9,12 @@ import androidx.test.core.app.ApplicationProvider;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.powermock.reflect.Whitebox;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
 import org.smartregister.immunization.domain.Vaccine;
@@ -34,7 +29,11 @@ import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
 import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.immunization.util.IMConstants;
 import org.smartregister.immunization.util.VaccinatorUtils;
+import org.smartregister.service.AlertService;
+import org.smartregister.util.AppProperties;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,16 +43,22 @@ import java.util.Map;
 /**
  * Created by onaio on 30/08/2017.
  */
-@PrepareForTest({ImmunizationLibrary.class, VaccinatorUtils.class})
 public class VaccineIntentServiceTest extends BaseUnitTest {
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     @Mock
     private ImmunizationLibrary immunizationLibrary;
 
     @Mock
     private VaccineRepository vaccineRepository;
+
+    @Mock
+    private org.smartregister.Context drishtiContext;
+
+    @Mock
+    private AlertService alertService;
+
+    @Mock
+    private AppProperties appProperties;
 
     @Spy
     private List<Vaccine> vaccineList = new ArrayList<>();
@@ -66,7 +71,7 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        mockImmunizationLibrary(immunizationLibrary, drishtiContext, vaccineRepository, alertService, appProperties);
     }
 
     @Test
@@ -75,38 +80,34 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
     }
 
     @Test
-    public void onHandleIntentTest() {
+    public void onHandleIntentTest() throws Exception {
         Application application = ApplicationProvider.getApplicationContext();
         Intent intent = new Intent(application, VaccineIntentService.class);
 
         VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
         Assert.assertNotNull(vaccineIntentService);
 
-        PowerMockito.mockStatic(ImmunizationLibrary.class);
-        PowerMockito.mockStatic(VaccinatorUtils.class);
+        try (MockedStatic<VaccinatorUtils> vaccinatorUtils = Mockito.mockStatic(VaccinatorUtils.class)) {
+            vaccinatorUtils.when(() -> VaccinatorUtils.getSupportedVaccines(ArgumentMatchers.any(Context.class))).thenReturn(availableVaccines);
+            vaccinatorUtils.when(() -> VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(Context.class))).thenReturn(specialJsonMappingVaccines);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance()).thenReturn(immunizationLibrary);
-        Assert.assertNotNull(immunizationLibrary);
+            Mockito.when(immunizationLibrary.vaccineRepository()).thenReturn(vaccineRepository);
+            Mockito.when(immunizationLibrary.context()).thenReturn(drishtiContext);
+            Mockito.when(immunizationLibrary.allowSyncImmediately()).thenReturn(false);
+            Mockito.when(immunizationLibrary.getVaccineSyncTime()).thenReturn(1L);
 
-        PowerMockito.when(ImmunizationLibrary.getInstance().vaccineRepository()).thenReturn(vaccineRepository);
-        Assert.assertNotNull(vaccineRepository);
+            Vaccine vaccine = new Vaccine(0L, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
+                    VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0L,
+                    VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
+            Mockito.when(vaccineRepository.findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME))
+                    .thenReturn(vaccineList);
+            vaccineList.add(vaccine);
+            Assert.assertNotNull(vaccineList);
 
-        PowerMockito.when(VaccinatorUtils.getSupportedVaccines(ArgumentMatchers.any(Context.class))).thenReturn(availableVaccines);
-        PowerMockito.when(VaccinatorUtils.getSpecialVaccines(ArgumentMatchers.any(Context.class))).thenReturn(specialJsonMappingVaccines);
-        Assert.assertNotNull(availableVaccines);
-        Assert.assertNotNull(specialJsonMappingVaccines);
-
-        Vaccine vaccine = new Vaccine(0l, VaccineTest.BASEENTITYID, VaccineTest.NAME, 0, new Date(),
-                VaccineTest.ANMID, VaccineTest.LOCATIONID, VaccineTest.SYNCSTATUS, VaccineTest.HIA2STATUS, 0l,
-                VaccineTest.EVENTID, VaccineTest.FORMSUBMISSIONID, 0);
-        Mockito.when(vaccineRepository.findUnSyncedBeforeTime(IMConstants.VACCINE_SYNC_TIME))
-                .thenReturn(vaccineList);
-        vaccineList.add(vaccine);
-        Assert.assertNotNull(vaccineList);
-
-        Whitebox.setInternalState(vaccineIntentService, "vaccineRepository",
-                vaccineRepository);
-        vaccineIntentService.onHandleIntent(intent);
+            setField(vaccineIntentService, "vaccineRepository", vaccineRepository);
+            setField(vaccineIntentService, "immunizationLibrary", immunizationLibrary);
+            vaccineIntentService.onHandleIntent(intent);
+        }
     }
 
     @Test
@@ -116,7 +117,7 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
 
         String eventType = vaccineIntentService.getEventType();
         Assert.assertNotNull(eventType);
-        Assert.assertEquals(eventType, "Vaccination");
+        Assert.assertEquals("Vaccination", eventType);
     }
 
     @Test
@@ -126,7 +127,7 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
 
         String entityType = vaccineIntentService.getEntityType();
         Assert.assertNotNull(entityType);
-        Assert.assertEquals(entityType, "vaccination");
+        Assert.assertEquals("vaccination", entityType);
     }
 
     @Test
@@ -136,52 +137,116 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
 
         String eventTypeOutOfCatchment = vaccineIntentService.getEventTypeOutOfCatchment();
         Assert.assertNotNull(eventTypeOutOfCatchment);
-        Assert.assertEquals(eventTypeOutOfCatchment, "Out of Area Service - Vaccination");
+        Assert.assertEquals("Out of Area Service - Vaccination", eventTypeOutOfCatchment);
     }
 
     @Test
-    public void getParentIdAvailableVaccinesTest() {
-        try {
-            OpenMRSDate openMRSDate = getOpenMRSDate();
-            OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
+    public void getParentIdAvailableVaccinesTest() throws Exception {
+        OpenMRSDate openMRSDate = getOpenMRSDate();
+        OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
 
-            Due due = getDue();
-            List<Due> dueList = new ArrayList<>();
-            dueList.add(due);
+        Due due = getDue();
+        List<Due> dueList = new ArrayList<>();
+        dueList.add(due);
 
-            Expiry expiry = getExpiry();
-            List<Expiry> expiryList = new ArrayList<>();
-            expiryList.add(expiry);
+        Expiry expiry = getExpiry();
+        List<Expiry> expiryList = new ArrayList<>();
+        expiryList.add(expiry);
 
-            Condition condition = getCondition();
-            List<Condition> conditionList = new ArrayList<>();
-            conditionList.add(condition);
+        Condition condition = getCondition();
+        List<Condition> conditionList = new ArrayList<>();
+        conditionList.add(condition);
 
-            Schedule schedule = getSchedule(dueList, expiryList, conditionList);
-            Map<String, Schedule> stringScheduleMap = new HashMap<>();
-            stringScheduleMap.put("schedule", schedule);
+        Schedule schedule = getSchedule(dueList, expiryList, conditionList);
+        Map<String, Schedule> stringScheduleMap = new HashMap<>();
+        stringScheduleMap.put("schedule", schedule);
 
-            org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
-                    openMRSCalculation, schedule, stringScheduleMap);
-            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
-            vaccineList.add(jsonMappingVaccine);
+        org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
+                openMRSCalculation, schedule, stringScheduleMap);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
+        vaccineList.add(jsonMappingVaccine);
 
-            VaccineGroup vaccineGroup = getVaccineGroup(vaccineList);
-            List<VaccineGroup> vaccineGroups = new ArrayList<>();
-            vaccineGroups.add(vaccineGroup);
+        VaccineGroup vaccineGroup = getVaccineGroup(vaccineList);
+        List<VaccineGroup> vaccineGroups = new ArrayList<>();
+        vaccineGroups.add(vaccineGroup);
 
-            VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
-            Assert.assertNotNull(vaccineIntentService);
+        VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
+        Assert.assertNotNull(vaccineIntentService);
 
-            Whitebox.setInternalState(vaccineIntentService, "availableVaccines", vaccineGroups);
-            Whitebox.setInternalState(vaccineIntentService, "specialVaccines", new ArrayList<>());
-            String parentId = Whitebox.invokeMethod(vaccineIntentService, "getParentId", "name");
-            Assert.assertEquals("QEUIYN327647857657657657656576576", parentId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setField(vaccineIntentService, "availableVaccines", vaccineGroups);
+        setField(vaccineIntentService, "specialVaccines", new ArrayList<>());
+        String parentId = invokeGetParentId(vaccineIntentService, "name");
+        Assert.assertEquals("QEUIYN327647857657657657656576576", parentId);
+    }
 
+    @Test
+    public void getParentIdWithSpecialVaccinesTest() throws Exception {
+        OpenMRSDate openMRSDate = getOpenMRSDate();
+        OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
 
+        Due due = getDue();
+        List<Due> dueList = new ArrayList<>();
+        dueList.add(due);
+
+        Expiry expiry = getExpiry();
+        List<Expiry> expiryList = new ArrayList<>();
+        expiryList.add(expiry);
+
+        Condition condition = getCondition();
+        List<Condition> conditionList = new ArrayList<>();
+        conditionList.add(condition);
+
+        Schedule schedule = getSchedule(dueList, expiryList, conditionList);
+        Map<String, Schedule> stringScheduleMap = new HashMap<>();
+        stringScheduleMap.put("schedule", schedule);
+
+        org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
+                openMRSCalculation, schedule, stringScheduleMap);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
+        vaccineList.add(jsonMappingVaccine);
+
+        VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
+        Assert.assertNotNull(vaccineIntentService);
+
+        setField(vaccineIntentService, "availableVaccines", new ArrayList<>());
+        setField(vaccineIntentService, "specialVaccines", vaccineList);
+        String parentId = invokeGetParentId(vaccineIntentService, "name");
+        Assert.assertEquals("QEUIYN327647857657657657656576576", parentId);
+    }
+
+    @Test
+    public void getParentIdWithTwoNamesTest() throws Exception {
+        OpenMRSDate openMRSDate = getOpenMRSDate();
+        OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
+
+        Due due = getDue();
+        List<Due> dueList = new ArrayList<>();
+        dueList.add(due);
+
+        Expiry expiry = getExpiry();
+        List<Expiry> expiryList = new ArrayList<>();
+        expiryList.add(expiry);
+
+        Condition condition = getCondition();
+        List<Condition> conditionList = new ArrayList<>();
+        conditionList.add(condition);
+
+        Schedule schedule = getSchedule(dueList, expiryList, conditionList);
+        Map<String, Schedule> stringScheduleMap = new HashMap<>();
+        stringScheduleMap.put("schedule", schedule);
+
+        org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
+                openMRSCalculation, schedule, stringScheduleMap);
+        List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
+        vaccineList.add(jsonMappingVaccine);
+
+        VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
+        Assert.assertNotNull(vaccineIntentService);
+
+        setField(vaccineIntentService, "availableVaccines", new ArrayList<>());
+        setField(vaccineIntentService, "specialVaccines", vaccineList);
+        String parentId = invokeGetParentId(vaccineIntentService, "name name-two");
+        Assert.assertEquals("QEUIYN327647857657657657656576576", parentId);
     }
 
     @NotNull
@@ -262,161 +327,15 @@ public class VaccineIntentServiceTest extends BaseUnitTest {
         return vaccineGroup;
     }
 
-    @Test
-    public void getParentIdWithSpecialVaccinesTest() {
-        try {
-            OpenMRSDate openMRSDate = getOpenMRSDate();
-            OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
-
-            Due due = getDue();
-            List<Due> dueList = new ArrayList<>();
-            dueList.add(due);
-
-            Expiry expiry = getExpiry();
-            List<Expiry> expiryList = new ArrayList<>();
-            expiryList.add(expiry);
-
-            Condition condition = getCondition();
-            List<Condition> conditionList = new ArrayList<>();
-            conditionList.add(condition);
-
-            Schedule schedule = getSchedule(dueList, expiryList, conditionList);
-            Map<String, Schedule> stringScheduleMap = new HashMap<>();
-            stringScheduleMap.put("schedule", schedule);
-
-            org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
-                    openMRSCalculation, schedule, stringScheduleMap);
-            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
-            vaccineList.add(jsonMappingVaccine);
-
-            VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
-            Assert.assertNotNull(vaccineIntentService);
-
-            Whitebox.setInternalState(vaccineIntentService, "availableVaccines", new ArrayList<>());
-            Whitebox.setInternalState(vaccineIntentService, "specialVaccines", vaccineList);
-            String parentId = Whitebox.invokeMethod(vaccineIntentService, "getParentId", "name");
-            Assert.assertEquals("QEUIYN327647857657657657656576576", parentId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void setField(Object target, String fieldName, Object value) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
     }
 
-    @Test
-    public void getParentIdWithTwoNamesTest() {
-        try {
-            OpenMRSDate openMRSDate = getOpenMRSDate();
-            OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
-
-            Due due = getDue();
-            List<Due> dueList = new ArrayList<>();
-            dueList.add(due);
-
-            Expiry expiry = getExpiry();
-            List<Expiry> expiryList = new ArrayList<>();
-            expiryList.add(expiry);
-
-            Condition condition = getCondition();
-            List<Condition> conditionList = new ArrayList<>();
-            conditionList.add(condition);
-
-            Schedule schedule = getSchedule(dueList, expiryList, conditionList);
-            Map<String, Schedule> stringScheduleMap = new HashMap<>();
-            stringScheduleMap.put("schedule", schedule);
-
-            org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
-                    openMRSCalculation, schedule, stringScheduleMap);
-            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
-            vaccineList.add(jsonMappingVaccine);
-
-            VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
-            Assert.assertNotNull(vaccineIntentService);
-
-            Whitebox.setInternalState(vaccineIntentService, "availableVaccines", new ArrayList<>());
-            Whitebox.setInternalState(vaccineIntentService, "specialVaccines", vaccineList);
-            String parentId = Whitebox.invokeMethod(vaccineIntentService, "getParentId", "name name");
-            Assert.assertEquals("QEUIYN327647857657657657656576576", parentId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void getParentIdWithSlashOnParentEntityAndMeaslesTest() {
-        try {
-            OpenMRSDate openMRSDate = getOpenMRSDate();
-            OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
-
-            Due due = getDue();
-            List<Due> dueList = new ArrayList<>();
-            dueList.add(due);
-
-            Expiry expiry = getExpiry();
-            List<Expiry> expiryList = new ArrayList<>();
-            expiryList.add(expiry);
-
-            Condition condition = getCondition();
-            List<Condition> conditionList = new ArrayList<>();
-            conditionList.add(condition);
-
-            Schedule schedule = getSchedule(dueList, expiryList, conditionList);
-            Map<String, Schedule> stringScheduleMap = new HashMap<>();
-            stringScheduleMap.put("schedule", schedule);
-
-            openMRSDate.parent_entity = "measles / measles";
-            org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
-                    openMRSCalculation, schedule, stringScheduleMap);
-            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
-            vaccineList.add(jsonMappingVaccine);
-
-            VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
-            Assert.assertNotNull(vaccineIntentService);
-
-            Whitebox.setInternalState(vaccineIntentService, "availableVaccines", new ArrayList<>());
-            Whitebox.setInternalState(vaccineIntentService, "specialVaccines", vaccineList);
-            String parentId = Whitebox.invokeMethod(vaccineIntentService, "getParentId", "name name");
-            Assert.assertEquals("measles / measles", parentId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void getParentIdWithSlashOnParentEntityAndMrTest() {
-        try {
-            OpenMRSDate openMRSDate = getOpenMRSDate();
-            OpenMRSCalculation openMRSCalculation = getOpenMRSCalculation();
-
-            Due due = getDue();
-            List<Due> dueList = new ArrayList<>();
-            dueList.add(due);
-
-            Expiry expiry = getExpiry();
-            List<Expiry> expiryList = new ArrayList<>();
-            expiryList.add(expiry);
-
-            Condition condition = getCondition();
-            List<Condition> conditionList = new ArrayList<>();
-            conditionList.add(condition);
-
-            Schedule schedule = getSchedule(dueList, expiryList, conditionList);
-            Map<String, Schedule> stringScheduleMap = new HashMap<>();
-            stringScheduleMap.put("schedule", schedule);
-
-            openMRSDate.parent_entity = "measles / mr";
-            org.smartregister.immunization.domain.jsonmapping.Vaccine jsonMappingVaccine = getVaccine(openMRSDate,
-                    openMRSCalculation, schedule, stringScheduleMap);
-            List<org.smartregister.immunization.domain.jsonmapping.Vaccine> vaccineList = new ArrayList<>();
-            vaccineList.add(jsonMappingVaccine);
-
-            VaccineIntentService vaccineIntentService = Mockito.spy(new VaccineIntentService());
-            Assert.assertNotNull(vaccineIntentService);
-
-            Whitebox.setInternalState(vaccineIntentService, "availableVaccines", new ArrayList<>());
-            Whitebox.setInternalState(vaccineIntentService, "specialVaccines", vaccineList);
-            String parentId = Whitebox.invokeMethod(vaccineIntentService, "getParentId", "name name");
-            Assert.assertEquals("measles / mr", parentId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private String invokeGetParentId(VaccineIntentService service, String name) throws Exception {
+        Method method = VaccineIntentService.class.getDeclaredMethod("getParentId", String.class);
+        method.setAccessible(true);
+        return (String) method.invoke(service, name);
     }
 }

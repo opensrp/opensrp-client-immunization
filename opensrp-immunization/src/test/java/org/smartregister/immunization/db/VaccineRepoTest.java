@@ -2,12 +2,9 @@ package org.smartregister.immunization.db;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.smartregister.Context;
 import org.smartregister.immunization.BaseUnitTest;
 import org.smartregister.immunization.ImmunizationLibrary;
@@ -21,13 +18,10 @@ import java.util.ArrayList;
  * Created by onaio on 30/08/2017.
  */
 
-@PrepareForTest({ImmunizationLibrary.class})
 public class VaccineRepoTest extends BaseUnitTest {
     public static final String WOMAN = "woman";
     public static final String CHILD = "child";
 
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
     @Mock
     private ImmunizationLibrary immunizationLibrary;
     @Mock

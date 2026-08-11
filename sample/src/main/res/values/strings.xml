@@ -4,6 +4,8 @@
 
     <string name="label_immunization_records">IMMUNISATION &amp; SERVICES</string>
     <string name="updating_dialog_title">Updating…</string>
+    <string name="immunizations">IMMUNIZATIONS</string>
+    <string name="recurring">RECURRING SERVICES</string>
 
     <!-- Immunization Names-->
     <string name="bcg">BCG</string>
